@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <meta name="description" content="<%= description %>">
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <div class="nav-container">
+                <a href="/" class="nav-logo">
+                    <h1>다시, 봄</h1>
+                    <span>Dasi, Bom</span>
+                </a>
+                <ul class="nav-menu">
+                    <li><a href="/">홈</a></li>
+                    <li><a href="/privacy">개인정보처리방침</a></li>
+                    <li><a href="/terms">이용약관</a></li>
+                    <li><a href="/delete-account">계정삭제</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main">
+        <%- body %>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>다시, 봄 (Dasi, Bom)</h3>
+                    <p>50세 이상을 위한 따뜻한 동반자 앱</p>
+                    <p>Gentle connections, at your pace</p>
+                </div>
+                <div class="footer-section">
+                    <h4>문의</h4>
+                    <p>이메일: support@bloomagain.com</p>
+                    <p>고객지원: 평일 09:00 - 18:00</p>
+                </div>
+                <div class="footer-section">
+                    <h4>법적 고지</h4>
+                    <p><a href="/privacy">개인정보처리방침</a></p>
+                    <p><a href="/terms">이용약관</a></p>
+                    <p><a href="/delete-account">계정삭제</a></p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 BloomAgain Korea. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
