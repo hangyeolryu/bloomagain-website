@@ -24,6 +24,12 @@
 .DS_Store
 *.pem
 
+# npm cache
+.npm-cache/
+
+# firebase cache
+.firebase/hosting.b3V0.cache
+
 # debug
 npm-debug.log*
 yarn-debug.log*
