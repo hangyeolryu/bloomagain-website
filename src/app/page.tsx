@@ -60,7 +60,7 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <section className="py-20 relative overflow-hidden">
+      <section className="py-12 sm:py-20 relative overflow-hidden">
         {/* Background Logo Pattern */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <div className="absolute top-10 right-10 w-32 h-32 md:w-48 md:h-48 lg:w-64 lg:h-64 opacity-25">
@@ -88,9 +88,9 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="lg:grid lg:grid-cols-12 lg:gap-8">
             <div className="sm:text-center md:max-w-2xl md:mx-auto lg:col-span-6 lg:text-left">
-              <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
-                <span className="block text-[#8CB350]">다시, 봄</span>
-                <span className="block text-[#534741]">Dasi, Bom</span>
+              <h1 className="tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
+                <span className="text-xl block text-[#8CB350]">Dasi, Bom</span>
+                <span className="text-3xl block text-[#534741]">다시, 봄</span>
               </h1>
               <p className="mt-3 text-base text-gray-700 sm:mt-5 sm:text-xl lg:text-lg xl:text-xl">
                 50세 이상을 위한 따뜻한 동반자 앱
@@ -99,23 +99,23 @@ export default function Home() {
                 부담 없이, 천천히 이어지는 친구
               </p>
               <div className="mt-8 sm:max-w-lg sm:mx-auto sm:text-center lg:text-left lg:mx-0">
-                <div className="flex flex-col sm:flex-row gap-4">
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <a
                     href="#"
-                    className="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-[#534741] bg-[#8CB350] hover:bg-[#7BA044] md:py-4 md:text-lg md:px-10 transition-colors"
+                    className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-[#534741] bg-[#8CB350] hover:bg-[#7BA044] md:py-4 md:text-lg md:px-10 transition-colors"
                   >
                     앱 다운로드
                   </a>
                   <a
                     href="#features"
-                    className="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-[#534741] bg-[#BFE38A] hover:bg-[#ABD077] md:py-4 md:text-lg md:px-10 transition-colors"
+                    className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-[#534741] bg-[#BFE38A] hover:bg-[#ABD077] md:py-4 md:text-lg md:px-10 transition-colors"
                   >
                     더 알아보기
                   </a>
                 </div>
               </div>
             </div>
-            <div className="mt-12 relative sm:max-w-lg sm:mx-auto lg:mt-0 lg:max-w-none lg:mx-0 lg:col-span-6 lg:flex lg:items-center">
+            <div className="mt-12 relative flex items-center sm:max-w-lg sm:mx-auto lg:mt-0 lg:max-w-none lg:mx-0 lg:col-span-6">
               <div className="relative mx-auto w-full rounded-lg shadow-lg lg:max-w-md">
                 <div className="relative block w-full rounded-lg overflow-hidden">
                   <div className="p-8">
@@ -147,7 +147,7 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-16 bg-white">
+      <section id="features" className="py-12 sm:py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <button
@@ -158,10 +158,10 @@ export default function Home() {
               <span>부모님께 추천하시는 분들께</span>
             </button>
           </div>
-          <div className="mt-16">
+          <div className="mt-10 sm:mt-16">
             <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              <div className="pt-6">
-                <div className="flow-root bg-white rounded-lg px-6 pb-8 shadow-lg border-2 border-[#534741] hover:border-[#635953] transition-all cursor-pointer">
+              {/* <div className="pt-6">
+                <div className="flow-root bg-white rounded-lg px-4 pb-6 sm:px-6 sm:pb-8 shadow-lg border-2 border-[#534741] hover:border-[#635953] transition-all cursor-pointer">
                   <div className="-mt-6">
                     <div className="inline-flex items-center justify-center p-3 bg-[#534741] rounded-md shadow-lg">
                       <Lock className="w-6 h-6 text-white" />
@@ -172,22 +172,22 @@ export default function Home() {
                     </p>
                   </div>
                 </div>
-              </div>
+              </div> */}
               <div className="pt-6">
-                <div className="flow-root bg-white rounded-lg px-6 pb-8 shadow-lg border-2 border-[#8CB350] hover:border-[#7BA044] transition-all cursor-pointer">
+                <div className="flow-root bg-white rounded-lg px-4 pb-6 sm:px-6 sm:pb-8 shadow-lg border-2 border-[#8CB350] hover:border-[#7BA044] transition-all cursor-pointer">
                   <div className="-mt-6">
                     <div className="inline-flex items-center justify-center p-3 bg-[#8CB350] rounded-md shadow-lg">
                       <Sprout className="w-6 h-6 text-white" />
                     </div>
-                    <h3 className="mt-8 text-lg font-medium text-gray-900 tracking-tight">부드러운 발견</h3>
+                    <h3 className="mt-8 text-lg font-medium text-gray-900 tracking-tight">부담없는 발견</h3>
                     <p className="mt-5 text-base text-gray-500">
-                      스와이프 없이 인사하기, 서클 초대, 커피챗 제안
+                      스와이프 없이 인사하기, 서클 초대
                     </p>
                   </div>
                 </div>
               </div>
               <div className="pt-6">
-                <div className="flow-root bg-white rounded-lg px-6 pb-8 shadow-lg border-2 border-[#BFE38A] hover:border-[#ABD077] transition-all cursor-pointer">
+                <div className="flow-root bg-white rounded-lg px-4 pb-6 sm:px-6 sm:pb-8 shadow-lg border-2 border-[#BFE38A] hover:border-[#ABD077] transition-all cursor-pointer">
                   <div className="-mt-6">
                     <div className="inline-flex items-center justify-center p-3 bg-[#BFE38A] rounded-md shadow-lg">
                       <Users className="w-6 h-6 text-[#534741]" />
@@ -200,7 +200,7 @@ export default function Home() {
                 </div>
               </div>
               {/* <div className="pt-6">
-                <div className="flow-root bg-white rounded-lg px-6 pb-8 shadow-lg">
+                <div className="flow-root bg-white rounded-lg px-4 pb-6 sm:px-6 sm:pb-8 shadow-lg">
                   <div className="-mt-6">
                     <div className="inline-flex items-center justify-center p-3 bg-[#FFF51B] rounded-md shadow-lg">
                       <span className="text-2xl">🎵</span>
@@ -213,20 +213,7 @@ export default function Home() {
                 </div>
               </div> */}
               <div className="pt-6">
-                <div className="flow-root bg-white rounded-lg px-6 pb-8 shadow-lg border-2 border-[#8CB350] hover:border-[#7BA044] transition-all cursor-pointer">
-                  <div className="-mt-6">
-                    <div className="inline-flex items-center justify-center p-3 bg-[#8CB350] rounded-md shadow-lg">
-                      <Shield className="w-6 h-6 text-white" />
-                    </div>
-                    <h3 className="mt-8 text-lg font-medium text-gray-900 tracking-tight">안전 우선</h3>
-                    <p className="mt-5 text-base text-gray-500">
-                      차단, 신고, 편안함 설정
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="pt-6">
-                <div className="flow-root bg-white rounded-lg px-6 pb-8 shadow-lg border-2 border-[#BFE38A] hover:border-[#ABD077] transition-all cursor-pointer">
+                <div className="flow-root bg-white rounded-lg px-4 pb-6 sm:px-6 sm:pb-8 shadow-lg border-2 border-[#BFE38A] hover:border-[#ABD077] transition-all cursor-pointer">
                   <div className="-mt-6">
                     <div className="inline-flex items-center justify-center p-3 bg-[#BFE38A] rounded-md shadow-lg">
                       <Accessibility className="w-6 h-6 text-[#534741]" />
@@ -238,6 +225,20 @@ export default function Home() {
                   </div>
                 </div>
               </div>
+              <div className="pt-6">
+                <div className="flow-root bg-white rounded-lg px-4 pb-6 sm:px-6 sm:pb-8 shadow-lg border-2 border-[#8CB350] hover:border-[#7BA044] transition-all cursor-pointer">
+                  <div className="-mt-6">
+                    <div className="inline-flex items-center justify-center p-3 bg-[#8CB350] rounded-md shadow-lg">
+                      <Shield className="w-6 h-6 text-white" />
+                    </div>
+                    <h3 className="mt-8 text-lg font-medium text-gray-900 tracking-tight">안전 우선</h3>
+                    <p className="mt-5 text-base text-gray-500">
+                      차단, 신고, 편안함 설정
+                    </p>
+                  </div>
+                </div>
+              </div>
+            
               <div className="pt-6">
                 <a href="#scam-detection" className="block">
                   <div className="flow-root bg-white rounded-lg px-6 pb-8 shadow-lg border-2 border-[#8CB350] hover:border-[#7BA044] transition-all cursor-pointer">
@@ -506,7 +507,7 @@ export default function Home() {
       </section>
 
       {/* Download Section */}
-      <section className="py-16 bg-[#534741]">
+      <section className="py-12 sm:py-16 bg-[#534741]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h2 className="text-3xl font-extrabold text-white sm:text-4xl">

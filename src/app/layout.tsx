@@ -16,7 +16,23 @@ export const metadata: Metadata = {
   title: "다시, 봄",
   description: "50세 이상을 위한 따뜻한 동반자 앱",
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/logotile.png", type: "image/png" },
+    ],
+    shortcut: "/logotile.png",
+    apple: "/logotile.png",
+  },
+  openGraph: {
+    title: "다시, 봄",
+    description: "50세 이상을 위한 따뜻한 동반자 앱",
+    images: [{ url: "/logotile.png", alt: "다시, 봄 로고" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "다시, 봄",
+    description: "50세 이상을 위한 따뜻한 동반자 앱",
+    images: ["/logotile.png"],
   },
 };
 
