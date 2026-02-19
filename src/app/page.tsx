@@ -173,7 +173,7 @@ export default function Home() {
               rel="noopener noreferrer"
               className="text-xs text-slate-500 hover:text-[#8CB350] transition-colors ml-2"
             >
-              Made with <span className="font-semibold">EFFEFF</span>
+              Made by <span className="font-semibold">EFFEFF</span>
             </a>
           </div>
           <div className="md:hidden">
@@ -183,7 +183,7 @@ export default function Home() {
               rel="noopener noreferrer"
               className="text-xs text-slate-500 hover:text-[#8CB350] transition-colors"
             >
-              Made with <span className="font-semibold">EFFEFF</span>
+              Made by <span className="font-semibold">EFFEFF</span>
             </a>
           </div>
         </nav>
