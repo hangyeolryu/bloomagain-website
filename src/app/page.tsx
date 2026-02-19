@@ -1,633 +1,553 @@
 "use client";
 
+import { useEffect } from "react";
 import Link from "next/link";
-import { useState } from "react";
-import { 
-  Hand, 
-  Users, 
-  Lock, 
-  Sprout, 
-  Shield, 
-  Accessibility, 
-  Bot,
-  MessageCircle,
-  HeartCrack,
-  Zap,
-  Target,
-  AlertTriangle,
-  XCircle,
-  Search,
-  Palette,
-  Pointer,
-  Mic,
+import Image from "next/image";
+import {
+  ArrowRight,
   Heart,
-  ChevronDown,
-  ChevronUp,
-  X
+  Users,
+  Shield,
+  Eye,
+  MessageCircle,
+  Sparkles,
+  Download,
+  CheckCircle,
+  Mail,
+  FileText,
 } from "lucide-react";
 
+const navItems = [
+  { label: "홈", href: "/" },
+  { label: "개인정보처리방침", href: "/privacy" },
+  { label: "이용약관", href: "/terms" },
+  { label: "보안·행동 데이터 처리", href: "/security-processing" },
+  { label: "계정삭제", href: "/delete-account" },
+];
+
+const appFeatures = [
+  {
+    icon: Sparkles,
+    title: "AI 기반 인연 추천",
+    description:
+      "Google Cloud AI 기술로 당신과 잘 맞는 인연을 찾아드립니다. 관심사와 가치관을 분석하여 의미 있는 만남을 제안합니다.",
+  },
+  {
+    icon: Users,
+    title: "서클 커뮤니티",
+    description:
+      "공통의 관심사를 가진 분들과 함께하는 서클을 만들고 참여하세요. 새로운 친구들과 소통하며 즐거운 시간을 보낼 수 있습니다.",
+  },
+  {
+    icon: MessageCircle,
+    title: "특허 기술 기반 안전한 소통",
+    description:
+      "특허 출원된 실시간 메시지 분석 기술로 1:1 채팅과 그룹 채팅을 보호합니다. 의심스러운 메시지를 AI가 자동으로 감지하고 경고합니다.",
+  },
+  {
+    icon: Eye,
+    title: "접근성 최적화",
+    description:
+      "시력 수준에 따라 글자 크기, 대비, 버튼 간격을 자동으로 조정합니다. 누구나 편리하게 사용할 수 있도록 설계되었습니다.",
+  },
+  {
+    icon: Shield,
+    title: "특허 출원 보안 기술",
+    description:
+      "특허 출원된 AI 기반 실시간 스캠 감지 시스템으로 로맨스 스캠, 피싱, 보이스피싱을 자동으로 차단합니다. 금융권 수준의 보안 기술로 여러분을 보호합니다.",
+  },
+  {
+    icon: Heart,
+    title: "50세 이상 전용",
+    description:
+      "50세 이상 분들을 위한 따뜻하고 안전한 공간입니다. 같은 세대의 분들과 자연스럽게 어울릴 수 있습니다.",
+  },
+];
+
+const benefits = [
+  "큰 글씨와 명확한 디자인으로 누구나 쉽게 사용",
+  "AI가 당신의 관심사와 가치관을 분석하여 인연 추천",
+  "서클을 통해 취미와 관심사를 공유하는 새로운 친구들",
+  "24시간 AI 보안 시스템으로 안전한 소통 환경",
+  "시력에 맞춘 자동 레이아웃 조정",
+];
+
+const mainPatent = {
+  title: "시니어 특화 소셜 플랫폼 시스템",
+  titleEn: "Senior-Specific Social Platform System",
+  description:
+    "시니어 사용자를 위한 온라인 소셜 플랫폼에서 사용자 상호작용의 보안성 및 신뢰성을 향상시키기 위한 통합 시스템. 사용자 식별, 콘텐츠 노출 제어, AI 기반 이상행위 탐지, 하이브리드 매칭 기술을 통합 제공합니다.",
+  applicationNumber: "10-2024-XXXXXXX", // 실제 출원번호로 업데이트 필요 (또는 null로 설정하여 숨김)
+  showApplicationNumber: false, // true로 설정하면 출원번호 표시, false면 숨김
+  applicationDate: "2026년 2월 06일",
+  status: "출원완료",
+  claims: [
+    {
+      title: "AI 기반 인연 추천 시스템",
+      description: "사용자 프로필 임베딩 및 유사도 기반 매칭 알고리즘",
+    },
+    {
+      title: "실시간 스캠 감지 및 차단 시스템",
+      description: "AI 기반 메시지 분석을 통한 로맨스 스캠 및 피싱 탐지 기술",
+    },
+    {
+      title: "접근성 자동 최적화 시스템",
+      description: "시력 수준에 따른 UI 레이아웃 자동 조정 기술",
+    },
+  ],
+};
+
+// App Store URLs - Update these with your actual app store links
+const APP_STORE_URL = "https://apps.apple.com/app/id6751523550"; // Replace with your App Store ID
+const PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=com.bloomagain.bloomagain"; // Replace with your package name
+
+const handleAppDownload = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  e.preventDefault();
+  
+  if (typeof window === "undefined") return;
+  
+  const userAgent = window.navigator.userAgent.toLowerCase();
+  const isIOS = /iphone|ipad|ipod|macintosh/.test(userAgent);
+  const isAndroid = /android/.test(userAgent);
+  
+  if (isIOS) {
+    window.open(APP_STORE_URL, "_blank", "noopener,noreferrer");
+  } else if (isAndroid) {
+    window.open(PLAY_STORE_URL, "_blank", "noopener,noreferrer");
+  } else {
+    // Default to Play Store for desktop/other devices
+    window.open(PLAY_STORE_URL, "_blank", "noopener,noreferrer");
+  }
+};
+
 export default function Home() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  useEffect(() => {
+    const elements = document.querySelectorAll("[data-animate='fade']");
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    elements.forEach((element) => observer.observe(element));
+
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#BFE38A] to-[#FFF51B]">
-      {/* Header */}
-      <header className="bg-white shadow-sm">
-        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <h1 className="text-2xl font-bold text-[#534741]">다시, 봄</h1>
-              <span className="ml-2 text-sm text-gray-500">Dasi, Bom</span>
-            </div>
-            <div className="hidden md:block">
-              <div className="ml-10 flex items-baseline space-x-4">
-                <Link href="/" className="text-gray-900 hover:text-[#8CB350] px-3 py-2 rounded-md text-sm font-medium">
-                  홈
-                </Link>
-                <Link href="/privacy" className="text-gray-500 hover:text-[#8CB350] px-3 py-2 rounded-md text-sm font-medium">
-                  개인정보처리방침
-                </Link>
-                <Link href="/terms" className="text-gray-500 hover:text-[#8CB350] px-3 py-2 rounded-md text-sm font-medium">
-                  이용약관
-                </Link>
-                <Link href="/delete-account" className="text-gray-500 hover:text-[#8CB350] px-3 py-2 rounded-md text-sm font-medium">
-                  계정삭제
-                </Link>
-              </div>
-            </div>
+    <div className="min-h-screen bg-white text-slate-900">
+      <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur">
+        <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex items-center gap-3">
+            <Image
+              src="/logo_icon.svg"
+              alt="다시, 봄 로고"
+              width={32}
+              height={35}
+              className="h-8 w-auto"
+              priority
+            />
+            <Link href="/" className="text-2xl font-bold text-[#534741]">
+              다시, 봄
+            </Link>
+          </div>
+          <div className="hidden md:flex items-center gap-6">
+            {/* {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="text-sm font-medium text-gray-600 hover:text-[#8CB350] transition-colors"
+              >
+                {item.label}
+              </Link>
+            ))} */}
+            <a
+              href="https://effeffcorp.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-slate-500 hover:text-[#8CB350] transition-colors ml-2"
+            >
+              Made with <span className="font-semibold">EFFEFF</span>
+            </a>
+          </div>
+          <div className="md:hidden">
+            <a
+              href="https://effeffcorp.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-slate-500 hover:text-[#8CB350] transition-colors"
+            >
+              Made with <span className="font-semibold">EFFEFF</span>
+            </a>
           </div>
         </nav>
       </header>
 
-      {/* Hero Section */}
-      <section className="py-12 sm:py-20 relative overflow-hidden">
-        {/* Background Logo Pattern */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute top-10 right-10 w-32 h-32 md:w-48 md:h-48 lg:w-64 lg:h-64 opacity-25">
-            <div className="w-full h-full" style={{ backgroundImage: "url('/logo_icon.svg')", backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center' }} />
-          </div>
-          <div className="absolute bottom-20 left-10 w-24 h-24 md:w-32 md:h-32 lg:w-40 lg:h-40 opacity-30">
-            <div className="w-full h-full" style={{ backgroundImage: "url('/logo_icon_reverse.svg')", backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center' }} />
-          </div>
-          <div className="absolute top-1/2 left-1/4 w-20 h-20 md:w-28 md:h-28 opacity-20">
-            <div className="w-full h-full" style={{ backgroundImage: "url('/logo_icon.svg')", backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center' }} />
-          </div>
-          <div className="absolute top-1/3 right-1/4 w-16 h-16 md:w-24 md:h-24 opacity-25">
-            <div className="w-full h-full" style={{ backgroundImage: "url('/logo_icon_reverse.svg')", backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center' }} />
-          </div>
-          <div className="absolute bottom-1/4 right-1/3 w-20 h-20 md:w-28 md:h-28 opacity-20">
-            <div className="w-full h-full" style={{ backgroundImage: "url('/logo_icon.svg')", backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center' }} />
-          </div>
-          <div className="absolute top-1/4 left-1/3 w-16 h-16 md:w-24 md:h-24 opacity-25">
-            <div className="w-full h-full" style={{ backgroundImage: "url('/logo_icon_reverse.svg')", backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center' }} />
-          </div>
-          <div className="absolute bottom-10 right-1/4 w-16 h-16 md:w-20 md:h-20 opacity-20">
-            <div className="w-full h-full" style={{ backgroundImage: "url('/logo_icon.svg')", backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center' }} />
-          </div>
-        </div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="lg:grid lg:grid-cols-12 lg:gap-8">
-            <div className="sm:text-center md:max-w-2xl md:mx-auto lg:col-span-6 lg:text-left">
-              <h1 className="tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
-                <span className="text-xl block text-[#8CB350]">Dasi, Bom</span>
-                <span className="text-3xl block text-[#534741]">다시, 봄</span>
-              </h1>
-              <p className="mt-3 text-base text-gray-700 sm:mt-5 sm:text-xl lg:text-lg xl:text-xl">
-                50세 이상을 위한 따뜻한 동반자 앱
-              </p>
-              <p className="mt-2 text-lg text-gray-700">
-                부담 없이, 천천히 이어지는 친구
-              </p>
-              <div className="mt-8 sm:max-w-lg sm:mx-auto sm:text-center lg:text-left lg:mx-0">
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+      <main>
+        {/* Hero Section */}
+        <section className="relative overflow-hidden bg-white">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20">
+            <div className="grid gap-8 md:gap-12 xl:grid-cols-2 items-center">
+              <div className="space-y-6 md:space-y-8 text-center xl:text-left w-full">
+                <div className="inline-flex items-center gap-2 rounded-full border border-[#8CB350]/30 bg-[#8CB350]/10 px-4 py-2 text-xs uppercase tracking-[0.2em] text-[#534741]">
+                  50세 이상을 위한 따뜻한 커뮤니티
+                </div>
+                <div className="space-y-6">
+                  <div className="flex items-center gap-4 justify-center xl:justify-start">
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#534741] leading-tight break-words">
+                      다시, 봄
+                      <br />
+                      <span className="text-[#8CB350]">새로운 인연을 만나다</span>
+                    </h1>
+                  </div>
+                  <p className="text-lg md:text-xl text-slate-600 max-w-full md:max-w-2xl md:mx-auto md:text-center xl:mx-0 xl:text-left break-words">
+                    따뜻하고 안전한 소셜 네트워킹 플랫폼으로<br />50세 이상 분들을 위한
+                    의미 있는 만남과 소통을 제공합니다.
+                  </p>
+                  <p className="text-base text-slate-500 max-w-full md:max-w-xl md:mx-auto md:text-center xl:mx-0 xl:text-left break-words">
+                    AI 기반 인연 추천부터 접근성 최적화까지<br />누구나 편리하게 사용할 수 있도록
+                    설계된 앱입니다.
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-4 justify-center xl:justify-start">
                   <a
                     href="#"
-                    className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-[#534741] bg-[#8CB350] hover:bg-[#7BA044] md:py-4 md:text-lg md:px-10 transition-colors"
+                    onClick={handleAppDownload}
+                    className="inline-flex items-center gap-2 rounded-full bg-[#8CB350] px-6 py-4 text-base font-semibold text-white shadow-lg transition hover:bg-[#7BA340] hover:shadow-xl"
                   >
                     앱 다운로드
+                    <Download className="h-5 w-5" />
                   </a>
                   <a
                     href="#features"
-                    className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-[#534741] bg-[#BFE38A] hover:bg-[#ABD077] md:py-4 md:text-lg md:px-10 transition-colors"
+                    className="inline-flex items-center gap-2 rounded-full border-2 border-[#534741] px-6 py-4 text-base font-semibold text-[#534741] transition hover:bg-[#534741] hover:text-white"
                   >
-                    더 알아보기
+                    주요 기능 알아보기
+                    <ArrowRight className="h-5 w-5" />
                   </a>
                 </div>
               </div>
+              <div className="relative mt-10 md:mt-12 xl:mt-0 flex flex-col md:flex-row gap-4 justify-center items-center">
+                <Image
+                  src="/apppreview1.png"
+                  alt="다시, 봄 앱 미리보기 1"
+                  width={300}
+                  height={533}
+                  className="w-full object-contain max-w-[280px] sm:max-w-[300px] md:max-w-[320px] lg:max-w-[340px]"
+                  priority
+                />
+                <Image
+                  src="/apppreview2.png"
+                  alt="다시, 봄 앱 미리보기 2"
+                  width={300}
+                  height={533}
+                  className="w-full object-contain max-w-[280px] sm:max-w-[300px] md:max-w-[320px] lg:max-w-[340px]"
+                />
+              </div>
             </div>
-            <div className="mt-12 relative flex items-center sm:max-w-lg sm:mx-auto lg:mt-0 lg:max-w-none lg:mx-0 lg:col-span-6">
-              <div className="relative mx-auto w-full rounded-lg shadow-lg lg:max-w-md">
-                <div className="relative block w-full rounded-lg overflow-hidden">
-                  <div className="p-8">
-                    <div className="text-center">
-                      <div className="space-y-4">
-                        <div className="flex items-center justify-center space-x-3 p-3 bg-[#BFE38A] rounded-lg">
-                          <Hand className="w-6 h-6 text-[#534741]" />
-                          <div className="text-left">
-                            <h4 className="font-semibold text-[#534741]">인사하기</h4>
-                            <p className="text-sm text-gray-700">스와이프 없이 부담 없이</p>
-                          </div>
+          </div>
+        </section>
+
+        {/* Features Section */}
+        <section
+          id="features"
+          className="fade-in-section mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20"
+          data-animate="fade"
+        >
+          <div className="text-center mb-16">
+            <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#8CB350] mb-3">
+              주요 기능
+            </p>
+            <h2 className="text-3xl md:text-4xl font-bold text-[#534741] mb-4">
+              따뜻하고 안전한 경험
+            </h2>
+            <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+              50세 이상 분들을 위해 특별히 설계된 기능들로, 편리하고 안전하게 사용하실 수 있습니다.
+            </p>
+          </div>
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {appFeatures.map((feature) => {
+              const Icon = feature.icon;
+              return (
+                <div
+                  key={feature.title}
+                  className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition-shadow"
+                >
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#8CB350]/10 mb-4">
+                    <Icon className="h-6 w-6 text-[#8CB350]" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-[#534741] mb-2">
+                    {feature.title}
+                  </h3>
+                  <p className="text-sm text-slate-600 leading-relaxed">
+                    {feature.description}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* Benefits Section */}
+        <section
+          className="fade-in-section bg-gradient-to-br from-[#534741] to-[#3A3329] py-20 text-white"
+          data-animate="fade"
+        >
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="grid gap-12 lg:grid-cols-2 items-center">
+              <div className="space-y-6">
+                <p className="text-sm font-semibold uppercase tracking-[0.3em] text-white/60">
+                  왜 다시, 봄인가요?
+                </p>
+                <h2 className="text-3xl md:text-4xl font-bold">
+                  누구나 쉽게, 안전하게
+                </h2>
+                <p className="text-lg text-white/80">
+                  기술의 복잡함 없이, 사람과의 따뜻한 연결에 집중합니다.
+                </p>
+              </div>
+              <div className="space-y-4">
+                {benefits.map((benefit, index) => (
+                  <div key={index} className="flex items-start gap-3">
+                    <CheckCircle className="h-6 w-6 text-[#8CB350] flex-shrink-0 mt-0.5" />
+                    <p className="text-base text-white/90">{benefit}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Patents Section */}
+        <section
+          id="patents"
+          className="fade-in-section bg-gradient-to-br from-slate-50 to-white py-20"
+          data-animate="fade"
+        >
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-16">
+              <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#8CB350] mb-3">
+                특허 출원 기술
+              </p>
+              <h2 className="text-3xl md:text-4xl font-bold text-[#534741] mb-4">
+                특허 수준의 보안 기술로 여러분을 보호합니다
+              </h2>
+              <p className="text-lg text-slate-600 max-w-3xl mx-auto">
+                다시, 봄은 특허 출원된 독자적인 보안 기술로 사용자의 안전을 최우선으로 합니다. 
+                금융권 수준의 보안 아키텍처와 AI 기반 실시간 위협 탐지 시스템을 통해 
+                스캠과 피싱으로부터 여러분을 보호합니다.
+              </p>
+            </div>
+       
+            <div className="max-w-4xl mx-auto">
+              <div className="rounded-2xl border-2 border-[#8CB350]/30 bg-white p-8 shadow-lg hover:shadow-xl transition-all">
+                <div className="flex items-start gap-6 mb-6">
+                  
+                  <div className="flex-1">    
+                    <span className="inline-flex items-center rounded-full bg-[#8CB350] px-4 py-1.5 mb-3 text-xs font-semibold text-white whitespace-nowrap">
+                      Patent Pending
+                    </span>
+                    <div className="flex items-start justify-between gap-4 mb-3">
+                      <div>
+                        <h3 className="text-2xl font-bold text-[#534741] mb-1">
+                          {mainPatent.title}
+                        </h3>
+                        <p className="text-sm text-slate-500 mb-3 italic">
+                          {mainPatent.titleEn}
+                        </p>
+                        <p className="text-base text-slate-700 leading-relaxed">
+                          {mainPatent.description}
+                        </p>
+                      </div>
+                  
+                    </div>
+                    <div className={`grid gap-4 pt-4 border-t border-slate-200 ${mainPatent.showApplicationNumber ? 'grid-cols-3' : 'grid-cols-2'}`}>
+                      {mainPatent.showApplicationNumber && (
+                        <div>
+                          <span className="text-xs text-slate-500">출원번호</span>
+                          <p className="text-sm font-medium text-slate-700 mt-1">
+                            {mainPatent.applicationNumber}
+                          </p>
                         </div>
-                        <div className="flex items-center justify-center space-x-3 p-3 bg-[#8CB350] rounded-lg">
-                          <Users className="w-6 h-6 text-white" />
-                          <div className="text-left">
-                            <h4 className="font-semibold text-white">소규모 서클</h4>
-                            <p className="text-sm text-white/90">최대 12명의 관심사 기반 모임</p>
-                          </div>
-                        </div>
-                       
+                      )}
+                      <div>
+                        <span className="text-xs text-slate-500">출원일</span>
+                        <p className="text-sm font-medium text-slate-700 mt-1">
+                          {mainPatent.applicationDate}
+                        </p>
+                      </div>
+                      <div>
+                        <span className="text-xs text-slate-500">상태</span>
+                        <p className="text-sm font-semibold text-[#8CB350] mt-1">
+                          {mainPatent.status}
+                        </p>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section id="features" className="py-12 sm:py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-[#BFE38A] hover:bg-[#ABD077] text-[#534741] rounded-lg transition-all text-base font-semibold border-2 border-[#8CB350] shadow-md hover:shadow-lg hover:scale-105 active:scale-95"
-            >
-              <Heart className="w-5 h-5" />
-              <span>부모님께 추천하시는 분들께</span>
-            </button>
-          </div>
-          <div className="mt-10 sm:mt-16">
-            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              {/* <div className="pt-6">
-                <div className="flow-root bg-white rounded-lg px-4 pb-6 sm:px-6 sm:pb-8 shadow-lg border-2 border-[#534741] hover:border-[#635953] transition-all cursor-pointer">
-                  <div className="-mt-6">
-                    <div className="inline-flex items-center justify-center p-3 bg-[#534741] rounded-md shadow-lg">
-                      <Lock className="w-6 h-6 text-white" />
-                    </div>
-                    <h3 className="mt-8 text-lg font-medium text-gray-900 tracking-tight">나이 확인</h3>
-                    <p className="mt-5 text-base text-gray-500">
-                      50세 이상만 사용 가능한 안전한 공간
-                    </p>
-                  </div>
-                </div>
-              </div> */}
-              <div className="pt-6">
-                <div className="flow-root bg-white rounded-lg px-4 pb-6 sm:px-6 sm:pb-8 shadow-lg border-2 border-[#8CB350] hover:border-[#7BA044] transition-all cursor-pointer">
-                  <div className="-mt-6">
-                    <div className="inline-flex items-center justify-center p-3 bg-[#8CB350] rounded-md shadow-lg">
-                      <Sprout className="w-6 h-6 text-white" />
-                    </div>
-                    <h3 className="mt-8 text-lg font-medium text-gray-900 tracking-tight">부담없는 발견</h3>
-                    <p className="mt-5 text-base text-gray-500">
-                      스와이프 없이 인사하기, 서클 초대
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="pt-6">
-                <div className="flow-root bg-white rounded-lg px-4 pb-6 sm:px-6 sm:pb-8 shadow-lg border-2 border-[#BFE38A] hover:border-[#ABD077] transition-all cursor-pointer">
-                  <div className="-mt-6">
-                    <div className="inline-flex items-center justify-center p-3 bg-[#BFE38A] rounded-md shadow-lg">
-                      <Users className="w-6 h-6 text-[#534741]" />
-                    </div>
-                    <h3 className="mt-8 text-lg font-medium text-gray-900 tracking-tight">소규모 서클</h3>
-                    <p className="mt-5 text-base text-gray-500">
-                      최대 12명의 관심사 기반 소규모 모임
-                    </p>
-                  </div>
-                </div>
-              </div>
-              {/* <div className="pt-6">
-                <div className="flow-root bg-white rounded-lg px-4 pb-6 sm:px-6 sm:pb-8 shadow-lg">
-                  <div className="-mt-6">
-                    <div className="inline-flex items-center justify-center p-3 bg-[#FFF51B] rounded-md shadow-lg">
-                      <span className="text-2xl">🎵</span>
-                    </div>
-                    <h3 className="mt-8 text-lg font-medium text-gray-900 tracking-tight">음성 메시지</h3>
-                    <p className="mt-5 text-base text-gray-500">
-                      쉬운 음성 메모 기능
-                    </p>
-                  </div>
-                </div>
-              </div> */}
-              <div className="pt-6">
-                <div className="flow-root bg-white rounded-lg px-4 pb-6 sm:px-6 sm:pb-8 shadow-lg border-2 border-[#BFE38A] hover:border-[#ABD077] transition-all cursor-pointer">
-                  <div className="-mt-6">
-                    <div className="inline-flex items-center justify-center p-3 bg-[#BFE38A] rounded-md shadow-lg">
-                      <Accessibility className="w-6 h-6 text-[#534741]" />
-                    </div>
-                    <h3 className="mt-8 text-lg font-medium text-gray-900 tracking-tight">접근성</h3>
-                    <p className="mt-5 text-base text-gray-500">
-                      큰 글씨, 고대비, 음성 지원
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="pt-6">
-                <div className="flow-root bg-white rounded-lg px-4 pb-6 sm:px-6 sm:pb-8 shadow-lg border-2 border-[#8CB350] hover:border-[#7BA044] transition-all cursor-pointer">
-                  <div className="-mt-6">
-                    <div className="inline-flex items-center justify-center p-3 bg-[#8CB350] rounded-md shadow-lg">
-                      <Shield className="w-6 h-6 text-white" />
-                    </div>
-                    <h3 className="mt-8 text-lg font-medium text-gray-900 tracking-tight">안전 우선</h3>
-                    <p className="mt-5 text-base text-gray-500">
-                      차단, 신고, 편안함 설정
-                    </p>
-                  </div>
-                </div>
-              </div>
-            
-              <div className="pt-6">
-                <a href="#scam-detection" className="block">
-                  <div className="flow-root bg-white rounded-lg px-6 pb-8 shadow-lg border-2 border-[#8CB350] hover:border-[#7BA044] transition-all cursor-pointer">
-                    <div className="-mt-6">
-                      <div className="inline-flex items-center justify-center p-3 bg-[#8CB350] rounded-md shadow-lg">
-                        <Bot className="w-6 h-6 text-white" />
+                
+                <div className="pt-6 border-t-2 border-slate-200">
+                  <h4 className="text-lg font-semibold text-[#534741] mb-4">
+                    주요 청구항
+                  </h4>
+                  <div className="grid gap-4 md:grid-cols-3">
+                    {mainPatent.claims.map((claim, index) => (
+                      <div
+                        key={index}
+                        className="rounded-xl border border-slate-200 bg-slate-50 p-4 hover:bg-slate-100 transition-colors"
+                      >
+                        <div className="flex items-start gap-2 mb-2">
+                          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#8CB350]/20 text-xs font-semibold text-[#8CB350] flex-shrink-0">
+                            {index + 1}
+                          </span>
+                          <h5 className="text-sm font-semibold text-[#534741]">
+                            {claim.title}
+                          </h5>
+                        </div>
+                        <p className="text-xs text-slate-600 leading-relaxed ml-8">
+                          {claim.description}
+                        </p>
                       </div>
-                      <h3 className="mt-8 text-lg font-medium text-gray-900 tracking-tight">AI 사기 감지</h3>
-                      <p className="mt-5 text-base text-gray-500">
-                        실시간 AI 기반 사기 행위 자동 감지 및 차단
-                      </p>
-                      <p className="mt-3 text-sm text-[#8CB350] font-medium">
-                        자세히 보기 →
-                      </p>
-                    </div>
+                    ))}
                   </div>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Scam Detection Section */}
-      <section id="scam-detection" className="py-16 bg-gradient-to-br from-[#BFE38A] to-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
-              AI 기반 지능형 사기 감지 시스템
-            </h2>
-            <p className="mt-4 text-lg text-gray-600">
-              대화 패턴 분석을 통한 선제적 사기 방지로 안전한 만남을 보장합니다
-            </p>
-          </div>
-
-          <div className="mt-16">
-            {/* Main Features */}
-            <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 mb-16">
-              <div className="bg-white rounded-lg p-8 shadow-lg">
-                <div className="flex items-center mb-4">
-                  <MessageCircle className="w-8 h-8 mr-4 text-[#8CB350]" />
-                  <h3 className="text-xl font-bold text-gray-900">대화 맥락 분석</h3>
-                </div>
-                <p className="text-gray-600 mb-4">
-                  최근 20개 메시지를 분석하여 전체 대화 흐름을 파악합니다. 단일 메시지가 아닌 대화 패턴 전체를 평가하여 정확도를 높입니다.
-                </p>
-                <ul className="space-y-2 text-gray-600">
-                  <li className="flex items-start">
-                    <span className="text-[#8CB350] mr-2">✓</span>
-                    <span>대화 히스토리 전체를 고려한 종합 분석</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-[#8CB350] mr-2">✓</span>
-                    <span>시간 경과에 따른 패턴 변화 추적</span>
-                  </li>
-                </ul>
-              </div>
-
-              <div className="bg-white rounded-lg p-8 shadow-lg">
-                <div className="flex items-center mb-4">
-                  <HeartCrack className="w-8 h-8 mr-4 text-[#534741]" />
-                  <h3 className="text-xl font-bold text-gray-900">로맨스 사기 감지</h3>
-                </div>
-                <p className="text-gray-600 mb-4">
-                  로맨스 사기 전형적인 패턴을 자동으로 감지합니다:
-                </p>
-                <ul className="space-y-2 text-gray-600">
-                  <li className="flex items-start">
-                    <span className="text-[#534741] mr-2">•</span>
-                    <span>러브밤빙: 초반 과도한 감정 표현</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-[#534741] mr-2">•</span>
-                    <span>금전 요청: 감정 유대 후 금전적 도움 요청</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-[#534741] mr-2">•</span>
-                    <span>급속한 관계 발전: 빠른 결혼/미래 약속</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-[#534741] mr-2">•</span>
-                    <span>회피 패턴: 화상 통화나 만남 지속적 회피</span>
-                  </li>
-                </ul>
-              </div>
-
-              <div className="bg-white rounded-lg p-8 shadow-lg">
-                <div className="flex items-center mb-4">
-                  <Zap className="w-8 h-8 mr-4 text-[#8CB350]" />
-                  <h3 className="text-xl font-bold text-gray-900">패턴 감지</h3>
-                </div>
-                <p className="text-gray-600 mb-4">
-                  여러 메시지에 걸친 행동 패턴을 분석합니다:
-                </p>
-                <ul className="space-y-2 text-gray-600">
-                  <li className="flex items-start">
-                    <span className="text-[#8CB350] mr-2">•</span>
-                    <span><strong>급속한 관계 발전:</strong> 3일 이내 사랑 고백/결혼 언급</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-[#8CB350] mr-2">•</span>
-                    <span><strong>금전 요청 패턴:</strong> 러브밤빙 후 금전적 도움 요청</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-[#8CB350] mr-2">•</span>
-                    <span><strong>긴급 상황 악용:</strong> 응급 상황 후 금전 요청</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-[#8CB350] mr-2">•</span>
-                    <span><strong>반복적 회피:</strong> 화상 통화/만남 다회 회피</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-[#8CB350] mr-2">•</span>
-                    <span><strong>과도한 메시징:</strong> 24시간 내 10개 이상 메시지 + 러브밤빙</span>
-                  </li>
-                </ul>
-              </div>
-
-              <div className="bg-white rounded-lg p-8 shadow-lg">
-                <div className="flex items-center mb-4">
-                  <Target className="w-8 h-8 mr-4 text-[#534741]" />
-                  <h3 className="text-xl font-bold text-gray-900">스마트 점수 시스템</h3>
-                </div>
-                <p className="text-gray-600 mb-4">
-                  다층 점수 시스템으로 정확한 판단을 제공합니다:
-                </p>
-                <ul className="space-y-2 text-gray-600">
-                  <li className="flex items-start">
-                    <span className="text-[#534741] mr-2">•</span>
-                    <span><strong>로맨스 사기 점수:</strong> 로맨스 사기 전용 점수</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-[#534741] mr-2">•</span>
-                    <span><strong>대화 맥락 점수:</strong> 대화 패턴 기반 추가 점수</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-[#534741] mr-2">•</span>
-                    <span><strong>낮은 임계값:</strong> 로맨스 사기는 위험 점수 4점 이상 시 차단</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-[#534741] mr-2">•</span>
-                    <span><strong>종합 분석:</strong> 모든 점수를 결합하여 최종 판단</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-            {/* Detection Examples */}
-            <div className="bg-white rounded-lg p-8 shadow-lg mb-8">
-              <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">감지 시나리오 예시</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="border-l-4 border-[#534741] pl-4">
-                  <h4 className="font-semibold text-gray-900 mb-2">로맨스 사기 패턴</h4>
-                  <ul className="text-sm text-gray-600 space-y-1">
-                    <li>1일차: &ldquo;사랑해요&rdquo;</li>
-                    <li>2일차: &ldquo;병원에 있어요&rdquo;</li>
-                    <li>3일차: &ldquo;도와줘요, 돈이 필요해요&rdquo;</li>
-                    <li className="text-[#534741] font-semibold mt-2">→ 차단됨</li>
-                  </ul>
-                </div>
-                <div className="border-l-4 border-[#8CB350] pl-4">
-                  <h4 className="font-semibold text-gray-900 mb-2">급속한 관계 발전</h4>
-                  <ul className="text-sm text-gray-600 space-y-1">
-                    <li>3일 이내: &ldquo;사랑해&rdquo;, &ldquo;결혼&rdquo;, &ldquo;영원히 함께&rdquo;</li>
-                    <li className="text-[#8CB350] font-semibold mt-2">→ 경고</li>
-                  </ul>
-                </div>
-                <div className="border-l-4 border-[#FFF51B] pl-4">
-                  <h4 className="font-semibold text-gray-900 mb-2">반복적 회피</h4>
-                  <ul className="text-sm text-gray-600 space-y-1">
-                    <li>화상 통화나 만남 회피 반복</li>
-                    <li className="text-[#534741] font-semibold mt-2">→ 경고</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            {/* Protection Levels */}
-            <div className="bg-white rounded-lg p-8 shadow-lg">
-              <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">단계별 보호 시스템</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-[#FFF51B]/30 border-2 border-[#FFF51B] rounded-lg p-6">
-                  <div className="flex items-center mb-3">
-                    <AlertTriangle className="w-6 h-6 mr-2 text-[#534741]" />
-                    <h4 className="text-lg font-bold text-gray-900">중간 위험</h4>
-                  </div>
-                  <p className="text-sm text-gray-600 mb-3">위험 점수 ≥ 10 또는 사기 감지 ≥ 3회</p>
-                  <ul className="text-sm text-gray-600 space-y-1">
-                    <li>• 관리자 알림 생성</li>
-                    <li>• 검토 대기</li>
-                  </ul>
-                </div>
-                <div className="bg-[#BFE38A]/50 border-2 border-[#8CB350] rounded-lg p-6">
-                  <div className="flex items-center mb-3">
-                    <Shield className="w-6 h-6 mr-2 text-[#8CB350]" />
-                    <h4 className="text-lg font-bold text-gray-900">높은 위험</h4>
-                  </div>
-                  <p className="text-sm text-gray-600 mb-3">위험 점수 ≥ 20 또는 사기 감지 ≥ 5회</p>
-                  <ul className="text-sm text-gray-600 space-y-1">
-                    <li>• 계정 제한 (그림자 차단)</li>
-                    <li>• 발견 기능 비활성화</li>
-                    <li>• 다른 사용자에게 보이지 않음</li>
-                  </ul>
-                </div>
-                <div className="bg-[#534741]/10 border-2 border-[#534741] rounded-lg p-6">
-                  <div className="flex items-center mb-3">
-                    <XCircle className="w-6 h-6 mr-2 text-[#534741]" />
-                    <h4 className="text-lg font-bold text-gray-900">심각한 위험</h4>
-                  </div>
-                  <p className="text-sm text-gray-600 mb-3">위험 점수 ≥ 50 또는 사기 감지 ≥ 10회</p>
-                  <ul className="text-sm text-gray-600 space-y-1">
-                    <li>• 계정 정지</li>
-                    <li>• 메시지 전송 불가</li>
-                    <li>• 대화 생성 불가</li>
-                    <li>• 모든 활동 제한</li>
-                  </ul>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Accessibility Section */}
-      <section className="py-16 bg-[#BFE38A]/30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
-              접근성 기능
-            </h2>
-            <p className="mt-4 text-lg text-gray-600">
-              모든 사용자가 편리하게 사용할 수 있도록 설계되었습니다
-            </p>
-          </div>
-          <div className="mt-16 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="text-center">
-              <div className="inline-flex items-center justify-center p-3 bg-[#8CB350] rounded-full">
-                <Search className="w-6 h-6 text-white" />
-              </div>
-              <h3 className="mt-4 text-lg font-medium text-gray-900">큰 글씨</h3>
-              <p className="mt-2 text-base text-gray-500">큰 글씨 모드 지원</p>
-            </div>
-            <div className="text-center">
-              <div className="inline-flex items-center justify-center p-3 bg-[#534741] rounded-full">
-                <Palette className="w-6 h-6 text-white" />
-              </div>
-              <h3 className="mt-4 text-lg font-medium text-gray-900">고대비</h3>
-              <p className="mt-2 text-base text-gray-500">고대비 테마 제공</p>
-            </div>
-            <div className="text-center">
-              <div className="inline-flex items-center justify-center p-3 bg-[#FFF51B] rounded-full">
-                <Pointer className="w-6 h-6 text-[#534741]" />
-              </div>
-              <h3 className="mt-4 text-lg font-medium text-gray-900">터치 영역</h3>
-              <p className="mt-2 text-base text-gray-500">48dp 이상의 터치 영역</p>
-            </div>
-            <div className="text-center">
-              <div className="inline-flex items-center justify-center p-3 bg-[#BFE38A] rounded-full">
-                <Mic className="w-6 h-6 text-[#534741]" />
-              </div>
-              <h3 className="mt-4 text-lg font-medium text-gray-900">음성 지원</h3>
-              <p className="mt-2 text-base text-gray-500">음성 입력 및 텍스트 읽기</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Download Section */}
-      <section className="py-12 sm:py-16 bg-[#534741]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h2 className="text-3xl font-extrabold text-white sm:text-4xl">
+        {/* Download Section */}
+        <section
+          id="download"
+          className="fade-in-section mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20"
+          data-animate="fade"
+        >
+          <div className="rounded-3xl bg-gradient-to-br from-[#8CB350]/10 to-[#534741]/5 border-2 border-[#8CB350]/20 p-12 text-center">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#534741] mb-4">
               지금 시작하세요
             </h2>
-            <p className="mt-4 text-lg text-[#BFE38A]">
-              50세 이상을 위한 따뜻한 동반자 앱
+            <p className="text-lg text-slate-600 mb-8 max-w-2xl mx-auto">
+              다시, 봄과 함께 새로운 인연과 따뜻한 소통을 시작해보세요.
             </p>
-            <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
+            <div className="flex flex-wrap gap-4 justify-center">
               <a
                 href="#"
-                className="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-[#534741] bg-[#FFF51B] hover:bg-[#E6E617] md:py-4 md:text-lg md:px-10 transition-colors"
+                onClick={handleAppDownload}
+                className="inline-flex items-center gap-2 rounded-full bg-[#534741] px-8 py-4 text-base font-semibold text-white shadow-lg transition hover:bg-[#3A3329] hover:shadow-xl"
               >
-                App Store에서 다운로드
+                <Download className="h-5 w-5" />
+                앱 다운로드
               </a>
               <a
-                href="#"
-                className="inline-flex items-center justify-center px-8 py-3 border border-white text-base font-medium rounded-md text-white hover:bg-[#635953] md:py-4 md:text-lg md:px-10 transition-colors"
+                href="/privacy"
+                className="inline-flex items-center gap-2 rounded-full border-2 border-[#534741] px-8 py-4 text-base font-semibold text-[#534741] transition hover:bg-[#534741] hover:text-white"
               >
-                Google Play에서 다운로드
+                개인정보처리방침 보기
               </a>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Modal */}
-      {isModalOpen && (
-        <div 
-          className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
-          onClick={() => setIsModalOpen(false)}
+        {/* Contact Section */}
+        <section
+          className="fade-in-section bg-slate-50 py-20"
+          data-animate="fade"
         >
-          <div 
-            className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="inline-flex items-center justify-center p-2 bg-[#BFE38A] rounded-full">
-                  <Heart className="w-6 h-6 text-[#534741]" />
-                </div>
-                <h2 className="text-2xl font-bold text-gray-900">
-                  부모님께 추천하시는 분들께
-                </h2>
-              </div>
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-                aria-label="Close"
-              >
-                <X className="w-6 h-6 text-gray-500" />
-              </button>
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold text-[#534741] mb-4">
+                문의하기
+              </h2>
+              <p className="text-lg text-slate-600">
+                궁금한 점이 있으시면 언제든지 연락주세요.
+              </p>
             </div>
-            <div className="px-6 py-8">
-              <div className="prose prose-lg max-w-none text-gray-700 space-y-4">
-                <p className="text-base md:text-lg leading-relaxed">
-                  부모님께 &ldquo;다시, 봄&rdquo;을 추천해주시는 마음 깊이 감사드립니다. 이 앱은 50세 이상 어르신들을 위해 특별히 설계되었습니다.
-                </p>
-                <div className="bg-[#FFF51B]/20 rounded-lg p-6 mt-6 border-l-4 border-[#FFF51B]">
-                  <h3 className="font-semibold text-gray-900 mb-3 text-lg">앱을 추천할 때 알려주세요:</h3>
-                  <ul className="space-y-2 text-gray-700 text-sm md:text-base">
-                    <li className="flex items-start">
-                      <span className="text-[#8CB350] mr-2 mt-1">•</span>
-                      <span>부드러운 소셜 네트워킹: 스와이프 없이 천천히 만남을 이어갑니다</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-[#8CB350] mr-2 mt-1">•</span>
-                      <span>안전한 공간: 실시간 AI 사기 감지와 강력한 보안 기능으로 보호됩니다</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-[#8CB350] mr-2 mt-1">•</span>
-                      <span>접근성 우선: 큰 글씨, 고대비, 음성 지원으로 누구나 쉽게 사용할 수 있습니다</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-[#8CB350] mr-2 mt-1">•</span>
-                      <span>소규모 서클: 12명 이하의 관심사 기반 모임으로 부담 없이 만날 수 있습니다</span>
-                    </li>
-                  </ul>
-                </div>
-                <p className="text-base md:text-lg leading-relaxed mt-6 text-gray-600">
-                  부모님께서 새로운 인연을 만나고 따뜻한 대화를 나누실 수 있도록 함께 응원해주세요. 처음 사용하시는 분들도 쉽게 시작할 수 있도록 도와드리겠습니다.
-                </p>
+            <div className="max-w-md mx-auto text-center space-y-4">
+              <div className="flex items-center justify-center gap-3 text-slate-600">
+                <Mail className="h-5 w-5 text-[#8CB350]" />
+                <a
+                  href="mailto:hangyeolryu@gmail.com"
+                  className="text-base hover:text-[#8CB350] transition-colors"
+                >
+                  hangyeolryu@gmail.com
+                </a>
               </div>
+              <p className="text-sm text-slate-500">
+                계정 삭제, 개인정보 관련 문의도<br />위 이메일로 연락주시면 빠르게 도와드리겠습니다.
+              </p>
             </div>
           </div>
-        </div>
-      )}
+        </section>
+      </main>
 
-      {/* Footer */}
-      <footer className="bg-[#534741]">
-        <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div>
-              <h3 className="text-lg font-semibold text-white">다시, 봄 (Dasi, Bom)</h3>
-              <p className="mt-2 text-gray-400">50세 이상을 위한 따뜻한 동반자 앱</p>
-              <p className="text-gray-400">Gentle connections, at your pace</p>
-            </div>
-            <div>
-              <h4 className="text-lg font-semibold text-white">문의</h4>
-              <p className="mt-2 text-gray-400">이메일: efflio.inc@gmail.com</p>
-              <p className="text-gray-400">고객지원: 평일 09:00 - 18:00</p>
-            </div>
-            <div>
-              <h4 className="text-lg font-semibold text-white">법적 고지</h4>
-              <div className="mt-2 space-y-2">
-                <Link href="/privacy" className="block text-gray-400 hover:text-[#BFE38A]">
-                  개인정보처리방침
-                </Link>
-                <Link href="/terms" className="block text-gray-400 hover:text-[#BFE38A]">
-                  이용약관
-                </Link>
-                <Link href="/delete-account" className="block text-gray-400 hover:text-[#BFE38A]">
-                  계정삭제
-                </Link>
+      <footer className="border-t border-slate-200 bg-white">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 mb-8">
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 mb-3">
+                <Image
+                  src="/logo_icon.svg"
+                  alt="다시, 봄 로고"
+                  width={24}
+                  height={26}
+                  className="h-6 w-auto"
+                />
+                <span className="text-lg font-semibold text-[#534741]">
+                  다시, 봄
+                </span>
+              </div>
+              <div>
+                <a
+                  href="https://effeffcorp.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-lg font-semibold text-[#534741] hover:text-[#8CB350] transition-colors inline-block"
+                >
+                  EFFEFF Co., Ltd
+                </a>
+                <p className="text-sm text-slate-600 italic mt-1">
+                  Driven by Efficiency, Proven by Effect.
+                </p>
               </div>
             </div>
+            <div className="space-y-2 text-sm text-slate-600">
+              <p className="font-medium text-[#534741]">(주)이프이프</p>
+              <p>사업자등록번호: 466-81-04205</p>
+              <p>대표이사: RYU HAN GYEOL (유한결)</p>
+            </div>
+            <div className="flex flex-wrap gap-4 text-sm md:justify-end">
+              <Link href="/privacy" className="text-slate-500 hover:text-[#8CB350] transition-colors">
+                개인정보처리방침
+              </Link>
+              <Link href="/terms" className="text-slate-500 hover:text-[#8CB350] transition-colors">
+                이용약관
+              </Link>
+              <Link href="/security-processing" className="text-slate-500 hover:text-[#8CB350] transition-colors">
+                보안·행동 데이터 처리
+              </Link>
+              <Link href="/delete-account" className="text-slate-500 hover:text-[#8CB350] transition-colors">
+                계정삭제
+              </Link>
+            </div>
           </div>
-          <div className="mt-8 pt-8 border-t border-gray-800">
-            <p className="text-center text-gray-400">
-              &copy; 2025 BloomAgain Korea. All rights reserved.
+          <div className="border-t border-slate-200 pt-6">
+            <p className="text-xs text-slate-400 text-center">
+              © 2026{" "}
+              <a
+                href="https://effeffcorp.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-[#8CB350] transition-colors"
+              >
+                EFFEFF Co., Ltd
+              </a>
+              . All rights reserved.
             </p>
           </div>
         </div>

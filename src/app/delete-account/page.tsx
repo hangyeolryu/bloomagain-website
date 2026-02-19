@@ -22,6 +22,9 @@ export default function DeleteAccountPage() {
                 <Link href="/terms" className="text-gray-500 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">
                   이용약관
                 </Link>
+                <Link href="/security-processing" className="text-gray-500 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">
+                  보안·행동 데이터 처리
+                </Link>
                 <Link href="/delete-account" className="text-gray-900 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">
                   계정삭제
                 </Link>
@@ -76,7 +79,7 @@ export default function DeleteAccountPage() {
                   </ul>
                   <p className="text-green-800 mt-3">
                     <strong>이메일:</strong> 
-                    <a href="mailto:efflio.inc@gmail.com" className="underline">efflio.inc@gmail.com</a>
+                    <a href="mailto:hangyeolryu@gmail.com" className="underline">hangyeolryu@gmail.com</a>
                   </p>
                 </div>
               </div>
@@ -174,11 +177,11 @@ export default function DeleteAccountPage() {
                 <div className="space-y-2">
                   <p className="text-blue-800">
                     <strong>계정 삭제 전용 이메일:</strong> 
-                    <a href="mailto:efflio.inc@gmail.com" className="underline">efflio.inc@gmail.com</a>
+                    <a href="mailto:hangyeolryu@gmail.com" className="underline">hangyeolryu@gmail.com</a>
                   </p>
                   <p className="text-blue-800">
                     <strong>일반 고객지원:</strong> 
-                    <a href="mailto:efflio.inc@gmail.com" className="underline">efflio.inc@gmail.com</a>
+                    <a href="mailto:hangyeolryu@gmail.com" className="underline">hangyeolryu@gmail.com</a>
                   </p>
                   <p className="text-blue-800">
                     <strong>운영시간:</strong> 평일 09:00 - 18:00 (한국시간)
@@ -201,11 +204,11 @@ export default function DeleteAccountPage() {
             <div className="border-t pt-8 mt-8">
               <div className="text-center">
                 <p className="text-sm text-gray-500 mb-4">
-                  <strong>최종 업데이트:</strong> 2025년 09월 27일
+                  <strong>최종 업데이트:</strong> 2026년 01월 01일
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <a
-                    href="mailto:efflio.inc@gmail.com"
+                    href="mailto:hangyeolryu@gmail.com"
                     className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-red-600 hover:bg-red-700"
                   >
                     계정 삭제 요청하기
