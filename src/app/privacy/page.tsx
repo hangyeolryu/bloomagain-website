@@ -48,6 +48,33 @@ export default function PrivacyPage() {
               </p>
             </section>
 
+            <section className="mb-8 bg-slate-50 border border-slate-200 rounded-lg p-6">
+              <h2 className="text-2xl font-semibold text-[#534741] mb-4">수집 데이터·수집 방법·이용 목적 요약</h2>
+              <p className="text-gray-700 leading-relaxed mb-4">
+                본 앱이 수집하는 데이터, 수집 경로, 그리고 모든 이용 목적을 요약합니다.
+              </p>
+              <h3 className="text-lg font-semibold text-gray-800 mt-4 mb-2">1. 수집하는 데이터</h3>
+              <ul className="list-disc list-inside space-y-1 text-gray-700 mb-4">
+                <li><strong>프로필 데이터</strong>: 이름, 생년월일, 성별, 이메일, 휴대폰 번호, 본인인증값(CI/DI), 프로필 사진, 관심사, 지역, 자기소개, 가치관, 접근성 설정 등</li>
+                <li><strong>채팅·메시지 데이터</strong>: 대화 메시지 내용(스캠 분석 및 안전 보호 목적)</li>
+                <li><strong>안전·이용 데이터</strong>: 서비스 이용 기록, 접속 로그, 기기 정보, 신뢰도/위험 점수, 스캠 감지 이력, FCM 토큰(푸시 알림용)</li>
+              </ul>
+              <h3 className="text-lg font-semibold text-gray-800 mt-4 mb-2">2. 수집 방법</h3>
+              <ul className="list-disc list-inside space-y-1 text-gray-700 mb-4">
+                <li><strong>앱 내 입력</strong>: 회원가입, 프로필 작성, 설정, 메시지 전송 시 이용자가 직접 입력한 정보</li>
+                <li><strong>백엔드 API</strong>: 앱과 서버 간 통신을 통해 전송·저장되는 프로필, 메시지, 이용 기록</li>
+                <li><strong>Google Cloud Functions</strong>: 서버 측 처리(예: 임베딩 생성, 스캠 분석) 시 위 데이터가 Cloud Functions를 통해 처리됨</li>
+              </ul>
+              <h3 className="text-lg font-semibold text-gray-800 mt-4 mb-2">3. 모든 이용 목적</h3>
+              <ul className="list-disc list-inside space-y-1 text-gray-700">
+                <li><strong>매칭·추천</strong>: 프로필 기반 임베딩(embedding) 생성 및 유사도 기반 인연 추천</li>
+                <li><strong>안전·스캠 감지</strong>: 메시지 분석을 통한 스캠/사기 탐지 시도, 위험 점수 산정, 관리자 검토 및 제재</li>
+                <li><strong>임베딩</strong>: 프로필 텍스트의 임베딩 벡터 생성(30일 캐시) 및 매칭에 활용</li>
+                <li><strong>서비스 제공</strong>: 회원 관리, 푸시 알림, 접근성 설정 적용, 본인인증 및 부정 이용 방지</li>
+                <li>별도의 분석·광고용 목적으로 개인을 식별 가능한 형태의 분석을 수행하지 않습니다.</li>
+              </ul>
+            </section>
+
             <section className="mb-8">
               <h2 className="text-2xl font-semibold text-[#534741] mb-4">제2조 (개인정보의 수집 및 이용 목적)</h2>
               <p className="text-gray-700 leading-relaxed mb-4">
@@ -136,17 +163,25 @@ export default function PrivacyPage() {
                 <li>이용자가 사전에 제3자 제공 및 공개에 동의한 경우</li>
                 <li>법령의 규정에 의거하거나, 수사 목적으로 법령에 정해진 절차와 방법에 따라 수사기관의 요구가 있는 경우</li>
                 <li>
-                  <strong>기술 파트너</strong>: 
-                  <ul className="list-disc list-inside ml-6 mt-2 space-y-1">
+                  <strong>기술 파트너 및 제3자 AI 제공자</strong>: 
+                  <ul className="list-disc list-inside ml-6 mt-2 space-y-2">
                     <li><strong>Google Cloud Platform / Firebase</strong>: 데이터 저장, 사용자 인증, 푸시 알림 전송</li>
-                    <li><strong>Google Cloud Vertex AI</strong>: 
+                    <li><strong>Google Cloud Vertex AI</strong> (Google LLC, 제3자 AI): 
                       <ul className="list-circle list-inside ml-6 mt-1 space-y-1">
-                        <li>text-embedding-004 모델: 사용자 프로필 임베딩 벡터 생성(768차원)</li>
-                        <li>Gemini 1.5 Flash 모델: 실시간 메시지 스캠 분석 및 신뢰도 계산</li>
+                        <li><strong>전송 데이터</strong>: 사용자 프로필 텍스트(자기소개·관심사·가치관 등) → text-embedding-004로 임베딩 벡터 생성; 채팅 메시지 텍스트 → Gemini 1.5 Flash로 스캠·안전 분석</li>
+                        <li><strong>보호 방식</strong>: 데이터는 Google Cloud 서비스 약관 및 데이터 처리 계약(DPA)에 따라 처리되며, 당사와 동등 이상의 보호 수준을 적용합니다. 회사의 지시에 따라 처리되며, Google의 자체 모델 학습용으로 이용되지 않습니다.</li>
                       </ul>
                     </li>
-                    <li><strong>OpenAI</strong> (선택적): AI 상담사 봇 응답 생성(gpt-4o-mini 모델)</li>
+                    <li><strong>OpenAI</strong> (선택적, 제3자 AI): 
+                      <ul className="list-circle list-inside ml-6 mt-1 space-y-1">
+                        <li><strong>전송 데이터</strong>: AI 상담사 봇 대화 시 이용자가 입력한 텍스트 및 대화 맥락(gpt-4o-mini 응답 생성용)</li>
+                        <li><strong>보호 방식</strong>: 데이터는 OpenAI 서비스 약관 및 DPA에 따라 처리되며, 당사와 동등 이상의 보호 수준을 적용합니다. 회사의 지시에 따른 처리 목적으로만 사용되며, OpenAI의 자체 모델 학습용으로 이용되지 않습니다.</li>
+                      </ul>
+                    </li>
                   </ul>
+                  <p className="mt-3 text-gray-700">
+                    회사는 개인정보를 당사와 동일하거나 동등 이상의 보호를 제공하는 제3자에게만 공유합니다(가이드라인 5.1.2(i) 준수).
+                  </p>
                 </li>
               </ol>
             </section>
@@ -245,6 +280,29 @@ export default function PrivacyPage() {
                 </ul>
               </section>
               
+              <section className="mb-8">
+                <h3 className="text-xl font-semibold text-gray-800 mb-3">제3자 AI 서비스(외부 API)</h3>
+                <p className="text-gray-700 leading-relaxed mb-4">
+                  본 앱은 아래 제3자 AI 제공자를 사용합니다. 각 제공자별 전송 데이터와 보호 방식을 명시하며, 회사는 당사와 동일하거나 동등 이상의 보호를 제공하는 제3자에게만 데이터를 공유합니다(가이드라인 5.1.2(i) 준수).
+                </p>
+                <ul className="list-disc list-inside space-y-4 text-gray-700">
+                  <li>
+                    <strong>Google Cloud Vertex AI</strong> (Google LLC)
+                    <ul className="list-circle list-inside ml-6 mt-1 space-y-1">
+                      <li><strong>전송 데이터</strong>: 프로필 텍스트(자기소개·관심사·가치관 등) — 임베딩용; 채팅 메시지 텍스트 — 스캠·안전 분석용. 이미지 등 다른 유형의 데이터는 해당 AI 기능에 사용되지 않습니다.</li>
+                      <li><strong>보호 방식</strong>: 데이터는 Google Cloud 서비스 약관 및 데이터 처리 계약(DPA)에 따라 처리되며, 당사와 동등 이상의 보호 수준을 적용합니다. 회사 계정 내에서 회사의 지시에 따라만 처리되며, Google의 자체 모델 학습용으로 이용되지 않습니다.</li>
+                    </ul>
+                  </li>
+                  <li>
+                    <strong>OpenAI</strong> (선택적)
+                    <ul className="list-circle list-inside ml-6 mt-1 space-y-1">
+                      <li><strong>전송 데이터</strong>: AI 상담사 봇과의 대화에서 이용자가 입력한 텍스트 및 대화 맥락(gpt-4o-mini 응답 생성용). 이미지 등 다른 유형은 해당 기능에서 사용하지 않습니다.</li>
+                      <li><strong>보호 방식</strong>: 데이터는 OpenAI 서비스 약관 및 DPA에 따라 처리되며, 당사와 동등 이상의 보호 수준을 적용합니다. 회사의 지시에 따른 처리 목적으로만 사용되며, OpenAI의 자체 모델 학습용으로 이용되지 않습니다.</li>
+                    </ul>
+                  </li>
+                </ul>
+              </section>
+
               <section className="mb-8 bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
                 <h3 className="text-xl font-semibold text-gray-800 mb-3">면책 조항</h3>
                 <p className="text-gray-700 leading-relaxed">
