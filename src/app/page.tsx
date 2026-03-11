@@ -522,6 +522,9 @@ export default function Home() {
               <p>대표이사: RYU HAN GYEOL (유한결)</p>
             </div>
             <div className="flex flex-wrap gap-4 text-sm md:justify-end">
+              <Link href="/support" className="text-slate-500 hover:text-[#8CB350] transition-colors">
+                고객지원
+              </Link>
               <Link href="/privacy" className="text-slate-500 hover:text-[#8CB350] transition-colors">
                 개인정보처리방침
               </Link>
