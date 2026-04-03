@@ -472,10 +472,10 @@ export default function Home() {
               <div className="flex items-center justify-center gap-3 text-slate-600">
                 <Mail className="h-5 w-5 text-[#8CB350]" />
                 <a
-                  href="mailto:hangyeolryu@gmail.com"
+                  href="mailto:ceo@effeffcorp.com"
                   className="text-base hover:text-[#8CB350] transition-colors"
                 >
-                  hangyeolryu@gmail.com
+                  ceo@effeffcorp.com
                 </a>
               </div>
               <p className="text-sm text-slate-500">

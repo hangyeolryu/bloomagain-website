@@ -86,7 +86,7 @@ export default function SecurityProcessingPage() {
 
             <div className="border-t-2 border-[#8CB350] pt-8 mt-12">
               <p className="text-gray-600 text-sm">
-                문의: <a href="mailto:hangyeolryu@gmail.com" className="text-[#8CB350] hover:underline">hangyeolryu@gmail.com</a>
+                문의: <a href="mailto:ceo@effeffcorp.com" className="text-[#8CB350] hover:underline">ceo@effeffcorp.com</a>
               </p>
               <p className="text-gray-500 text-sm mt-2">최종 업데이트: 2026년 1월 1일</p>
             </div>

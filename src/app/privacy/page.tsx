@@ -224,7 +224,7 @@ export default function PrivacyPage() {
                 <ul className="space-y-2 text-gray-700">
                   <li><strong>성명</strong>: 유한결</li>
                   <li><strong>직책</strong>: 개인정보 보호책임자</li>
-                  <li><strong>이메일</strong>: <a href="mailto:hangyeolryu@gmail.com" className="text-[#8CB350] hover:underline">hangyeolryu@gmail.com</a></li>
+                  <li><strong>이메일</strong>: <a href="mailto:ceo@effeffcorp.com" className="text-[#8CB350] hover:underline">ceo@effeffcorp.com</a></li>
                 </ul>
               </div>
             </section>

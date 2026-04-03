@@ -266,7 +266,7 @@ export default function TermsPage() {
                   <h3 className="text-lg font-semibold text-gray-800 mb-3">문의처</h3>
                   <div className="bg-[#BFE38A]/20 border-l-4 border-[#8CB350] p-6 rounded-lg">
                     <ul className="space-y-2">
-                      <li><strong>이메일</strong>: <a href="mailto:hangyeolryu@gmail.com" className="text-[#8CB350] hover:underline">hangyeolryu@gmail.com</a></li>
+                      <li><strong>이메일</strong>: <a href="mailto:ceo@effeffcorp.com" className="text-[#8CB350] hover:underline">ceo@effeffcorp.com</a></li>
                       <li><strong>운영시간</strong>: 평일 09:00 - 18:00</li>
                     </ul>
                   </div>

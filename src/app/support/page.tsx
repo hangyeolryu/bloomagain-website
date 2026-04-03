@@ -126,10 +126,10 @@ export default function SupportPage() {
               <h3 className="font-semibold text-[#534741]">이메일 문의</h3>
               <p className="text-sm text-slate-500">영업일 기준 1–3일 내 답변 드립니다.</p>
               <a
-                href="mailto:hangyeolryu@gmail.com"
+                href="mailto:ceo@effeffcorp.com"
                 className="mt-auto inline-flex items-center gap-1 text-sm font-medium text-[#8CB350] hover:underline"
               >
-                hangyeolryu@gmail.com
+                ceo@effeffcorp.com
                 <ChevronRight className="h-4 w-4" />
               </a>
             </div>
@@ -141,7 +141,7 @@ export default function SupportPage() {
               <h3 className="font-semibold text-[#534741]">신고 및 안전</h3>
               <p className="text-sm text-slate-500">스캠·불법 콘텐츠는 즉시 신고해 주세요. 24시간 처리합니다.</p>
               <a
-                href="mailto:hangyeolryu@gmail.com?subject=신고"
+                href="mailto:ceo@effeffcorp.com?subject=신고"
                 className="mt-auto inline-flex items-center gap-1 text-sm font-medium text-[#8CB350] hover:underline"
               >
                 신고 이메일 보내기
@@ -208,7 +208,7 @@ export default function SupportPage() {
             고객 지원팀이 도와드리겠습니다. 언제든지 이메일로 문의해 주세요.
           </p>
           <a
-            href="mailto:hangyeolryu@gmail.com"
+            href="mailto:ceo@effeffcorp.com"
             className="inline-flex items-center gap-2 rounded-full bg-[#8CB350] px-8 py-4 text-base font-semibold text-white shadow-lg transition hover:bg-[#7BA340]"
           >
             <Mail className="h-5 w-5" />

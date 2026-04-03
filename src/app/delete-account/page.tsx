@@ -79,7 +79,9 @@ export default function DeleteAccountPage() {
                   </ul>
                   <p className="text-green-800 mt-3">
                     <strong>이메일:</strong> 
-                    <a href="mailto:hangyeolryu@gmail.com" className="underline">hangyeolryu@gmail.com</a>
+                    <a href="mailto:ceo@effeffcorp.com
+" className="underline">ceo@effeffcorp.com
+</a>
                   </p>
                 </div>
               </div>
@@ -177,11 +179,15 @@ export default function DeleteAccountPage() {
                 <div className="space-y-2">
                   <p className="text-blue-800">
                     <strong>계정 삭제 전용 이메일:</strong> 
-                    <a href="mailto:hangyeolryu@gmail.com" className="underline">hangyeolryu@gmail.com</a>
+                    <a href="mailto:ceo@effeffcorp.com
+" className="underline">ceo@effeffcorp.com
+</a>
                   </p>
                   <p className="text-blue-800">
                     <strong>일반 고객지원:</strong> 
-                    <a href="mailto:hangyeolryu@gmail.com" className="underline">hangyeolryu@gmail.com</a>
+                    <a href="mailto:ceo@effeffcorp.com
+" className="underline">ceo@effeffcorp.com
+</a>
                   </p>
                   <p className="text-blue-800">
                     <strong>운영시간:</strong> 평일 09:00 - 18:00 (한국시간)
@@ -208,7 +214,8 @@ export default function DeleteAccountPage() {
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <a
-                    href="mailto:hangyeolryu@gmail.com"
+                    href="mailto:ceo@effeffcorp.com
+"
                     className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-red-600 hover:bg-red-700"
                   >
                     계정 삭제 요청하기
