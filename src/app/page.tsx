@@ -534,6 +534,9 @@ export default function Home() {
               <Link href="/security-processing" className="text-slate-500 hover:text-[#8CB350] transition-colors">
                 보안·행동 데이터 처리
               </Link>
+              <Link href="/csae-standards" className="text-slate-500 hover:text-[#8CB350] transition-colors">
+                아동 안전 정책
+              </Link>
               <Link href="/delete-account" className="text-slate-500 hover:text-[#8CB350] transition-colors">
                 계정삭제
               </Link>
