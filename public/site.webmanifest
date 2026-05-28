@@ -1,0 +1,25 @@
+{
+  "name": "다시, 봄 (Bloom Again)",
+  "short_name": "다시, 봄",
+  "description": "50세+ 액티브 시니어를 위한 안전한 친구·모임 플랫폼. 만남앱이 아닙니다.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#EBEBEB",
+  "theme_color": "#10367D",
+  "lang": "ko-KR",
+  "dir": "ltr",
+  "categories": ["social", "lifestyle"],
+  "icons": [
+    { "src": "/icon-48.png",  "sizes": "48x48",   "type": "image/png", "purpose": "any" },
+    { "src": "/icon-64.png",  "sizes": "64x64",   "type": "image/png", "purpose": "any" },
+    { "src": "/icon-96.png",  "sizes": "96x96",   "type": "image/png", "purpose": "any" },
+    { "src": "/icon-128.png", "sizes": "128x128", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-256.png", "sizes": "256x256", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-384.png", "sizes": "384x384", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-maskable-1200.png", "sizes": "1200x1200", "type": "image/png", "purpose": "maskable" }
+  ]
+}

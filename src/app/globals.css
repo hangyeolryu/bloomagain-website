@@ -2,27 +2,49 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #0a1733;
+
+  /* Brand palette — fintech/IT trust, financial-grade reliability with a soft frame.
+     Primary navy carries the seriousness, lavender backgrounds soften it. */
+  --brand-navy:        #10367D;  /* primary  — CTAs, headers, accents */
+  --brand-navy-deep:   #0A2459;  /* hover    — slightly darker for press states */
+  --brand-navy-soft:   #2D54A1;  /* tint     — secondary buttons, links */
+  --brand-lavender:    #EBEBEB;  /* surface  — section backgrounds, soft cards */
+  --brand-ink:         #0F1A35;  /* heading  — body / heading text on white */
+  --brand-muted:       #4A5878;  /* body     — secondary copy */
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-brand-navy:        var(--brand-navy);
+  --color-brand-navy-deep:   var(--brand-navy-deep);
+  --color-brand-navy-soft:   var(--brand-navy-soft);
+  --color-brand-lavender:    var(--brand-lavender);
+  --color-brand-ink:         var(--brand-ink);
+  --color-brand-muted:       var(--brand-muted);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+/* Light theme only — high contrast, no auto dark inversion (senior demo prefers consistency). */
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  /*
+   * Font stack — Geist supports Latin only (subset: ["latin"] in layout.tsx),
+   * so it renders Korean as ☐. The fallback chain below makes Korean glyphs
+   * resolve to a system Korean face on every platform:
+   *   • iOS / macOS  → "Apple SD Gothic Neo"
+   *   • Android      → "Noto Sans CJK KR" (preinstalled)
+   *   • Windows      → "Malgun Gothic"
+   *   • Generic web fallback → "Pretendard" (if user has it) → sans-serif
+   * Geist still wins for Latin characters because it's first.
+   */
+  font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, "Apple SD Gothic Neo", "Noto Sans CJK KR", "Noto Sans KR",
+    "Malgun Gothic", Pretendard, sans-serif;
 }
 
 html {

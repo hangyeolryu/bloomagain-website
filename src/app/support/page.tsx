@@ -76,25 +76,25 @@ export default function SupportPage() {
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center gap-3">
-              <Link href="/" className="text-2xl font-bold text-[#534741]">
+              <Link href="/" className="text-2xl font-bold text-[#0F1A35]">
                 다시, 봄
               </Link>
               <span className="text-sm text-gray-500">Dasi, Bom</span>
             </div>
             <div className="hidden md:flex items-baseline space-x-4">
-              <Link href="/" className="text-gray-500 hover:text-[#8CB350] px-3 py-2 rounded-md text-sm font-medium transition-colors">
+              <Link href="/" className="text-gray-500 hover:text-[#10367D] px-3 py-2 rounded-md text-sm font-medium transition-colors">
                 홈
               </Link>
-              <Link href="/support" className="text-[#534741] font-semibold px-3 py-2 rounded-md text-sm transition-colors">
+              <Link href="/support" className="text-[#0F1A35] font-semibold px-3 py-2 rounded-md text-sm transition-colors">
                 고객지원
               </Link>
-              <Link href="/privacy" className="text-gray-500 hover:text-[#8CB350] px-3 py-2 rounded-md text-sm font-medium transition-colors">
+              <Link href="/privacy" className="text-gray-500 hover:text-[#10367D] px-3 py-2 rounded-md text-sm font-medium transition-colors">
                 개인정보처리방침
               </Link>
-              <Link href="/terms" className="text-gray-500 hover:text-[#8CB350] px-3 py-2 rounded-md text-sm font-medium transition-colors">
+              <Link href="/terms" className="text-gray-500 hover:text-[#10367D] px-3 py-2 rounded-md text-sm font-medium transition-colors">
                 이용약관
               </Link>
-              <Link href="/delete-account" className="text-gray-500 hover:text-[#8CB350] px-3 py-2 rounded-md text-sm font-medium transition-colors">
+              <Link href="/delete-account" className="text-gray-500 hover:text-[#10367D] px-3 py-2 rounded-md text-sm font-medium transition-colors">
                 계정삭제
               </Link>
             </div>
@@ -103,9 +103,9 @@ export default function SupportPage() {
       </header>
 
       {/* Hero */}
-      <div className="bg-gradient-to-br from-[#534741] to-[#3A3329] py-16">
+      <div className="bg-gradient-to-br from-[#0F1A35] to-[#0A2459] py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <HelpCircle className="h-12 w-12 text-[#8CB350] mx-auto mb-4" />
+          <HelpCircle className="h-12 w-12 text-[#10367D] mx-auto mb-4" />
           <h1 className="text-3xl font-bold text-white mb-3">고객 지원</h1>
           <p className="text-lg text-white/80">
             다시, 봄 사용에 어려움이 있으신가요? 도와드리겠습니다.
@@ -117,17 +117,17 @@ export default function SupportPage() {
 
         {/* Contact Cards */}
         <section>
-          <h2 className="text-2xl font-bold text-[#534741] mb-6">문의 방법</h2>
+          <h2 className="text-2xl font-bold text-[#0F1A35] mb-6">문의 방법</h2>
           <div className="grid gap-6 md:grid-cols-3">
             <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col items-center text-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#8CB350]/10">
-                <Mail className="h-6 w-6 text-[#8CB350]" />
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#10367D]/10">
+                <Mail className="h-6 w-6 text-[#10367D]" />
               </div>
-              <h3 className="font-semibold text-[#534741]">이메일 문의</h3>
+              <h3 className="font-semibold text-[#0F1A35]">이메일 문의</h3>
               <p className="text-sm text-slate-500">영업일 기준 1–3일 내 답변 드립니다.</p>
               <a
                 href="mailto:ceo@effeffcorp.com"
-                className="mt-auto inline-flex items-center gap-1 text-sm font-medium text-[#8CB350] hover:underline"
+                className="mt-auto inline-flex items-center gap-1 text-sm font-medium text-[#10367D] hover:underline"
               >
                 ceo@effeffcorp.com
                 <ChevronRight className="h-4 w-4" />
@@ -135,14 +135,14 @@ export default function SupportPage() {
             </div>
 
 <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col items-center text-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#8CB350]/10">
-                <Shield className="h-6 w-6 text-[#8CB350]" />
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#10367D]/10">
+                <Shield className="h-6 w-6 text-[#10367D]" />
               </div>
-              <h3 className="font-semibold text-[#534741]">신고 및 안전</h3>
+              <h3 className="font-semibold text-[#0F1A35]">신고 및 안전</h3>
               <p className="text-sm text-slate-500">스캠·불법 콘텐츠는 즉시 신고해 주세요. 24시간 처리합니다.</p>
               <a
                 href="mailto:ceo@effeffcorp.com?subject=신고"
-                className="mt-auto inline-flex items-center gap-1 text-sm font-medium text-[#8CB350] hover:underline"
+                className="mt-auto inline-flex items-center gap-1 text-sm font-medium text-[#10367D] hover:underline"
               >
                 신고 이메일 보내기
                 <ChevronRight className="h-4 w-4" />
@@ -153,11 +153,11 @@ export default function SupportPage() {
 
         {/* FAQ */}
         <section>
-          <h2 className="text-2xl font-bold text-[#534741] mb-6">자주 묻는 질문 (FAQ)</h2>
+          <h2 className="text-2xl font-bold text-[#0F1A35] mb-6">자주 묻는 질문 (FAQ)</h2>
           <div className="space-y-8">
             {faqs.map((section) => (
               <div key={section.category}>
-                <h3 className="text-sm font-semibold uppercase tracking-widest text-[#8CB350] mb-4">
+                <h3 className="text-sm font-semibold uppercase tracking-widest text-[#10367D] mb-4">
                   {section.category}
                 </h3>
                 <div className="space-y-3">
@@ -167,14 +167,14 @@ export default function SupportPage() {
                       className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm"
                     >
                       <div className="flex gap-3">
-                        <MessageCircle className="h-5 w-5 text-[#8CB350] flex-shrink-0 mt-0.5" />
+                        <MessageCircle className="h-5 w-5 text-[#10367D] flex-shrink-0 mt-0.5" />
                         <div>
-                          <p className="font-semibold text-[#534741] mb-1">{item.question}</p>
+                          <p className="font-semibold text-[#0F1A35] mb-1">{item.question}</p>
                           <p className="text-sm text-slate-600 leading-relaxed">{item.answer}</p>
                           {item.question.includes("계정을 삭제") && (
                             <Link
                               href="/delete-account"
-                              className="inline-flex items-center gap-1 mt-2 text-xs font-medium text-[#8CB350] hover:underline"
+                              className="inline-flex items-center gap-1 mt-2 text-xs font-medium text-[#10367D] hover:underline"
                             >
                               계정 삭제 안내 보기
                               <ChevronRight className="h-3 w-3" />
@@ -183,7 +183,7 @@ export default function SupportPage() {
                           {item.question.includes("개인정보") && (
                             <Link
                               href="/privacy"
-                              className="inline-flex items-center gap-1 mt-2 text-xs font-medium text-[#8CB350] hover:underline"
+                              className="inline-flex items-center gap-1 mt-2 text-xs font-medium text-[#10367D] hover:underline"
                             >
                               개인정보처리방침 보기
                               <ChevronRight className="h-3 w-3" />
@@ -200,8 +200,8 @@ export default function SupportPage() {
         </section>
 
         {/* CTA */}
-        <section className="bg-gradient-to-br from-[#8CB350]/10 to-[#534741]/5 border-2 border-[#8CB350]/20 rounded-2xl p-8 text-center">
-          <h2 className="text-xl font-bold text-[#534741] mb-2">
+        <section className="bg-gradient-to-br from-[#10367D]/10 to-[#0F1A35]/5 border-2 border-[#10367D]/20 rounded-2xl p-8 text-center">
+          <h2 className="text-xl font-bold text-[#0F1A35] mb-2">
             찾으시는 답변이 없으신가요?
           </h2>
           <p className="text-slate-600 mb-6">
@@ -209,7 +209,7 @@ export default function SupportPage() {
           </p>
           <a
             href="mailto:ceo@effeffcorp.com"
-            className="inline-flex items-center gap-2 rounded-full bg-[#8CB350] px-8 py-4 text-base font-semibold text-white shadow-lg transition hover:bg-[#7BA340]"
+            className="inline-flex items-center gap-2 rounded-full bg-[#10367D] px-8 py-4 text-base font-semibold text-white shadow-lg transition hover:bg-[#0A2459]"
           >
             <Mail className="h-5 w-5" />
             이메일 문의하기
@@ -218,11 +218,11 @@ export default function SupportPage() {
 
         {/* Footer nav */}
         <div className="border-t pt-6 flex flex-wrap gap-4 justify-center text-sm text-slate-500">
-          <Link href="/" className="hover:text-[#8CB350] transition-colors">홈</Link>
-          <Link href="/privacy" className="hover:text-[#8CB350] transition-colors">개인정보처리방침</Link>
-          <Link href="/terms" className="hover:text-[#8CB350] transition-colors">이용약관</Link>
-          <Link href="/security-processing" className="hover:text-[#8CB350] transition-colors">보안·행동 데이터 처리</Link>
-          <Link href="/delete-account" className="hover:text-[#8CB350] transition-colors">계정삭제</Link>
+          <Link href="/" className="hover:text-[#10367D] transition-colors">홈</Link>
+          <Link href="/privacy" className="hover:text-[#10367D] transition-colors">개인정보처리방침</Link>
+          <Link href="/terms" className="hover:text-[#10367D] transition-colors">이용약관</Link>
+          <Link href="/security-processing" className="hover:text-[#10367D] transition-colors">보안·행동 데이터 처리</Link>
+          <Link href="/delete-account" className="hover:text-[#10367D] transition-colors">계정삭제</Link>
         </div>
       </main>
     </div>
