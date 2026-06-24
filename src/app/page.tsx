@@ -54,7 +54,7 @@ export default function Home() {
               className="text-xs font-semibold tracking-wide"
               style={{ color: TITA.forest }}
             >
-              티타에 오신 걸 환영해요
+              오후 한 잔의 안심 티타임
             </span>
           </div>
           <h1
@@ -69,7 +69,7 @@ export default function Home() {
             className="text-base sm:text-lg leading-relaxed mb-8"
             style={{ color: TITA.muted }}
           >
-            가벼운 만남이 아닌, 한 분 한 분 정성스럽게.
+            툭 던져도 착 받아주는 우리의 티키타카.
             <br className="hidden sm:block" />
             본인인증·AI 안전망으로 보호받는 친구 매칭.
           </p>
@@ -224,9 +224,9 @@ export default function Home() {
             className="text-xl sm:text-2xl font-extrabold mb-3"
             style={{ color: TITA.ink, letterSpacing: "-0.02em" }}
           >
-            결이 통하는 친구 한 분,
+            두 번째 인생의 티타임,
             <br />
-            천천히 만나보세요
+            지금 시작하세요
           </h3>
           <p className="text-sm mb-6" style={{ color: TITA.muted }}>
             창립 멤버 한정 · 플러스 6개월 무료

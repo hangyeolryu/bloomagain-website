@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "티타 (Tita) — 결이 맞는 40+ 친구",
   description:
-    "본인인증을 마친 회원만 함께하는 안전한 친구 매칭. AI가 결이 맞는 분을 동네에서 찾아드립니다.",
+    "오후 한 잔의 안심 티타임. 본인인증·AI 안전망으로 보호받는 결친구 매칭. 툭 던져도 착 받아주는 우리의 티키타카.",
   // Icon stack — modern browsers prefer SVG; older / OS-native surfaces fall
   // back to fixed-size PNG. iOS home-screen uses the 180×180 apple-touch icon.
   icons: {
@@ -33,9 +33,9 @@ export const metadata: Metadata = {
   },
   manifest: "/site.webmanifest",
   openGraph: {
-    title: "티타 — 결이 맞는 40+ 친구",
+    title: "티타 — 오후 한 잔의 안심 티타임",
     description:
-      "본인인증·AI 안전망으로 보호되는 40+ 친구 매칭. 동네에서 결이 통하는 분을 찾아드려요.",
+      "결이 통하는 40+ 친구 한 분, 천천히. 본인인증·AI 안전망으로 보호받는 친구 매칭.",
     images: [
       { url: "/icon-512.png", width: 512, height: 512, alt: "티타 로고" },
     ],
