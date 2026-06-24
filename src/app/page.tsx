@@ -27,6 +27,7 @@ import {
 } from "./_components/tita-brand";
 import { TitaHeader } from "./_components/TitaHeader";
 import { TitaFooter } from "./_components/TitaFooter";
+import { logAnalyticsEvent } from "@/lib/firebase";
 
 export default function Home() {
   return (
@@ -77,6 +78,12 @@ export default function Home() {
               href={APP_STORE_URL}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() =>
+                logAnalyticsEvent("app_download_click", {
+                  store: "ios",
+                  source: "home_hero",
+                })
+              }
               className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full text-sm font-semibold transition-transform hover:scale-105 w-full sm:w-auto"
               style={{ backgroundColor: TITA.forest, color: "white" }}
             >
@@ -87,6 +94,12 @@ export default function Home() {
               href={PLAY_STORE_URL}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() =>
+                logAnalyticsEvent("app_download_click", {
+                  store: "android",
+                  source: "home_hero",
+                })
+              }
               className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full text-sm font-semibold border-2 transition-colors w-full sm:w-auto"
               style={{
                 borderColor: TITA.forest,
@@ -217,6 +230,11 @@ export default function Home() {
           </p>
           <Link
             href="/download"
+            onClick={() =>
+              logAnalyticsEvent("download_cta_click", {
+                source: "home_footer",
+              })
+            }
             className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full text-sm font-bold transition-transform hover:scale-105"
             style={{ backgroundColor: TITA.forest, color: "white" }}
           >

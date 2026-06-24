@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Suspense } from "react";
+import { AnalyticsTracker } from "./_components/AnalyticsTracker";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -69,6 +71,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        {/* Suspense boundary required: AnalyticsTracker uses
+            useSearchParams which Next.js needs to suspend on initial
+            render. Static export build fails otherwise with
+            "useSearchParams should be wrapped in a suspense boundary." */}
+        <Suspense fallback={null}>
+          <AnalyticsTracker />
+        </Suspense>
         {children}
       </body>
     </html>

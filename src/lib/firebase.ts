@@ -1,6 +1,11 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
+import {
+  getAnalytics,
+  isSupported as isAnalyticsSupported,
+  logEvent,
+  type Analytics,
+} from "firebase/analytics";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
@@ -32,8 +37,42 @@ export const db = getFirestore(app);
 export const storage = getStorage(app);
 export const functions = getFunctions(app, 'asia-northeast3');
 
-// Initialize Analytics (only in browser environment)
-export const analytics = typeof window !== 'undefined' ? getAnalytics(app) : null;
+// Firebase Analytics is browser-only and needs an async `isSupported()`
+// check before construction — calling getAnalytics in unsupported envs
+// (older Safari private mode, some embedded browsers) throws. We expose
+// a memoized promise so callers can fire-and-forget logEvent without
+// worrying about init state or platform support.
+let _analyticsPromise: Promise<Analytics | null> | null = null;
+function ensureAnalytics(): Promise<Analytics | null> {
+  if (typeof window === "undefined") return Promise.resolve(null);
+  if (_analyticsPromise) return _analyticsPromise;
+  _analyticsPromise = isAnalyticsSupported()
+    .then((ok) => (ok ? getAnalytics(app) : null))
+    .catch(() => null);
+  return _analyticsPromise;
+}
+
+/**
+ * Fire a Firebase Analytics custom event. No-op when analytics isn't
+ * supported (SSR, older browsers, blocked by ad blocker). Safe to call
+ * from any client component without try/catch — failures are swallowed.
+ *
+ * Usage:
+ *   logAnalyticsEvent('app_download_click', { store: 'ios' });
+ *   logAnalyticsEvent('page_view', { page_path: '/about' });
+ */
+export function logAnalyticsEvent(
+  eventName: string,
+  params?: Record<string, string | number | boolean>,
+): void {
+  ensureAnalytics()
+    .then((a) => {
+      if (a) logEvent(a, eventName, params);
+    })
+    .catch(() => {
+      /* swallow */
+    });
+}
 
 /**
  * Request browser notification permission and obtain a Firebase Cloud Messaging

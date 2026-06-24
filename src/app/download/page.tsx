@@ -12,6 +12,7 @@ import {
   APP_STORE_URL,
   PLAY_STORE_URL,
 } from "../_components/tita-brand";
+import { logAnalyticsEvent } from "@/lib/firebase";
 
 function detectPlatform(): "ios" | "android" | "other" {
   if (typeof navigator === "undefined") return "other";
@@ -27,9 +28,21 @@ export default function DownloadPage() {
   useEffect(() => {
     const platform = detectPlatform();
     if (platform === "ios") {
+      // Track the auto-redirect as a download click so analytics reflects
+      // the actual mobile traffic, not just desktop manual clicks below.
+      // `source: 'auto_redirect'` lets us separate intent from incidental
+      // visits in the dashboard.
+      logAnalyticsEvent("app_download_click", {
+        store: "ios",
+        source: "auto_redirect",
+      });
       window.location.href = APP_STORE_URL;
       setRedirected(true);
     } else if (platform === "android") {
+      logAnalyticsEvent("app_download_click", {
+        store: "android",
+        source: "auto_redirect",
+      });
       window.location.href = PLAY_STORE_URL;
       setRedirected(true);
     }
@@ -69,6 +82,12 @@ export default function DownloadPage() {
       <div className="flex flex-col gap-3 w-full max-w-xs">
         <a
           href={APP_STORE_URL}
+          onClick={() =>
+            logAnalyticsEvent("app_download_click", {
+              store: "ios",
+              source: "download_page",
+            })
+          }
           className="flex items-center justify-center gap-3 rounded-2xl px-6 py-3.5 font-medium transition-transform hover:scale-105"
           style={{ backgroundColor: "black", color: "white" }}
         >
@@ -87,6 +106,12 @@ export default function DownloadPage() {
 
         <a
           href={PLAY_STORE_URL}
+          onClick={() =>
+            logAnalyticsEvent("app_download_click", {
+              store: "android",
+              source: "download_page",
+            })
+          }
           className="flex items-center justify-center gap-3 rounded-2xl px-6 py-3.5 font-medium transition-transform hover:scale-105"
           style={{ backgroundColor: TITA.forest, color: "white" }}
         >

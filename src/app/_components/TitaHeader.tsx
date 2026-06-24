@@ -9,6 +9,7 @@
 import Link from "next/link";
 import { Download } from "lucide-react";
 import { TITA, KOREAN_FONT_STACK } from "./tita-brand";
+import { logAnalyticsEvent } from "@/lib/firebase";
 
 export function TitaHeader() {
   return (
@@ -36,6 +37,11 @@ export function TitaHeader() {
           </Link>
           <Link
             href="/download"
+            onClick={() =>
+              logAnalyticsEvent("download_cta_click", {
+                source: "header",
+              })
+            }
             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-transform hover:scale-105"
             style={{ backgroundColor: TITA.forest, color: "white" }}
           >

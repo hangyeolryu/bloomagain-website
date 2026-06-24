@@ -229,9 +229,6 @@ export default function AboutPage() {
               로 함께해요.
             </p>
             <p>
-              <strong className="text-white">
-                내 자식이 만든 앱이다 생각하시고
-              </strong>{" "}
               불편한 점 무엇이든 말씀해 주세요. 직접 듣고 고치겠습니다.
             </p>
             <p className="pt-1 text-white/70 text-xs sm:text-sm">
