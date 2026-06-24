@@ -69,9 +69,9 @@ export default function Home() {
             className="text-base sm:text-lg leading-relaxed mb-8"
             style={{ color: TITA.muted }}
           >
-            본인인증을 마친 회원만 함께해요.
+            가벼운 만남이 아닌, 한 분 한 분 정성스럽게.
             <br className="hidden sm:block" />
-            AI가 동네에서 결이 통하는 분을 찾아드립니다.
+            본인인증·AI 안전망으로 보호받는 친구 매칭.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
             <a
@@ -114,15 +114,15 @@ export default function Home() {
         </section>
 
         {/* ── 2. 어떻게 작동하나 (3단계) ─────────────────────── */}
-        <Section tag="시작하기" title="3분이면 첫 친구를 만나요">
+        <Section tag="시작하기" title="3분이면 준비 완료">
           <ol className="space-y-3 mt-2">
             <Step n="1" title="본인인증">
-              신원 확인. 30초.
+              NICE 인증으로 신원 확인. 30초.
             </Step>
             <Step n="2" title="관심사 선택">
               산책·책·등산·요리 등 결이 통하는 키워드.
             </Step>
-            <Step n="3" title="동네 친구 추천">
+            <Step n="3" title="결친구 추천">
               AI가 결이 맞는 분을 매일 찾아드려요.
             </Step>
           </ol>
@@ -136,16 +136,17 @@ export default function Home() {
         >
           <ul className="space-y-2.5">
             <Bullet>
-              <strong>NICE 본인인증</strong> · 신원 확인된 40+ 회원만
+              <strong>NICE 본인인증</strong> · 신원 확인된 회원만 가입
             </Bullet>
             <Bullet>
-              <strong>AI 위험 감지</strong> · 사기 패턴 실시간 차단
+              <strong>AI 위험 감지</strong> · 사기 메시지 패턴 24시간
+              모니터링
             </Bullet>
             <Bullet>
               <strong>적응형 화면</strong> · 시력·손떨림에 맞춰 자동 조정
             </Bullet>
             <Bullet>
-              <strong>멤버 상호 보호</strong> · 의심스러운 행동 즉시 신고
+              <strong>신고·차단 즉시</strong> · 24시간 내 검토
             </Bullet>
           </ul>
           <div
@@ -169,7 +170,7 @@ export default function Home() {
               className="text-xs leading-relaxed"
               style={{ color: TITA.muted }}
             >
-              4단계 안전 시스템 통합 특허 출원 (PA260003).
+              4단계 안전 시스템 통합 특허 출원 진행 중 (PA260003, 우선심사).
             </p>
           </div>
         </Section>
@@ -223,7 +224,9 @@ export default function Home() {
             className="text-xl sm:text-2xl font-extrabold mb-3"
             style={{ color: TITA.ink, letterSpacing: "-0.02em" }}
           >
-            지금 첫 친구를 만나보세요
+            결이 통하는 친구 한 분,
+            <br />
+            천천히 만나보세요
           </h3>
           <p className="text-sm mb-6" style={{ color: TITA.muted }}>
             창립 멤버 한정 · 플러스 6개월 무료
