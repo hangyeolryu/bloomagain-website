@@ -22,7 +22,7 @@ export default function PrivacyPage() {
     <LegalLayout
       activeKey="privacy"
       title="개인정보 처리방침"
-      subtitle="다시 봄 (Bloom Again Korea)"
+      subtitle="다시 봄 (Tita Korea)"
       versionTag="v2.0"
       effectiveDate="2026년 5월 19일"
       lastUpdated="2026년 5월 19일"
@@ -101,14 +101,14 @@ export default function PrivacyPage() {
             <ul>
               <li><strong>PHQ-2</strong> (Patient Health Questionnaire 2-item, public domain)</li>
               <li><strong>Cantril Ladder</strong> (public domain, Mini Pulse 격주 측정)</li>
-              <li>다시봄 자체 설계 일일 질문 (성향·취향·정서 우회 측정)</li>
+              <li>티타 자체 설계 일일 질문 (성향·취향·정서 우회 측정)</li>
             </ul>
             <p className="mt-2 text-base text-gray-600">
               추가 도구(LSIS-6, UCLA Loneliness Scale, WHO-5, SWLS 등)는 권리자 사용 허가 절차가 완료되는 시점에 본 처리방침을 개정하여 안내한 후 도입할 예정입니다.
             </p>
           </li>
           <li>
-            <strong>연구 및 통계 활용 (선택)</strong>: 익명화된 집계 데이터를 활용한 학술 논문 publish, 국립정신건강센터·보건복지부 등 공공 기관과의 정책 연구 협력, 한국 50+ 세대 디지털·정서·사회 연결 종단 데이터셋 구축. 개인 식별 정보는 학술 publish에 포함되지 않습니다.
+            <strong>연구 및 통계 활용 (선택)</strong>: 익명화된 집계 데이터를 활용한 학술 논문 publish, 국립정신건강센터·보건복지부 등 공공 기관과의 정책 연구 협력, 한국 시니어 세대 디지털·정서·사회 연결 종단 데이터셋 구축. 개인 식별 정보는 학술 publish에 포함되지 않습니다.
           </li>
           <li>
             <strong>기관 협력 PoC 데이터 공유 (선택)</strong>: 본인이 특정 기관(예: 50플러스재단 캠퍼스, 노인복지관)을 통해 가입한 경우에 한해, 익명화·집계된 결과(전체 인원 수, 평균 변화, 양성률 등)를 해당 기관에 보고. <strong>개별 사용자 식별 정보는 절대 공유하지 않습니다.</strong>
@@ -145,7 +145,7 @@ export default function PrivacyPage() {
             <strong>설문 응답 (선택 동의 시에만)</strong>:
             <ul>
               <li>PHQ-2 등 public domain 표준 척도 응답</li>
-              <li>다시봄 자체 일일 질문 응답 + 누적 태그</li>
+              <li>티타 자체 일일 질문 응답 + 누적 태그</li>
               <li>Mini Pulse (격주 안부 체크) 응답</li>
               <li>모임 종료 후 만족도 응답</li>
               <li>서버 계산 점수: PHQ-2/9 합계, Cantril Ladder 점수</li>
@@ -225,7 +225,7 @@ export default function PrivacyPage() {
         <ol>
           <li><strong>별도 동의</strong>: 제2조 6번(연구 및 통계 활용), 제2조 7번(기관 PoC) 활용은 회원 가입과 분리하여 별도 동의를 받습니다.</li>
           <li>
-            <strong>거부 시</strong>: 동의를 거부하셔도 다시봄의 일반 서비스(모임·매칭·메시지·안전 기능) 이용에 제한이 없습니다. 다만:
+            <strong>거부 시</strong>: 동의를 거부하셔도 티타의 일반 서비스(모임·매칭·메시지·안전 기능) 이용에 제한이 없습니다. 다만:
             <ul>
               <li>본인 외로움·웰빙 변화 대시보드 제공 X (설문 미수집)</li>
               <li>기관 PoC 가입 시 해당 기관에 익명화 결과 제공 X</li>
@@ -237,7 +237,7 @@ export default function PrivacyPage() {
             <ul>
               <li>PHQ-2: Public domain (Pfizer 공개)</li>
               <li>Cantril Ladder: Public domain</li>
-              <li>다시봄 자체 일일 질문: 다시봄(㈜이프이프) 자체 설계 콘텐츠</li>
+              <li>티타 자체 일일 질문: 티타(㈜이프이프) 자체 설계 콘텐츠</li>
             </ul>
           </li>
           <li><strong>윤리 검토</strong>: 학술 연구 협력은 대학·공공기관의 기관생명윤리위원회(IRB) 승인을 받은 프로토콜에 따라 진행됩니다.</li>
@@ -298,7 +298,7 @@ export default function PrivacyPage() {
       <section id="section-10">
         <h2>제10조 (개인정보 보호책임자)</h2>
         <p>서비스 이용 중 발생하는 모든 개인정보 보호 관련 민원은 아래의 담당 부서로 문의하실 수 있습니다.</p>
-        <div className="bg-[#BFE38A]/20 border-l-4 border-[#10367D] p-6 rounded">
+        <div className="bg-[#BFE38A]/20 border-l-4 border-[#1F4E3D] p-6 rounded">
           <ul className="!list-none !pl-0">
             <li><strong>성명</strong>: 류한결</li>
             <li><strong>직책</strong>: 개인정보 보호책임자 / 대표</li>

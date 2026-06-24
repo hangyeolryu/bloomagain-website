@@ -29,7 +29,7 @@ export default function TermsPage() {
     <LegalLayout
       activeKey="terms"
       title="이용약관"
-      subtitle="다시 봄 (Bloom Again Korea)"
+      subtitle="다시 봄 (Tita Korea)"
       versionTag="v2.0"
       effectiveDate="2026년 5월 19일"
       lastUpdated="2026년 5월 19일"

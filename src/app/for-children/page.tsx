@@ -4,10 +4,10 @@
  * Reached from:
  *   - QR on the senior printed brochure ("자녀와 함께 보세요" line)
  *   - Direct share via KakaoTalk by 부모/자녀
- *   - SEO: "부모님 디지털 친구 안전" / "다시봄 자녀"
+ *   - SEO: "부모님 디지털 친구 안전" / "티타 자녀"
  *
  * Goals (in order of importance):
- *   1. Reassure that 다시봄 is NOT a dating app.
+ *   1. Reassure that 티타 is NOT a dating app.
  *   2. Make the safety stack legible to a non-technical 40대.
  *   3. Set up the "자녀가 부모님께 권하는" buying motion.
  *   4. Surface the Family Care feature as the differentiator parent apps don't have.
@@ -36,12 +36,12 @@ import {
 
 // Brand tokens — keep in sync with /src/app/page.tsx and /invite/[code]/page.tsx
 const BRAND = {
-  navy:      "#10367D",
-  navyDeep:  "#0A2459",
+  navy:      "#1F4E3D",
+  navyDeep:  "#143329",
   navySoft:  "#2D54A1",
   lavender:  "#EBEBEB",
-  ink:       "#0F1A35",
-  muted:     "#4A5878",
+  ink:       "#1A2E26",
+  muted:     "#6B7D6E",
   success:   "#15803D",
   danger:    "#B91C1C",
 } as const;
@@ -61,13 +61,13 @@ export default function ForChildrenPage() {
           <Link href="/" className="flex items-center gap-2">
             <Image
               src="/app_icon.svg"
-              alt="다시, 봄 로고"
+              alt="티타 로고"
               width={32}
               height={32}
               className="h-8 w-8 rounded-lg"
             />
             <span className="text-xl font-bold" style={{ color: BRAND.navy }}>
-              다시, 봄
+              티타
             </span>
           </Link>
           <span
@@ -100,7 +100,7 @@ export default function ForChildrenPage() {
             className="text-base sm:text-lg leading-relaxed max-w-2xl mx-auto"
             style={{ color: BRAND.muted }}
           >
-            만남앱이 아닙니다. 50대 이상만 가입하는 모임·친구 앱.
+            만남앱이 아닙니다. 신원 확인된 40+ 회원만 가입하는 친구 앱.
             <br className="hidden sm:inline" />
             보이스피싱·로맨스 스캠을 AI가 24시간 차단합니다.
           </p>
@@ -160,7 +160,7 @@ export default function ForChildrenPage() {
             </h2>
           </div>
           <p className="text-base leading-relaxed" style={{ color: BRAND.muted }}>
-            많은 분들이 가장 먼저 묻는 질문입니다. 다시, 봄은
+            많은 분들이 가장 먼저 묻는 질문입니다. 티타은
             <strong style={{ color: BRAND.ink }}> 친구·모임 중심으로 설계된 앱</strong>입니다.
             가입하시면 기본 설정이 <strong style={{ color: BRAND.ink }}>{"'친구만 원해요'"}</strong>로 시작되며,
             원하시는 분만 설정에서 직접 인연 옵션을 열 수 있습니다.
@@ -169,12 +169,12 @@ export default function ForChildrenPage() {
           <div className="grid sm:grid-cols-2 gap-4 mt-8">
             <DesignChoice
               ok={false}
-              title="다른 50+ SNS"
+              title="다른 40+ SNS"
               items={["좋아요·매칭 푸시", "1:1 데이트 추천", "외모 평가", "성별 필터"]}
             />
             <DesignChoice
               ok={true}
-              title="다시, 봄"
+              title="티타"
               items={[
                 "관심사 모임 (산책·책·텃밭)",
                 "동네 친구 찾기",
@@ -211,7 +211,7 @@ export default function ForChildrenPage() {
             <SafetyLayer
               icon={UserCheck}
               title="① 본인인증"
-              body="NICE 본인확인 서비스로 신원을 검증합니다. 만 50세 미만 차단, 중복 가입 차단, 부정 사용자 재가입 원천 봉쇄."
+              body="NICE 본인확인 서비스로 신원을 검증합니다. 중복 가입 차단, 부정 사용자 재가입 원천 봉쇄."
             />
             <SafetyLayer
               icon={Sparkles}
@@ -276,7 +276,7 @@ export default function ForChildrenPage() {
               자녀와 함께 안심하세요
             </h2>
             <p className="text-sm sm:text-base" style={{ color: BRAND.muted }}>
-              가족 공유 (Family Care) — 다시, 봄 플러스 회원 기능
+              가족 공유 (Family Care) — 티타 플러스 회원 기능
             </p>
           </div>
 
@@ -306,7 +306,7 @@ export default function ForChildrenPage() {
               부모님께 가족 연결을 받으셨나요?
             </p>
             <p className="text-xs sm:text-sm mb-4" style={{ color: BRAND.muted }}>
-              부모님이 다시봄 앱에서 초대 코드를 만드시면 자녀분께 보내드립니다.
+              부모님이 티타 앱에서 초대 코드를 만드시면 자녀분께 보내드립니다.
               초대 코드 8자리를 받으셨다면 아래 버튼으로 들어와 주세요.
             </p>
             <Link
@@ -334,7 +334,7 @@ export default function ForChildrenPage() {
           <div className="space-y-3">
             <FAQ
               q="비용이 드나요?"
-              a="가입·모임 가입·친구 매칭은 모두 무료입니다. 광고도 없습니다. 모임 만들기, 무제한 채팅, 음성 메시지, 가족 공유는 다시봄 플러스(월 19,900원, 30일 무료 체험) 회원 기능입니다."
+              a="가입·모임 가입·친구 매칭은 모두 무료입니다. 광고도 없습니다. 모임 만들기, 무제한 채팅, 음성 메시지, 가족 공유는 티타 플러스(월 19,900원, 30일 무료 체험) 회원 기능입니다."
             />
             <FAQ
               q="부모님이 디지털을 어려워하시는데..."
@@ -387,7 +387,7 @@ export default function ForChildrenPage() {
               <ArrowRight className="h-5 w-5" />
             </Link>
             <a
-              href="mailto:ceo@effeffcorp.com?subject=다시봄 자녀 문의"
+              href="mailto:ceo@effeffcorp.com?subject=티타 자녀 문의"
               className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-white px-7 py-3 text-base font-bold text-white"
             >
               <Mail className="h-5 w-5" />
@@ -449,7 +449,7 @@ function DesignChoice({
         className="text-sm font-bold mb-3 uppercase tracking-wider"
         style={{ color: ok ? BRAND.success : BRAND.danger }}
       >
-        {ok ? "✓ 다시봄" : "✗ 일반 SNS"}
+        {ok ? "✓ 티타" : "✗ 일반 SNS"}
       </p>
       <p className="text-base font-bold mb-3" style={{ color: BRAND.ink }}>
         {title}

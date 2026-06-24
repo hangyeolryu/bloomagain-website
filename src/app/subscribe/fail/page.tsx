@@ -6,10 +6,10 @@ import Link from "next/link";
 import { XCircle } from "lucide-react";
 
 const BRAND = {
-  navy: "#10367D",
+  navy: "#1F4E3D",
   lavender: "#EBEBEB",
-  ink: "#0F1A35",
-  muted: "#4A5878",
+  ink: "#1A2E26",
+  muted: "#6B7D6E",
 } as const;
 
 const FRIENDLY_BY_CODE: Record<string, string> = {

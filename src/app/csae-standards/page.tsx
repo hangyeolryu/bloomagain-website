@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "Bloom Again – Safety Standards against Child Sexual Abuse and Exploitation (CSAE)",
+  title: "Tita – Safety Standards against Child Sexual Abuse and Exploitation (CSAE)",
 };
 
 export default function Page() {
@@ -24,7 +24,7 @@ export default function Page() {
 
         <h2 style={{ lineHeight: 1.25, fontSize: 20, marginTop: 28 }}>1. Zero‑Tolerance Policy</h2>
         <p>
-          Bloom Again strictly prohibits content, conduct, or services that involve child sexual
+          Tita strictly prohibits content, conduct, or services that involve child sexual
           abuse and exploitation (CSAE), including but not limited to: creation, possession,
           distribution, solicitation, grooming, sexualization of minors, or any attempt to
           facilitate such harm. We remove such content, permanently disable accounts, and
@@ -126,7 +126,7 @@ export default function Page() {
         <h2 style={{ lineHeight: 1.25, fontSize: 20, marginTop: 28 }}>10. Contact</h2>
         <p>For questions about these standards, contact: compliance@bloomagain.app</p>
 
-        <p style={{ color: "#666", fontSize: 14 }}>Bloom Again</p>
+        <p style={{ color: "#666", fontSize: 14 }}>Tita</p>
       </div>
     </main>
   );

@@ -13,7 +13,7 @@ export default function SecurityProcessingPage() {
     <LegalLayout
       activeKey="security"
       title="보안·행동 데이터 처리 안내"
-      subtitle="다시 봄 (Bloom Again Korea)"
+      subtitle="다시 봄 (Tita Korea)"
       versionTag="v1.0"
       effectiveDate="2026년 1월 1일"
       lastUpdated="2026년 5월 19일"

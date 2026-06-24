@@ -20,12 +20,12 @@ import {
 } from "lucide-react";
 
 const BRAND = {
-  navy:      "#10367D",
-  navyDeep:  "#0A2459",
+  navy:      "#1F4E3D",
+  navyDeep:  "#143329",
   navySoft:  "#2D54A1",
   lavender:  "#EBEBEB",
-  ink:       "#0F1A35",
-  muted:     "#4A5878",
+  ink:       "#1A2E26",
+  muted:     "#6B7D6E",
 } as const;
 
 // ────────────────────────────────────────────────────────────────────────────
@@ -60,7 +60,7 @@ function resolveTier(count: number): Tier {
 const useCases = [
   {
     icon: Building2,
-    title: "50+재단·시니어 복지관",
+    title: "40+ 재단·복지관",
     description:
       "회원 디지털 친구 만들기 프로그램의 안전한 도구로 통합. 첫 1년 무료 베타로 도메인 데이터를 같이 쌓습니다.",
     pilotPeriod: "1년 무료",
@@ -76,14 +76,14 @@ const useCases = [
     icon: ShieldCheck,
     title: "보험사 시니어 케어팀",
     description:
-      "고객 부가서비스로 다시봄 Plus 묶음 제공. 50+ 가입자 리텐션 + 안전사고 예방 효과.",
+      "고객 부가서비스로 티타 Plus 묶음 제공. 40+ 가입자 리텐션 + 안전사고 예방 효과.",
     pilotPeriod: "협의",
   },
   {
     icon: Sparkles,
     title: "통신사 시니어 디지털 케어",
     description:
-      "AI Care / 시니어 패키지 결합 상품. 다시봄 안전 인프라를 통신사 채널로 보급.",
+      "AI Care / 시니어 패키지 결합 상품. 티타 안전 인프라를 통신사 채널로 보급.",
     pilotPeriod: "협의",
   },
 ];
@@ -114,7 +114,7 @@ export default function BusinessPage() {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const subject = encodeURIComponent(
-      `[다시봄 단체 라이선스 문의] ${orgName || "기관명 미기재"}`,
+      `[티타 단체 라이선스 문의] ${orgName || "기관명 미기재"}`,
     );
     const body = encodeURIComponent(
       [
@@ -130,7 +130,7 @@ export default function BusinessPage() {
         `문의 내용:`,
         message || "(비어 있음)",
         ``,
-        `— 다시봄 비즈니스 페이지에서 발송`,
+        `— 티타 비즈니스 페이지에서 발송`,
       ].join("\n"),
     );
     window.location.href = `mailto:ceo@effeffcorp.com?subject=${subject}&body=${body}`;
@@ -150,14 +150,14 @@ export default function BusinessPage() {
           <Link href="/" className="flex items-center gap-3">
             <Image
               src="/app_icon.svg"
-              alt="다시, 봄 로고"
+              alt="티타 로고"
               width={36}
               height={36}
               className="h-9 w-9 rounded-xl"
               priority
             />
             <span className="text-2xl font-bold" style={{ color: BRAND.navy }}>
-              다시, 봄
+              티타
             </span>
           </Link>
           <div className="flex items-center gap-4 sm:gap-6">
@@ -199,7 +199,7 @@ export default function BusinessPage() {
             className="text-lg lg:text-xl leading-relaxed mt-6 max-w-2xl"
             style={{ color: BRAND.muted }}
           >
-            50+재단·노인복지관·실버타운·보험사 시니어팀을 위한 다시봄 단체 라이선스.
+            40+ 재단·복지관·실버타운·보험사 시니어팀을 위한 티타 단체 라이선스.
             금융권 수준의 안전 인프라와 운영 대시보드를 한 번에.
           </p>
           <div className="flex flex-wrap gap-3 mt-8">
