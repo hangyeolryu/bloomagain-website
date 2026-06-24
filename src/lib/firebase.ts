@@ -1,4 +1,11 @@
 // Import the functions you need from the SDKs you need
+//
+// 2026-06: previously this file eagerly initialized auth/db/storage/
+// functions even though the website never uses them (the Flutter app
+// uses those — the website is marketing-only + invite acceptance via
+// FCM). The unused getAuth(app) was triggering CONFIGURATION_NOT_FOUND
+// 400s in browser console because Authentication isn't enabled on the
+// website's Firebase project. Slim down to only what the website needs.
 import { initializeApp } from "firebase/app";
 import {
   getAnalytics,
@@ -6,10 +13,6 @@ import {
   logEvent,
   type Analytics,
 } from "firebase/analytics";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
-import { getStorage } from "firebase/storage";
-import { getFunctions } from "firebase/functions";
 import {
   getMessaging,
   getToken,
@@ -31,11 +34,10 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Initialize Firebase services
-export const auth = getAuth(app);
-export const db = getFirestore(app);
-export const storage = getStorage(app);
-export const functions = getFunctions(app, 'asia-northeast3');
+// Auth/Firestore/Storage/Functions are intentionally NOT initialized
+// here — the website doesn't consume them. Re-add only if a future
+// website feature genuinely needs one of those services, *and* the
+// matching Firebase product is enabled on the project.
 
 // Firebase Analytics is browser-only and needs an async `isSupported()`
 // check before construction — calling getAnalytics in unsupported envs
