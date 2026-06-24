@@ -1,20 +1,20 @@
 <svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
-  <!-- Brand-tinted twin of the iOS app icon — navy gradient (#10367D → #0A2459)
-       matches the marketing palette. The original indigo variant (#4F46E5 →
-       #3730A3) lives in bloomagain-korea/assets/app_icon.svg for the App Store
-       binary; we don't touch that one. No transparency: alpha breaks favicons. -->
-  <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1024" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#10367D"/>
-      <stop offset="1" stop-color="#0A2459"/>
-    </linearGradient>
-  </defs>
-  <rect width="1024" height="1024" fill="url(#bg)"/>
+  <!-- 티타 brand icon — Monotone Forest palette.
+       Solid deep forest background + bold white "티타" text centered.
+       No transparency: iOS App Store rejects alpha on icon. -->
+  <rect width="1024" height="1024" fill="#1F4E3D"/>
 
-  <!-- White flower mark, centred. Source viewBox 115 × 127.
-       Scaled to 656px tall (~64% of canvas) so the mark sits comfortably
-       inside iOS's rounded-rect mask and Android's adaptive-icon safe zone. -->
-  <g transform="translate(215 184) scale(5.165)">
-    <path fill="#FFFFFF" d="M103.61 64.0849C103.001 63.7268 102.38 63.415 101.748 63.1148C102.38 62.826 103.001 62.5027 103.61 62.1446C114.263 55.966 117.917 42.269 111.769 31.5516C105.621 20.8458 91.9915 17.1732 81.327 23.3519C80.718 23.7099 80.1319 24.091 79.5688 24.4952C79.6377 23.8023 79.6722 23.0978 79.6722 22.3933C79.6722 10.0244 69.6972 0 57.3894 0C45.0815 0 35.1066 10.0244 35.1066 22.3933C35.1066 23.1094 35.141 23.8023 35.21 24.4952C34.6469 24.091 34.0608 23.7099 33.4517 23.3519C22.7987 17.1732 9.16931 20.8342 3.00964 31.5516C-3.13853 42.269 0.504405 55.966 11.1689 62.1446C11.778 62.5027 12.3985 62.8145 13.0306 63.1148C12.3985 63.4035 11.778 63.7268 11.1689 64.0849C0.481421 70.2635 -3.16152 83.9605 2.98666 94.6779C9.13483 105.395 22.7642 109.056 33.4287 102.878C34.0378 102.52 34.6239 102.138 35.187 101.734C35.1181 102.427 35.0836 103.132 35.0836 103.836C35.0836 116.205 45.0586 126.23 57.3664 126.23C69.6742 126.23 79.6492 116.205 79.6492 103.836C79.6492 103.132 79.6148 102.427 79.5458 101.734C80.1089 102.138 80.695 102.52 81.3041 102.878C91.9571 109.056 105.586 105.395 111.746 94.6779C117.894 83.9605 114.251 70.2635 103.587 64.0849H103.61ZM57.3779 94.9782C39.8642 94.9782 25.6717 80.7153 25.6717 63.1148C25.6717 45.5142 39.8642 31.2513 57.3779 31.2513C74.8916 31.2513 89.0841 45.5142 89.0841 63.1148C89.0841 80.7153 74.8916 94.9782 57.3779 94.9782Z"/>
-  </g>
+  <!-- "티타" centred. Korean Pretendard / system fallback chain.
+       Font size tuned so two-character glyph block reads cleanly at
+       60px home-screen size without losing legibility. -->
+  <text
+    x="512"
+    y="512"
+    text-anchor="middle"
+    dominant-baseline="central"
+    font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, -apple-system, BlinkMacSystemFont, sans-serif"
+    font-size="420"
+    font-weight="700"
+    letter-spacing="-12"
+    fill="#FBF7F0">티타</text>
 </svg>
