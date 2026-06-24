@@ -114,10 +114,10 @@ export default function AboutPage() {
         </section>
 
         {/* ── 2. 무엇을 만들었나 (mission + product combined) ───────── */}
-        <Section tag="우리가 만든 것" title="40+ 결동무 커뮤니티">
+        <Section tag="우리가 만든 것" title="40+ 결친구 커뮤니티">
           <ul className="space-y-2.5">
             <Bullet>
-              <strong>결동무 우선, 데이팅 아님.</strong> 같은 동네·관심사로
+              <strong>결친구 우선, 데이팅 아님.</strong> 같은 동네·관심사로
               만나는 친구 중심
             </Bullet>
             <Bullet>
