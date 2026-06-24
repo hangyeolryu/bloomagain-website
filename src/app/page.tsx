@@ -61,7 +61,7 @@ export default function Home() {
             className="text-3xl sm:text-5xl font-extrabold leading-tight mb-5"
             style={{ color: TITA.ink, letterSpacing: "-0.025em" }}
           >
-            결이 맞는 40+ 친구를
+            결이 맞는 친구를
             <br />
             천천히 만나요.
           </h1>

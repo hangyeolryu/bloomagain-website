@@ -100,7 +100,7 @@ export default function ForChildrenPage() {
             className="text-base sm:text-lg leading-relaxed max-w-2xl mx-auto"
             style={{ color: BRAND.muted }}
           >
-            만남앱이 아닙니다. 신원 확인된 40+ 회원만 가입하는 친구 앱.
+            만남앱이 아닙니다. 신원 확인된 회원만 가입하는 친구 앱.
             <br className="hidden sm:inline" />
             보이스피싱·로맨스 스캠을 AI가 24시간 차단합니다.
           </p>
@@ -169,7 +169,7 @@ export default function ForChildrenPage() {
           <div className="grid sm:grid-cols-2 gap-4 mt-8">
             <DesignChoice
               ok={false}
-              title="다른 40+ SNS"
+              title="다른 SNS"
               items={["좋아요·매칭 푸시", "1:1 데이트 추천", "외모 평가", "성별 필터"]}
             />
             <DesignChoice

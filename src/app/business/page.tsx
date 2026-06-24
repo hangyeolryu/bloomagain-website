@@ -60,7 +60,7 @@ function resolveTier(count: number): Tier {
 const useCases = [
   {
     icon: Building2,
-    title: "40+ 재단·복지관",
+    title: "재단·복지관",
     description:
       "회원 디지털 친구 만들기 프로그램의 안전한 도구로 통합. 첫 1년 무료 베타로 도메인 데이터를 같이 쌓습니다.",
     pilotPeriod: "1년 무료",

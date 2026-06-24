@@ -100,7 +100,7 @@ export default function AboutPage() {
             className="text-2xl sm:text-3xl font-extrabold leading-tight mb-4"
             style={{ color: BRAND.ink, letterSpacing: "-0.02em" }}
           >
-            결이 맞는 40+ 친구를
+            결이 맞는 친구를
             <br />
             천천히 만나요.
           </h1>
@@ -114,14 +114,14 @@ export default function AboutPage() {
         </section>
 
         {/* ── 2. 무엇을 만들었나 (mission + product combined) ───────── */}
-        <Section tag="우리가 만든 것" title="40+ 결친구 커뮤니티">
+        <Section tag="우리가 만든 것" title="친구 커뮤니티">
           <ul className="space-y-2.5">
             <Bullet>
-              <strong>결친구 우선, 데이팅 아님.</strong> 같은 동네·관심사로
+              <strong>결동무 우선, 데이팅 아님.</strong> 같은 동네·관심사로
               만나는 친구 중심
             </Bullet>
             <Bullet>
-              <strong>40+ 회원만.</strong> NICE 본인인증을 통과해야 함께해요
+              NICE 본인인증을 통과해야 함께해요
             </Bullet>
             <Bullet>
               <strong>AI가 위험을 차단.</strong> 로맨스 스캠·보이스 피싱 패턴
@@ -232,7 +232,7 @@ export default function AboutPage() {
               불편한 점 무엇이든 말씀해 주세요. 직접 듣고 고치겠습니다.
             </p>
             <p className="pt-1 text-white/70 text-xs sm:text-sm">
-              — 류한결, 티타 창업자 / ㈜이프이프 대표
+              — 유한결, 티타 창업자 / ㈜이프이프 대표
             </p>
           </div>
         </section>
