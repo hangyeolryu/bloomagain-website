@@ -76,7 +76,7 @@ const useCases = [
     icon: ShieldCheck,
     title: "보험사 시니어 케어팀",
     description:
-      "고객 부가서비스로 티타 Plus 묶음 제공. 40+ 가입자 리텐션 + 안전사고 예방 효과.",
+      "고객 부가서비스로 티타 Plus 묶음 제공. 가입자 리텐션 + 안전사고 예방 효과.",
     pilotPeriod: "협의",
   },
   {
@@ -89,7 +89,7 @@ const useCases = [
 ];
 
 const partnerBenefits = [
-  "회원 일괄 Plus 권한 — 음성 메시지·모임 만들기 무제한",
+  "회원 일괄 Plus 권한 — AI 맞춤 매칭 인사이트·메시지 한도 없이",
   "운영 대시보드 — 활동·매칭·안전 인시던트 실시간 모니터링",
   "주간/월간 인사이트 리포트 — 회원 코호트 + 안전 통계",
   "전담 사업개발 매니저 배정 — 도입·교육·정착까지",
@@ -199,7 +199,7 @@ export default function BusinessPage() {
             className="text-lg lg:text-xl leading-relaxed mt-6 max-w-2xl"
             style={{ color: BRAND.muted }}
           >
-            40+ 재단·복지관·실버타운·보험사 시니어팀을 위한 티타 단체 라이선스.
+            재단·복지관·실버타운·보험사 시니어팀을 위한 티타 단체 라이선스.
             금융권 수준의 안전 인프라와 운영 대시보드를 한 번에.
           </p>
           <div className="flex flex-wrap gap-3 mt-8">

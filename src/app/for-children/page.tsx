@@ -22,8 +22,6 @@ import {
   Heart,
   Lock,
   UserCheck,
-  Bell,
-  MessageCircle,
   Sparkles,
   ArrowRight,
   CheckCircle2,
@@ -256,71 +254,6 @@ export default function ForChildrenPage() {
         </div>
       </section>
 
-      {/* ── Section 3: Family Care ──────────────────────────────────────── */}
-      <section
-        className="py-14 sm:py-20"
-        style={{ background: "white" }}
-      >
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 space-y-8">
-          <div className="text-center space-y-3">
-            <div
-              className="inline-flex items-center justify-center w-14 h-14 rounded-xl mx-auto"
-              style={{ background: `${BRAND.success}15` }}
-            >
-              <Heart className="h-7 w-7" style={{ color: BRAND.success }} />
-            </div>
-            <h2
-              className="text-2xl sm:text-3xl font-bold"
-              style={{ color: BRAND.ink }}
-            >
-              자녀와 함께 안심하세요
-            </h2>
-            <p className="text-sm sm:text-base" style={{ color: BRAND.muted }}>
-              가족 공유 (Family Care) — 티타 플러스 회원 기능
-            </p>
-          </div>
-
-          <div className="space-y-3">
-            <FamilyBenefit
-              icon={Bell}
-              title="위험 신호 즉시 알림"
-              body="부모님께 사기·스캠 의심 메시지가 감지되면 자녀에게 즉시 알림이 갑니다. 한 번 안부 전화 드리시면 됩니다."
-            />
-            <FamilyBenefit
-              icon={MessageCircle}
-              title="주간 활동 요약"
-              body="부모님이 어떤 모임에서 활동하시는지 일주일에 한 번 요약을 받아봅니다."
-            />
-            <FamilyBenefit
-              icon={Lock}
-              title="프라이버시 보호"
-              body="부모님의 채팅 내용·위험 점수·구체 사유는 자녀에게 절대 노출되지 않습니다. '안부 전화 한번 어떠세요' 정도의 안내만 갑니다."
-            />
-          </div>
-
-          <div
-            className="rounded-2xl p-5 sm:p-6 text-center"
-            style={{ background: BRAND.lavender }}
-          >
-            <p className="text-sm sm:text-base font-bold mb-3" style={{ color: BRAND.ink }}>
-              부모님께 가족 연결을 받으셨나요?
-            </p>
-            <p className="text-xs sm:text-sm mb-4" style={{ color: BRAND.muted }}>
-              부모님이 티타 앱에서 초대 코드를 만드시면 자녀분께 보내드립니다.
-              초대 코드 8자리를 받으셨다면 아래 버튼으로 들어와 주세요.
-            </p>
-            <Link
-              href="/invite/0"
-              className="inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-bold text-white"
-              style={{ background: BRAND.navy }}
-            >
-              초대 코드 입력하기
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-        </div>
-      </section>
-
       {/* ── Section 4: 자주 묻는 질문 ───────────────────────────────────── */}
       <section className="py-14 sm:py-20">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 space-y-6">
@@ -334,7 +267,7 @@ export default function ForChildrenPage() {
           <div className="space-y-3">
             <FAQ
               q="비용이 드나요?"
-              a="가입·모임 가입·친구 매칭은 모두 무료입니다. 광고도 없습니다. 모임 만들기, 무제한 채팅, 음성 메시지, 가족 공유는 티타 플러스(월 19,900원, 30일 무료 체험) 회원 기능입니다."
+              a="가입·친구 매칭·모임·채팅은 모두 무료입니다. 광고도 없습니다. 티타 플러스(월 19,900원, 30일 무료 체험)는 메시지를 한도 없이 쓰고 AI 맞춤 매칭 인사이트를 더 깊이 볼 수 있는 회원 기능입니다."
             />
             <FAQ
               q="부모님이 디지털을 어려워하시는데..."
@@ -495,38 +428,6 @@ function SafetyLayer({
         </p>
       </div>
     </li>
-  );
-}
-
-function FamilyBenefit({
-  icon: Icon,
-  title,
-  body,
-}: {
-  icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
-  title: string;
-  body: string;
-}) {
-  return (
-    <div
-      className="rounded-xl p-5 border bg-white flex items-start gap-4"
-      style={{ borderColor: "rgba(15,26,53,0.08)" }}
-    >
-      <div
-        className="flex h-10 w-10 items-center justify-center rounded-lg flex-shrink-0"
-        style={{ background: `${BRAND.success}15` }}
-      >
-        <Icon className="h-5 w-5" style={{ color: BRAND.success }} />
-      </div>
-      <div>
-        <p className="text-base font-bold mb-1" style={{ color: BRAND.ink }}>
-          {title}
-        </p>
-        <p className="text-sm leading-relaxed" style={{ color: BRAND.muted }}>
-          {body}
-        </p>
-      </div>
-    </div>
   );
 }
 

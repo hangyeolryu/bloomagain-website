@@ -205,8 +205,8 @@ export default function Home() {
             />
             <PlanCard
               name="플러스"
-              price="₩9,900/월"
-              perks={["음성 메시지", "확장 매칭", "광고 없음"]}
+              price="₩19,900/월"
+              perks={["AI 맞춤 매칭", "특허 출원 4계층 안전", "적응형 화면"]}
               highlight
             />
           </div>
