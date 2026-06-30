@@ -14,28 +14,28 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Routes
 app.get('/', (req, res) => {
   res.render('index', {
-    title: '다시, 봄 (Dasi, Bom) - Gentle connections, at your pace',
-    description: '50세 이상을 위한 따뜻한 동반자 앱'
+    title: '티타 (Tita) - Gentle connections, at your pace',
+    description: '만 45세 이상을 위한 따뜻한 동반자 앱'
   });
 });
 
 app.get('/privacy', (req, res) => {
   res.render('privacy', {
-    title: 'Privacy Policy - 다시, 봄 (Dasi, Bom)',
+    title: 'Privacy Policy - 티타 (Tita)',
     description: 'Privacy Policy for BloomAgain Korea app'
   });
 });
 
 app.get('/terms', (req, res) => {
   res.render('terms', {
-    title: 'Terms of Service - 다시, 봄 (Dasi, Bom)',
+    title: 'Terms of Service - 티타 (Tita)',
     description: 'Terms of Service for BloomAgain Korea app'
   });
 });
 
 app.get('/delete-account', (req, res) => {
   res.render('delete-account', {
-    title: 'Account Deletion - 다시, 봄 (Dasi, Bom)',
+    title: 'Account Deletion - 티타 (Tita)',
     description: 'How to delete your BloomAgain Korea account'
   });
 });

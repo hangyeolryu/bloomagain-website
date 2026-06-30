@@ -128,17 +128,17 @@ export default function ParentGiftPage() {
           <Link
             href={APP_STORE_URL}
             style={ctaPrimaryStyle}
-            aria-label="App Store에서 티타 다운로드"
+            aria-label="앱스토어에서 티타 다운로드"
           >
-            App Store
+            앱스토어에서 받기
             <ArrowRight size={18} aria-hidden />
           </Link>
           <Link
             href={PLAY_STORE_URL}
             style={ctaSecondaryStyle}
-            aria-label="Google Play에서 티타 다운로드"
+            aria-label="구글 플레이에서 티타 다운로드"
           >
-            Google Play
+            구글 플레이에서 받기
             <ArrowRight size={18} aria-hidden />
           </Link>
         </div>
@@ -446,7 +446,7 @@ export default function ParentGiftPage() {
             {
               step: "1",
               title: "내 폰에 먼저 다운로드",
-              body: "App Store 또는 Google Play에서 '티타' 검색.",
+              body: "앱스토어 또는 구글 플레이에서 '티타' 검색.",
               icon: <Smartphone size={22} aria-hidden />,
             },
             {
@@ -580,8 +580,9 @@ export default function ParentGiftPage() {
                 background: TITA.cream,
                 color: TITA.forestDeep,
               }}
+              aria-label="앱스토어에서 티타 다운로드"
             >
-              App Store
+              앱스토어에서 받기
               <ArrowRight size={18} aria-hidden />
             </Link>
             <Link
@@ -591,8 +592,9 @@ export default function ParentGiftPage() {
                 background: TITA.cream,
                 color: TITA.forestDeep,
               }}
+              aria-label="구글 플레이에서 티타 다운로드"
             >
-              Google Play
+              구글 플레이에서 받기
               <ArrowRight size={18} aria-hidden />
             </Link>
           </div>

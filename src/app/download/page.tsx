@@ -133,7 +133,7 @@ export default function DownloadPage() {
         className="mt-10 text-xs"
         style={{ color: TITA.mutedSoft }}
       >
-        결이 맞는 40+ 친구
+        결이 맞는 친구
       </p>
     </main>
   );

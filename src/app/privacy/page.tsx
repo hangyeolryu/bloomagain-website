@@ -300,7 +300,7 @@ export default function PrivacyPage() {
         <p>서비스 이용 중 발생하는 모든 개인정보 보호 관련 민원은 아래의 담당 부서로 문의하실 수 있습니다.</p>
         <div className="bg-[#BFE38A]/20 border-l-4 border-[#1F4E3D] p-6 rounded">
           <ul className="!list-none !pl-0">
-            <li><strong>성명</strong>: 류한결</li>
+            <li><strong>성명</strong>: 유한결</li>
             <li><strong>직책</strong>: 개인정보 보호책임자 / 대표</li>
             <li><strong>이메일</strong>: <a href="mailto:ceo@effeffcorp.com">ceo@effeffcorp.com</a></li>
             <li><strong>회사</strong>: ㈜이프이프 (사업자등록 466-81-04205)</li>

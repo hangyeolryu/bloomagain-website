@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "티타 — 오후 한 잔의 안심 티타임",
     description:
-      "결이 통하는 40+ 친구 한 분, 천천히. 본인인증·AI 안전망으로 보호받는 친구 매칭.",
+      "결이 통하는 친구 한 분, 천천히. 본인인증·AI 안전망으로 보호받는 친구 매칭.",
     images: [
       { url: "/icon-512.png", width: 512, height: 512, alt: "티타 로고" },
     ],

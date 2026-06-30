@@ -88,7 +88,7 @@ export default function Home() {
               style={{ backgroundColor: TITA.forest, color: "white" }}
             >
               <Apple className="w-4 h-4" />
-              App Store
+              앱스토어에서 받기
             </a>
             <a
               href={PLAY_STORE_URL}
@@ -108,7 +108,7 @@ export default function Home() {
               }}
             >
               <Smartphone className="w-4 h-4" />
-              Google Play
+              구글 플레이에서 받기
             </a>
           </div>
         </section>
