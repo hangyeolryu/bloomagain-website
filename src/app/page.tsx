@@ -18,6 +18,8 @@ import {
   Apple,
   Smartphone,
   Sparkles,
+  Lock,
+  Coffee,
 } from "lucide-react";
 import {
   TITA,
@@ -206,7 +208,11 @@ export default function Home() {
             <PlanCard
               name="플러스"
               price="₩19,900/월"
-              perks={["AI 맞춤 매칭", "특허 출원 4계층 안전", "적응형 화면"]}
+              perks={[
+                "메시지 한도 없이",
+                "AI 매칭 깊은 이유까지",
+                "언제든 해지",
+              ]}
               highlight
             />
           </div>
@@ -215,6 +221,63 @@ export default function Home() {
             style={{ color: TITA.muted }}
           >
             창립 멤버 500분께 <strong>플러스 6개월 무료</strong>
+          </p>
+
+          {/* WHY plus — 한 표 + 4 frame 압축.
+              상세 비교는 /subscribe 에서 본격. 여기는 *결정의 씨앗*만. */}
+          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {[
+              {
+                icon: Sparkles,
+                title: "왜 맞는지 이유까지",
+                body: "무료엔 \"결이 통해요\" 한 줄. 플러스엔 깊은 이유.",
+              },
+              {
+                icon: Lock,
+                title: "결친구와 끝까지 대화",
+                body: "무료는 월 한도. 플러스는 깊어질 때까지 자유롭게.",
+              },
+              {
+                icon: Coffee,
+                title: "카페 4잔 한 달",
+                body: "동호회 회비 대신 19,900원으로 결이 통하는 친구.",
+              },
+              {
+                icon: Heart,
+                title: "광고 안 받습니다",
+                body: "솔로 파운더의 작은 모델. 사용자가 진짜 고객.",
+              },
+            ].map(({ icon: Icon, title, body }) => (
+              <div
+                key={title}
+                className="rounded-2xl p-4 flex items-start gap-3"
+                style={{ background: TITA.white, border: `1px solid ${TITA.sage}` }}
+              >
+                <div
+                  className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center"
+                  style={{ background: TITA.sage }}
+                >
+                  <Icon className="w-4 h-4" style={{ color: TITA.forest }} />
+                </div>
+                <div>
+                  <h4 className="text-sm font-bold mb-1" style={{ color: TITA.forestDeep }}>
+                    {title}
+                  </h4>
+                  <p className="text-xs leading-relaxed" style={{ color: TITA.muted }}>
+                    {body}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <p className="text-center text-xs mt-4">
+            <Link
+              href="/subscribe"
+              className="underline hover:no-underline"
+              style={{ color: TITA.forest }}
+            >
+              플러스 자세히 보기 →
+            </Link>
           </p>
         </Section>
 

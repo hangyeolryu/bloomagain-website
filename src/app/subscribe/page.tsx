@@ -6,18 +6,64 @@
 // 헤더/푸터는 공용 컴포넌트를 써서 사업자정보(푸터 6항목)가 모든 페이지와 동일하게 노출된다.
 
 import Link from "next/link";
-import { ShieldCheck, CheckCircle2 } from "lucide-react";
+import { ShieldCheck, CheckCircle2, Sparkles, Lock, Coffee, Heart } from "lucide-react";
 import { TITA, KOREAN_FONT_STACK } from "../_components/tita-brand";
 import { TitaHeader } from "../_components/TitaHeader";
 import { TitaFooter } from "../_components/TitaFooter";
 
 const PLUS_AMOUNT = 19_900;
 
+// Plus 실제 차이 — 실제 코드에 구현된 것만. 안전·적응형·NICE 같은 *기본*
+// 기능은 무료에도 동일하게 제공됨을 명시 (App Store 3.1.2 + 한국 표시광고법).
 const FEATURES = [
-  "AI 맞춤 매칭 — 관심사·매일의 짧은 답을 분석해 결이 맞는 또래를 추천하고, 왜 잘 맞는지 이유까지 알려드려요",
-  "특허 출원 4계층 안전(PA260003) — 로맨스 스캠·보이스피싱·투자유도를 행동 분석으로 사전 차단",
-  "적응형 화면 — 사용 습관에 맞춰 글자·버튼 크기를 편하게 자동 조정 (특허 기술)",
+  "메시지 한도 없이 — 무료는 월 한도, 플러스는 결친구와 끝까지 대화",
+  "AI 맞춤 매칭 인사이트 — 무료는 \"결이 통해요\" 한 줄, 플러스는 \"왜 맞는지\" 깊은 이유까지",
+  "특허 4계층 안전·적응형 화면 — 무료 회원도 동일하게 보호받습니다",
   "언제든 해지 · 약정·위약금 없음",
+];
+
+// Free vs Plus 비교 — *실제 코드에 구현된* 차이만.
+// 무료에도 제공되는 기본 기능은 동일하게 표시 (포지셔닝 정직).
+const COMPARE_ROWS: { label: string; free: string; plus: string }[] = [
+  { label: "본인인증 가입", free: "포함", plus: "포함" },
+  { label: "특허 4계층 안전", free: "포함 (모두에게)", plus: "포함 (모두에게)" },
+  { label: "적응형 화면 (특허)", free: "포함 (모두에게)", plus: "포함 (모두에게)" },
+  { label: "결친구 매칭", free: "기본 매칭", plus: "AI 맞춤 — 왜 맞는지 이유까지" },
+  { label: "채팅 메시지", free: "월 한도", plus: "무제한" },
+  { label: "약정 / 위약금", free: "없음", plus: "없음 · 언제든 해지" },
+];
+
+// "왜 Plus를 내야 하나?" — 4가지 정직한 이유.
+// 안전을 가격 뒤에 가두지 않음 (윤리). Plus는 *대화 깊이* + *대화 양*.
+const WHY_FRAMES: {
+  icon: typeof Sparkles;
+  title: string;
+  body: string;
+}[] = [
+  {
+    icon: Sparkles,
+    title: "왜 잘 맞는지 이유까지",
+    body:
+      "무료는 '결이 통해요' 한 줄. 플러스는 결큐 답변을 분석해 \"산책과 차 한 잔의 여유를 아는 분 — 대화 리듬이 잘 통할 것 같아요\"처럼 깊은 이유를 보여드립니다.",
+  },
+  {
+    icon: Lock,
+    title: "결친구와 끝까지 대화",
+    body:
+      "무료에는 월 메시지 한도가 있어요. 플러스는 한도 없이, 결이 통하는 분과 깊어질 때까지 자유롭게 대화하실 수 있습니다.",
+  },
+  {
+    icon: Coffee,
+    title: "한 달 19,900원 = 카페 4잔",
+    body:
+      "동호회 입회비·회비·교통비를 다 합쳐도 한 달 수십만 원. 결이 통하는 친구 한 분을 만나는 비용으로 환산하면 거의 무료에 가깝습니다.",
+  },
+  {
+    icon: Heart,
+    title: "광고 안 받습니다. 데이터 안 팝니다.",
+    body:
+      "솔로 파운더가 만든 작은 모델이에요. 사용자의 구독료가 우리가 돌아가는 유일한 방법. 사용자가 진짜 고객인 앱.",
+  },
 ];
 
 // 결제 전 필수 고지 — 카드사 심사 핵심 항목.
@@ -62,6 +108,86 @@ export default function SubscribePage() {
             카드 등록 즉시 결제되며, 매월 같은 날짜에 자동으로 갱신됩니다. 언제든지 해지하실 수 있어요.
           </p>
         </div>
+
+        {/* Free vs Plus 비교 표 — "내가 왜 돈을 내야 하지?" 한 표로 답 */}
+        <section
+          className="rounded-2xl border overflow-hidden mb-8"
+          style={{ borderColor: TITA.sage, background: TITA.white }}
+        >
+          <h2 className="px-6 pt-6 pb-2 text-lg font-bold" style={{ color: TITA.forestDeep }}>
+            무료 회원과 플러스, 어떻게 다른가요?
+          </h2>
+          <div className="overflow-x-auto px-2 sm:px-4 pb-4">
+            <table className="w-full text-sm">
+              <thead>
+                <tr style={{ color: TITA.muted }}>
+                  <th className="text-left font-semibold px-3 py-2"></th>
+                  <th className="font-semibold px-3 py-2">무료</th>
+                  <th className="font-semibold px-3 py-2" style={{ color: TITA.forest }}>
+                    플러스
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {COMPARE_ROWS.map((row, i) => (
+                  <tr
+                    key={row.label}
+                    style={{
+                      borderTop: i === 0 ? undefined : `1px solid ${TITA.sage}`,
+                      color: TITA.ink,
+                    }}
+                  >
+                    <td className="text-left font-semibold px-3 py-3" style={{ color: TITA.forestDeep }}>
+                      {row.label}
+                    </td>
+                    <td className="text-center px-3 py-3" style={{ color: TITA.muted }}>
+                      {row.free}
+                    </td>
+                    <td
+                      className="text-center px-3 py-3 font-semibold"
+                      style={{ color: TITA.forest }}
+                    >
+                      {row.plus}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        {/* WHY pay — 4가지 frame */}
+        <section className="mb-8">
+          <h2 className="text-lg font-bold mb-4" style={{ color: TITA.forestDeep }}>
+            왜 플러스를 결제하시나요?
+          </h2>
+          <ul className="space-y-3">
+            {WHY_FRAMES.map(({ icon: Icon, title, body }) => (
+              <li
+                key={title}
+                className="rounded-2xl border p-5"
+                style={{ borderColor: TITA.sage, background: TITA.white }}
+              >
+                <div className="flex items-start gap-3">
+                  <div
+                    className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center"
+                    style={{ background: TITA.sage }}
+                  >
+                    <Icon className="w-5 h-5" style={{ color: TITA.forest }} />
+                  </div>
+                  <div>
+                    <h3 className="font-bold mb-1" style={{ color: TITA.forestDeep }}>
+                      {title}
+                    </h3>
+                    <p className="text-sm leading-relaxed" style={{ color: TITA.muted }}>
+                      {body}
+                    </p>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
 
         {/* 상품 카드 */}
         <section

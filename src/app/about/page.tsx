@@ -117,8 +117,8 @@ export default function AboutPage() {
         <Section tag="우리가 만든 것" title="친구 커뮤니티">
           <ul className="space-y-2.5">
             <Bullet>
-              <strong>결동무 우선, 데이팅 아님.</strong> 같은 동네·관심사로
-              만나는 친구 중심
+              <strong>친구 우선 · 의도는 본인이 선택.</strong> 같은 동네·관심사로
+              만나는 결친구 중심, 인연은 본인이 열어둘 수도 있어요
             </Bullet>
             <Bullet>
               NICE 본인인증을 통과해야 함께해요
