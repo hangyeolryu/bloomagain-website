@@ -165,25 +165,40 @@ export default async function GyeolResultPage({ params }: Params) {
               fontSize: 15,
               fontWeight: 700,
               color: TITA.forestMid,
-              margin: "0 0 8px",
+              margin: "0 0 6px",
             }}
           >
-            이 테스트는 12개였지만, 이건 맛보기예요.
+            이 테스트는 맛보기예요
+          </p>
+          <p
+            style={{
+              fontSize: 23,
+              fontWeight: 800,
+              letterSpacing: "-0.6px",
+              lineHeight: 1.35,
+              color: TITA.forestDeep,
+              margin: "0 0 12px",
+            }}
+          >
+            그런데 그 사람,
+            <br />
+            어디에 있을까요?
           </p>
           <p
             style={{
               fontSize: 16,
-              lineHeight: 1.75,
+              lineHeight: 1.8,
               color: TITA.ink,
               margin: "0 0 20px",
             }}
           >
-            <b style={{ color: TITA.forestDeep }}>티타</b>에선 매일{" "}
-            <b>하루 한 질문(결큐)</b>에 답할수록 당신의 결이 더 또렷해져요.
+            당신과 결이 딱 맞는 사람은{" "}
+            <b style={{ color: TITA.forestDeep }}>어딘가 분명 있어요.</b>
             <br />
-            그렇게 쌓인 결로, 본인인증 된 우리 동네에서{" "}
-            <b style={{ color: TITA.forestDeep }}>진짜 나와 결이 맞는 사람</b>을
-            천천히 찾아드려요. 🍵
+            <b>티타</b>에서 매일 한 질문(결큐)에 답할수록 결이 또렷해지고, 그만큼 그
+            사람에 한 걸음씩 가까워져요.
+            <br />
+            우리 동네일 수도, 생각지 못한 먼 곳일 수도. 진짜 찾아볼래요? 🍵
           </p>
           <ResultActions code={t.code} name={t.name} />
         </section>
