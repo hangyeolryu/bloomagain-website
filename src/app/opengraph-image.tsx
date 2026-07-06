@@ -10,7 +10,7 @@ import { join } from "path";
 // 구워져야 한다. force-static을 지정해야 Next가 서버 런타임 없이 정적 생성한다.
 // (runtime="nodejs"는 정적 내보내기와 호환 안 됨 — 빌드 에러의 원인이었다.)
 export const dynamic = "force-static";
-export const alt = "티타 — 만 45세 이상, 결이 통하는 친구 한 분";
+export const alt = "티타 — 만 45세 이상, 결이 통하는 친구들";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -99,7 +99,7 @@ export default async function Image() {
               letterSpacing: "-2px",
             }}
           >
-            결이 통하는 친구 한 분
+            결이 통하는 친구들
           </div>
           <div style={{ color: sage, fontSize: 30, fontWeight: 600, marginTop: 10 }}>
             오후 한 잔의 안심 티타임 · 데이팅 앱이 아닙니다

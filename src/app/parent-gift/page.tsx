@@ -40,7 +40,7 @@ import {
 export const metadata: Metadata = {
   title: "어머니께 6개월 무료를 선물하세요 — 티타 창립회원",
   description:
-    "결이 통하는 평생 친구 한 분. 창립회원 500명 한정 · 6개월 무료 · 평생 가격 잠금. 만 45세 이상 본인인증, 친구 우선 (의도는 본인이 선택).",
+    "결이 통하는 평생 친구들. 창립회원 500명 한정 · 6개월 무료 · 평생 가격 잠금. 만 45세 이상 본인인증, 친구 우선 (의도는 본인이 선택).",
 };
 
 export default function ParentGiftPage() {
@@ -111,7 +111,7 @@ export default function ParentGiftPage() {
             fontWeight: 500,
           }}
         >
-          결이 통하는 평생 친구 한 분.
+          결이 통하는 평생 친구들.
           <br />
           만 45세 이상 본인인증된 분만 모이는 안전한 공간이에요.
         </p>
@@ -216,7 +216,7 @@ export default function ParentGiftPage() {
               margin: "0 0 12px",
             }}
           >
-            티타. 결이 통하는 친구 한 분.
+            티타. 결이 통하는 친구들.
           </h2>
           <p
             style={{

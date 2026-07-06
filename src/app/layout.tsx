@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     // images 미지정 — Next가 src/app/opengraph-image.tsx를 1200×630 OG로 자동 사용.
     title: "티타 — 오후 한 잔의 안심 티타임",
     description:
-      "결이 통하는 친구 한 분, 천천히. 본인인증·AI 안전망으로 보호받는 친구 매칭.",
+      "결이 통하는 친구들, 천천히. 본인인증·AI 안전망으로 보호받는 친구 매칭.",
     siteName: "티타",
     locale: "ko_KR",
     type: "website",
