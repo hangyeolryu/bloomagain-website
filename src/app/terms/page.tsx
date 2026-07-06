@@ -1,6 +1,7 @@
 import LegalLayout from "../_components/legal/LegalLayout";
 
 const TOC = [
+  { id: "seller-info", label: "통신판매업자 정보" },
   { id: "section-1", label: "제1조 (목적)" },
   { id: "section-2", label: "제2조 (정의)" },
   { id: "section-3", label: "제3조 (약관의 게시와 개정)" },
@@ -12,16 +13,15 @@ const TOC = [
   { id: "section-9", label: "제9조 (콘텐츠의 저작권)" },
   { id: "section-10", label: "제10조 (서비스 이용의 제한)" },
   { id: "section-11", label: "제11조 (불법 성적 서비스 금지)" },
-  { id: "section-12", label: "제12조 (결제·구독·환불)" },
-  { id: "section-13", label: "제13조 (창립 회원·평생 후원자)" },
-  { id: "section-14", label: "제14조 (손해배상)" },
-  { id: "section-15", label: "제15조 (면책조항)" },
-  { id: "section-16", label: "제16조 (분쟁의 해결)" },
-  { id: "section-17", label: "제17조 (연령 제한)" },
-  { id: "section-18", label: "제18조 (AI 기반 서비스)" },
-  { id: "section-19", label: "제19조 (스캠 방지 시스템)" },
-  { id: "section-20", label: "제20조 (접근성 서비스)" },
-  { id: "section-21", label: "제21조 (기타)" },
+  { id: "refund", label: "제12조 (결제·구독·환불)" },
+  { id: "section-13", label: "제13조 (손해배상)" },
+  { id: "section-14", label: "제14조 (면책조항)" },
+  { id: "section-15", label: "제15조 (분쟁의 해결)" },
+  { id: "section-16", label: "제16조 (연령 제한)" },
+  { id: "section-17", label: "제17조 (AI 기반 서비스)" },
+  { id: "section-18", label: "제18조 (스캠 방지 시스템)" },
+  { id: "section-19", label: "제19조 (접근성 서비스)" },
+  { id: "section-20", label: "제20조 (기타)" },
 ];
 
 export default function TermsPage() {
@@ -29,16 +29,32 @@ export default function TermsPage() {
     <LegalLayout
       activeKey="terms"
       title="이용약관"
-      subtitle="다시 봄 (Tita Korea)"
-      versionTag="v2.0"
-      effectiveDate="2026년 5월 19일"
-      lastUpdated="2026년 5월 19일"
+      subtitle="티타 (Tita)"
+      versionTag="v3.0"
+      effectiveDate="2026년 6월 27일"
+      lastUpdated="2026년 6월 27일"
       toc={TOC}
     >
+      <section id="seller-info" className="bg-slate-50 border border-slate-200 rounded-lg p-6 -mt-2 mb-10">
+        <h2 className="!mt-0">통신판매업자 정보</h2>
+        <ul className="!list-none !pl-0">
+          <li><strong>상호</strong>: ㈜이프이프 (EFFEFF Inc.)</li>
+          <li><strong>대표자</strong>: 유한결</li>
+          <li><strong>사업자등록번호</strong>: 466-81-04205</li>
+          <li><strong>통신판매업 신고번호</strong>: 신고 준비 중 (영등포구청 신고 예정)</li>
+          <li><strong>주소</strong>: (07271) 서울특별시 영등포구 국회대로50길 20, 101동 803호</li>
+          <li><strong>고객센터 전화</strong>: 010-5647-1196</li>
+          <li><strong>이메일</strong>: <a href="mailto:ceo@effeffcorp.com">ceo@effeffcorp.com</a></li>
+        </ul>
+        <p className="mt-3 text-base text-gray-600">
+          본 서비스의 유료 상품(티타 플러스 구독)은 위 사업자가 판매합니다. Apple App Store를 통한 결제의 경우 Apple의 결제 정책 및 표준 이용약관(EULA)이 함께 적용됩니다.
+        </p>
+      </section>
+
       <section id="section-1">
         <h2>제1조 (목적)</h2>
         <p>
-          본 약관은 &lsquo;다시 봄&rsquo;(이하 &lsquo;회사&rsquo;)이 제공하는 서비스(이하
+          본 약관은 &lsquo;티타&rsquo;(이하 &lsquo;회사&rsquo;)이 제공하는 서비스(이하
           &lsquo;서비스&rsquo;)의 이용과 관련하여 회사와 이용자 간의 권리, 의무 및 책임사항,
           기타 필요한 사항을 규정함을 목적으로 합니다.
         </p>
@@ -61,12 +77,6 @@ export default function TermsPage() {
           </li>
           <li>&ldquo;모임&rdquo;이란 이용자들이 공통의 관심사를 바탕으로 형성하는 12명 이하의 소그룹 공간을 의미합니다.</li>
           <li>&ldquo;콘텐츠&rdquo;란 이용자가 서비스를 이용하면서 게시한 글, 사진, 동영상, 댓글, 메시지 등 모든 정보를 의미합니다.</li>
-          <li>
-            &ldquo;창립 회원&rdquo;이란 본 약관 시행일 이후 가입 순서에 따라 회사로부터 한정된 식별 번호를 부여받은 회원을 의미합니다.
-          </li>
-          <li>
-            &ldquo;평생 후원자&rdquo;란 평생 회원권을 결제하고 회사로부터 별도의 후원자 번호를 부여받은 회원을 의미합니다.
-          </li>
         </ol>
       </section>
 
@@ -218,33 +228,36 @@ export default function TermsPage() {
         </ol>
       </section>
 
-      <section id="section-12">
+      <section id="refund">
         <h2>제12조 (결제·구독·환불)</h2>
         <ol>
           <li>
-            <strong>유료 서비스 종류</strong>: 회사는 다음과 같은 유료 서비스를 제공합니다:
+            <strong>유료 서비스</strong>: 회사는 다음의 유료 구독 서비스를 제공합니다:
             <ul>
-              <li>월 구독 (Premium): 월 19,900원 (부가세 포함)</li>
-              <li>연 구독 (Premium): 연 199,000원 (부가세 포함)</li>
-              <li>평생 회원권 (창립 회원에 한해 한정 판매, 제13조 참조)</li>
+              <li>티타 플러스 (월간 구독): 월 19,900원 (부가세 포함)</li>
             </ul>
           </li>
           <li>
-            <strong>결제 수단</strong>: 회사는 토스페이먼츠, 카카오페이, Apple In-App Purchase, Google Play 결제 등 회사가 지정한 결제 수단을 통해 결제를 처리합니다. 결제 정보는 결제 대행사가 안전하게 보관합니다.
+            <strong>결제 수단</strong>: 회사는 토스페이먼츠 신용카드 정기결제(빌링), 카카오페이, Apple In-App Purchase, Google Play 결제 등 회사가 지정한 결제 수단을 통해 결제를 처리합니다. 카드 정보는 결제대행사(토스페이먼츠)가 안전하게 보관하며 회사 서버에는 저장되지 않습니다.
           </li>
           <li>
-            <strong>자동 결제 (월/연 구독)</strong>: 구독은 이용자가 별도로 해지하지 않는 한 자동으로 갱신됩니다. 해지는 마이페이지 → 설정 → 구독 관리 또는 결제 플랫폼(App Store, Google Play)에서 직접 처리할 수 있습니다.
-          </li>
-          <li>
-            <strong>청약 철회 (월/연 구독)</strong>:
+            <strong>자동 갱신</strong>: 본 구독은 자동 갱신형(auto-renewable) 구독입니다.
             <ul>
-              <li>결제 후 7일 이내 + Premium 기능을 한 번도 사용하지 않은 경우에 한해 전액 환불이 가능합니다.</li>
-              <li>Premium 기능을 사용한 경우 「전자상거래 등에서의 소비자보호에 관한 법률」 제17조 제2항 제5호에 따라 청약 철회가 제한될 수 있습니다.</li>
-              <li>7일이 경과한 이후 또는 해지 시점까지의 사용 분에 대해서는 환불이 불가합니다.</li>
+              <li>구독은 이용자가 <strong>현재 구독 기간이 종료되기 최소 24시간 전</strong>에 해지하지 않는 한, 동일한 기간·금액(월 19,900원)으로 자동 갱신·결제됩니다.</li>
+              <li>토스페이먼츠 정기결제의 경우 등록한 카드로 매월 같은 날 자동 결제되며, App Store·Google Play 결제의 경우 해당 계정에 청구됩니다.</li>
+              <li>해지 및 자동 갱신 끄기는 구매 후 언제든지 앱 마이페이지 → 설정 → 구독 관리, 결제 플랫폼(App Store → Apple 계정 → 구독 / Google Play → 구독), 또는 고객센터(ceo@effeffcorp.com)를 통해 처리할 수 있습니다.</li>
+              <li>무료 체험 기간이 제공되는 경우, 체험 기간 종료 최소 24시간 전에 해지하지 않으면 유료 구독으로 자동 전환됩니다.</li>
             </ul>
           </li>
           <li>
-            <strong>해지 후 잔여 기간</strong>: 월/연 구독을 해지하더라도 이미 결제한 기간 동안에는 Premium 기능을 계속 이용할 수 있으며, 다음 결제 주기부터 일반 회원으로 전환됩니다.
+            <strong>청약 철회 및 환불</strong>:
+            <ul>
+              <li>결제 후 <strong>7일 이내 + 플러스(Premium) 기능을 한 번도 사용하지 않은 경우</strong>에 한해 전액 환불이 가능합니다.</li>
+              <li>플러스 기능을 사용한 경우 「전자상거래 등에서의 소비자보호에 관한 법률」 제17조 제2항 제5호(디지털 콘텐츠 등의 제공이 개시된 경우)에 따라 청약 철회가 제한될 수 있습니다.</li>
+              <li>정기결제를 해지하면 <strong>다음 결제 주기부터 자동 결제가 중단</strong>되며, 이미 결제한 기간은 만료일까지 계속 이용할 수 있습니다.</li>
+              <li>회사의 귀책 사유로 결제 오류가 발생하거나 서비스가 정상 제공되지 않은 경우 해당 금액을 전액 환불합니다.</li>
+              <li>환불 신청은 앱 마이페이지 또는 고객센터(ceo@effeffcorp.com)로 접수하며, 접수 후 영업일 기준 3~5일 이내 원결제 수단으로 처리됩니다. App Store·Google Play 결제는 각 스토어의 환불 정책이 우선 적용됩니다.</li>
+            </ul>
           </li>
           <li>
             <strong>가격 변경</strong>: 회사가 가격을 변경하는 경우 변경 시행일 30일 전 회원에게 고지하며, 기존 구독자에게는 다음 결제 주기부터 새 가격이 적용됩니다.
@@ -256,58 +269,15 @@ export default function TermsPage() {
       </section>
 
       <section id="section-13">
-        <h2>제13조 (창립 회원·평생 후원자)</h2>
-        <ol>
-          <li>
-            <strong>창립 회원 번호</strong>: 본 약관 시행일 이후 가입 순서에 따라 회사는 최초 500명의 회원에게 창립 회원 번호를 자동 발급합니다.
-          </li>
-          <li>
-            <strong>평생 회원권 가격</strong>: 창립 회원 번호에 따라 다음의 평생 회원권 가격이 잠금됩니다:
-            <ul>
-              <li>1번 ~ 100번: 69,000원 (부가세 포함, 일시불)</li>
-              <li>101번 ~ 300번: 99,000원 (부가세 포함, 일시불)</li>
-              <li>301번 ~ 500번: 149,000원 (부가세 포함, 일시불)</li>
-            </ul>
-          </li>
-          <li>
-            <strong>평생 후원자 모집</strong>: 평생 회원권을 결제하면 회사로부터 평생 후원자 번호를 별도 발급받습니다. 모집은 최초 500명까지만 진행되며, 500명에 도달하는 시점에 영구히 종료됩니다. 이후 다시 봄은 월/연 구독 형태로만 유료 가입할 수 있습니다.
-          </li>
-          <li>
-            <strong>평생 회원권의 효력</strong>: 평생 회원권은 다시 봄 서비스가 운영되는 기간 동안 유지됩니다. &ldquo;평생&rdquo;은 회원의 자연수명이 아닌, 회사의 서비스 운영 기간을 기준으로 합니다.
-          </li>
-          <li>
-            <strong>창립 회원 자격의 회수</strong>: 다음의 경우 창립 회원 자격은 회수되며, 회수된 창립 회원 번호는 다른 회원에게 재발급되지 않습니다:
-            <ul>
-              <li>회원 본인이 계정 삭제를 요청한 경우</li>
-              <li>가입일로부터 60일이 경과할 때까지 다시 봄에 한 번도 다시 접속하지 않은 경우 (회사는 가입 후 30일, 45일, 55일 경과 시점에 활동 안내를 발송합니다)</li>
-              <li>이용약관 위반, 부정 가입, 타인 명의 도용 등으로 회사가 이용을 정지한 경우</li>
-            </ul>
-          </li>
-          <li>
-            <strong>평생 후원자 자격의 효력</strong>: 평생 후원자로 결제한 회원의 창립 회원 자격은 비활성 회수 대상에서 제외됩니다.
-          </li>
-          <li>
-            <strong>환불</strong>: 평생 회원권 결제 후 7일 이내 + Premium 기능을 한 번도 사용하지 않은 경우에 한해 전액 환불 가능합니다. 그 외 환불은 불가합니다.
-          </li>
-          <li>
-            <strong>양도·상속</strong>: 창립 회원 자격 및 평생 후원자 자격은 회원 본인에게만 귀속되며 타인에게 양도할 수 없습니다. 회원 사망 시 평생 후원자 자격은 자동으로 소멸되며, 상속되지 않습니다.
-          </li>
-          <li>
-            <strong>서비스 종료 및 인수합병</strong>: 회사가 서비스를 종료하기로 결정한 경우 최소 30일 전에 평생 후원자에게 서면 통지하며, 잔여 가치의 비례적 환불 또는 동급 서비스로의 자격 이전 중 하나를 선택할 수 있도록 합니다. 다른 회사에 사업이 이전되는 경우 평생 후원자 자격은 인수 회사의 동급 서비스로 자동 이전됩니다.
-          </li>
-        </ol>
-      </section>
-
-      <section id="section-14">
-        <h2>제14조 (손해배상)</h2>
+        <h2>제13조 (손해배상)</h2>
         <ol>
           <li>회사는 무료로 제공되는 서비스와 관련하여 회원에게 어떠한 손해가 발생하더라도 동 손해가 회사의 중대한 과실에 의한 경우를 제외하고 이에 대하여 책임을 부담하지 아니합니다.</li>
           <li>이용자가 본 약관의 규정을 위반하여 회사에 손해를 입힌 경우, 이용자는 회사에 대하여 그 손해를 배상하여야 합니다.</li>
         </ol>
       </section>
 
-      <section id="section-15">
-        <h2>제15조 (면책조항)</h2>
+      <section id="section-14">
+        <h2>제14조 (면책조항)</h2>
         <ol>
           <li>회사는 천재지변 또는 이에 준하는 불가항력으로 인하여 서비스를 제공할 수 없는 경우에는 서비스 제공에 관한 책임이 면제됩니다.</li>
           <li>회사는 회원의 귀책사유로 인한 서비스 이용의 장애에 대하여는 책임을 지지 않습니다.</li>
@@ -320,21 +290,21 @@ export default function TermsPage() {
         </ol>
       </section>
 
-      <section id="section-16">
-        <h2>제16조 (분쟁의 해결)</h2>
+      <section id="section-15">
+        <h2>제15조 (분쟁의 해결)</h2>
         <ol>
           <li>회사와 이용자 간에 발생한 전자상거래 분쟁에 관한 소송은 제소 당시의 이용자의 주소에 의하고, 주소가 없는 경우에는 거소를 관할하는 지방법원의 전속관할로 합니다. 다만, 제소 당시 이용자의 주소 또는 거소가 분명하지 않거나 외국 거주자의 경우에는 민사소송법상의 관할법원에 제기합니다.</li>
           <li>회사와 이용자 간에 발생한 분쟁은 전자거래기본법 제28조 및 동 시행령 제15조에 의하여 설치된 전자거래분쟁조정위원회의 조정에 따를 수 있습니다.</li>
         </ol>
       </section>
 
-      <section id="section-17">
-        <h2>제17조 (연령 제한)</h2>
+      <section id="section-16">
+        <h2>제16조 (연령 제한)</h2>
         <p>본 서비스는 만 45세 이상의 사용자만을 대상으로 합니다. 만 45세 미만의 사용자는 서비스를 이용할 수 없으며, 회원가입이 거부될 수 있습니다.</p>
       </section>
 
-      <section id="section-18">
-        <h2>제18조 (AI 기반 서비스)</h2>
+      <section id="section-17">
+        <h2>제17조 (AI 기반 서비스)</h2>
         <ol>
           <li>회사는 Google Cloud Vertex AI를 활용하여 사용자 매칭 및 스캠 방지 서비스를 제공하기 위해 노력합니다.</li>
           <li>이용자는 AI 기반 서비스의 특성상 완벽하지 않을 수 있으며, 100% 정확한 감지나 매칭을 보장하지 않음을 이해하고 동의합니다.</li>
@@ -343,8 +313,8 @@ export default function TermsPage() {
         </ol>
       </section>
 
-      <section id="section-19">
-        <h2>제19조 (스캠 방지 시스템)</h2>
+      <section id="section-18">
+        <h2>제18조 (스캠 방지 시스템)</h2>
         <ol>
           <li>회사는 멀티모달 신뢰 스코어링 엔진을 통해 실시간으로 스캠 및 사기 행위를 감지하고 차단합니다.</li>
           <li>이용자는 스캠 방지를 위한 메시지 모니터링 및 분석에 동의합니다.</li>
@@ -355,8 +325,8 @@ export default function TermsPage() {
         </ol>
       </section>
 
-      <section id="section-20">
-        <h2>제20조 (접근성 서비스)</h2>
+      <section id="section-19">
+        <h2>제19조 (접근성 서비스)</h2>
         <ol>
           <li>회사는 시력 수준에 따른 동적 레이아웃 조정 서비스를 제공합니다.</li>
           <li>접근성 설정은 로컬 기기에 저장되며, 서버와 동기화되지 않습니다.</li>
@@ -364,8 +334,8 @@ export default function TermsPage() {
         </ol>
       </section>
 
-      <section id="section-21">
-        <h2>제21조 (기타)</h2>
+      <section id="section-20">
+        <h2>제20조 (기타)</h2>
         <ol>
           <li>본 약관에서 정하지 아니한 사항에 대해서는 관련법령 또는 상관례에 따릅니다.</li>
           <li>회사는 필요한 경우 특정 서비스에 관하여 적용될 사항(이하 &ldquo;개별약관&rdquo;이라고 합니다)을 정하여 이를 미리 공지할 수 있습니다.</li>

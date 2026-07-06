@@ -149,7 +149,6 @@ export default function LegalLayout({
             <div>
               <p className="font-semibold text-[#0F1A35] mb-2">㈜이프이프</p>
               <p>대표자명 유한결 · 사업자등록번호 466-81-04205</p>
-              <p>통신판매업신고번호 제2026-서울영등포-____호</p>
               <p>전화 010-5647-1196</p>
               <p>(07271) 서울특별시 영등포구 국회대로50길 20, 101동 803호</p>
             </div>
