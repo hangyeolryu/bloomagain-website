@@ -114,7 +114,9 @@ export default function GyeolTestPage() {
             테스트 시작하기
           </button>
           <p style={{ fontSize: 13, color: TITA.mutedSoft, marginTop: 16 }}>
-            결과는 나와 결이 맞는 친구 유형까지 알려드려요.
+            나와 결이 맞는 친구 유형까지 알려드려요.
+            <br />
+            티타에선 답할수록 더 또렷해져, 진짜 맞는 사람을 찾아줘요.
           </p>
         </div>
       ) : (

@@ -158,23 +158,32 @@ export default async function GyeolResultPage({ params }: Params) {
           </p>
         </section>
 
-        {/* 티타 연결 + CTA */}
+        {/* 티타 연결 + CTA — 핵심 메시지: 답할수록 천천히 더 정확히 찾아준다 */}
         <section style={{ marginTop: 28, textAlign: "center" }}>
           <p
             style={{
+              fontSize: 15,
+              fontWeight: 700,
+              color: TITA.forestMid,
+              margin: "0 0 8px",
+            }}
+          >
+            이 테스트는 12개였지만, 이건 맛보기예요.
+          </p>
+          <p
+            style={{
               fontSize: 16,
-              lineHeight: 1.7,
+              lineHeight: 1.75,
               color: TITA.ink,
               margin: "0 0 20px",
             }}
           >
-            <b style={{ color: TITA.forestDeep }}>티타</b>는 결이 통하는 사람을
-            찾아주는 <b>만 45세 이상</b> 친구 앱이에요.
+            <b style={{ color: TITA.forestDeep }}>티타</b>에선 매일{" "}
+            <b>하루 한 질문(결큐)</b>에 답할수록 당신의 결이 더 또렷해져요.
             <br />
-            본인인증 된 우리 동네 이웃 중에서
-            <br />
-            <b style={{ color: TITA.forestDeep }}>{match.name}</b> 같은 분을
-            만나보세요. 🍵
+            그렇게 쌓인 결로, 본인인증 된 우리 동네에서{" "}
+            <b style={{ color: TITA.forestDeep }}>진짜 나와 결이 맞는 사람</b>을
+            천천히 찾아드려요. 🍵
           </p>
           <ResultActions code={t.code} name={t.name} />
         </section>

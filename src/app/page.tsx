@@ -113,6 +113,20 @@ export default function Home() {
               구글 플레이에서 받기
             </a>
           </div>
+          {/* 무가입 훅 — 다운로드 전에 가치를 먼저 주는 결 유형 테스트 진입 */}
+          <div className="mt-6">
+            <Link
+              href="/gyeol"
+              onClick={() =>
+                logAnalyticsEvent("gyeol_entry_click", { source: "home_hero" })
+              }
+              className="inline-flex items-center gap-1.5 text-sm font-semibold underline-offset-4 hover:underline"
+              style={{ color: TITA.forestMid }}
+            >
+              🍵 가입 없이 3분, 내 결 유형 알아보기
+              <span aria-hidden>→</span>
+            </Link>
+          </div>
         </section>
 
         {/* ── 2. 어떻게 작동하나 (3단계) ─────────────────────── */}
