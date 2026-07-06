@@ -15,6 +15,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  // metadataBase가 있어야 opengraph-image / twitter-image URL이 절대경로로
+  // 풀린다. 없으면 링크 공유 시 프리뷰 이미지가 깨진다.
+  metadataBase: new URL("https://tita-app.com"),
   title: "티타 (Tita) — 결이 맞는 친구",
   description:
     "오후 한 잔의 안심 티타임. 본인인증·AI 안전망으로 보호받는 결친구 매칭. 툭 던져도 착 받아주는 우리의 티키타카.",
@@ -33,21 +36,19 @@ export const metadata: Metadata = {
   },
   manifest: "/site.webmanifest",
   openGraph: {
+    // images 미지정 — Next가 src/app/opengraph-image.tsx를 1200×630 OG로 자동 사용.
     title: "티타 — 오후 한 잔의 안심 티타임",
     description:
       "결이 통하는 친구 한 분, 천천히. 본인인증·AI 안전망으로 보호받는 친구 매칭.",
-    images: [
-      { url: "/icon-512.png", width: 512, height: 512, alt: "티타 로고" },
-    ],
     siteName: "티타",
     locale: "ko_KR",
     type: "website",
   },
   twitter: {
-    card: "summary",
-    title: "티타 (Tita)",
-    description: "결이 맞는 친구 매칭.",
-    images: ["/icon-512.png"],
+    // 큰 가로 카드. 이미지는 opengraph-image.tsx를 공유.
+    card: "summary_large_image",
+    title: "티타 (Tita) — 결이 맞는 친구",
+    description: "오후 한 잔의 안심 티타임. 데이팅 앱이 아닙니다.",
   },
 };
 
