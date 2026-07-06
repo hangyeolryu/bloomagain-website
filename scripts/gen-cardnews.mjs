@@ -109,7 +109,7 @@ const cards = [
 
   // 5. 메커니즘
   frame(4, TOTAL, h("div", { style: { display: "flex", flexDirection: "column", gap: 22 } },
-    subText("티타는 한 방에 안 골라요"),
+    subText("티타는 서두르지 않아요"),
     bigText("매일 한 질문에", 58),
     bigText("답할수록 또렷해져,", 58),
     bigText("진짜 맞는 사람을", 58),
