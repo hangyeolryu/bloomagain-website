@@ -28,7 +28,7 @@ const messaging = firebase.messaging();
 // Background message handler — fires when the page is closed and a push
 // arrives from the bloomagain-korea backend's risk-alert fan-out.
 messaging.onBackgroundMessage((payload) => {
-  const title = payload.notification?.title ?? "다시, 봄 알림";
+  const title = payload.notification?.title ?? "티타 알림";
   const options = {
     body: payload.notification?.body ?? "",
     icon: "/icon-192.png",

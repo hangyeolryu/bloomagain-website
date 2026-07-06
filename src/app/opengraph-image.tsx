@@ -1,4 +1,6 @@
 import { ImageResponse } from "next/og";
+import { readFile } from "fs/promises";
+import { join } from "path";
 
 // 링크 공유 시(스레드·카톡·인스타 등) 뜨는 1200×630 프리뷰 이미지.
 // Next가 빌드/요청 시 아래 JSX를 PNG로 렌더한다. 별도 정적 이미지 파일이
@@ -9,13 +11,26 @@ export const alt = "티타 — 만 45세 이상, 결이 맞는 친구를 만나�
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-// Satori(ImageResponse)는 한글 글리프를 내장하지 않으므로 한글 폰트를
-// 빌드 시 불러와 넣어준다. Pretendard(오픈소스)를 jsDelivr에서 fetch.
+// Satori(ImageResponse)는 한글 글리프를 내장하지 않으므로 한글 폰트를 넣어준다.
+// 로컬 번들(src/app/fonts/Pretendard-*.otf) 우선 — 빌드 시 외부 fetch 의존이
+// 없어 안전하다. 폰트 파일이 없으면 jsDelivr fetch로 폴백(즉시 작동은 하되
+// 빌드 환경이 외부 네트워크를 막으면 실패할 수 있음).
+//
+// 완전 번들하려면 아래를 한 번 실행해 폰트를 받아 커밋:
+//   mkdir -p src/app/fonts && for w in Bold SemiBold; do curl -sSL \
+//     "https://cdn.jsdelivr.net/gh/orioncactus/pretendard/packages/pretendard/dist/public/static/Pretendard-$w.otf" \
+//     -o "src/app/fonts/Pretendard-$w.otf"; done
 async function loadFont(weight: "Bold" | "SemiBold") {
-  const url = `https://cdn.jsdelivr.net/gh/orioncactus/pretendard/packages/pretendard/dist/public/static/Pretendard-${weight}.otf`;
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`font load failed: ${weight}`);
-  return res.arrayBuffer();
+  try {
+    return await readFile(
+      join(process.cwd(), "src/app/fonts", `Pretendard-${weight}.otf`)
+    );
+  } catch {
+    const url = `https://cdn.jsdelivr.net/gh/orioncactus/pretendard/packages/pretendard/dist/public/static/Pretendard-${weight}.otf`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`font load failed: ${weight}`);
+    return Buffer.from(await res.arrayBuffer());
+  }
 }
 
 export default async function Image() {
@@ -88,7 +103,7 @@ export default async function Image() {
               letterSpacing: "-2px",
             }}
           >
-            결이 맞는 친구를 만나는 곳 🍵
+            결이 맞는 친구를 만나는 곳
           </div>
           <div
             style={{

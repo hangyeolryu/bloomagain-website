@@ -1,6 +1,6 @@
 "use client";
 
-// 다시봄 알아보기 — public-facing "about us" page.
+// 티타 알아보기 — public-facing "about us" page.
 // Linked from app onboarding modal, app settings menu, and home app bar.
 // All three entry points open this URL in a WebView so updates land instantly
 // across iOS / Android without requiring an app release.
@@ -57,7 +57,7 @@ export default function AboutPage() {
           <div className="flex justify-between items-center h-16">
             <Link href="/" className="flex items-center gap-2">
               <span className="text-2xl font-bold" style={{ color: BRAND.ink }}>
-                다시, 봄
+                티타
               </span>
               <span className="text-sm text-gray-500">Dasi, Bom</span>
             </Link>
@@ -86,7 +86,7 @@ export default function AboutPage() {
               className="text-sm font-semibold tracking-wide"
               style={{ color: BRAND.navy }}
             >
-              다시봄에 대해서
+              티타에 대해서
             </span>
           </div>
           <h1
@@ -110,7 +110,7 @@ export default function AboutPage() {
             <p>
               젊은 나이에 열심히 인생 달려오신 분들, 이제 걱정은 최소화 하시고
               편하고 즐거운 날들 보내세요.{" "}
-              <strong style={{ color: BRAND.navy }}>다시봄이 함께 할게요.</strong>
+              <strong style={{ color: BRAND.navy }}>티타이 함께 할게요.</strong>
             </p>
           </div>
         </section>
@@ -119,22 +119,22 @@ export default function AboutPage() {
         <Section
           icon={Target}
           tag="우리 미션"
-          title="50대 이상의 외로움을, 안전한 모임으로 풀어드립니다."
+          title="45세 이상의 외로움을, 안전한 모임으로 풀어드립니다."
         >
           <p>
-            한국은 OECD 국가 중 사회적 고립 정도가 가장 높습니다. 50대 이후엔
+            한국은 OECD 국가 중 사회적 고립 정도가 가장 높습니다. 45세 이후엔
             관계가 줄고, 새 친구 만나기는 점점 어려워집니다.
           </p>
           <p>
             기존 모임 앱·소셜 앱은 너무 복잡하고, 사기 위험이 크고, 결국 데이팅
             중심입니다.{" "}
             <strong style={{ color: BRAND.ink }}>
-              다시봄은 그 빈자리를 채우려고 만들어졌습니다.
+              티타은 그 빈자리를 채우려고 만들어졌습니다.
             </strong>
           </p>
           <p className="pt-2">
             국립정신건강센터의 2021년 국가 정신건강조사(NMHSK)에 따르면, 한국
-            성인 11.79%가 외로움을 느끼고 있습니다. 다시봄은 이 데이터와 같은
+            성인 11.79%가 외로움을 느끼고 있습니다. 티타은 이 데이터와 같은
             척도(LSIS-6)로 사용자의 마음 건강 변화를 측정해, 정말로 의미있게
             연결되는지 함께 확인합니다.
           </p>
@@ -144,16 +144,16 @@ export default function AboutPage() {
         <Section
           icon={Users}
           tag="우리가 만든 것"
-          title="모임 중심의 50+ 안전 커뮤니티"
+          title="모임 중심의 45+ 안전 커뮤니티"
         >
-          <p>다시봄은 다음 세 가지가 다릅니다:</p>
+          <p>티타은 다음 세 가지가 다릅니다:</p>
           <ul className="space-y-3 pl-1">
             <Bullet>
               <strong>모임 우선, 데이팅 아님.</strong> 같은 동네, 같은 관심사로
               모이는 작은 그룹이 중심입니다.
             </Bullet>
             <Bullet>
-              <strong>50세 이상만.</strong> NICE 본인인증으로 신원이 확인된
+              <strong>45세 이상만.</strong> NICE 본인인증으로 신원이 확인된
               회원만 만납니다.
             </Bullet>
             <Bullet>
@@ -189,14 +189,14 @@ export default function AboutPage() {
           title="4단계 안전 시스템 — 특허 출원 중"
         >
           <p>
-            다시봄의 안전 시스템은 한 가지 기술에 의존하지 않습니다. 4개의 다른
+            티타의 안전 시스템은 한 가지 기술에 의존하지 않습니다. 4개의 다른
             층이 동시에 작동합니다:
           </p>
           <div className="grid sm:grid-cols-2 gap-3 my-4">
             <Tech
               num="1"
               title="NICE 본인인증"
-              desc="실명+CI/DI 해시. 50세 이상만 통과. 한 번 차단된 사람은 영구 차단."
+              desc="실명+CI/DI 해시. 45세 이상만 통과. 한 번 차단된 사람은 영구 차단."
             />
             <Tech
               num="2"
@@ -234,7 +234,7 @@ export default function AboutPage() {
                   className="text-sm leading-relaxed"
                   style={{ color: BRAND.muted }}
                 >
-                  4단계 안전 시스템 통합 특허. 추가 4건 특허 준비 중 — 50+
+                  4단계 안전 시스템 통합 특허. 추가 4건 특허 준비 중 — 45+
                   세대를 위한 디지털 안전 솔루션을 진지하게 보호하는 회사가 되겠습니다.
                 </p>
               </div>
@@ -249,7 +249,7 @@ export default function AboutPage() {
           title="성향과 동네로 진짜 잘 맞는 친구만"
         >
           <p>
-            다시봄은 사용자의 답변과 행동을 분석해 비슷한 분들끼리 연결합니다.
+            티타은 사용자의 답변과 행동을 분석해 비슷한 분들끼리 연결합니다.
           </p>
           <ul className="space-y-2.5 pl-1">
             <Bullet>
@@ -272,7 +272,7 @@ export default function AboutPage() {
             </Bullet>
           </ul>
           <p className="pt-3 text-sm" style={{ color: BRAND.muted }}>
-            그리고 새로운 사람 만나는 게 부담스러우신 분도 환영합니다. 다시봄의
+            그리고 새로운 사람 만나는 게 부담스러우신 분도 환영합니다. 티타의
             글·모임 활동만 둘러보셔도 충분히 의미있게 사용하실 수 있어요.
           </p>
         </Section>
@@ -281,25 +281,25 @@ export default function AboutPage() {
         <Section
           icon={Sparkles}
           tag="우리 비전"
-          title="50대 이상이 인생 후반을 의미있게 보낼 수 있는 한국의 첫 디지털 동반자"
+          title="45세 이상이 인생 후반을 의미있게 보낼 수 있는 한국의 첫 디지털 동반자"
         >
           <p>
-            다시봄은 단순한 모임 앱이 아닙니다. 우리는{" "}
+            티타은 단순한 모임 앱이 아닙니다. 우리는{" "}
             <strong style={{ color: BRAND.ink }}>
-              한국 50+ 세대를 위한 첫 정량 측정형 사회 연결 플랫폼
+              한국 45+ 세대를 위한 첫 정량 측정형 사회 연결 플랫폼
             </strong>
             을 만들고 있습니다.
           </p>
           <p>다음 5년 안에:</p>
           <ul className="space-y-2.5 pl-1">
             <Bullet>
-              한국 50+ 활동 세대(50-67세) 50만 명 이상이 일상적으로 사용
+              한국 45+ 활동 세대(50-67세) 50만 명 이상이 일상적으로 사용
             </Bullet>
             <Bullet>
               서울시50플러스재단, 노인복지관 등 공공 기관과의 정식 협력
             </Bullet>
             <Bullet>
-              한국 최초의 50+ 디지털 적응 곡선 종단 데이터셋 구축 (학술
+              한국 최초의 45+ 디지털 적응 곡선 종단 데이터셋 구축 (학술
               기여)
             </Bullet>
             <Bullet>
@@ -350,7 +350,7 @@ export default function AboutPage() {
               키우겠습니다.
             </p>
             <p className="pt-2 text-white/80 text-sm sm:text-base">
-              — 류한결, 다시봄 창업자 / ㈜이프이프 대표
+              — 류한결, 티타 창업자 / ㈜이프이프 대표
             </p>
           </div>
         </section>
@@ -361,7 +361,7 @@ export default function AboutPage() {
             className="text-xl sm:text-2xl font-bold mb-4"
             style={{ color: BRAND.ink }}
           >
-            지금 다시봄과 함께 시작하세요
+            지금 티타과 함께 시작하세요
           </h3>
           <p className="mb-8" style={{ color: BRAND.muted }}>
             창립 멤버 500명 한정 — 6개월 무료

@@ -1,7 +1,7 @@
 {
-  "name": "다시, 봄 (Bloom Again)",
-  "short_name": "다시, 봄",
-  "description": "50세+ 액티브 시니어를 위한 안전한 친구·모임 플랫폼. 만남앱이 아닙니다.",
+  "name": "티타 (Tita)",
+  "short_name": "티타",
+  "description": "만 45세 이상, 결이 맞는 친구를 만나는 곳. NICE 본인인증 된 또래와 안심하고 만드는 동네 친구. 데이팅 앱이 아닙니다.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

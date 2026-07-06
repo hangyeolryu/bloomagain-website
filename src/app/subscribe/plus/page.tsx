@@ -15,7 +15,7 @@ const BRAND = {
 } as const;
 
 const PLUS_AMOUNT = 19_900;
-const PLUS_PRODUCT_NAME = "다시봄 플러스 (월간)";
+const PLUS_PRODUCT_NAME = "티타 플러스 (월간)";
 
 const SESSION_KEY = "bloomagain_toss_pending";
 
@@ -133,7 +133,7 @@ export default function SubscribePlusPage() {
               style={{ color: BRAND.navy }}
             >
               <Smartphone className="h-4 w-4" />
-              다시봄 앱 결제
+              티타 앱 결제
             </span>
           ) : (
             <Link
@@ -142,7 +142,7 @@ export default function SubscribePlusPage() {
               style={{ color: BRAND.navy }}
             >
               <ArrowLeft className="h-4 w-4" />
-              다시, 봄 홈
+              티타 홈
             </Link>
           )}
           <span className="text-xs" style={{ color: BRAND.muted }}>
@@ -157,7 +157,7 @@ export default function SubscribePlusPage() {
             className="text-xs font-bold uppercase tracking-[0.3em] mb-2"
             style={{ color: BRAND.navySoft }}
           >
-            다시봄 플러스 정기결제
+            티타 플러스 정기결제
           </p>
           <h1
             className="text-3xl sm:text-4xl font-bold leading-tight mb-3"
@@ -278,7 +278,7 @@ export default function SubscribePlusPage() {
                 개인정보처리방침
               </Link>
               , 정기결제 진행에 동의합니다. 결제는 토스페이먼츠를 통해 안전하게 처리되며,
-              카드 정보는 다시봄 서버에 저장되지 않습니다.
+              카드 정보는 티타 서버에 저장되지 않습니다.
             </span>
           </label>
         </section>
@@ -309,7 +309,7 @@ export default function SubscribePlusPage() {
           <ShieldCheck className="h-4 w-4 flex-shrink-0 mt-0.5" style={{ color: BRAND.navy }} />
           <p>
             결제는 토스페이먼츠 PG가 처리합니다. 카드 정보는 토스페이먼츠 서버에만 저장되며,
-            다시봄은 마지막 4자리와 카드사 정보만 받습니다. 매월 결제 1일 전 이메일로 안내드립니다.
+            티타은 마지막 4자리와 카드사 정보만 받습니다. 매월 결제 1일 전 이메일로 안내드립니다.
             해지는 고객지원으로 요청하시면 즉시 처리해드립니다.
           </p>
         </div>

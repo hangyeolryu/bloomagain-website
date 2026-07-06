@@ -34,7 +34,7 @@ export default function DownloadPage() {
       <div className="mb-6">
         <Image
           src="/logo.png"
-          alt="다시, 봄 로고"
+          alt="티타 로고"
           width={96}
           height={96}
           className="mx-auto rounded-2xl shadow-md"
@@ -44,7 +44,7 @@ export default function DownloadPage() {
         />
       </div>
 
-      <h1 className="text-2xl font-bold text-gray-800 mb-2">다시, 봄</h1>
+      <h1 className="text-2xl font-bold text-gray-800 mb-2">티타</h1>
       <p className="text-gray-500 mb-8 text-sm">
         {redirected
           ? '스토어로 이동 중입니다...'
@@ -80,7 +80,7 @@ export default function DownloadPage() {
       </div>
 
       <p className="mt-10 text-xs text-gray-400">
-        50세 이상을 위한 따뜻한 동반자 앱
+        45세 이상을 위한 따뜻한 동반자 앱
       </p>
     </main>
   );

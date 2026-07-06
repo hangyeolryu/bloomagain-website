@@ -6,8 +6,8 @@ const faqs = [
     category: "계정 및 가입",
     items: [
       {
-        question: "다시, 봄은 누가 사용할 수 있나요?",
-        answer: "다시, 봄은 50세 이상의 분들을 위한 소셜 네트워킹 앱입니다. 가입 시 나이 확인 절차를 거칩니다.",
+        question: "티타은 누가 사용할 수 있나요?",
+        answer: "티타은 45세 이상의 분들을 위한 소셜 네트워킹 앱입니다. 가입 시 나이 확인 절차를 거칩니다.",
       },
       {
         question: "비밀번호를 잊어버렸어요. 어떻게 재설정하나요?",
@@ -24,7 +24,7 @@ const faqs = [
     items: [
       {
         question: "글자가 너무 작아서 보기 어려워요.",
-        answer: "다시, 봄은 시력 수준에 따라 글자 크기와 레이아웃을 자동으로 조정합니다. 마이페이지 → 설정 → 접근성에서 글자 크기를 직접 조정하실 수도 있습니다.",
+        answer: "티타은 시력 수준에 따라 글자 크기와 레이아웃을 자동으로 조정합니다. 마이페이지 → 설정 → 접근성에서 글자 크기를 직접 조정하실 수도 있습니다.",
       },
       {
         question: "새로운 인연을 어떻게 추천받나요?",
@@ -45,11 +45,11 @@ const faqs = [
       },
       {
         question: "스캠(사기) 메시지를 받았어요.",
-        answer: "다시, 봄의 특허 출원 AI 보안 시스템이 의심스러운 메시지를 자동으로 감지하고 경고합니다. 의심스러운 메시지를 받으셨다면 즉시 신고해 주시고, 개인정보나 금전 요구에는 절대 응하지 마세요.",
+        answer: "티타의 특허 출원 AI 보안 시스템이 의심스러운 메시지를 자동으로 감지하고 경고합니다. 의심스러운 메시지를 받으셨다면 즉시 신고해 주시고, 개인정보나 금전 요구에는 절대 응하지 마세요.",
       },
       {
         question: "개인정보는 어떻게 보호되나요?",
-        answer: "다시, 봄은 금융권 수준의 암호화 기술과 특허 출원된 보안 시스템으로 회원님의 개인정보를 보호합니다. 자세한 내용은 개인정보처리방침을 참고해 주세요.",
+        answer: "티타은 금융권 수준의 암호화 기술과 특허 출원된 보안 시스템으로 회원님의 개인정보를 보호합니다. 자세한 내용은 개인정보처리방침을 참고해 주세요.",
       },
     ],
   },
@@ -62,7 +62,7 @@ const faqs = [
       },
       {
         question: "알림이 오지 않아요.",
-        answer: "기기의 설정 → 앱 → 다시, 봄에서 알림 권한이 허용되어 있는지 확인해 주세요. 앱 내에서도 마이페이지 → 설정 → 알림에서 알림 설정을 확인하실 수 있습니다.",
+        answer: "기기의 설정 → 앱 → 티타에서 알림 권한이 허용되어 있는지 확인해 주세요. 앱 내에서도 마이페이지 → 설정 → 알림에서 알림 설정을 확인하실 수 있습니다.",
       },
     ],
   },
@@ -77,7 +77,7 @@ export default function SupportPage() {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center gap-3">
               <Link href="/" className="text-2xl font-bold text-[#0F1A35]">
-                다시, 봄
+                티타
               </Link>
               <span className="text-sm text-gray-500">Dasi, Bom</span>
             </div>
@@ -108,7 +108,7 @@ export default function SupportPage() {
           <HelpCircle className="h-12 w-12 text-[#10367D] mx-auto mb-4" />
           <h1 className="text-3xl font-bold text-white mb-3">고객 지원</h1>
           <p className="text-lg text-white/80">
-            다시, 봄 사용에 어려움이 있으신가요? 도와드리겠습니다.
+            티타 사용에 어려움이 있으신가요? 도와드리겠습니다.
           </p>
         </div>
       </div>

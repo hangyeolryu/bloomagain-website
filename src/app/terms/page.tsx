@@ -29,7 +29,7 @@ export default function TermsPage() {
     <LegalLayout
       activeKey="terms"
       title="이용약관"
-      subtitle="다시 봄 (Bloom Again Korea)"
+      subtitle="다시 봄 (Tita Korea)"
       versionTag="v2.0"
       effectiveDate="2026년 5월 19일"
       lastUpdated="2026년 5월 19일"
@@ -48,7 +48,7 @@ export default function TermsPage() {
         <h2>제2조 (정의)</h2>
         <ol>
           <li>
-            &ldquo;서비스&rdquo;란 회사가 제공하는 50세 이상 사용자를 위한 건전한 사교·동반자
+            &ldquo;서비스&rdquo;란 회사가 제공하는 45세 이상 사용자를 위한 건전한 사교·동반자
             관계 형성 및 커뮤니티 활동 플랫폼을 의미합니다. 본 서비스는 이성 간 건전한 교류,
             취미·관심사 공유, 지역 모임 등을 목적으로 하며, 어떠한 형태의 성적 서비스
             제공·알선·유도와도 무관합니다.
@@ -95,7 +95,7 @@ export default function TermsPage() {
               <li>실명이 아니거나 타인의 명의를 이용한 경우</li>
               <li>등록 내용에 허위, 기재누락, 오기가 있는 경우</li>
               <li>기타 회원으로 등록하는 것이 회사의 기술상 현저히 지장이 있다고 판단되는 경우</li>
-              <li>50세 미만인 경우</li>
+              <li>45세 미만인 경우</li>
               <li>본 약관 및 개인정보처리방침에 동의하지 않은 경우</li>
             </ul>
           </li>
@@ -330,7 +330,7 @@ export default function TermsPage() {
 
       <section id="section-17">
         <h2>제17조 (연령 제한)</h2>
-        <p>본 서비스는 50세 이상의 사용자만을 대상으로 합니다. 50세 미만의 사용자는 서비스를 이용할 수 없으며, 회원가입이 거부될 수 있습니다.</p>
+        <p>본 서비스는 45세 이상의 사용자만을 대상으로 합니다. 45세 미만의 사용자는 서비스를 이용할 수 없으며, 회원가입이 거부될 수 있습니다.</p>
       </section>
 
       <section id="section-18">

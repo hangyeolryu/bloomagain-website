@@ -199,7 +199,7 @@ function SuccessInner() {
         className="rounded-2xl border p-6 space-y-3 text-sm"
         style={{ borderColor: "rgba(15,26,53,0.1)", background: BRAND.lavender }}
       >
-        <Row label="상품" value={receipt?.product_name ?? "다시봄 플러스"} />
+        <Row label="상품" value={receipt?.product_name ?? "티타 플러스"} />
         <Row
           label="결제 금액"
           value={`${(receipt?.amount ?? 0).toLocaleString()}원`}

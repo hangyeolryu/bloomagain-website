@@ -47,8 +47,8 @@ export default function LegalLayout({
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <Link href="/" className="flex items-center gap-2">
-              <span className="text-2xl font-bold text-[#0F1A35]">다시, 봄</span>
-              <span className="text-sm text-gray-500 hidden sm:inline">Bloom Again</span>
+              <span className="text-2xl font-bold text-[#0F1A35]">티타</span>
+              <span className="text-sm text-gray-500 hidden sm:inline">Tita</span>
             </Link>
             <div className="hidden md:flex items-baseline space-x-1">
               {NAV_LINKS.map((link) => {

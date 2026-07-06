@@ -8,7 +8,7 @@ export default function DeleteAccountPage() {
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <Link href="/" className="text-2xl font-bold text-indigo-600">다시, 봄</Link>
+              <Link href="/" className="text-2xl font-bold text-indigo-600">티타</Link>
               <span className="ml-2 text-sm text-gray-500">Dasi, Bom</span>
             </div>
             <div className="hidden md:block">
@@ -60,7 +60,7 @@ export default function DeleteAccountPage() {
                 <div className="bg-blue-50 p-6 rounded-lg">
                   <h3 className="text-lg font-medium text-blue-900 mb-3">방법 1: 앱 내에서 삭제 (권장)</h3>
                   <ol className="list-decimal list-inside text-blue-800 space-y-2">
-                    <li>다시, 봄 (Dasi, Bom) 앱을 실행합니다</li>
+                    <li>티타 (Dasi, Bom) 앱을 실행합니다</li>
                     <li>하단 메뉴에서 마이페이지를 선택합니다</li>
                     <li>설정 → 개인정보 → 계정 삭제를 선택합니다</li>
                     <li>삭제 확인 절차를 완료합니다</li>

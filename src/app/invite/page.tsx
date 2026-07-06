@@ -110,13 +110,13 @@ export default function InvitePage() {
           <Link href="/" className="flex items-center gap-2">
             <Image
               src="/app_icon.svg"
-              alt="다시, 봄 로고"
+              alt="티타 로고"
               width={32}
               height={32}
               className="h-8 w-8 rounded-lg"
             />
             <span className="text-xl font-bold" style={{ color: BRAND.navy }}>
-              다시, 봄
+              티타
             </span>
           </Link>
           <span
@@ -292,7 +292,7 @@ function PreviewCard({
       <p className="text-xs text-center" style={{ color: BRAND.muted }}>
         본인인증은 <strong>NICE</strong> 본인확인 서비스를 통해 안전하게 처리됩니다.
         <br />
-        다시봄은 자녀의 휴대폰 번호 평문을 저장하지 않고, 해시(SHA-256)만 보관합니다.
+        티타은 자녀의 휴대폰 번호 평문을 저장하지 않고, 해시(SHA-256)만 보관합니다.
       </p>
     </div>
   );
@@ -385,7 +385,7 @@ function SuccessCard({ withPush }: { withPush: boolean }) {
           <li>• 첫 주간 요약은 7일 후 발송됩니다.</li>
           {withPush && <li>• 위험 신호 알림은 즉시 푸시됩니다.</li>}
           <li>• 알림에는 부모님이 주고받은 대화 내용이 포함되지 않습니다 (사생활 보호).</li>
-          <li>• 부모님이 다시봄 앱을 열어두셔야 활동이 기록됩니다.</li>
+          <li>• 부모님이 티타 앱을 열어두셔야 활동이 기록됩니다.</li>
         </ul>
       </div>
       <Link
@@ -433,7 +433,7 @@ function ErrorCard({
           다시 시도하기
         </button>
         <a
-          href="mailto:ceo@effeffcorp.com?subject=다시봄 가족 연결 문의"
+          href="mailto:ceo@effeffcorp.com?subject=티타 가족 연결 문의"
           className="inline-flex items-center justify-center gap-2 rounded-full border-2 px-6 py-3 text-sm font-bold transition"
           style={{ borderColor: BRAND.navy, color: BRAND.navy }}
         >
@@ -442,7 +442,7 @@ function ErrorCard({
       </div>
       <p className="text-xs" style={{ color: BRAND.muted }}>
         초대 코드가 만료되었거나, 부모님이 취소하셨을 수 있습니다.<br />
-        부모님께 다시봄 앱에서 새 초대를 만들어달라고 부탁해주세요.
+        부모님께 티타 앱에서 새 초대를 만들어달라고 부탁해주세요.
       </p>
     </div>
   );

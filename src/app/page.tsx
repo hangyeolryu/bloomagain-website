@@ -52,7 +52,7 @@ const safetyFeatures: Feature[] = [
     icon: UserCheck,
     title: "NICE 본인인증 (전원 무료)",
     description:
-      "만 50세 이상만 가입 가능. NICE 인증으로 신원이 확인된 회원과만 만나니 안심하고 시작하실 수 있습니다.",
+      "만 45세 이상만 가입 가능. NICE 인증으로 신원이 확인된 회원과만 만나니 안심하고 시작하실 수 있습니다.",
     status: "shipping",
   },
   {
@@ -220,7 +220,7 @@ const pricingPlans = [
     badge: null,
   },
   {
-    name: "다시봄 플러스",
+    name: "티타 플러스",
     price: "19,900",
     priceUnit: "원/월",
     yearly: "연 199,000원 (2개월 무료)",
@@ -261,7 +261,7 @@ const pricingPlans = [
     ],
     badge: "B2B",
     cta: "문의하기",
-    ctaHref: "mailto:ceo@effeffcorp.com?subject=다시봄 단체 라이선스 문의",
+    ctaHref: "mailto:ceo@effeffcorp.com?subject=티타 단체 라이선스 문의",
   },
 ];
 
@@ -407,7 +407,7 @@ export default function Home() {
           <div className="flex items-center gap-3">
             <Image
               src="/app_icon.svg"
-              alt="다시, 봄 로고"
+              alt="티타 로고"
               width={36}
               height={36}
               className="h-9 w-9 rounded-xl"
@@ -418,7 +418,7 @@ export default function Home() {
               className="text-2xl font-bold"
               style={{ color: BRAND.navy }}
             >
-              다시, 봄
+              티타
             </Link>
           </div>
           <div className="flex items-center gap-4 sm:gap-6">
@@ -462,7 +462,7 @@ export default function Home() {
                     color: BRAND.navy,
                   }}
                 >
-                  50+ 세대를 위한
+                  45+ 세대를 위한
                 </div>
                 <h1
                   className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.15] tracking-tight"
@@ -489,7 +489,7 @@ export default function Home() {
                     color: BRAND.navy,
                   }}
                 >
-                  <strong>※ 다시봄은 만남앱이 아닙니다.</strong> 친구·모임 중심 플랫폼입니다.
+                  <strong>※ 티타은 만남앱이 아닙니다.</strong> 친구·모임 중심 플랫폼입니다.
                 </div>
                 <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
                   <a
@@ -519,7 +519,7 @@ export default function Home() {
               <div className="relative flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <Image
                   src="/apppreview1.png"
-                  alt="다시, 봄 앱 미리보기 1"
+                  alt="티타 앱 미리보기 1"
                   width={300}
                   height={533}
                   className="w-full object-contain max-w-[280px] sm:max-w-[300px] md:max-w-[320px]"
@@ -527,7 +527,7 @@ export default function Home() {
                 />
                 <Image
                   src="/apppreview2.png"
-                  alt="다시, 봄 앱 미리보기 2"
+                  alt="티타 앱 미리보기 2"
                   width={300}
                   height={533}
                   className="w-full object-contain max-w-[280px] sm:max-w-[300px] md:max-w-[320px]"
@@ -549,7 +549,7 @@ export default function Home() {
                 className="text-xs font-bold uppercase tracking-[0.3em] mb-3"
                 style={{ color: BRAND.navySoft }}
               >
-                다시봄 원칙
+                티타 원칙
               </p>
               <h2
                 className="text-3xl md:text-4xl font-bold mb-3"
@@ -600,7 +600,7 @@ export default function Home() {
               <strong style={{ color: BRAND.navy }}>
                 +73% (2024년 1,265건 → 2025년 2,192건)
               </strong>{" "}
-              늘었습니다. 그래서 다시봄은 NICE 본인인증과 AI 안전 보호를{" "}
+              늘었습니다. 그래서 티타은 NICE 본인인증과 AI 안전 보호를{" "}
               <strong style={{ color: BRAND.navy }}>모든 회원에게 무료</strong>로
               제공합니다.
             </p>
@@ -675,7 +675,7 @@ export default function Home() {
                 className="text-xs font-bold uppercase tracking-[0.3em] mb-3"
                 style={{ color: BRAND.navySoft }}
               >
-                다시봄 플러스
+                티타 플러스
               </p>
               <h2
                 className="text-3xl md:text-4xl font-bold mb-3"
@@ -882,7 +882,7 @@ export default function Home() {
           </p>
         </section>
 
-        {/* ── Why 다시봄 — Benefits ──────────────────────────────────── */}
+        {/* ── Why 티타 — Benefits ──────────────────────────────────── */}
         <section
           className="fade-in-section py-20"
           data-animate="fade"
@@ -892,7 +892,7 @@ export default function Home() {
             <div className="grid gap-10 lg:gap-14 lg:grid-cols-2 items-center">
               <div className="space-y-5 text-white">
                 <p className="text-xs font-bold uppercase tracking-[0.3em] text-white/60">
-                  왜 다시봄인가요
+                  왜 티타인가요
                 </p>
                 <h2 className="text-3xl md:text-4xl font-bold leading-tight">
                   복잡한 기술 대신,
@@ -900,7 +900,7 @@ export default function Home() {
                   사람과의 따뜻한 연결
                 </h2>
                 <p className="text-base md:text-lg text-white/85 leading-relaxed">
-                  3년 동안 50대 이상 분들의 안전만 생각하며 만들었습니다.
+                  3년 동안 45세 이상 분들의 안전만 생각하며 만들었습니다.
                   특허 14개 출원으로 인정받은 기술이에요.
                   복잡한 기능보다, 안심하고 마음을 여실 수 있는 환경에 집중했습니다.
                 </p>
@@ -1113,7 +1113,7 @@ export default function Home() {
                   icon: Bot,
                   title: "AI 친구 (말동무)",
                   description:
-                    "외로움이 깊을 때, 24시간 따뜻하게 대화해주는 50+ 한국어 특화 AI 친구.",
+                    "외로움이 깊을 때, 24시간 따뜻하게 대화해주는 45+ 한국어 특화 AI 친구.",
                   eta: "2026 Q4",
                 },
                 {
@@ -1206,7 +1206,7 @@ export default function Home() {
                 앱 다운로드
               </a>
               <a
-                href="mailto:ceo@effeffcorp.com?subject=다시봄 단체 라이선스 문의"
+                href="mailto:ceo@effeffcorp.com?subject=티타 단체 라이선스 문의"
                 className="inline-flex items-center gap-2 rounded-full border-2 border-white px-7 py-4 text-base font-bold text-white transition"
               >
                 단체 라이선스 문의
@@ -1255,7 +1255,7 @@ export default function Home() {
               <div className="flex items-center gap-2">
                 <Image
                   src="/app_icon.svg"
-                  alt="다시, 봄 로고"
+                  alt="티타 로고"
                   width={28}
                   height={28}
                   className="h-7 w-7 rounded-lg"
@@ -1264,7 +1264,7 @@ export default function Home() {
                   className="text-lg font-bold"
                   style={{ color: BRAND.navy }}
                 >
-                  다시, 봄
+                  티타
                 </span>
               </div>
               <a
