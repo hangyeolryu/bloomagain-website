@@ -11,6 +11,7 @@ import {
   PLAY_STORE_URL,
 } from "../_components/tita-brand";
 import { logAnalyticsEvent } from "@/lib/firebase";
+import { recordGyeolEvent } from "./gyeol-events";
 
 export function ResultActions({
   code,
@@ -23,6 +24,7 @@ export function ResultActions({
 
   async function share() {
     logAnalyticsEvent("gyeol_share", { gyeol_type: code });
+    recordGyeolEvent("share", code);
     const shareData = {
       title: `나의 결 유형: ${name}`,
       text: `나는 '${name}' 결이래요. 당신의 결 유형은? 🍵`,
@@ -49,6 +51,7 @@ export function ResultActions({
       store,
       source: `gyeol_result_${code}`,
     });
+    recordGyeolEvent("download", code);
   }
 
   const btnBase: React.CSSProperties = {

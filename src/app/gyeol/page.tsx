@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { TITA, KOREAN_FONT_STACK } from "../_components/tita-brand";
 import { QUESTIONS, scoreToCode } from "./types";
 import { logAnalyticsEvent } from "@/lib/firebase";
+import { recordGyeolEvent } from "./gyeol-events";
 
 export default function GyeolTestPage() {
   const router = useRouter();
@@ -21,6 +22,7 @@ export default function GyeolTestPage() {
 
   function begin() {
     logAnalyticsEvent("gyeol_test_start", {});
+    recordGyeolEvent("start");
     setStarted(true);
   }
 
@@ -33,6 +35,7 @@ export default function GyeolTestPage() {
     } else {
       const code = scoreToCode(next);
       logAnalyticsEvent("gyeol_test_complete", { gyeol_type: code });
+      recordGyeolEvent("complete", code);
       router.push(`/gyeol/${code}`);
     }
   }
