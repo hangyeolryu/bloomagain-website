@@ -13,9 +13,12 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "다시, 봄 (Bloom Again) — 50+ 세대를 위한 안전한 친구·모임 앱",
+  // metadataBase가 있어야 opengraph-image / twitter-image URL이 절대경로로
+  // 풀린다. 없으면 링크 공유 시 프리뷰 이미지가 깨진다.
+  metadataBase: new URL("https://tita-app.com"),
+  title: "티타 — 만 45세 이상, 결이 맞는 친구를 만나는 곳",
   description:
-    "안전 인프라는 모든 회원에게 무료. NICE 본인인증 + AI 4계층 안전 보호로 신뢰할 수 있는 친구·모임을 만나세요. 만남앱이 아닙니다.",
+    "데이팅 앱이 아닙니다. NICE 본인인증 된 또래와 안심하고 만드는 동네 친구. 매일 한 질문이 쌓이면 결이 맞는 분이 가까워져요.",
   // Icon stack — modern browsers prefer SVG; older / OS-native surfaces fall
   // back to fixed-size PNG. iOS home-screen uses the 180×180 apple-touch icon.
   icons: {
@@ -31,20 +34,21 @@ export const metadata: Metadata = {
   },
   manifest: "/site.webmanifest",
   openGraph: {
-    title: "다시, 봄 — 50+ 세대를 위한 친구·모임 앱",
+    // images는 지정하지 않는다 — Next가 src/app/opengraph-image.tsx를
+    // 자동으로 1200×630 OG 이미지로 잡는다.
+    title: "티타 — 만 45세 이상, 결이 맞는 친구를 만나는 곳",
     description:
-      "특허 출원 안전 기술로 보호받는 50+ 전용 커뮤니티. 모임 참여 무제한 무료, 창립 멤버 1~500명 6개월 무료 진행 중.",
-    images: [{ url: "/icon-512.png", width: 512, height: 512, alt: "다시, 봄 로고" }],
-    siteName: "다시, 봄",
+      "데이팅 앱이 아닙니다. 본인인증 된 또래와 안심하고 만드는 동네 친구. 매일 한 질문이 쌓이면 결이 맞는 분이 가까워져요.",
+    siteName: "티타",
     locale: "ko_KR",
     type: "website",
   },
   twitter: {
-    card: "summary",
-    title: "다시, 봄 (Bloom Again)",
+    // 큰 가로 카드. 이미지는 opengraph-image.tsx를 공유한다.
+    card: "summary_large_image",
+    title: "티타 — 만 45세 이상, 결이 맞는 친구를 만나는 곳",
     description:
-      "50+ 세대를 위한 안전한 친구·모임 앱. 만남앱이 아닙니다.",
-    images: ["/icon-512.png"],
+      "데이팅 앱이 아닙니다. 안심하고 만드는 동네 친구.",
   },
 };
 
