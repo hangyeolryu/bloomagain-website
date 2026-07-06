@@ -11,6 +11,21 @@
         "source": "/invite/**",
         "destination": "/invite/index.html"
       }
+    ],
+    "headers": [
+      {
+        "source": "/opengraph-image",
+        "headers": [
+          {
+            "key": "Content-Type",
+            "value": "image/png"
+          },
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=3600"
+          }
+        ]
+      }
     ]
   }
 }

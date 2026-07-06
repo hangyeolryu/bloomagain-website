@@ -6,7 +6,10 @@ import { join } from "path";
 // Next가 이 JSX를 PNG로 렌더한다. 한글은 번들된 Pretendard(src/app/fonts)로
 // 그린다. 손 디자인 PNG로 바꾸려면 이 파일을 지우고 public/og-image.png +
 // layout metadata의 openGraph.images로 교체.
-export const runtime = "nodejs";
+// output: 'export'(정적 내보내기)에서는 이 라우트가 빌드 타임에 PNG로
+// 구워져야 한다. force-static을 지정해야 Next가 서버 런타임 없이 정적 생성한다.
+// (runtime="nodejs"는 정적 내보내기와 호환 안 됨 — 빌드 에러의 원인이었다.)
+export const dynamic = "force-static";
 export const alt = "티타 — 만 45세 이상, 결이 통하는 친구 한 분";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
