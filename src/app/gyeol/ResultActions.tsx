@@ -27,15 +27,56 @@ function detectPlatform(): Platform {
   return "other";
 }
 
+// 다운로드 훅을 "누구와 편한지(comfort)" 답으로 개인화한다. 답을 안 했거나
+// (공유 링크로 바로 들어온 방문자 등) 값이 없으면 default(글로벌 궁금증) 문구.
+// same=동성 편함 / any=상관없음 / opp=이성도 좋음. 성별(gender)은 훅에 안 쓰고 집계용.
+const HOOKS: Record<string, { head: string; body: string }> = {
+  same: {
+    head: "결이 맞는 동성 친구,\n어디에 있을까요?",
+    body: "티타에선 본인인증받은 동성 친구부터, 결이 통하는 순서로 안전하게 만나요.",
+  },
+  any: {
+    head: "결만 맞으면 돼요.\n그 친구, 어디 있을까요?",
+    body: "티타에선 매일 한 질문(결큐)에 답할수록, 결이 통하는 친구를 천천히 찾아줘요.",
+  },
+  opp: {
+    head: "결이 맞으면\n누구든 친구가 돼요.",
+    body: "본인인증·4계층 안전 위에서, 결이 통하는 친구를 편하게 만나요.",
+  },
+  default: {
+    head: "그런데 그 사람,\n어디에 있을까요?",
+    body: "당신과 결이 딱 맞는 사람은 어딘가 분명 있어요. 티타에서 매일 한 질문(결큐)에 답할수록 결이 또렷해지고, 그만큼 그 사람에 한 걸음씩 가까워져요. 우리 동네일 수도, 생각지 못한 먼 곳일 수도. 진짜 찾아볼래요? 🍵",
+  },
+};
+
 export function ResultActions({ code, name }: { code: string; name: string }) {
   const [platform, setPlatform] = useState<Platform>("other");
-  useEffect(() => setPlatform(detectPlatform()), []);
+  // comfort/gender: 테스트를 방금 마친 세션에서만 존재. 초기값 null → SSR/정적
+  // 출력과 첫 렌더는 항상 default 훅(하이드레이션 불일치 방지), 마운트 후 개인화.
+  const [comfort, setComfort] = useState<string | null>(null);
+  const [gender, setGender] = useState<string | null>(null);
+  useEffect(() => {
+    setPlatform(detectPlatform());
+    try {
+      setComfort(sessionStorage.getItem("tita_gyeol_comfort"));
+      setGender(sessionStorage.getItem("tita_gyeol_gender"));
+    } catch {
+      /* sessionStorage 막힘 — default 훅 유지 */
+    }
+  }, []);
+
+  const hook = (comfort && HOOKS[comfort]) || HOOKS.default;
 
   const shareUrl = `https://tita-app.com/gyeol/${code}`;
 
   function download(store: "ios" | "android") {
-    logAnalyticsEvent("app_download_click", { store, source: `gyeol_result_${code}` });
-    recordGyeolEvent("download", code);
+    logAnalyticsEvent("app_download_click", {
+      store,
+      source: `gyeol_result_${code}`,
+      gyeol_comfort: comfort ?? "",
+      gyeol_gender: gender ?? "",
+    });
+    recordGyeolEvent("download", code, { gender, comfort });
   }
 
   async function share() {
@@ -81,6 +122,36 @@ export function ResultActions({ code, name }: { code: string; name: string }) {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+      {/* 개인화 훅 — comfort 답에 따라 헤드라인/본문이 바뀐다 */}
+      <div style={{ textAlign: "center", marginBottom: 8 }}>
+        <p style={{ fontSize: 15, fontWeight: 700, color: TITA.forestMid, margin: "0 0 6px" }}>
+          이 테스트는 맛보기예요
+        </p>
+        <p style={{ fontSize: 14, fontWeight: 600, color: TITA.forestMid, margin: "0 0 6px" }}>
+          {name}인 당신,
+        </p>
+        <h2
+          style={{
+            fontSize: 23,
+            fontWeight: 800,
+            letterSpacing: "-0.6px",
+            lineHeight: 1.35,
+            color: TITA.forestDeep,
+            margin: "0 0 12px",
+          }}
+        >
+          {hook.head.split("\n").map((line, i) => (
+            <span key={i}>
+              {line}
+              {i < hook.head.split("\n").length - 1 && <br />}
+            </span>
+          ))}
+        </h2>
+        <p style={{ fontSize: 16, lineHeight: 1.8, color: TITA.ink, margin: "0 0 20px" }}>
+          {hook.body}
+        </p>
+      </div>
+
       {/* 1차 — 지배적 다운로드 버튼 */}
       <a
         href={primaryHref}

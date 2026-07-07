@@ -158,48 +158,9 @@ export default async function GyeolResultPage({ params }: Params) {
           </p>
         </section>
 
-        {/* 티타 연결 + CTA — 핵심 메시지: 답할수록 천천히 더 정확히 찾아준다 */}
+        {/* 티타 연결 + CTA — 다운로드 훅은 ResultActions가 comfort 답에 따라
+            개인화해서 렌더한다(정적 페이지라 클라이언트에서 sessionStorage로 읽음). */}
         <section style={{ marginTop: 28, textAlign: "center" }}>
-          <p
-            style={{
-              fontSize: 15,
-              fontWeight: 700,
-              color: TITA.forestMid,
-              margin: "0 0 6px",
-            }}
-          >
-            이 테스트는 맛보기예요
-          </p>
-          <p
-            style={{
-              fontSize: 23,
-              fontWeight: 800,
-              letterSpacing: "-0.6px",
-              lineHeight: 1.35,
-              color: TITA.forestDeep,
-              margin: "0 0 12px",
-            }}
-          >
-            그런데 그 사람,
-            <br />
-            어디에 있을까요?
-          </p>
-          <p
-            style={{
-              fontSize: 16,
-              lineHeight: 1.8,
-              color: TITA.ink,
-              margin: "0 0 20px",
-            }}
-          >
-            당신과 결이 딱 맞는 사람은{" "}
-            <b style={{ color: TITA.forestDeep }}>어딘가 분명 있어요.</b>
-            <br />
-            <b>티타</b>에서 매일 한 질문(결큐)에 답할수록 결이 또렷해지고, 그만큼 그
-            사람에 한 걸음씩 가까워져요.
-            <br />
-            우리 동네일 수도, 생각지 못한 먼 곳일 수도. 진짜 찾아볼래요? 🍵
-          </p>
           <ResultActions code={t.code} name={t.name} />
         </section>
 

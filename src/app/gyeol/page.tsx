@@ -12,11 +12,27 @@ import { QUESTIONS, scoreToCode } from "./types";
 import { logAnalyticsEvent } from "@/lib/firebase";
 import { recordGyeolEvent } from "./gyeol-events";
 
+// 결과를 더 잘 맞추기 위한 두 가지(익명). 채점(8유형)에는 반영하지 않고,
+// 결과 페이지 다운로드 훅 분기(comfort) + 대시보드 성비 집계(gender)에만 쓴다.
+const GENDERS = [
+  { key: "f", label: "여성" },
+  { key: "m", label: "남성" },
+] as const;
+const COMFORTS = [
+  { key: "same", label: "동성 친구가 편해요" },
+  { key: "any", label: "상관없어요, 결만 맞으면" },
+  { key: "opp", label: "이성 친구도 좋아요" },
+] as const;
+
 export default function GyeolTestPage() {
   const router = useRouter();
   const [started, setStarted] = useState(false);
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<("a" | "b")[]>([]);
+  // "quiz" → 12문항, "profile" → 마지막 두 가지(성별·편안함)
+  const [stage, setStage] = useState<"quiz" | "profile">("quiz");
+  const [gender, setGender] = useState<string | null>(null);
+  const [comfort, setComfort] = useState<string | null>(null);
 
   const total = QUESTIONS.length;
 
@@ -33,11 +49,29 @@ export default function GyeolTestPage() {
     if (step + 1 < total) {
       setStep(step + 1);
     } else {
-      const code = scoreToCode(next);
-      logAnalyticsEvent("gyeol_test_complete", { gyeol_type: code });
-      recordGyeolEvent("complete", code);
-      router.push(`/gyeol/${code}`);
+      // 12문항 끝 → 결과 직전 프로필 한 화면
+      setStage("profile");
     }
+  }
+
+  function finish() {
+    const code = scoreToCode(answers);
+    // 결과 페이지(정적)가 읽어 다운로드 훅을 개인화한다.
+    try {
+      if (comfort) sessionStorage.setItem("tita_gyeol_comfort", comfort);
+      else sessionStorage.removeItem("tita_gyeol_comfort");
+      if (gender) sessionStorage.setItem("tita_gyeol_gender", gender);
+      else sessionStorage.removeItem("tita_gyeol_gender");
+    } catch {
+      /* sessionStorage 막힘 — 훅은 기본값으로 뜬다 */
+    }
+    logAnalyticsEvent("gyeol_test_complete", {
+      gyeol_type: code,
+      gyeol_gender: gender ?? "",
+      gyeol_comfort: comfort ?? "",
+    });
+    recordGyeolEvent("complete", code, { gender, comfort });
+    router.push(`/gyeol/${code}`);
   }
 
   function back() {
@@ -122,7 +156,7 @@ export default function GyeolTestPage() {
             티타에선 답할수록 더 또렷해져, 진짜 맞는 사람을 찾아줘요.
           </p>
         </div>
-      ) : (
+      ) : stage === "quiz" ? (
         <div style={{ maxWidth: 520, width: "100%" }}>
           {/* 진행 바 */}
           <div style={{ marginBottom: 28 }}>
@@ -231,6 +265,122 @@ export default function GyeolTestPage() {
               );
             })}
           </div>
+        </div>
+      ) : (
+        <div style={{ maxWidth: 480, width: "100%", textAlign: "center" }}>
+          <div style={{ fontSize: 44, marginBottom: 8 }}>🍵</div>
+          <h2
+            style={{
+              fontSize: 26,
+              fontWeight: 800,
+              letterSpacing: "-0.8px",
+              lineHeight: 1.35,
+              color: TITA.forestDeep,
+              margin: "0 0 8px",
+            }}
+          >
+            마지막으로, 딱 두 가지만
+          </h2>
+          <p style={{ fontSize: 15, lineHeight: 1.6, color: TITA.muted, margin: "0 0 28px" }}>
+            결과를 더 잘 맞춰드릴게요. (선택 · 익명으로 집계돼요)
+          </p>
+
+          {/* 성별 */}
+          <p style={{ fontSize: 14, fontWeight: 700, color: TITA.forestMid, margin: "0 0 10px", textAlign: "left" }}>
+            나는
+          </p>
+          <div style={{ display: "flex", gap: 10, marginBottom: 24 }}>
+            {GENDERS.map((g) => {
+              const on = gender === g.key;
+              return (
+                <button
+                  key={g.key}
+                  onClick={() => setGender(on ? null : g.key)}
+                  style={{
+                    flex: 1,
+                    padding: "16px 12px",
+                    fontSize: 16,
+                    fontWeight: 700,
+                    color: on ? TITA.cream : TITA.ink,
+                    background: on ? TITA.forest : TITA.white,
+                    border: `2px solid ${on ? TITA.forest : TITA.sage}`,
+                    borderRadius: 14,
+                    cursor: "pointer",
+                    fontFamily: KOREAN_FONT_STACK,
+                  }}
+                >
+                  {g.label}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* 편안함 */}
+          <p style={{ fontSize: 14, fontWeight: 700, color: TITA.forestMid, margin: "0 0 4px", textAlign: "left" }}>
+            어떤 분들과 함께일 때 더 편안하세요?
+          </p>
+          <p style={{ fontSize: 12.5, color: TITA.mutedSoft, margin: "0 0 10px", textAlign: "left" }}>
+            친구로서요 🙂
+          </p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 28 }}>
+            {COMFORTS.map((c) => {
+              const on = comfort === c.key;
+              return (
+                <button
+                  key={c.key}
+                  onClick={() => setComfort(on ? null : c.key)}
+                  style={{
+                    padding: "16px 18px",
+                    fontSize: 16,
+                    fontWeight: 600,
+                    textAlign: "left",
+                    color: on ? TITA.cream : TITA.ink,
+                    background: on ? TITA.forest : TITA.white,
+                    border: `2px solid ${on ? TITA.forest : TITA.sage}`,
+                    borderRadius: 14,
+                    cursor: "pointer",
+                    fontFamily: KOREAN_FONT_STACK,
+                  }}
+                >
+                  {c.label}
+                </button>
+              );
+            })}
+          </div>
+
+          <button
+            onClick={finish}
+            style={{
+              width: "100%",
+              padding: "18px 24px",
+              fontSize: 18,
+              fontWeight: 700,
+              color: TITA.cream,
+              background: TITA.forest,
+              border: "none",
+              borderRadius: 16,
+              cursor: "pointer",
+              fontFamily: KOREAN_FONT_STACK,
+              boxShadow: "0 8px 24px rgba(31,78,61,0.24)",
+            }}
+          >
+            결과 보기 🍵
+          </button>
+          <button
+            onClick={finish}
+            style={{
+              background: "none",
+              border: "none",
+              color: TITA.mutedSoft,
+              cursor: "pointer",
+              fontSize: 13,
+              fontWeight: 600,
+              fontFamily: KOREAN_FONT_STACK,
+              marginTop: 14,
+            }}
+          >
+            건너뛰고 결과 보기
+          </button>
         </div>
       )}
     </main>

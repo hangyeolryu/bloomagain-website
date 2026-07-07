@@ -4,7 +4,15 @@
 
 type GyeolPhase = "start" | "complete" | "share" | "download";
 
-export function recordGyeolEvent(phase: GyeolPhase, gyeolType?: string): void {
+// 성별·편안함은 익명 집계용(개인식별 X). gender: "f"|"m", comfort: "same"|"any"|"opp".
+// complete 시점에 함께 보내고, download 시점엔 sessionStorage에서 읽어 이어붙인다.
+type GyeolExtra = { gender?: string | null; comfort?: string | null };
+
+export function recordGyeolEvent(
+  phase: GyeolPhase,
+  gyeolType?: string,
+  extra?: GyeolExtra,
+): void {
   if (typeof window === "undefined") return;
   const backendUrl = process.env.NEXT_PUBLIC_BLOOMAGAIN_BACKEND_URL;
   if (!backendUrl) return; // 백엔드 URL 미설정 시 조용히 스킵 (GA4는 계속 남음)
@@ -21,6 +29,8 @@ export function recordGyeolEvent(phase: GyeolPhase, gyeolType?: string): void {
     const body = JSON.stringify({
       phase,
       gyeol_type: gyeolType ?? null,
+      gender: extra?.gender ?? null,
+      comfort: extra?.comfort ?? null,
       source: source ?? null,
       referrer: document.referrer || null,
       path: window.location.pathname,
