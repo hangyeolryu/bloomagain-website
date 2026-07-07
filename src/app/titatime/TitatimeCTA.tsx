@@ -2,7 +2,9 @@
 
 // 티타임 모집 페이지의 클릭 버튼 — 다운로드(주 목표) + 관심 신청(선택).
 // 페이지 본문은 SEO/공유를 위해 서버 렌더, 클릭 로깅만 이 조각으로 분리.
+// 마운트 시 가격 실험 view 이벤트도 여기서 1회 기록한다(페이지당 한 번).
 
+import { useEffect } from "react";
 import {
   TITA,
   KOREAN_FONT_STACK,
@@ -10,12 +12,18 @@ import {
   PLAY_STORE_URL,
 } from "../_components/tita-brand";
 import { logAnalyticsEvent } from "@/lib/firebase";
+import { getPriceArm, recordTitatimeEvent } from "./titatime-events";
 
 // 관심 신청 폼(구글폼 등)이 준비되면 이 URL만 채우면 버튼이 노출된다.
 // 비워두면 다운로드 CTA만 보인다 (앱 다운이 주 목표라 기본은 이걸로 충분).
 const INTEREST_FORM_URL = "";
 
 export function TitatimeCTA() {
+  // 가격 암별 노출 수(view) — 신청 클릭률의 분모.
+  useEffect(() => {
+    recordTitatimeEvent("view", { priceArm: getPriceArm() });
+  }, []);
+
   function download(store: "ios" | "android") {
     logAnalyticsEvent("app_download_click", { store, source: "titatime" });
   }
@@ -47,7 +55,7 @@ export function TitatimeCTA() {
           fontWeight: 600,
         }}
       >
-        참여는 앱에서 본인인증 후 · 참가비 첫 2회 무료
+        참여는 앱에서 본인인증 후 진행돼요
       </p>
       <div style={{ display: "flex", gap: 12 }}>
         <a

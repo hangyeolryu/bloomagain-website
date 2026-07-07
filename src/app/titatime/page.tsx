@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { TITA, KOREAN_FONT_STACK } from "../_components/tita-brand";
 import { TitatimeCTA } from "./TitatimeCTA";
+import { SessionApply } from "./SessionApply";
 
 // 티타임 모집 — 날짜 있는·동네·놓치면 아쉬운 이벤트로 상시 다운로드를 유발한다
 // (Timeleft 모델). 친구 만들기의 낮은 긴급도를 "이번 주 우리 동네 자리"라는
@@ -134,6 +135,7 @@ export default function TitatimePage() {
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             {SESSIONS.map((s, i) => {
               const st = STATUS_STYLE[s.status];
+              const applyOpen = s.status === "open" || s.status === "almost";
               return (
                 <div
                   key={i}
@@ -142,43 +144,50 @@ export default function TitatimePage() {
                     border: `1px solid ${TITA.sage}`,
                     borderRadius: 16,
                     padding: "18px 20px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    gap: 12,
                   }}
                 >
-                  <div>
-                    <div
-                      style={{
-                        fontSize: 18,
-                        fontWeight: 800,
-                        color: TITA.forestDeep,
-                        marginBottom: 4,
-                      }}
-                    >
-                      {s.district}
-                    </div>
-                    <div style={{ fontSize: 15, color: TITA.ink, marginBottom: 2 }}>
-                      {s.dateLabel}
-                    </div>
-                    <div style={{ fontSize: 13, color: TITA.muted }}>
-                      {s.spotsLabel}
-                    </div>
-                  </div>
-                  <span
+                  <div
                     style={{
-                      flexShrink: 0,
-                      fontSize: 13,
-                      fontWeight: 700,
-                      color: st.fg,
-                      background: st.bg,
-                      padding: "8px 14px",
-                      borderRadius: 999,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      gap: 12,
                     }}
                   >
-                    {st.label}
-                  </span>
+                    <div>
+                      <div
+                        style={{
+                          fontSize: 18,
+                          fontWeight: 800,
+                          color: TITA.forestDeep,
+                          marginBottom: 4,
+                        }}
+                      >
+                        {s.district}
+                      </div>
+                      <div style={{ fontSize: 15, color: TITA.ink, marginBottom: 2 }}>
+                        {s.dateLabel}
+                      </div>
+                      <div style={{ fontSize: 13, color: TITA.muted }}>
+                        {s.spotsLabel}
+                      </div>
+                    </div>
+                    <span
+                      style={{
+                        flexShrink: 0,
+                        fontSize: 13,
+                        fontWeight: 700,
+                        color: st.fg,
+                        background: st.bg,
+                        padding: "8px 14px",
+                        borderRadius: 999,
+                      }}
+                    >
+                      {st.label}
+                    </span>
+                  </div>
+                  {/* 가격 + 신청 — 모집 중인 자리에만. 가격은 방문자 암(arm)별 */}
+                  {applyOpen && <SessionApply district={s.district} />}
                 </div>
               );
             })}
