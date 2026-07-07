@@ -36,8 +36,8 @@ export const QUESTIONS: Question[] = [
   },
   {
     q: "친구는 어느 쪽이 더 좋으세요?",
-    a: { text: "속 깊은 몇 사람", pole: "D" },
-    b: { text: "두루 아는 여러 사람", pole: "B" },
+    a: { text: "속을 터놓는 가까운 몇 사람", pole: "D" },
+    b: { text: "폭넓게 두루 어울리는 여러 사람", pole: "B" },
   },
   {
     q: "만날 약속은?",
@@ -51,8 +51,8 @@ export const QUESTIONS: Question[] = [
   },
   {
     q: "대화가 제일 즐거운 순간은?",
-    a: { text: "진짜 속 얘기가 오갈 때", pole: "D" },
-    b: { text: "가볍고 유쾌한 수다", pole: "B" },
+    a: { text: "마음속 깊은 얘기가 오갈 때", pole: "D" },
+    b: { text: "웃음 끊이지 않는 유쾌한 수다", pole: "B" },
   },
   {
     q: "하루를 보내는 방식은?",
@@ -66,8 +66,8 @@ export const QUESTIONS: Question[] = [
   },
   {
     q: "편한 모임 규모는?",
-    a: { text: "3~4명 오붓하게", pole: "D" },
-    b: { text: "여럿이 북적북적", pole: "B" },
+    a: { text: "서넛이 오붓하게", pole: "D" },
+    b: { text: "여럿이 어울리는 활기찬 자리", pole: "B" },
   },
   {
     q: "\"지금 잠깐 나올래요?\" 연락이 오면?",
@@ -81,8 +81,8 @@ export const QUESTIONS: Question[] = [
   },
   {
     q: "새 사람과 친해지는 속도는?",
-    a: { text: "천천히, 깊게", pole: "D" },
-    b: { text: "빠르게, 두루", pole: "B" },
+    a: { text: "천천히 스며들듯", pole: "D" },
+    b: { text: "금세 스스럼없이", pole: "B" },
   },
   {
     q: "새로운 걸 시작할 때는?",
@@ -194,8 +194,11 @@ export function scoreToCode(answers: ("a" | "b")[]): GyeolCode {
     const pick = answers[i] === "b" ? question.b : question.a;
     tally[pick.pole] += 1;
   });
-  const e = tally.F >= tally.S ? "F" : "S";
-  const r = tally.D >= tally.B ? "D" : "B";
-  const t = tally.P >= tally.L ? "P" : "L";
+  // 동점(2:2)은 지금까지 과소대표된 쪽(F 함께 · B 넓이 · L 즉흥)으로 깨서
+  // 분포 쏠림(조용한 깊이형 과다)을 완화한다. 마케팅 퀴즈라 임상 정확도보다
+  // 8유형이 골고루 갈리는 게(=공유할 맛) 목적. 우세가 분명하면 그대로 반영.
+  const e = tally.S > tally.F ? "S" : "F"; // 동점 → F
+  const r = tally.D > tally.B ? "D" : "B"; // 동점 → B
+  const t = tally.P > tally.L ? "P" : "L"; // 동점 → L
   return `${e}${r}${t}` as GyeolCode;
 }
