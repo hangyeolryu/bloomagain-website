@@ -4,6 +4,7 @@ import Link from "next/link";
 import { TITA, KOREAN_FONT_STACK } from "../../_components/tita-brand";
 import { TYPES, ALL_CODES, GyeolCode } from "../types";
 import { ResultActions } from "../ResultActions";
+import { TeaTree } from "../TeaTree";
 
 // output: 'export' — 8개 유형을 빌드 타임에 정적 생성. 알 수 없는 코드는 404.
 export function generateStaticParams() {
@@ -162,6 +163,47 @@ export default async function GyeolResultPage({ params }: Params) {
             개인화해서 렌더한다(정적 페이지라 클라이언트에서 sessionStorage로 읽음). */}
         <section style={{ marginTop: 28, textAlign: "center" }}>
           <ResultActions code={t.code} name={t.name} />
+        </section>
+
+        {/* 차나무 티저 — 앱의 돌봄 서사를 결과 페이지에서 미리 보여준다.
+            스크롤로 만나면 새싹→만개까지 자라는 애니메이션 (앱과 동일 드로잉). */}
+        <section
+          style={{
+            marginTop: 24,
+            background: TITA.white,
+            borderRadius: 20,
+            padding: "28px 24px 24px",
+            textAlign: "center",
+            border: `1px solid ${TITA.sage}`,
+          }}
+        >
+          <TeaTree height={150} />
+          <p
+            style={{
+              fontSize: 18,
+              fontWeight: 800,
+              letterSpacing: "-0.5px",
+              color: TITA.forestDeep,
+              margin: "14px 0 8px",
+              lineHeight: 1.4,
+            }}
+          >
+            차나무를 키우며,
+            <br />
+            나의 결을 알아가 봐요
+          </p>
+          <p
+            style={{
+              fontSize: 15,
+              lineHeight: 1.7,
+              color: TITA.muted,
+              margin: 0,
+            }}
+          >
+            티타에선 하루 한 질문에 답할 때마다 나무가 자라요.
+            <br />
+            결이 또렷해지면 — <b style={{ color: TITA.ink }}>나와 맞는 결의 친구가 찾아와요.</b>
+          </p>
         </section>
 
         <p
