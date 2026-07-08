@@ -168,6 +168,16 @@ export default function Home() {
               결이 더 잘 통하는 친구를 만나요.
             </p>
           </div>
+          <div className="mt-4">
+            <Link
+              href="/matching"
+              onClick={() => logAnalyticsEvent("matching_detail_click", { source: "home" })}
+              className="inline-flex items-center gap-1 text-sm font-semibold underline-offset-4 hover:underline"
+              style={{ color: TITA.forest }}
+            >
+              결을 어떻게 정량화하는지 더 자세히 <span aria-hidden>→</span>
+            </Link>
+          </div>
         </Section>
 
         {/* ── 2. 어떻게 작동하나 (3단계) ─────────────────────── */}
