@@ -55,11 +55,15 @@ export function ResultActions({ code, name }: { code: string; name: string }) {
   // 출력과 첫 렌더는 항상 default 훅(하이드레이션 불일치 방지), 마운트 후 개인화.
   const [comfort, setComfort] = useState<string | null>(null);
   const [gender, setGender] = useState<string | null>(null);
+  // 이 세션에서 직접 테스트를 마쳤는가 — false면 공유 링크로 온 방문자.
+  // 방문자에겐 공유 버튼 대신 "나도 해보기"가 큰 버튼이어야 바이럴이 돈다.
+  const [taken, setTaken] = useState(false);
   useEffect(() => {
     setPlatform(detectPlatform());
     try {
       setComfort(sessionStorage.getItem("tita_gyeol_comfort"));
       setGender(sessionStorage.getItem("tita_gyeol_gender"));
+      setTaken(sessionStorage.getItem("tita_gyeol_taken") === "1");
     } catch {
       /* sessionStorage 막힘 — default 훅 유지 */
     }
@@ -84,7 +88,8 @@ export function ResultActions({ code, name }: { code: string; name: string }) {
     recordGyeolEvent("share", code);
     const shareData = {
       title: `나의 결 유형: ${name}`,
-      text: `나는 '${name}' 결이래요. 당신의 결 유형은? 🍵`,
+      // "너는 뭐야?"가 아니라 "우리 맞을까?" — 비교 궁금증이 클릭을 만든다.
+      text: `나는 '${name}' 결이래요. 우리, 결이 맞을까요? 3분이면 나와요 🍵`,
       url: shareUrl,
     };
     try {
@@ -202,37 +207,95 @@ export function ResultActions({ code, name }: { code: string; name: string }) {
         </a>
       )}
 
-      {/* 2차 — 공유(바이럴) + 다시하기, 시각적으로 강등 */}
+      {/* 2차 — 바이럴 버튼 (제대로 된 크기). 누가 보느냐로 갈린다:
+          테스트 마친 사람 → "친구의 결도 물어보기" (공유가 곧 확산)
+          공유 링크로 온 방문자 → "나도 해보기" (테스트 시작이 곧 확산) */}
+      {taken ? (
+        <button
+          onClick={share}
+          style={{
+            ...linkBase,
+            width: "100%",
+            padding: "16px 22px",
+            fontSize: 16,
+            fontWeight: 700,
+            color: TITA.forestDeep,
+            background: TITA.white,
+            border: `2px solid ${TITA.forestMid}`,
+            borderRadius: 14,
+            marginTop: 6,
+          }}
+        >
+          🍵 친구의 결도 물어보세요
+        </button>
+      ) : (
+        <Link
+          href="/gyeol"
+          onClick={() =>
+            logAnalyticsEvent("gyeol_take_from_shared", { from_type: code })
+          }
+          style={{
+            ...linkBase,
+            width: "100%",
+            padding: "16px 22px",
+            fontSize: 16,
+            fontWeight: 700,
+            color: TITA.forestDeep,
+            background: TITA.white,
+            border: `2px solid ${TITA.forestMid}`,
+            borderRadius: 14,
+            marginTop: 6,
+          }}
+        >
+          🍵 나는 어떤 결일까? 3분 테스트
+        </Link>
+      )}
+      <p
+        style={{
+          textAlign: "center",
+          fontSize: 13,
+          color: TITA.muted,
+          margin: "2px 0 0",
+        }}
+      >
+        {taken
+          ? "결이 맞는 친구인지, 서로의 유형으로 비교해 보세요"
+          : "가입 없이 바로 — 나와 결이 맞는 친구 유형까지 알려드려요"}
+      </p>
+
+      {/* 3차 — 잔여 액션, 작게 */}
       <div
         style={{
           display: "flex",
           justifyContent: "center",
           gap: 20,
-          marginTop: 8,
+          marginTop: 6,
           fontSize: 14,
         }}
       >
-        <button
-          onClick={share}
-          style={{
-            background: "none",
-            border: "none",
-            color: TITA.forestDeep,
-            fontWeight: 700,
-            cursor: "pointer",
-            fontFamily: KOREAN_FONT_STACK,
-            padding: 4,
-          }}
-        >
-          친구에게 공유 🔗
-        </button>
-        <span style={{ color: TITA.sage }}>·</span>
-        <Link
-          href="/gyeol"
-          style={{ color: TITA.muted, fontWeight: 600, textDecoration: "none", padding: 4 }}
-        >
-          다시 하기
-        </Link>
+        {taken ? (
+          <Link
+            href="/gyeol"
+            style={{ color: TITA.muted, fontWeight: 600, textDecoration: "none", padding: 4 }}
+          >
+            다시 하기
+          </Link>
+        ) : (
+          <button
+            onClick={share}
+            style={{
+              background: "none",
+              border: "none",
+              color: TITA.muted,
+              fontWeight: 600,
+              cursor: "pointer",
+              fontFamily: KOREAN_FONT_STACK,
+              padding: 4,
+            }}
+          >
+            이 결과 공유하기 🔗
+          </button>
+        )}
       </div>
     </div>
   );

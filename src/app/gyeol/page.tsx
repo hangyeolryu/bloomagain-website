@@ -58,6 +58,9 @@ export default function GyeolTestPage() {
     const code = scoreToCode(answers);
     // 결과 페이지(정적)가 읽어 다운로드 훅을 개인화한다.
     try {
+      // taken: 이 세션에서 직접 테스트를 마쳤다는 표시 — 결과 페이지가
+      // "친구에게 물어보기"(테스트함) vs "나도 해보기"(공유로 유입)를 가른다.
+      sessionStorage.setItem("tita_gyeol_taken", "1");
       if (comfort) sessionStorage.setItem("tita_gyeol_comfort", comfort);
       else sessionStorage.removeItem("tita_gyeol_comfort");
       if (gender) sessionStorage.setItem("tita_gyeol_gender", gender);
