@@ -135,6 +135,41 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ── 1-B. 왜 티타 — 결을 어떻게 알아보나 (설득 핵심) ──
+            대비(vs)가 아니라 우리 방식만 따뜻하게 설명. "결 맞는 친구를
+            찾아준다"를 감이 아니라 '매일의 선택이 쌓여 그린 결'로 설득. */}
+        <Section icon={Coffee} tag="왜 티타일까요" title="'결이 맞는다'는 걸, 이렇게 알아봐요">
+          <p className="mb-5" style={{ color: TITA.muted }}>
+            말이 잘 통하는 사람 있잖아요. 대화가 안 끊기고, 이상하게 편한 사람.
+            <br className="hidden sm:block" />
+            그게 <strong style={{ color: TITA.ink }}>결</strong>이에요. 티타는 그 결을
+            감이 아니라, 당신이 매일 답한 <strong style={{ color: TITA.ink }}>선택들</strong>로
+            알아봐요.
+          </p>
+          <ol className="space-y-3">
+            <Step n="1" title="매일, 가벼운 한 질문">
+              오늘 하나만 골라요. 답이 하나둘 쌓일수록 당신의 결이 또렷해져요.
+            </Step>
+            <Step n="2" title="자기소개보다 정확한 '결'">
+              무엇을 좋아한다고 적는 것보다, 매일 무엇을 고르는지가 당신을 더
+              정확히 말해주거든요.
+            </Step>
+            <Step n="3" title="결이 통하는 사람과 찻자리">
+              수백 갈래의 결을 견주어, 겹치는 결이 많은 분부터. 감이 아니라
+              당신의 답이 그 사람을 데려와요.
+            </Step>
+          </ol>
+          <div
+            className="rounded-xl p-4 mt-5"
+            style={{ backgroundColor: TITA.surface, border: `1px solid ${TITA.sage}` }}
+          >
+            <p className="text-sm leading-relaxed" style={{ color: TITA.ink }}>
+              그래서 티타는 <strong>쓸수록 정확해져요.</strong> 오래 함께한 사람일수록,
+              결이 더 잘 통하는 친구를 만나요.
+            </p>
+          </div>
+        </Section>
+
         {/* ── 2. 어떻게 작동하나 (3단계) ─────────────────────── */}
         <Section tag="시작하기" title="3분이면 준비 완료">
           <ol className="space-y-3 mt-2">
