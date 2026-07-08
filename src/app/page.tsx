@@ -113,15 +113,21 @@ export default function Home() {
               구글 플레이에서 받기
             </a>
           </div>
-          {/* 무가입 훅 — 다운로드 전에 가치를 먼저 주는 결 유형 테스트 진입 */}
+          {/* 무가입 훅 — 다운로드 전에 가치를 먼저 주는 결 유형 테스트 진입.
+              작은 텍스트 링크로는 눈에 안 띄어 → 탭하기 좋은 소프트 필로 조금 키움
+              (스토어 버튼보다는 가볍게, 하지만 확실히 보이게). */}
           <div className="mt-6">
             <Link
               href="/gyeol"
               onClick={() =>
                 logAnalyticsEvent("gyeol_entry_click", { source: "home_hero" })
               }
-              className="inline-flex items-center gap-1.5 text-sm font-semibold underline-offset-4 hover:underline"
-              style={{ color: TITA.forestMid }}
+              className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full text-[15px] font-bold transition-transform hover:scale-105"
+              style={{
+                color: TITA.forest,
+                backgroundColor: TITA.surface,
+                border: `1.5px solid ${TITA.sage}`,
+              }}
             >
               🍵 가입 없이 3분, 내 결 유형 알아보기
               <span aria-hidden>→</span>

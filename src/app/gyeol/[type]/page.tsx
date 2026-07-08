@@ -162,7 +162,7 @@ export default async function GyeolResultPage({ params }: Params) {
         {/* 티타 연결 + CTA — 다운로드 훅은 ResultActions가 comfort 답에 따라
             개인화해서 렌더한다(정적 페이지라 클라이언트에서 sessionStorage로 읽음). */}
         <section style={{ marginTop: 28, textAlign: "center" }}>
-          <ResultActions code={t.code} name={t.name} />
+          <ResultActions code={t.code} name={t.name} matchName={match.name} />
         </section>
 
         {/* 차나무 티저 — 앱의 돌봄 서사를 결과 페이지에서 미리 보여준다.
