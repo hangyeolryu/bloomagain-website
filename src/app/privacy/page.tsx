@@ -7,6 +7,7 @@ const TOC = [
   { id: "section-3", label: "제3조 (처리하는 항목)" },
   { id: "section-4", label: "제4조 (처리 및 보유 기간)" },
   { id: "section-5", label: "제5조 (제3자 제공)" },
+  { id: "section-5-2", label: "제5조의2 (광고·분석 쿠키·픽셀)" },
   { id: "section-6", label: "제6조 (연구 목적 활용 동의)" },
   { id: "section-7", label: "제7조 (정신건강 위기 대응)" },
   { id: "section-8", label: "제8조 (이용자의 권리)" },
@@ -57,7 +58,7 @@ export default function PrivacyPage() {
           <li><strong>사용자 안녕감 측정</strong> (선택 동의): 본인 외로움·웰빙 변화 대시보드 제공</li>
           <li><strong>연구·통계 활용</strong> (선택 동의): 익명 집계 데이터의 학술 publish 및 정책 연구</li>
           <li><strong>기관 PoC 보고</strong> (선택 동의): 가입 기관에 익명 집계 결과 보고</li>
-          <li>별도의 광고용 목적으로 개인을 식별 가능한 형태의 분석을 수행하지 않습니다.</li>
+          <li>별도의 광고용 목적으로 개인을 식별 가능한 형태의 분석을 수행하지 않습니다. (마케팅 웹사이트 tita-app.com은 광고 성과 측정을 위해 개인을 식별하지 않는 쿠키·픽셀을 사용합니다 — 제5조의2 참조.)</li>
         </ul>
       </section>
 
@@ -218,6 +219,45 @@ export default function PrivacyPage() {
           </li>
         </ol>
         <p>회사는 개인정보를 당사와 동일하거나 동등 이상의 보호를 제공하는 제3자에게만 공유합니다.</p>
+      </section>
+
+      <section id="section-5-2">
+        <h2>제5조의2 (마케팅 웹사이트의 광고·분석 쿠키·픽셀)</h2>
+        <p>
+          본 조항은 <strong>마케팅 웹사이트(tita-app.com)</strong> 방문 시에만 적용되며,
+          앱 내에서 처리되는 개인정보(제2조~제5조)와는 별개입니다.
+        </p>
+        <ol>
+          <li>
+            <strong>사용 도구</strong>: 회사는 광고 성과 측정과 유입 분석을 위해
+            <strong> Meta(Facebook) 픽셀</strong> 및 <strong>Google/Firebase Analytics</strong>를
+            사용합니다.
+          </li>
+          <li>
+            <strong>수집 정보</strong>: 쿠키·기기/브라우저 식별자, 방문한 페이지,
+            결 유형 테스트의 시작·완료·공유·앱 다운로드 클릭과 같은 이벤트.
+            <strong>이름·연락처·이메일 등 개인을 식별하는 정보는 포함하지 않습니다.</strong>
+          </li>
+          <li>
+            <strong>이용 목적</strong>: 광고 효과 측정, 방문·전환 분석, 서비스에 관심을 보인
+            방문자를 대상으로 한 리마케팅(재노출).
+          </li>
+          <li>
+            <strong>고급 매칭 미사용</strong>: 이메일·전화번호 등 개인정보를 해시하여
+            광고 플랫폼에 전송하는 &lsquo;자동 고급 매칭(Advanced Matching)&rsquo; 기능은
+            사용하지 않습니다.
+          </li>
+          <li>
+            <strong>거부(옵트아웃) 방법</strong>: 브라우저 설정에서 쿠키 차단, Meta 광고
+            환경설정(facebook.com/adpreferences), Google 광고 설정(adssettings.google.com),
+            또는 광고 차단 확장 프로그램을 통해 수집을 거부할 수 있습니다. 거부하셔도
+            웹사이트 이용에는 제한이 없습니다.
+          </li>
+          <li>
+            앱 내 안전·매칭용 개인정보(메시지·프로필·본인인증값 등)는 위 광고·분석
+            도구로 전송되지 않습니다.
+          </li>
+        </ol>
       </section>
 
       <section id="section-6" className="bg-blue-50 border-l-4 border-blue-400 rounded-r p-6 my-8">
