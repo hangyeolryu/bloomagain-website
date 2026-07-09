@@ -6,7 +6,11 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-export const KAKAO_JS_KEY = process.env.NEXT_PUBLIC_KAKAO_JS_KEY;
+// JS 키는 등록된 웹 도메인에서만 동작하도록 잠겨 있어 공개돼도 안전한 값
+// (모든 클라이언트 번들에 노출됨) — 픽셀과 동일하게 기본값으로 박아 env·빌드
+// 이슈로 깨지지 않게 한다. 필요 시 NEXT_PUBLIC_KAKAO_JS_KEY로 덮어씀.
+export const KAKAO_JS_KEY =
+  process.env.NEXT_PUBLIC_KAKAO_JS_KEY || "13772752b37f3d38fc4eedfd6dd37333";
 
 let loadingPromise: Promise<any> | null = null;
 
