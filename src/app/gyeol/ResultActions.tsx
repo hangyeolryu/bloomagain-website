@@ -21,6 +21,7 @@ import {
 } from "../_components/tita-brand";
 import { logAnalyticsEvent } from "@/lib/firebase";
 import { trackPixel } from "@/lib/pixel";
+import { shareKakao, KAKAO_JS_KEY } from "@/lib/kakao";
 import { recordGyeolEvent } from "./gyeol-events";
 
 type Platform = "ios" | "android" | "other";
@@ -94,6 +95,20 @@ export function ResultActions({
     });
     recordGyeolEvent("download", code, { gender, comfort });
     trackPixel("AppDownloadClick", { store, content_name: code }, true);
+  }
+
+  // 카카오톡 공유 — 45+ 확산 최강. 키 없거나 실패하면 일반 공유로 폴백.
+  async function shareToKakao() {
+    logAnalyticsEvent("gyeol_share", { gyeol_type: code, channel: "kakao" });
+    recordGyeolEvent("share", code);
+    trackPixel("GyeolShare", { content_name: code, channel: "kakao" }, true);
+    const ok = await shareKakao({
+      title: `나의 결 유형: ${name}`,
+      description: "나는 이런 결이래요. 우리, 결이 맞을까요? 3분이면 나와요 🍵",
+      imageUrl: `https://tita-app.com/gyeol/${code}/opengraph-image`,
+      url: shareUrl,
+    });
+    if (!ok) share();
   }
 
   async function share() {
@@ -312,7 +327,27 @@ export function ResultActions({
         </a>
       )}
 
-      {/* 2차 — 공유 (확산은 유지하되 다운로드와 경쟁하지 않게 가볍게) */}
+      {/* 2차 — 공유. 카카오 키가 있으면 카카오톡 버튼(45+ 최강 채널)을
+          먼저, 없으면 일반 공유만. */}
+      {KAKAO_JS_KEY && (
+        <button
+          onClick={shareToKakao}
+          style={{
+            ...linkBase,
+            width: "100%",
+            padding: "14px 20px",
+            fontSize: 16,
+            fontWeight: 700,
+            color: "#3C1E1E",
+            background: "#FEE500",
+            border: "none",
+            borderRadius: 12,
+            marginTop: 8,
+          }}
+        >
+          카카오톡으로 친구에게 물어보기
+        </button>
+      )}
       <button
         onClick={share}
         style={{
@@ -328,7 +363,7 @@ export function ResultActions({
           marginTop: 8,
         }}
       >
-        🍵 친구의 결도 물어보세요
+        🍵 {KAKAO_JS_KEY ? "다른 방법으로 공유" : "친구의 결도 물어보세요"}
       </button>
       <p
         style={{
