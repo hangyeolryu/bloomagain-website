@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Suspense } from "react";
 import { AnalyticsTracker } from "./_components/AnalyticsTracker";
+import { MetaPixel } from "./_components/MetaPixel";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -79,6 +80,7 @@ export default function RootLayout({
         <Suspense fallback={null}>
           <AnalyticsTracker />
         </Suspense>
+        <MetaPixel />
         {children}
       </body>
     </html>

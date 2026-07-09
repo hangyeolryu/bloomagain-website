@@ -20,6 +20,7 @@ import {
   PLAY_STORE_URL,
 } from "../_components/tita-brand";
 import { logAnalyticsEvent } from "@/lib/firebase";
+import { trackPixel } from "@/lib/pixel";
 import { recordGyeolEvent } from "./gyeol-events";
 
 type Platform = "ios" | "android" | "other";
@@ -92,11 +93,14 @@ export function ResultActions({
       gyeol_gender: gender ?? "",
     });
     recordGyeolEvent("download", code, { gender, comfort });
+    trackPixel("AppDownloadClick", { store, content_name: code }, true);
   }
 
   async function share() {
     logAnalyticsEvent("gyeol_share", { gyeol_type: code });
     recordGyeolEvent("share", code);
+    trackPixel("GyeolShare", { content_name: code }, true); // 확산 청중 → 유사타겟 씨앗
+
     const shareData = {
       title: `나의 결 유형: ${name}`,
       // "너는 뭐야?"가 아니라 "우리 맞을까?" — 비교 궁금증이 클릭을 만든다.

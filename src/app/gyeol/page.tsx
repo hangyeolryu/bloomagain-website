@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { TITA, KOREAN_FONT_STACK } from "../_components/tita-brand";
 import { QUESTIONS, scoreToCode } from "./types";
 import { logAnalyticsEvent } from "@/lib/firebase";
+import { trackPixel } from "@/lib/pixel";
 import { recordGyeolEvent } from "./gyeol-events";
 
 // 결과를 더 잘 맞추기 위한 두 가지(익명). 채점(8유형)에는 반영하지 않고,
@@ -39,6 +40,7 @@ export default function GyeolTestPage() {
   function begin() {
     logAnalyticsEvent("gyeol_test_start", {});
     recordGyeolEvent("start");
+    trackPixel("GyeolTestStart", {}, true); // 커스텀 — 시작 청중
     setStarted(true);
   }
 
@@ -74,6 +76,8 @@ export default function GyeolTestPage() {
       gyeol_comfort: comfort ?? "",
     });
     recordGyeolEvent("complete", code, { gender, comfort });
+    // 리타게팅 핵심: 완료 = Lead. 이 청중에게 다운로드 광고를 다시 띄운다.
+    trackPixel("Lead", { content_name: code, content_category: "gyeol_test" });
     router.push(`/gyeol/${code}`);
   }
 
