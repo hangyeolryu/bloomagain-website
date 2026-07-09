@@ -10,7 +10,10 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-export const META_PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID;
+// Pixel ID는 비밀이 아니다(모든 사이트 소스에 공개됨) — 기본값으로 박아두면
+// 환경변수 없이 재배포만으로 작동. 필요 시 NEXT_PUBLIC_META_PIXEL_ID로 덮어씀.
+export const META_PIXEL_ID =
+  process.env.NEXT_PUBLIC_META_PIXEL_ID || "3355838084619824";
 
 /**
  * Meta Pixel 이벤트 전송. fbq 미로드/미설정 시 조용히 무시.
