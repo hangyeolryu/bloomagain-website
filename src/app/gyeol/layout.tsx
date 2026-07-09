@@ -6,7 +6,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "결 유형 테스트 — 나는 어떤 결일까? | 티타",
   description:
-    "MBTI 말고, 사람과 사람 사이의 결. 12개 질문 3분으로 나의 결 유형과 잘 맞는 친구를 알아봐요. 가입 없이 바로.",
+    "MBTI 말고, 사람과 사람 사이의 결. 14개 질문 3분으로 나의 결 유형과 잘 맞는 친구를 알아봐요. 가입 없이 바로.",
   openGraph: {
     title: "나는 어떤 결일까? 🍵 — 3분 결 유형 테스트",
     description: "MBTI 말고, 사람 사이의 결. 가입 없이 3분, 나의 결 유형과 잘 맞는 친구까지.",

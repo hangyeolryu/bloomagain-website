@@ -110,7 +110,7 @@ export default async function Image() {
 
         {/* 하단: 서브 */}
         <div style={{ color: sage, fontSize: 30, fontWeight: 600 }}>
-          12개 질문으로 알아보는 나의 결 유형 · 잘 맞는 친구까지 🍵
+          14개 질문으로 알아보는 나의 결 유형 · 잘 맞는 친구까지 🍵
         </div>
       </div>
     ),

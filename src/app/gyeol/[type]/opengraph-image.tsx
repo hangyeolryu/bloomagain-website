@@ -1,13 +1,13 @@
 import { ImageResponse } from "next/og";
 import { readFile } from "fs/promises";
 import { join } from "path";
-import { TYPES, ALL_CODES, GyeolCode } from "../types";
+import { TYPES, TEMPERAMENTS, ALL_ROUTE_CODES, parseCode } from "../types";
 
 // 결과별 공유 카드(1200×630). 링크를 스레드·카톡에 붙이면 이 카드가 프리뷰로
 // 뜬다 → 친구가 유형을 보고 "나도 해볼래" → 바이럴 루프. output:'export' 호환을
-// 위해 8개 유형을 정적 생성하고 force-static으로 빌드 타임에 굽는다.
+// 위해 유형×온도 16개 + 레거시 8개를 정적 생성하고 force-static으로 굽는다.
 export function generateStaticParams() {
-  return ALL_CODES.map((type) => ({ type }));
+  return ALL_ROUTE_CODES.map((type) => ({ type }));
 }
 export const dynamicParams = false;
 export const dynamic = "force-static";
@@ -31,9 +31,12 @@ async function loadFont(weight: "Bold" | "SemiBold") {
 export default async function Image({
   params,
 }: {
-  params: { type: string };
+  params: Promise<{ type: string }>;
 }) {
-  const t = TYPES[params.type as GyeolCode] ?? TYPES.FDP;
+  const { type } = await params;
+  const { base, temp } = parseCode(type);
+  const t = TYPES[base ?? "FDP"];
+  const tempLabel = temp ? TEMPERAMENTS[temp].label : null;
   const [bold, semibold] = await Promise.all([
     loadFont("Bold"),
     loadFont("SemiBold"),
@@ -99,6 +102,21 @@ export default async function Image({
           <div style={{ color: sage, fontSize: 38, fontWeight: 600 }}>
             {t.tagline}
           </div>
+          {tempLabel && (
+            <div
+              style={{
+                marginTop: 26,
+                color: forestDeep,
+                background: cream,
+                fontSize: 28,
+                fontWeight: 700,
+                padding: "10px 28px",
+                borderRadius: 999,
+              }}
+            >
+              {tempLabel}
+            </div>
+          )}
         </div>
 
         {/* 하단: 워드마크 */}

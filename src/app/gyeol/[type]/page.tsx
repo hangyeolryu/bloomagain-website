@@ -2,13 +2,13 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { TITA, KOREAN_FONT_STACK } from "../../_components/tita-brand";
-import { TYPES, ALL_CODES, GyeolCode } from "../types";
+import { TYPES, TEMPERAMENTS, ALL_ROUTE_CODES, parseCode } from "../types";
 import { ResultActions } from "../ResultActions";
 import { TeaTree } from "../TeaTree";
 
-// output: 'export' — 8개 유형을 빌드 타임에 정적 생성. 알 수 없는 코드는 404.
+// output: 'export' — 유형×온도 16개 + 레거시 8개를 빌드 타임에 정적 생성.
 export function generateStaticParams() {
-  return ALL_CODES.map((type) => ({ type }));
+  return ALL_ROUTE_CODES.map((type) => ({ type }));
 }
 export const dynamicParams = false;
 
@@ -16,16 +16,18 @@ type Params = { params: Promise<{ type: string }> };
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { type } = await params;
-  const t = TYPES[type as GyeolCode];
-  if (!t) return { title: "결 유형 테스트 — 티타" };
-  const title = `나의 결 유형: ${t.emoji} ${t.name} — 티타`;
+  const { base, temp } = parseCode(type);
+  if (!base) return { title: "결 유형 테스트 — 티타" };
+  const t = TYPES[base];
+  const tempLabel = temp ? ` · ${TEMPERAMENTS[temp].label}` : "";
+  const title = `나의 결 유형: ${t.emoji} ${t.name}${tempLabel} — 티타`;
   const description = `${t.tagline}. ${t.desc}`;
   return {
     title,
     description,
     openGraph: {
       title,
-      description: `${t.emoji} ${t.name} · ${t.tagline}`,
+      description: `${t.emoji} ${t.name}${tempLabel} · ${t.tagline}`,
       siteName: "티타",
       locale: "ko_KR",
       type: "website",
@@ -36,8 +38,10 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 
 export default async function GyeolResultPage({ params }: Params) {
   const { type } = await params;
-  const t = TYPES[type as GyeolCode];
-  if (!t) notFound();
+  const { base, temp } = parseCode(type);
+  if (!base) notFound();
+  const t = TYPES[base];
+  const temperament = temp ? TEMPERAMENTS[temp] : null;
   const match = TYPES[t.match];
 
   return (
@@ -96,11 +100,39 @@ export default async function GyeolResultPage({ params }: Params) {
               fontSize: 16,
               fontWeight: 600,
               color: TITA.forestMid,
-              margin: "0 0 24px",
+              margin: temperament ? "0 0 14px" : "0 0 24px",
             }}
           >
             {t.tagline}
           </p>
+          {temperament && (
+            <div style={{ margin: "0 0 24px" }}>
+              <span
+                style={{
+                  display: "inline-block",
+                  fontSize: 14,
+                  fontWeight: 700,
+                  color: TITA.forestDeep,
+                  background: TITA.surface,
+                  border: `1px solid ${TITA.sage}`,
+                  borderRadius: 999,
+                  padding: "7px 16px",
+                }}
+              >
+                그중에서도 · {temperament.label}
+              </span>
+              <p
+                style={{
+                  fontSize: 14,
+                  color: TITA.muted,
+                  margin: "10px 0 0",
+                  lineHeight: 1.6,
+                }}
+              >
+                {temperament.blurb}
+              </p>
+            </div>
+          )}
           <p
             style={{
               fontSize: 16,
@@ -159,10 +191,37 @@ export default async function GyeolResultPage({ params }: Params) {
           </p>
         </section>
 
+        {/* 유형에 붙은 '그리움' 한 줄 — pain을 공포가 아니라 아름다운 특성의
+            갈망으로. hope 전환("결이 맞는 사람부터")은 ResultActions가 이어받음. */}
+        <section
+          style={{
+            marginTop: 20,
+            background: TITA.white,
+            borderRadius: 16,
+            padding: "20px 22px",
+            border: `1px solid ${TITA.sage}`,
+          }}
+        >
+          <p style={{ fontSize: 16, lineHeight: 1.7, color: TITA.ink, margin: 0 }}>
+            {t.longing}
+          </p>
+          <p
+            style={{
+              fontSize: 15,
+              fontWeight: 700,
+              color: TITA.forestDeep,
+              margin: "12px 0 0",
+            }}
+          >
+            그래서 티타는, 아무나가 아니라 &lsquo;결이 맞는 사람&rsquo;부터 만나요.
+          </p>
+        </section>
+
         {/* 티타 연결 + CTA — 다운로드 훅은 ResultActions가 comfort 답에 따라
             개인화해서 렌더한다(정적 페이지라 클라이언트에서 sessionStorage로 읽음). */}
-        <section style={{ marginTop: 28, textAlign: "center" }}>
-          <ResultActions code={t.code} name={t.name} matchName={match.name} />
+        <section style={{ marginTop: 20, textAlign: "center" }}>
+          {/* code는 라우트 코드(4글자) — 공유 링크가 온도까지 실어 카드가 갈리게 */}
+          <ResultActions code={type} name={t.name} matchName={match.name} />
         </section>
 
         {/* 차나무 티저 — 앱의 돌봄 서사를 결과 페이지에서 미리 보여준다.

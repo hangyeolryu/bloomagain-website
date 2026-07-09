@@ -1,7 +1,7 @@
 "use client";
 
 // 결 유형 테스트 — 무가입 최상단 유입 훅.
-// intro → 12문항 → 결과 페이지(/gyeol/[code])로 client 라우팅.
+// intro → 14문항 → 결과 페이지(/gyeol/[code])로 client 라우팅.
 // 목적: 자기발견 호기심으로 다운로드가 아니라 "테스트"를 시작하게 하고,
 // 결과 공유 링크가 바이럴 루프를 돈다. 앱 다운로드는 결과 페이지에서 유도.
 
@@ -29,7 +29,7 @@ export default function GyeolTestPage() {
   const [started, setStarted] = useState(false);
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<("a" | "b")[]>([]);
-  // "quiz" → 12문항, "profile" → 마지막 두 가지(성별·편안함)
+  // "quiz" → 14문항, "profile" → 마지막 두 가지(성별·편안함)
   const [stage, setStage] = useState<"quiz" | "profile">("quiz");
   const [gender, setGender] = useState<string | null>(null);
   const [comfort, setComfort] = useState<string | null>(null);
@@ -49,7 +49,7 @@ export default function GyeolTestPage() {
     if (step + 1 < total) {
       setStep(step + 1);
     } else {
-      // 12문항 끝 → 결과 직전 프로필 한 화면
+      // 14문항 끝 → 결과 직전 프로필 한 화면
       setStage("profile");
     }
   }
@@ -131,7 +131,7 @@ export default function GyeolTestPage() {
               margin: "0 0 32px",
             }}
           >
-            12개의 질문으로 알아보는 나의 <b style={{ color: TITA.ink }}>결 유형</b>.
+            14개의 질문으로 알아보는 나의 <b style={{ color: TITA.ink }}>결 유형</b>.
             <br />
             3분이면 충분해요. 가입 없이 바로 시작.
           </p>

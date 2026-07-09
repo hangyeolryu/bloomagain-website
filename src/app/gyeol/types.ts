@@ -12,14 +12,19 @@
 // 그 유형 카드가 프리뷰로 뜬다 → 친구가 보고 "나도 해볼래" → 테스트 → 다운로드.
 //
 // 축(axis) 설계는 결큐 태그 체계(e_high/e_low, depth_lover, planner/flexible…)를
-// 3개 이분 축으로 요약한 것이다. 12문항 = 축당 4문항.
+// 3개 이분 축으로 요약한 것 + 공유 다양성을 위한 4번째 '온도' 축이다.
 
-export type Pole = "F" | "S" | "D" | "B" | "P" | "L";
-// E축(충전): F 함께 vs S 혼자   |   R축(관계): D 깊이 vs B 넓이   |   T축(리듬): P 계획 vs L 즉흥
+export type Pole = "F" | "S" | "D" | "B" | "P" | "L" | "W" | "C";
+// E축(충전): F 함께 vs S 혼자   |   R축(관계): D 깊이 vs B 넓이
+// T축(리듬): P 계획 vs L 즉흥    |   온도축(표현): W 온기(드러냄) vs C 담백(품음)
+// 온도축은 8유형 중 한쪽(조용·깊은 결)에 과도하게 쏠리는 걸 완화해, 같은
+// 유형이 나와도 공유 카드가 갈리게 하는 '세분화' 장치다.
 
 export type GyeolCode =
   | "FDP" | "FDL" | "FBP" | "FBL"
   | "SDP" | "SDL" | "SBP" | "SBL";
+
+export type Temperament = "W" | "C";
 
 export interface Question {
   q: string;
@@ -27,7 +32,7 @@ export interface Question {
   b: { text: string; pole: Pole };
 }
 
-// 12문항 — 축 순서를 섞어 응답 편향을 줄인다.
+// 14문항 — 축 순서를 섞어 응답 편향을 줄인다 (앞 12 = 3축, 뒤 2 = 온도축).
 export const QUESTIONS: Question[] = [
   {
     q: "주말 오후, 마음이 제일 놓이는 쪽은?",
@@ -89,6 +94,17 @@ export const QUESTIONS: Question[] = [
     a: { text: "준비를 갖추고 나서", pole: "P" },
     b: { text: "일단 해보면서", pole: "L" },
   },
+  // ── 온도축 (표현) — 같은 유형을 온기형/담백형으로 가른다 ──
+  {
+    q: "고마운 마음이 들 때 나는?",
+    a: { text: "바로 표현하는 편", pole: "W" },
+    b: { text: "마음에 담아두는 편", pole: "C" },
+  },
+  {
+    q: "속상한 일이 있으면?",
+    a: { text: "티가 나는 편", pole: "W" },
+    b: { text: "잘 안 드러내는 편", pole: "C" },
+  },
 ];
 
 export interface GyeolType {
@@ -100,6 +116,9 @@ export interface GyeolType {
   strengths: string[];
   match: GyeolCode;
   matchReason: string;
+  // 결과 CTA 바로 위에 뜨는 '유형에 붙은 그리움' 한 줄 — 공포가 아니라
+  // 아름다운 특성에서 자연스럽게 나오는 갈망(seen). pain → hope 전환용.
+  longing: string;
 }
 
 export const TYPES: Record<GyeolCode, GyeolType> = {
@@ -112,6 +131,7 @@ export const TYPES: Record<GyeolCode, GyeolType> = {
     strengths: ["약속을 지키는 신뢰감", "깊고 진솔한 대화", "곁을 지키는 든든함"],
     match: "SDP",
     matchReason: "깊이와 약속을 아는 사람끼리는 서두르지 않아도 마음이 통해요.",
+    longing: "곁을 든든히 지키는 당신 — 정작 내 곁을 오래 지켜줄 한 사람은, 생각보다 귀하죠.",
   },
   FDL: {
     code: "FDL",
@@ -122,6 +142,7 @@ export const TYPES: Record<GyeolCode, GyeolType> = {
     strengths: ["금세 마음을 여는 다정함", "깊은 즉흥 대화", "함께의 활력"],
     match: "FBL",
     matchReason: "지금을 즐길 줄 아는 사람과는 매번 새로운 자리가 반가워요.",
+    longing: "마음이 동하면 바로 깊어지는 당신 — 그 속도를 맞춰줄 사람이 흔치 않죠.",
   },
   FBP: {
     code: "FBP",
@@ -132,6 +153,7 @@ export const TYPES: Record<GyeolCode, GyeolType> = {
     strengths: ["자리를 챙기는 세심함", "사람을 잇는 친화력", "밝은 분위기"],
     match: "FDP",
     matchReason: "넓게 잇는 당신과 깊게 가꾸는 사람이 만나면 균형이 좋아요.",
+    longing: "모두를 챙기는 당신 — 정작 당신을 챙겨줄 사람은 곁에 있나요?",
   },
   FBL: {
     code: "FBL",
@@ -142,6 +164,7 @@ export const TYPES: Record<GyeolCode, GyeolType> = {
     strengths: ["어디서든 어울리는 붙임성", "즐거운 에너지", "새로움을 즐김"],
     match: "FDL",
     matchReason: "지금을 즐기는 사람끼리는 계획 없이도 좋은 하루가 돼요.",
+    longing: "어디서든 잘 어울리는 당신 — 근데 '진짜 내 사람'은 또 다른 얘기죠.",
   },
   SDP: {
     code: "SDP",
@@ -152,6 +175,7 @@ export const TYPES: Record<GyeolCode, GyeolType> = {
     strengths: ["깊고 변치 않는 진심", "차분한 안정감", "믿음직한 곁"],
     match: "FDP",
     matchReason: "약속을 소중히 하고 깊이를 아는 사람과는 오래 편안해요.",
+    longing: "아무나와의 수다보다, 말이 깊이 통하는 한 사람이 귀한 당신. 그런 사람은 쉽게 안 나타나서 더 그렇죠.",
   },
   SDL: {
     code: "SDL",
@@ -162,6 +186,7 @@ export const TYPES: Record<GyeolCode, GyeolType> = {
     strengths: ["깊은 사색", "자기 리듬", "진솔한 한 번의 대화"],
     match: "SBL",
     matchReason: "부담 없이 곁을 내주는 사람과는 당신의 리듬이 지켜져요.",
+    longing: "내 리듬을 지키면서 곁을 내줄 사람 만나기, 참 어렵죠.",
   },
   SBP: {
     code: "SBP",
@@ -172,6 +197,7 @@ export const TYPES: Record<GyeolCode, GyeolType> = {
     strengths: ["편안한 거리감", "두루 친절함", "예측 가능한 다정"],
     match: "SBL",
     matchReason: "가볍고 편안한 사람과는 서로 부담 없이 오래 이어져요.",
+    longing: "적당한 거리를 아는 당신 — 그 거리를 편하게 맞춰줄 사람이 드물죠.",
   },
   SBL: {
     code: "SBL",
@@ -182,23 +208,66 @@ export const TYPES: Record<GyeolCode, GyeolType> = {
     strengths: ["편안한 존재감", "부담 없는 다정", "자연스러운 어울림"],
     match: "SDL",
     matchReason: "자기 리듬을 아는 사람과는 말없이 걸어도 편안해요.",
+    longing: "애쓰지 않아도 편한 사이를 좋아하는 당신 — 근데 그 '편함'이 제일 만들기 어렵잖아요.",
   },
 };
 
-export const ALL_CODES = Object.keys(TYPES) as GyeolCode[];
+// 온도(표현) 축 — 같은 유형을 두 결로 가르는 세분화 라벨.
+export const TEMPERAMENTS: Record<Temperament, {
+  label: string;
+  tagline: string;
+  blurb: string;
+}> = {
+  W: {
+    label: "온기형",
+    tagline: "마음을 따뜻하게 나누는",
+    blurb: "고마움도 속상함도 겉으로 잘 드러내는, 온기가 느껴지는 결이에요.",
+  },
+  C: {
+    label: "담백형",
+    tagline: "잔잔하게, 속이 깊은",
+    blurb: "마음을 안으로 품는, 담백하지만 속 깊은 결이에요.",
+  },
+};
 
-// 응답 배열(각 문항의 'a'|'b')로 결 유형 코드를 계산한다.
-export function scoreToCode(answers: ("a" | "b")[]): GyeolCode {
-  const tally: Record<Pole, number> = { F: 0, S: 0, D: 0, B: 0, P: 0, L: 0 };
+export const BASE_CODES = Object.keys(TYPES) as GyeolCode[];
+
+// 정적 생성용 라우트 코드: 4글자(유형+온도) 16개 + 3글자 레거시 8개.
+// (온도축 도입 전 공유된 3글자 링크가 404 나지 않게 함께 굽는다.)
+export const ALL_ROUTE_CODES: string[] = [
+  ...BASE_CODES,
+  ...BASE_CODES.flatMap((c) => [`${c}W`, `${c}C`]),
+];
+
+// 하위호환: 예전 이름을 참조하는 코드가 있을 수 있어 유지 (= 라우트 코드 전체).
+export const ALL_CODES = ALL_ROUTE_CODES;
+
+/** 라우트 코드(3 또는 4글자)를 기본 유형 + 온도로 분해. 잘못된 코드는 base null. */
+export function parseCode(code: string): {
+  base: GyeolCode | null;
+  temp: Temperament | null;
+} {
+  const b = code.slice(0, 3) as GyeolCode;
+  const base = TYPES[b] ? b : null;
+  const t = code.length >= 4 ? (code[3] as Temperament) : null;
+  const temp = t === "W" || t === "C" ? t : null;
+  return { base, temp };
+}
+
+// 응답 배열(각 문항의 'a'|'b')로 결 유형 코드(4글자: 유형+온도)를 계산한다.
+export function scoreToCode(answers: ("a" | "b")[]): string {
+  const tally: Record<Pole, number> = {
+    F: 0, S: 0, D: 0, B: 0, P: 0, L: 0, W: 0, C: 0,
+  };
   QUESTIONS.forEach((question, i) => {
     const pick = answers[i] === "b" ? question.b : question.a;
     tally[pick.pole] += 1;
   });
   // 동점(2:2)은 지금까지 과소대표된 쪽(F 함께 · B 넓이 · L 즉흥)으로 깨서
-  // 분포 쏠림(조용한 깊이형 과다)을 완화한다. 마케팅 퀴즈라 임상 정확도보다
-  // 8유형이 골고루 갈리는 게(=공유할 맛) 목적. 우세가 분명하면 그대로 반영.
+  // 분포 쏠림(조용한 깊이형 과다)을 완화한다. 우세가 분명하면 그대로 반영.
   const e = tally.S > tally.F ? "S" : "F"; // 동점 → F
   const r = tally.D > tally.B ? "D" : "B"; // 동점 → B
   const t = tally.P > tally.L ? "P" : "L"; // 동점 → L
-  return `${e}${r}${t}` as GyeolCode;
+  const w = tally.C > tally.W ? "C" : "W"; // 온도: 동점 → W(온기)
+  return `${e}${r}${t}${w}`;
 }
