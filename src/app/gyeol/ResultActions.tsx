@@ -29,7 +29,12 @@ type Platform = "ios" | "android" | "other";
 function detectPlatform(): Platform {
   if (typeof navigator === "undefined") return "other";
   const ua = navigator.userAgent;
-  if (/iPad|iPhone|iPod/.test(ua)) return "ios";
+  // iPadOS 13+ Safari는 데스크탑 UA로 위장 → 터치 지원 Mac을 iOS로 본다.
+  const iPadOS =
+    /Macintosh/.test(ua) &&
+    typeof document !== "undefined" &&
+    "ontouchend" in document;
+  if (/iPad|iPhone|iPod/.test(ua) || iPadOS) return "ios";
   if (/Android/.test(ua)) return "android";
   return "other";
 }
@@ -291,8 +296,25 @@ export function ResultActions({
         </p>
       </div>
 
-      {/* 1차 — 지배적 다운로드 버튼 (유일한 히어로) */}
-      <a href={primaryHref} onClick={() => download(primaryStore)} style={heroButton}>
+      {/* 1차 — 지배적 다운로드 버튼 (유일한 히어로).
+          href는 SSR/첫 렌더 기준(App Store)이지만, 클릭 순간 UA를 다시
+          감지해 올바른 스토어로 강제 이동한다 → 하이드레이션 전에 눌러도
+          안드로이드 유저가 App Store로 새는 레이스가 없다. */}
+      <a
+        href={primaryHref}
+        onClick={(e) => {
+          const p = detectPlatform();
+          if (p === "ios" || p === "android") {
+            e.preventDefault();
+            download(p);
+            window.location.href = p === "android" ? PLAY_STORE_URL : APP_STORE_URL;
+          } else {
+            // 데스크탑: 기본 href(App Store)로 진행 — 아래 보조 링크로 양쪽 노출
+            download("ios");
+          }
+        }}
+        style={heroButton}
+      >
         🍵 티타에서 결친구 만나기
       </a>
       <p
@@ -325,6 +347,25 @@ export function ResultActions({
         >
           아이폰은 여기 → App Store
         </a>
+      )}
+      {/* 데스크탑 등 — 어느 폰인지 모르니 양쪽 다 노출 */}
+      {platform === "other" && (
+        <div style={{ display: "flex", gap: 12, justifyContent: "center" }}>
+          <a
+            href={APP_STORE_URL}
+            onClick={() => download("ios")}
+            style={{ ...linkBase, fontSize: 13, color: TITA.forestMid, fontWeight: 600, padding: 4 }}
+          >
+            App Store
+          </a>
+          <a
+            href={PLAY_STORE_URL}
+            onClick={() => download("android")}
+            style={{ ...linkBase, fontSize: 13, color: TITA.forestMid, fontWeight: 600, padding: 4 }}
+          >
+            Google Play
+          </a>
+        </div>
       )}
 
       {/* 2차 — 공유. 카카오 키가 있으면 카카오톡 버튼(45+ 최강 채널)을

@@ -17,7 +17,12 @@ import { logAnalyticsEvent } from "@/lib/firebase";
 function detectPlatform(): "ios" | "android" | "other" {
   if (typeof navigator === "undefined") return "other";
   const ua = navigator.userAgent;
-  if (/iPad|iPhone|iPod/.test(ua)) return "ios";
+  // iPadOS 13+ Safari는 데스크탑 UA로 위장 → 터치 지원 Mac을 iOS로 본다.
+  const iPadOS =
+    /Macintosh/.test(ua) &&
+    typeof document !== "undefined" &&
+    "ontouchend" in document;
+  if (/iPad|iPhone|iPod/.test(ua) || iPadOS) return "ios";
   if (/Android/.test(ua)) return "android";
   return "other";
 }
