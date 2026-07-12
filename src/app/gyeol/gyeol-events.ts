@@ -8,6 +8,26 @@ type GyeolPhase = "start" | "complete" | "share" | "download";
 // complete 시점에 함께 보내고, download 시점엔 sessionStorage에서 읽어 이어붙인다.
 type GyeolExtra = { gender?: string | null; comfort?: string | null };
 
+// 익명 세션 ID — 개인식별 아님. 한 번의 테스트(탭 세션)를 시작→완료→다운클릭으로
+// 묶어 어드민이 '한 명이 어디까지 갔나'를 볼 수 있게 한다. sessionStorage라
+// 탭을 닫으면 사라진다(재방문=새 세션). 저장 실패해도 이벤트는 계속 보낸다.
+function getGyeolSessionId(): string | null {
+  try {
+    const KEY = "gyeol_sid";
+    let sid = window.sessionStorage.getItem(KEY);
+    if (!sid) {
+      sid =
+        typeof crypto !== "undefined" && crypto.randomUUID
+          ? crypto.randomUUID()
+          : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      window.sessionStorage.setItem(KEY, sid);
+    }
+    return sid;
+  } catch {
+    return null;
+  }
+}
+
 export function recordGyeolEvent(
   phase: GyeolPhase,
   gyeolType?: string,
@@ -34,6 +54,7 @@ export function recordGyeolEvent(
       source: source ?? null,
       referrer: document.referrer || null,
       path: window.location.pathname,
+      session_id: getGyeolSessionId(),
     });
     fetch(`${backendUrl.replace(/\/$/, "")}/api/v1/gyeol/events`, {
       method: "POST",
