@@ -39,6 +39,15 @@ function detectPlatform(): Platform {
   return "other";
 }
 
+// 인앱 브라우저(인스타·페북·카톡·네이버·라인) 감지. 이 안에서는 스토어
+// 앱으로 핸드오프가 자주 깨져서 "다운로드는 눌렀는데 설치가 안 되는" 누수의
+// 주범 — 감지되면 외부 브라우저로 열라는 안내를 띄운다.
+function detectInApp(): boolean {
+  if (typeof navigator === "undefined") return false;
+  const ua = navigator.userAgent;
+  return /Instagram|FBAN|FBAV|FB_IAB|KAKAOTALK|NAVER\(inapp|Line\//.test(ua);
+}
+
 // 다운로드 훅을 "누구와 편한지(comfort)" 답으로 개인화한다. 짧게 — 45+ 여성이
 // 훑어 읽어도 한눈에 들어오게. 값이 없으면(공유 링크 방문자 등) default.
 // same=동성 편함 / any=상관없음 / opp=이성도 좋음. 성별(gender)은 집계용.
@@ -77,8 +86,12 @@ export function ResultActions({
   const [gender, setGender] = useState<string | null>(null);
   // 이 세션에서 직접 테스트를 마쳤는가 — false면 공유 링크로 온 방문자.
   const [taken, setTaken] = useState(false);
+  // 인앱 브라우저 여부 + 안내 시트 표시.
+  const [inApp, setInApp] = useState(false);
+  const [showInAppHint, setShowInAppHint] = useState(false);
   useEffect(() => {
     setPlatform(detectPlatform());
+    setInApp(detectInApp());
     try {
       setComfort(sessionStorage.getItem("tita_gyeol_comfort"));
       setGender(sessionStorage.getItem("tita_gyeol_gender"));
@@ -303,6 +316,14 @@ export function ResultActions({
       <a
         href={primaryHref}
         onClick={(e) => {
+          // 인앱 브라우저(모바일)면 스토어 핸드오프가 깨지므로, 이동 대신
+          // '외부 브라우저로 열기' 안내를 띄운다. (다운클릭은 그대로 집계)
+          if (inApp && (platform === "ios" || platform === "android")) {
+            e.preventDefault();
+            download(platform);
+            setShowInAppHint(true);
+            return;
+          }
           const p = detectPlatform();
           if (p === "ios" || p === "android") {
             e.preventDefault();
@@ -317,6 +338,18 @@ export function ResultActions({
       >
         🍵 티타에서 결친구 만나기
       </a>
+      {inApp && (platform === "ios" || platform === "android") && (
+        <p
+          style={{
+            textAlign: "center",
+            fontSize: 12,
+            color: TITA.muted,
+            margin: "8px 0 0",
+          }}
+        >
+          ⚠️ 지금 인스타그램 안이에요. 설치가 안 되면 아래 안내를 따라주세요.
+        </p>
+      )}
       <p
         style={{
           textAlign: "center",
@@ -428,6 +461,55 @@ export function ResultActions({
           다시 하기
         </Link>
       </div>
+
+      {/* 인앱 브라우저 안내 시트 — 45+가 따라 하기 쉽게 최소 단계로 */}
+      {showInAppHint && (
+        <div
+          onClick={() => setShowInAppHint(false)}
+          style={{
+            position: "fixed", inset: 0, zIndex: 100,
+            background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "flex-end",
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              width: "100%", background: "#fff", borderRadius: "24px 24px 0 0",
+              padding: "28px 24px 32px", boxSizing: "border-box",
+            }}
+          >
+            <p style={{ fontSize: 22, fontWeight: 800, color: TITA.ink, margin: "0 0 10px", letterSpacing: "-0.02em" }}>
+              앱을 받으려면 한 단계만 더 🙏
+            </p>
+            <p style={{ fontSize: 15, lineHeight: 1.65, color: TITA.forestMid, margin: "0 0 20px" }}>
+              지금은 인스타그램 안의 화면이라 설치가 막힐 수 있어요.<br />
+              오른쪽 위 <b>⋯</b>(점 세 개)를 누르고<br />
+              <b>&ldquo;외부 브라우저로 열기&rdquo;</b>(또는 <b>Chrome/Safari로 열기</b>)를<br />
+              선택한 뒤, 다시 다운로드를 눌러주세요.
+            </p>
+            <a
+              href={platform === "android" ? PLAY_STORE_URL : APP_STORE_URL}
+              onClick={() => download(platform === "android" ? "android" : "ios")}
+              style={{
+                display: "block", textAlign: "center", background: TITA.forest,
+                color: TITA.cream, fontWeight: 700, fontSize: 16, borderRadius: 16,
+                padding: "15px 0", textDecoration: "none",
+              }}
+            >
+              그래도 바로 시도해 보기
+            </a>
+            <button
+              onClick={() => setShowInAppHint(false)}
+              style={{
+                display: "block", width: "100%", marginTop: 10, background: "none",
+                border: "none", color: TITA.muted, fontSize: 14, fontWeight: 600, padding: 8,
+              }}
+            >
+              닫기
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
