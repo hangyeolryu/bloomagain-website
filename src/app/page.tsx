@@ -346,6 +346,62 @@ export default function Home() {
           </p>
         </Section>
 
+        {/* ── 이런 분들께 (페르소나) ─────────────────────────── */}
+        <Section icon={Users} tag="이런 분들께" title="이런 분이라면, 티타가 반가울 거예요">
+          <div>
+            {[
+              {
+                icon: Coffee,
+                title: "바쁘게 사느라, 나를 못 챙겼던 분",
+                body: "일에, 가족에 쫓기다 보면 내 시간은 늘 뒤로 밀리죠.",
+              },
+              {
+                icon: Heart,
+                title: "아이 키우며 쉼 없이 달려온 분",
+                body: "'나'로 지낸 시간이 오래됐다면 — 다시, 나로 만나는 자리.",
+              },
+              {
+                icon: Sparkles,
+                title: "이제 새로운 걸 해보고 싶은 분",
+                body: "안 가본 곳, 안 해본 것. 혼자라 미뤄뒀다면 결이 맞는 또래와.",
+              },
+              {
+                icon: Users,
+                title: "결이 맞는 새 친구가 반가운 분",
+                body: "특별한 이유는 없어도 좋아요. 마음 편한 사이, 낮에 가볍게.",
+              },
+            ].map(({ icon: Icon, title, body }, i, arr) => (
+              <div
+                key={title}
+                className="flex items-center gap-3.5 py-4"
+                style={
+                  i < arr.length - 1
+                    ? { borderBottom: `1px solid ${TITA.sage}` }
+                    : undefined
+                }
+              >
+                <div
+                  className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center"
+                  style={{ background: TITA.sage }}
+                >
+                  <Icon className="w-4 h-4" style={{ color: TITA.forest }} />
+                </div>
+                <div>
+                  <h4 className="text-sm font-bold mb-0.5" style={{ color: TITA.forestDeep }}>
+                    {title}
+                  </h4>
+                  <p className="text-xs leading-relaxed" style={{ color: TITA.muted }}>
+                    {body}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <p className="text-center text-sm mt-6" style={{ color: TITA.ink }}>
+            <strong style={{ color: TITA.forest }}>결이 맞으면, 그걸로 충분해요.</strong>
+          </p>
+        </Section>
+
         {/* ── 6. CTA ──────────────────────────────────────── */}
         <section className="text-center py-16 mb-4">
           <h3
