@@ -17,9 +17,12 @@ const JP_SANS =
 const JP_SERIF =
   "'Hiragino Mincho ProN','Yu Mincho',YuMincho,'Noto Serif JP',serif";
 
-// 先行案内(ウェイトリスト)のPOST先。Formspree / 自前バックエンド等のURL。
-// 未設定でもUXは動く（送信は fire-and-forget、その場でお礼表示）。
-const WAITLIST_ENDPOINT = process.env.NEXT_PUBLIC_JP_WAITLIST_ENDPOINT || "";
+// 先行案内(ウェイトリスト)のPOST先。Google Apps Script Web App の /exec。
+// このURLは公開エンドポイント(秘密ではない)なので既定値として直書き。
+// 差し替えたい時は環境変数 NEXT_PUBLIC_JP_WAITLIST_ENDPOINT で上書き可能。
+const WAITLIST_ENDPOINT =
+  process.env.NEXT_PUBLIC_JP_WAITLIST_ENDPOINT ||
+  "https://script.google.com/macros/s/AKfycby3EpErKUj2dGZ6Veb2ElHp65jMSPRnvPL58N6xSBWZ-yumbgcjZ_0YFbzu_aj2nrhdXA/exec";
 
 // 都市別に順次オープン → どの都市に需要が集まるかを取得し、最初のオープン都市を決める。
 const CITIES = [
