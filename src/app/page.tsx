@@ -348,7 +348,7 @@ export default function Home() {
 
         {/* ── 이런 분들께 (페르소나) ─────────────────────────── */}
         <Section icon={Users} tag="이런 분들께" title="이런 분이라면, 티타가 반가울 거예요">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
             {[
               {
                 icon: Coffee,
@@ -370,11 +370,15 @@ export default function Home() {
                 title: "결이 맞는 새 친구가 반가운 분",
                 body: "특별한 이유는 없어도 좋아요. 마음 편한 사이, 낮에 가볍게.",
               },
-            ].map(({ icon: Icon, title, body }) => (
+            ].map(({ icon: Icon, title, body }, i, arr) => (
               <div
                 key={title}
-                className="rounded-2xl p-4 flex items-start gap-3"
-                style={{ background: TITA.white, border: `1px solid ${TITA.sage}` }}
+                className="flex items-center gap-3.5 py-4"
+                style={
+                  i < arr.length - 1
+                    ? { borderBottom: `1px solid ${TITA.sage}` }
+                    : undefined
+                }
               >
                 <div
                   className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center"
@@ -383,7 +387,7 @@ export default function Home() {
                   <Icon className="w-4 h-4" style={{ color: TITA.forest }} />
                 </div>
                 <div>
-                  <h4 className="text-sm font-bold mb-1" style={{ color: TITA.forestDeep }}>
+                  <h4 className="text-sm font-bold mb-0.5" style={{ color: TITA.forestDeep }}>
                     {title}
                   </h4>
                   <p className="text-xs leading-relaxed" style={{ color: TITA.muted }}>
