@@ -17,8 +17,21 @@ const JP_SANS =
 const JP_SERIF =
   "'Hiragino Mincho ProN','Yu Mincho',YuMincho,'Noto Serif JP',serif";
 
-// 先行案内の登録先（Googleフォーム/Tally等）。未設定ならその場でお礼表示。
-const WAITLIST_URL = process.env.NEXT_PUBLIC_JP_WAITLIST_URL || "";
+// 先行案内(ウェイトリスト)のPOST先。Formspree / 自前バックエンド等のURL。
+// 未設定でもUXは動く（送信は fire-and-forget、その場でお礼表示）。
+const WAITLIST_ENDPOINT = process.env.NEXT_PUBLIC_JP_WAITLIST_ENDPOINT || "";
+
+// 都市別に順次オープン → どの都市に需要が集まるかを取得し、最初のオープン都市を決める。
+const CITIES = [
+  "東京",
+  "大阪",
+  "名古屋",
+  "横浜",
+  "福岡",
+  "札幌",
+  "京都・神戸",
+  "その他",
+] as const;
 
 const GENDERS = [
   { key: "f", label: "女性" },
@@ -38,7 +51,6 @@ export default function GyeolTestJaPage() {
   const [gender, setGender] = useState<string | null>(null);
   const [comfort, setComfort] = useState<string | null>(null);
   const [code, setCode] = useState<GyeolCode | null>(null);
-  const [joined, setJoined] = useState(false);
 
   const total = QUESTIONS.length;
 
@@ -70,19 +82,6 @@ export default function GyeolTestJaPage() {
     trackPixel("Lead", { content_name: c, content_category: "gyeol_test_ja" });
     setStage("result");
     if (typeof window !== "undefined") window.scrollTo(0, 0);
-  }
-
-  function joinWaitlist() {
-    logAnalyticsEvent("jp_waitlist_click", { gyeol_type: code ?? "" });
-    recordGyeolEvent("download", code ?? undefined, { gender, comfort });
-    trackPixel("CompleteRegistration", {
-      content_name: code ?? "",
-      content_category: "jp_waitlist",
-    });
-    if (WAITLIST_URL) {
-      window.open(WAITLIST_URL, "_blank", "noopener");
-    }
-    setJoined(true);
   }
 
   function back() {
@@ -359,8 +358,9 @@ export default function GyeolTestJaPage() {
         code && <ResultView
           type={TYPES[code]}
           matchType={TYPES[TYPES[code].match]}
-          joined={joined}
-          onJoin={joinWaitlist}
+          code={code}
+          gender={gender}
+          comfort={comfort}
           serif={JP_SERIF}
           sans={JP_SANS}
         />
@@ -372,18 +372,65 @@ export default function GyeolTestJaPage() {
 function ResultView({
   type,
   matchType,
-  joined,
-  onJoin,
+  code,
+  gender,
+  comfort,
   serif,
   sans,
 }: {
   type: (typeof TYPES)[GyeolCode];
   matchType: (typeof TYPES)[GyeolCode];
-  joined: boolean;
-  onJoin: () => void;
+  code: GyeolCode;
+  gender: string | null;
+  comfort: string | null;
   serif: string;
   sans: string;
 }) {
+  const [email, setEmail] = useState("");
+  const [city, setCity] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [done, setDone] = useState(false);
+  const [err, setErr] = useState(false);
+
+  const emailOk = /.+@.+\..+/.test(email.trim());
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!emailOk || submitting) return;
+    setSubmitting(true);
+    setErr(false);
+    logAnalyticsEvent("jp_waitlist_submit", { gyeol_type: code, jp_city: city || "" });
+    recordGyeolEvent("download", code, { gender, comfort });
+    trackPixel("CompleteRegistration", {
+      content_name: code,
+      content_category: "jp_waitlist",
+    });
+    try {
+      if (WAITLIST_ENDPOINT) {
+        await fetch(WAITLIST_ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify({
+            email: email.trim(),
+            city,
+            gyeol_type: code,
+            gender,
+            comfort,
+            locale: "ja",
+            source: typeof window !== "undefined" ? window.location.href : "",
+          }),
+        });
+      }
+      setDone(true);
+    } catch {
+      // 送信先が未設定/失敗でも、意向は取れているので前向きに完了扱い（ウェイトリストUX）
+      setErr(!WAITLIST_ENDPOINT ? false : true);
+      setDone(true);
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
   return (
     <div style={{ maxWidth: 480, width: "100%", textAlign: "center" }}>
       <div style={{ fontSize: 60, marginBottom: 6 }}>{type.emoji}</div>
@@ -473,49 +520,129 @@ function ResultView({
         {type.longing}
       </p>
 
-      {joined ? (
+      {done ? (
         <div
           style={{
             background: TITA.white,
             border: `1px solid ${TITA.sage}`,
             borderRadius: 16,
-            padding: "22px 20px",
+            padding: "24px 20px",
           }}
         >
           <div style={{ fontSize: 34, marginBottom: 6 }}>🍵</div>
           <p style={{ fontSize: 17, fontWeight: 700, color: TITA.forestDeep, margin: "0 0 6px" }}>
-            ありがとうございます
+            ウェイトリストに登録しました
           </p>
           <p style={{ fontSize: 14.5, lineHeight: 1.7, color: TITA.muted, margin: 0 }}>
-            日本での開始が決まりしだい、いちばんにご案内します。
+            {city ? `${city}で` : "あなたの街で"}オープンが決まりしだい、
+            <br />
+            招待リンクをいちばんにお送りします。
           </p>
         </div>
       ) : (
-        <>
-          <button
-            onClick={onJoin}
-            style={{
-              width: "100%",
-              padding: "18px 24px",
-              fontSize: 18,
-              fontWeight: 700,
-              color: TITA.cream,
-              background: TITA.forest,
-              border: "none",
-              borderRadius: 16,
-              cursor: "pointer",
-              fontFamily: sans,
-              boxShadow: "0 8px 24px rgba(31,78,61,0.24)",
-            }}
-          >
-            先行案内を受け取る
-          </button>
-          <p style={{ fontSize: 13, color: TITA.mutedSoft, marginTop: 14, lineHeight: 1.7 }}>
-            ティタは日本でまもなく。
-            <br />
-            45歳以上・恋愛／婚活ではありません。
+        // ── 都市別に順次オープン・招待制ウェイトリスト（メール取得） ──
+        <div
+          style={{
+            background: TITA.white,
+            border: `1px solid ${TITA.sage}`,
+            borderRadius: 18,
+            padding: "22px 20px",
+            textAlign: "left",
+          }}
+        >
+          <p style={{ fontSize: 16, fontWeight: 700, color: TITA.forestDeep, margin: "0 0 6px" }}>
+            ティタは、日本の各都市で順次オープン予定
           </p>
-        </>
+          <p style={{ fontSize: 14, lineHeight: 1.7, color: TITA.muted, margin: "0 0 18px" }}>
+            まずは招待制で。ウェイトリストに登録すると、
+            あなたの街でオープンした時に<b style={{ color: TITA.ink }}>招待リンク</b>をいちばんにお届けします。
+          </p>
+
+          <form onSubmit={submit}>
+            <label style={{ fontSize: 13, fontWeight: 700, color: TITA.forestMid }}>
+              お住まいの都市
+            </label>
+            <select
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              style={{
+                width: "100%",
+                marginTop: 6,
+                marginBottom: 14,
+                padding: "14px 14px",
+                fontSize: 16,
+                color: city ? TITA.ink : TITA.mutedSoft,
+                background: TITA.cream,
+                border: `2px solid ${TITA.sage}`,
+                borderRadius: 12,
+                fontFamily: sans,
+                appearance: "none",
+              }}
+            >
+              <option value="">選択してください</option>
+              {CITIES.map((c) => (
+                <option key={c} value={c} style={{ color: TITA.ink }}>
+                  {c}
+                </option>
+              ))}
+            </select>
+
+            <label style={{ fontSize: 13, fontWeight: 700, color: TITA.forestMid }}>
+              メールアドレス
+            </label>
+            <input
+              type="email"
+              inputMode="email"
+              autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+              style={{
+                width: "100%",
+                marginTop: 6,
+                marginBottom: 16,
+                padding: "14px 14px",
+                fontSize: 16,
+                color: TITA.ink,
+                background: TITA.cream,
+                border: `2px solid ${TITA.sage}`,
+                borderRadius: 12,
+                fontFamily: sans,
+              }}
+            />
+
+            <button
+              type="submit"
+              disabled={!emailOk || submitting}
+              style={{
+                width: "100%",
+                padding: "18px 24px",
+                fontSize: 18,
+                fontWeight: 700,
+                color: TITA.cream,
+                background: !emailOk || submitting ? TITA.mutedSoft : TITA.forest,
+                border: "none",
+                borderRadius: 16,
+                cursor: !emailOk || submitting ? "default" : "pointer",
+                fontFamily: sans,
+                boxShadow: "0 8px 24px rgba(31,78,61,0.24)",
+                transition: "background 0.15s",
+              }}
+            >
+              {submitting ? "登録中…" : "招待リンクを受け取る"}
+            </button>
+            {err && (
+              <p style={{ fontSize: 13, color: "#C0392B", marginTop: 10 }}>
+                うまく送信できませんでした。少し時間をおいてお試しください。
+              </p>
+            )}
+            <p style={{ fontSize: 12.5, color: TITA.mutedSoft, marginTop: 14, lineHeight: 1.7 }}>
+              45歳以上・恋愛／婚活ではありません。
+              <br />
+              ご登録で、オープン案内メールの受信に同意いただいたものとします。
+            </p>
+          </form>
+        </div>
       )}
     </div>
   );
