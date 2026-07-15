@@ -347,7 +347,7 @@ export default function Home() {
         </Section>
 
         {/* ── 이런 분들께 (페르소나) ─────────────────────────── */}
-        <Section icon={Users} tag="이런 분들께" title="혹시, 이런 마음이신가요?">
+        <Section icon={Users} tag="이런 분들께" title="이런 분이라면, 티타가 반가울 거예요">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {[
               {
@@ -394,7 +394,6 @@ export default function Home() {
             ))}
           </div>
           <p className="text-center text-sm mt-6" style={{ color: TITA.ink }}>
-            거창한 이유가 없어도 괜찮아요.{" "}
             <strong style={{ color: TITA.forest }}>결이 맞으면, 그걸로 충분해요.</strong>
           </p>
         </Section>
