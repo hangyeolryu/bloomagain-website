@@ -407,9 +407,13 @@ function ResultView({
     });
     try {
       if (WAITLIST_ENDPOINT) {
+        // Google Apps Script / Formspree 等に対応するため no-cors + text/plain。
+        // (プリフライトを避ける simple request。応答は読めないが送信は届く＝
+        //  シートへの追記・確認メール送信は実行される。UXは楽観的に完了表示。)
         await fetch(WAITLIST_ENDPOINT, {
           method: "POST",
-          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          mode: "no-cors",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
           body: JSON.stringify({
             email: email.trim(),
             city,
