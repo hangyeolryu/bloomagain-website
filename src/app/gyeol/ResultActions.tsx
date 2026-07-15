@@ -156,8 +156,7 @@ export function ResultActions({
     }
   }
 
-  // 플랫폼별 1차 버튼 대상
-  const primaryHref = platform === "android" ? PLAY_STORE_URL : APP_STORE_URL;
+  // 플랫폼별 다운로드 집계용 (href는 /download 리다이렉트 사용)
   const primaryStore: "ios" | "android" =
     platform === "android" ? "android" : "ios";
   const primaryStoreLabel =
@@ -244,9 +243,11 @@ export function ResultActions({
           🍵 나도 테스트 해보기
         </Link>
 
-        {/* 다운로드는 작은 링크로만 — 방문자에게 강요하지 않는다 */}
+        {/* 다운로드는 작은 링크로만 — 방문자에게 강요하지 않는다.
+            href는 /download(기기 감지 리다이렉트)로 → 안드로이드가 App Store로
+            새지 않게 (SSR href 하드코딩 레이스 방지). */}
         <a
-          href={primaryHref}
+          href="/download"
           onClick={() => download(primaryStore)}
           style={{
             ...linkBase,
@@ -310,11 +311,12 @@ export function ResultActions({
       </div>
 
       {/* 1차 — 지배적 다운로드 버튼 (유일한 히어로).
-          href는 SSR/첫 렌더 기준(App Store)이지만, 클릭 순간 UA를 다시
-          감지해 올바른 스토어로 강제 이동한다 → 하이드레이션 전에 눌러도
-          안드로이드 유저가 App Store로 새는 레이스가 없다. */}
+          href는 /download(기기 감지 후 올바른 스토어로 리다이렉트)로 둔다.
+          하이드레이션 전에 눌러 onClick이 아직 안 붙었어도 안드로이드 유저가
+          App Store로 새지 않는다. 하이드레이션 후엔 onClick이 UA를 재감지해
+          직접 스토어로 보내 한 홉 아낀다. */}
       <a
-        href={primaryHref}
+        href="/download"
         onClick={(e) => {
           // 인앱 브라우저(모바일)면 스토어 핸드오프가 깨지므로, 이동 대신
           // '외부 브라우저로 열기' 안내를 띄운다. (다운클릭은 그대로 집계)
