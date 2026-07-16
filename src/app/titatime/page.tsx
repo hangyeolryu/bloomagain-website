@@ -34,10 +34,10 @@ interface Session {
 }
 const SESSIONS: Session[] = [
   {
-    district: "송파구 잠실",
-    dateLabel: "이번 주 목요일 오후 2시",
-    spotsLabel: "남은 자리 2 / 4",
-    status: "almost",
+    district: "종로·광화문 일대",
+    dateLabel: "7월 22일 (수) 오전 11시",
+    spotsLabel: "정원 4~6명 · 선착순 모집",
+    status: "open",
   },
   {
     district: "다른 동네",
