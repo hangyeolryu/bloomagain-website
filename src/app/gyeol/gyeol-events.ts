@@ -11,6 +11,18 @@ type GyeolExtra = { gender?: string | null; comfort?: string | null };
 // 익명 세션 ID — 개인식별 아님. 한 번의 테스트(탭 세션)를 시작→완료→다운클릭으로
 // 묶어 어드민이 '한 명이 어디까지 갔나'를 볼 수 있게 한다. sessionStorage라
 // 탭을 닫으면 사라진다(재방문=새 세션). 저장 실패해도 이벤트는 계속 보낸다.
+// 인앱 브라우저(인스타·페북·카톡·네이버·라인) 감지. 이 안에서는 스토어 앱으로
+// 핸드오프가 자주 깨져 "다운클릭했는데 설치 안 됨" 누수의 주범 — 이벤트에 실어
+// 어드민이 "인앱에서 다운클릭한 비율"을 집계할 수 있게 한다.
+function isInAppBrowser(): boolean {
+  try {
+    const ua = navigator.userAgent || "";
+    return /Instagram|FBAN|FBAV|FB_IAB|KAKAOTALK|NAVER\(inapp|Line\//.test(ua);
+  } catch {
+    return false;
+  }
+}
+
 function getGyeolSessionId(): string | null {
   try {
     const KEY = "gyeol_sid";
@@ -55,6 +67,7 @@ export function recordGyeolEvent(
       referrer: document.referrer || null,
       path: window.location.pathname,
       session_id: getGyeolSessionId(),
+      in_app: isInAppBrowser(),
     });
     fetch(`${backendUrl.replace(/\/$/, "")}/api/v1/gyeol/events`, {
       method: "POST",
