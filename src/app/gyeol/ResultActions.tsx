@@ -18,6 +18,7 @@ import {
   KOREAN_FONT_STACK,
   APP_STORE_URL,
   PLAY_STORE_URL,
+  PLAY_STORE_INTENT_URL,
 } from "../_components/tita-brand";
 import { logAnalyticsEvent } from "@/lib/firebase";
 import { trackPixel } from "@/lib/pixel";
@@ -324,13 +325,11 @@ export function ResultActions({
             marginBottom: 4,
           }}
         >
-          <p style={{ fontSize: 14.5, fontWeight: 800, color: "#8A5A00", margin: "0 0 5px" }}>
-            ⚠️ 지금 앱 안(인스타·카톡 등)에서 열렸어요
+          <p style={{ fontSize: 15, fontWeight: 800, color: "#8A5A00", margin: "0 0 4px" }}>
+            📱 설치 화면이 바로 안 뜨나요?
           </p>
-          <p style={{ fontSize: 13.5, lineHeight: 1.65, color: "#6B4E16", margin: 0 }}>
-            여기선 설치가 막힐 수 있어요. 오른쪽 위 <b>메뉴(⋯ 또는 공유)</b>를 눌러{" "}
-            <b>&ldquo;외부 브라우저로 열기&rdquo;</b>(Chrome·Safari)를 선택한 뒤,
-            아래 버튼을 눌러주세요.
+          <p style={{ fontSize: 14, lineHeight: 1.6, color: "#6B4E16", margin: 0 }}>
+            아래 <b>초록 버튼</b>을 한 번 더 눌러주세요. 잠시 기다리면 스토어가 열려요.
           </p>
         </div>
       )}
@@ -343,19 +342,25 @@ export function ResultActions({
       <a
         href="/download"
         onClick={(e) => {
-          // 인앱 브라우저(모바일)면 스토어 핸드오프가 깨지므로, 이동 대신
-          // '외부 브라우저로 열기' 안내를 띄운다. (다운클릭은 그대로 집계)
+          // 인앱 브라우저(모바일): 먼저 스토어 앱 강제 실행을 시도한다. 안드로이드는
+          // intent://, iOS는 App Store 링크가 인앱에서도 대개 열린다 — 50대가 아무
+          // 조작 안 해도 설치 화면이 뜨게. 혹시 인앱이 막아 페이지에 그대로 남으면
+          // 잠시 뒤 수동 안내 시트를 폴백으로 띄운다. (다운클릭은 그대로 집계)
           if (inApp && (platform === "ios" || platform === "android")) {
             e.preventDefault();
             download(platform);
-            setShowInAppHint(true);
+            window.location.href =
+              platform === "android" ? PLAY_STORE_INTENT_URL : APP_STORE_URL;
+            setTimeout(() => setShowInAppHint(true), 1200);
             return;
           }
           const p = detectPlatform();
           if (p === "ios" || p === "android") {
             e.preventDefault();
             download(p);
-            window.location.href = p === "android" ? PLAY_STORE_URL : APP_STORE_URL;
+            // 안드로이드는 intent://로 스토어 앱을 강제 실행 → 인앱 브라우저에서도
+            // 사용자가 아무 조작 없이 설치 화면이 뜬다(실패 시 자동 폴백).
+            window.location.href = p === "android" ? PLAY_STORE_INTENT_URL : APP_STORE_URL;
           } else {
             // 데스크탑: 기본 href(App Store)로 진행 — 아래 보조 링크로 양쪽 노출
             download("ios");
@@ -506,24 +511,25 @@ export function ResultActions({
             }}
           >
             <p style={{ fontSize: 22, fontWeight: 800, color: TITA.ink, margin: "0 0 10px", letterSpacing: "-0.02em" }}>
-              앱을 받으려면 한 단계만 더 🙏
+              한 번만 더 눌러볼까요? 🙏
             </p>
-            <p style={{ fontSize: 15, lineHeight: 1.65, color: TITA.forestMid, margin: "0 0 20px" }}>
-              지금은 인스타그램 안의 화면이라 설치가 막힐 수 있어요.<br />
-              오른쪽 위 <b>⋯</b>(점 세 개)를 누르고<br />
-              <b>&ldquo;외부 브라우저로 열기&rdquo;</b>(또는 <b>Chrome/Safari로 열기</b>)를<br />
-              선택한 뒤, 다시 다운로드를 눌러주세요.
+            <p style={{ fontSize: 15.5, lineHeight: 1.7, color: TITA.forestMid, margin: "0 0 20px" }}>
+              아래 <b>초록 버튼</b>을 눌러주세요. 스토어가 열리면 &lsquo;받기·설치&rsquo;를
+              누르면 돼요.<br />
+              <span style={{ fontSize: 13.5, color: TITA.muted }}>
+                그래도 안 열리면, 이 문자·카톡 링크를 눌러 열어주세요.
+              </span>
             </p>
             <a
-              href={platform === "android" ? PLAY_STORE_URL : APP_STORE_URL}
+              href={platform === "android" ? PLAY_STORE_INTENT_URL : APP_STORE_URL}
               onClick={() => download(platform === "android" ? "android" : "ios")}
               style={{
                 display: "block", textAlign: "center", background: TITA.forest,
-                color: TITA.cream, fontWeight: 700, fontSize: 16, borderRadius: 16,
-                padding: "15px 0", textDecoration: "none",
+                color: TITA.cream, fontWeight: 800, fontSize: 17, borderRadius: 16,
+                padding: "16px 0", textDecoration: "none",
               }}
             >
-              그래도 바로 시도해 보기
+              🍵 스토어 열기
             </a>
             <button
               onClick={() => setShowInAppHint(false)}

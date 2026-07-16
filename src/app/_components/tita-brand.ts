@@ -37,3 +37,11 @@ export const KOREAN_FONT_STACK =
 export const APP_STORE_URL = "https://apps.apple.com/app/id6751523550";
 export const PLAY_STORE_URL =
   "https://play.google.com/store/apps/details?id=com.bloomagain.bloomagain";
+
+// 안드로이드 인앱 브라우저(인스타·카톡 등)에서도 Play 스토어 '앱'을 강제로 열기
+// 위한 intent URL. scheme=market + package=com.android.vending 로 네이티브
+// 스토어를 띄우고, 실패하면 browser_fallback_url(https Play 링크)로 자동 폴백한다.
+// → 50대가 "외부 브라우저로 열기" 같은 조작을 안 해도 설치 화면이 바로 뜬다.
+// (일반 크롬에서도 안전 — 폴백이 있어 그냥 스토어로 감.)
+export const PLAY_STORE_INTENT_URL =
+  "intent://details?id=com.bloomagain.bloomagain#Intent;scheme=market;package=com.android.vending;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.bloomagain.bloomagain;end";
