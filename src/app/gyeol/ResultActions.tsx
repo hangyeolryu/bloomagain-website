@@ -70,6 +70,13 @@ const HOOKS: Record<string, { head: string; body: string }> = {
   },
 };
 
+// 관심신청 저장 엔드포인트 (Google Apps Script). 일본 웨잇리스트와 같은 스크립트를
+// 재사용하되, body의 list='titatime722'로 별도 탭에 쌓이게 한다. no-cors + text/plain
+// 로 preflight를 피하고, 응답은 opaque라 throw 없으면 성공으로 본다.
+const INTEREST_ENDPOINT =
+  "https://script.google.com/macros/s/AKfycby3EpErKUj2dGZ6Veb2ElHp65jMSPRnvPL58N6xSBWZ-yumbgcjZ_0YFbzu_aj2nrhdXA/exec";
+const TITATIME_EVENT = "2026-07-22 종로·광화문 11:00";
+
 export function ResultActions({
   code,
   name,
@@ -89,6 +96,11 @@ export function ResultActions({
   // 인앱 브라우저 여부 + 안내 시트 표시.
   const [inApp, setInApp] = useState(false);
   const [showInAppHint, setShowInAppHint] = useState(false);
+  // 7/22 티타임 관심신청 (이메일 + 방금 나온 결 유형).
+  const [email, setEmail] = useState("");
+  const [iSubmitting, setISubmitting] = useState(false);
+  const [iDone, setIDone] = useState(false);
+  const [iErr, setIErr] = useState<string | null>(null);
   useEffect(() => {
     setPlatform(detectPlatform());
     setInApp(detectInApp());
@@ -153,6 +165,41 @@ export function ResultActions({
       alert("링크를 복사했어요. 친구에게 붙여넣어 보내보세요 🍵");
     } catch {
       /* 클립보드 막힘 */
+    }
+  }
+
+  async function submitInterest() {
+    const em = email.trim();
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)) {
+      setIErr("이메일 주소를 확인해주세요");
+      return;
+    }
+    setISubmitting(true);
+    setIErr(null);
+    try {
+      await fetch(INTEREST_ENDPOINT, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({
+          list: "titatime722",
+          email: em,
+          gyeol: code, // 방금 나온 결 유형 → 매칭 근거
+          gender: gender ?? "",
+          comfort: comfort ?? "",
+          event: TITATIME_EVENT,
+        }),
+      });
+      logAnalyticsEvent("titatime_interest_submit", {
+        source: `gyeol_${code}`,
+        gyeol_gender: gender ?? "",
+        gyeol_comfort: comfort ?? "",
+      });
+      setIDone(true);
+    } catch {
+      setIErr("전송에 실패했어요. 잠시 후 다시 시도해주세요.");
+    } finally {
+      setISubmitting(false);
     }
   }
 
@@ -402,6 +449,94 @@ export function ResultActions({
           </a>
         </div>
       )}
+
+      {/* 7/22 종로·광화문 티타임 관심신청 — 테스트를 방금 마친 사람에게만 노출.
+          이메일 + 방금 나온 결 유형(code)을 함께 저장해 서울 티타임 매칭에 쓴다.
+          다운로드 히어로 아래 별도 카드라 기존 다운로드 퍼널을 밀어내지 않는다. */}
+      <div
+        style={{
+          marginTop: 18,
+          padding: "18px 18px 20px",
+          background: TITA.surface,
+          border: `1px solid ${TITA.sage}`,
+          borderRadius: 16,
+        }}
+      >
+        <p style={{ fontSize: 13, fontWeight: 700, color: TITA.forestMid, margin: "0 0 4px" }}>
+          📍 서울 · 7월 22일(수) 오전 11시
+        </p>
+        <p
+          style={{
+            fontSize: 16.5,
+            fontWeight: 800,
+            color: TITA.forestDeep,
+            letterSpacing: "-0.4px",
+            margin: "0 0 8px",
+          }}
+        >
+          종로·광화문, 결 맞는 또래 4~6명과 티타임
+        </p>
+        {!iDone ? (
+          <>
+            <p style={{ fontSize: 13.5, lineHeight: 1.6, color: TITA.ink, margin: "0 0 12px" }}>
+              앱 설치는 나중에. 이메일만 남기면 자리 확정 시 초대해 드려요.
+              방금 나온 결 유형으로 결이 맞는 분들과 묶어드려요.
+            </p>
+            <div style={{ display: "flex", gap: 8 }}>
+              <input
+                type="email"
+                inputMode="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="이메일 주소"
+                style={{
+                  flex: 1,
+                  minWidth: 0,
+                  padding: "12px 14px",
+                  fontSize: 15,
+                  border: `1px solid ${TITA.sage}`,
+                  borderRadius: 12,
+                  fontFamily: KOREAN_FONT_STACK,
+                }}
+              />
+              <button
+                onClick={submitInterest}
+                disabled={iSubmitting}
+                style={{
+                  padding: "12px 18px",
+                  fontSize: 15,
+                  fontWeight: 700,
+                  color: TITA.cream,
+                  background: TITA.forest,
+                  border: "none",
+                  borderRadius: 12,
+                  cursor: "pointer",
+                  fontFamily: KOREAN_FONT_STACK,
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {iSubmitting ? "..." : "관심 신청"}
+              </button>
+            </div>
+            {iErr && <p style={{ fontSize: 12.5, color: "#C0392B", margin: "8px 0 0" }}>{iErr}</p>}
+            <p style={{ fontSize: 11.5, color: TITA.muted, margin: "8px 0 0" }}>
+              만 45세 이상 · 본인인증 후 확정 · 데이팅 앱 아님
+            </p>
+          </>
+        ) : (
+          <p
+            style={{
+              fontSize: 14.5,
+              lineHeight: 1.6,
+              color: TITA.forestDeep,
+              fontWeight: 600,
+              margin: 0,
+            }}
+          >
+            🍵 관심 신청 완료! 자리가 확정되면 이메일로 초대해 드릴게요.
+          </p>
+        )}
+      </div>
 
       {/* 2차 — 공유. 카카오 키가 있으면 카카오톡 버튼(45+ 최강 채널)을
           먼저, 없으면 일반 공유만. */}
