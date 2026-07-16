@@ -310,6 +310,31 @@ export function ResultActions({
         </p>
       </div>
 
+      {/* 인앱 브라우저(인스타·카톡 등) 상시 경고 — 탭 전에 미리 보여준다.
+          유입의 ~90%가 인스타/스레드/페북 인앱이고, 여기선 스토어 핸드오프가
+          깨져 "다운클릭했는데 설치 안 됨" 누수가 가장 크다. 눌러야 뜨는 시트
+          (아래 showInAppHint)에만 의존하지 않고, 버튼 위에 상시 안내한다. */}
+      {inApp && (platform === "ios" || platform === "android") && (
+        <div
+          style={{
+            background: "#FFF4E5",
+            border: "1px solid #F0C088",
+            borderRadius: 14,
+            padding: "13px 15px",
+            marginBottom: 4,
+          }}
+        >
+          <p style={{ fontSize: 14.5, fontWeight: 800, color: "#8A5A00", margin: "0 0 5px" }}>
+            ⚠️ 지금 앱 안(인스타·카톡 등)에서 열렸어요
+          </p>
+          <p style={{ fontSize: 13.5, lineHeight: 1.65, color: "#6B4E16", margin: 0 }}>
+            여기선 설치가 막힐 수 있어요. 오른쪽 위 <b>메뉴(⋯ 또는 공유)</b>를 눌러{" "}
+            <b>&ldquo;외부 브라우저로 열기&rdquo;</b>(Chrome·Safari)를 선택한 뒤,
+            아래 버튼을 눌러주세요.
+          </p>
+        </div>
+      )}
+
       {/* 1차 — 지배적 다운로드 버튼 (유일한 히어로).
           href는 /download(기기 감지 후 올바른 스토어로 리다이렉트)로 둔다.
           하이드레이션 전에 눌러 onClick이 아직 안 붙었어도 안드로이드 유저가
