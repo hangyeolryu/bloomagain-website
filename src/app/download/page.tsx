@@ -11,6 +11,7 @@ import {
   KOREAN_FONT_STACK,
   APP_STORE_URL,
   PLAY_STORE_URL,
+  PLAY_STORE_INTENT_URL,
 } from "../_components/tita-brand";
 import { logAnalyticsEvent } from "@/lib/firebase";
 
@@ -48,7 +49,8 @@ export default function DownloadPage() {
         store: "android",
         source: "auto_redirect",
       });
-      window.location.href = PLAY_STORE_URL;
+      // intent:// 로 스토어 앱을 강제 실행 (인앱 브라우저에서도 열림, 실패 시 폴백).
+      window.location.href = PLAY_STORE_INTENT_URL;
       setRedirected(true);
     }
   }, []);
