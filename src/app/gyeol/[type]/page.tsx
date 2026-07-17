@@ -4,6 +4,7 @@ import Link from "next/link";
 import { TITA, KOREAN_FONT_STACK } from "../../_components/tita-brand";
 import { TYPES, TEMPERAMENTS, ALL_ROUTE_CODES, parseCode } from "../types";
 import { ResultActions } from "../ResultActions";
+import { ValueResultCard } from "./ValueResultCard";
 import { TeaTree } from "../TeaTree";
 
 // output: 'export' — 유형×온도 16개 + 레거시 8개를 빌드 타임에 정적 생성.
@@ -169,6 +170,10 @@ export default async function GyeolResultPage({ params }: Params) {
             ))}
           </div>
         </section>
+
+        {/* 가치 결 — 8유형(어울림 방식) 위에 얹는 두 번째 층. 클라이언트에서
+            ?v= 또는 sessionStorage로 읽어 렌더(없으면 안 그림). */}
+        <ValueResultCard />
 
         {/* 잘 맞는 결 */}
         <section

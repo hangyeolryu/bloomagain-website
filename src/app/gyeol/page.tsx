@@ -1,14 +1,14 @@
 "use client";
 
 // 결 유형 테스트 — 무가입 최상단 유입 훅.
-// intro → 14문항 → 결과 페이지(/gyeol/[code])로 client 라우팅.
+// intro → 18문항(스타일 14 + 가치 4) → 결과 페이지(/gyeol/[code])로 client 라우팅.
 // 목적: 자기발견 호기심으로 다운로드가 아니라 "테스트"를 시작하게 하고,
 // 결과 공유 링크가 바이럴 루프를 돈다. 앱 다운로드는 결과 페이지에서 유도.
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { TITA, KOREAN_FONT_STACK } from "../_components/tita-brand";
-import { QUESTIONS, scoreToCode } from "./types";
+import { QUIZ_QUESTIONS, scoreToCode, scoreToValue } from "./types";
 import { logAnalyticsEvent } from "@/lib/firebase";
 import { trackPixel } from "@/lib/pixel";
 import { recordGyeolEvent } from "./gyeol-events";
@@ -35,7 +35,7 @@ export default function GyeolTestPage() {
   const [gender, setGender] = useState<string | null>(null);
   const [comfort, setComfort] = useState<string | null>(null);
 
-  const total = QUESTIONS.length;
+  const total = QUIZ_QUESTIONS.length;
 
   function begin() {
     logAnalyticsEvent("gyeol_test_start", {});
@@ -51,18 +51,22 @@ export default function GyeolTestPage() {
     if (step + 1 < total) {
       setStep(step + 1);
     } else {
-      // 14문항 끝 → 결과 직전 프로필 한 화면
+      // 문항 끝 → 결과 직전 프로필 한 화면
       setStage("profile");
     }
   }
 
   function finish() {
     const code = scoreToCode(answers);
+    // 가치 결(성장/평온 · 열림/익숙) — 8유형과 별개로 계산해 결과에 얹는다.
+    const value = scoreToValue(answers);
+    const valueCode = `${value.direction}${value.openness}`; // 예: "GO"
     // 결과 페이지(정적)가 읽어 다운로드 훅을 개인화한다.
     try {
       // taken: 이 세션에서 직접 테스트를 마쳤다는 표시 — 결과 페이지가
       // "친구에게 물어보기"(테스트함) vs "나도 해보기"(공유로 유입)를 가른다.
       sessionStorage.setItem("tita_gyeol_taken", "1");
+      sessionStorage.setItem("tita_gyeol_value", valueCode);
       if (comfort) sessionStorage.setItem("tita_gyeol_comfort", comfort);
       else sessionStorage.removeItem("tita_gyeol_comfort");
       if (gender) sessionStorage.setItem("tita_gyeol_gender", gender);
@@ -72,13 +76,15 @@ export default function GyeolTestPage() {
     }
     logAnalyticsEvent("gyeol_test_complete", {
       gyeol_type: code,
+      gyeol_value: valueCode,
       gyeol_gender: gender ?? "",
       gyeol_comfort: comfort ?? "",
     });
     recordGyeolEvent("complete", code, { gender, comfort });
     // 리타게팅 핵심: 완료 = Lead. 이 청중에게 다운로드 광고를 다시 띄운다.
     trackPixel("Lead", { content_name: code, content_category: "gyeol_test" });
-    router.push(`/gyeol/${code}`);
+    // 가치 결은 URL(?v=)로도 실어 공유 링크에서도 보이게(OG/라우트는 불변).
+    router.push(`/gyeol/${code}?v=${valueCode}`);
   }
 
   function back() {
@@ -135,7 +141,7 @@ export default function GyeolTestPage() {
               margin: "0 0 32px",
             }}
           >
-            14개의 질문으로 알아보는 나의 <b style={{ color: TITA.ink }}>결 유형</b>.
+            18개의 질문으로 알아보는 나의 <b style={{ color: TITA.ink }}>결 유형</b>.
             <br />
             3분이면 충분해요. 가입 없이 바로 시작.
           </p>
@@ -229,12 +235,12 @@ export default function GyeolTestPage() {
               minHeight: 68,
             }}
           >
-            {QUESTIONS[step].q}
+            {QUIZ_QUESTIONS[step].q}
           </h2>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
             {(["a", "b"] as const).map((key) => {
-              const opt = QUESTIONS[step][key];
+              const opt = QUIZ_QUESTIONS[step][key];
               return (
                 <button
                   key={key}

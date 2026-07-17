@@ -255,6 +255,7 @@ export function parseCode(code: string): {
 }
 
 // 응답 배열(각 문항의 'a'|'b')로 결 유형 코드(4글자: 유형+온도)를 계산한다.
+// 값 문항(VALUE_QUESTIONS)은 뒤에 붙어도 QUESTIONS만 순회하므로 영향 없음.
 export function scoreToCode(answers: ("a" | "b")[]): string {
   const tally: Record<Pole, number> = {
     F: 0, S: 0, D: 0, B: 0, P: 0, L: 0, W: 0, C: 0,
@@ -270,4 +271,125 @@ export function scoreToCode(answers: ("a" | "b")[]): string {
   const t = tally.P > tally.L ? "P" : "L"; // 동점 → L
   const w = tally.C > tally.W ? "C" : "W"; // 온도: 동점 → W(온기)
   return `${e}${r}${t}${w}`;
+}
+
+// ── 가치 결 (두 번째 층) ──────────────────────────────────────────────────
+// "어떻게 어울리나"(8유형)만큼 "무엇을 소중히 여기나"도 결의 핵심이라, 관계
+// 스타일과 겹치지 않는 두 가치 축을 별도로 잰다. 8유형 코드/OG는 그대로 두고
+// (method 1), 결과에 '가치 결'로 얹어 보여준다.
+//   축① 삶의 방향: G 성장(새로움·도전) vs E 평온(익숙·여유)
+//   축④ 열림      : O 열림(다름도 반가움) vs K 익숙(결이 통하는 게 편함)
+export type ValueDirection = "G" | "E";
+export type ValueOpenness = "O" | "K";
+export type ValuePole = ValueDirection | ValueOpenness;
+
+export interface ValueQuestion {
+  q: string;
+  a: { text: string; pole: ValuePole };
+  b: { text: string; pole: ValuePole };
+}
+
+// 가치 문항 4개 (축당 2). 스타일 축과 겹치지 않게 '삶의 태도'를 묻는다.
+export const VALUE_QUESTIONS: ValueQuestion[] = [
+  {
+    q: "요즘 더 끌리는 쪽은?",
+    a: { text: "새로 배우고 도전하는 것", pole: "G" },
+    b: { text: "익숙한 걸 편히 즐기는 것", pole: "E" },
+  },
+  {
+    q: "나에게 좋은 하루란?",
+    a: { text: "안 해본 걸 해본 날", pole: "G" },
+    b: { text: "무리 없이 여유로운 날", pole: "E" },
+  },
+  {
+    q: "모임에서 더 편한 사람은?",
+    a: { text: "나와 좀 달라도 새 얘기 나누는 사람", pole: "O" },
+    b: { text: "결이 비슷해 말이 잘 통하는 사람", pole: "K" },
+  },
+  {
+    q: "생각이 다른 사람을 만나면?",
+    a: { text: "그 얘기가 더 궁금해진다", pole: "O" },
+    b: { text: "아무래도 결이 맞는 쪽이 편하다", pole: "K" },
+  },
+];
+
+// 전체 퀴즈 = 스타일 14 + 가치 4. 테스트 화면은 이걸 순회한다.
+export const QUIZ_QUESTIONS: (Question | ValueQuestion)[] = [
+  ...QUESTIONS,
+  ...VALUE_QUESTIONS,
+];
+
+export interface ValueResult {
+  direction: ValueDirection;
+  openness: ValueOpenness;
+}
+
+export const VALUE_AXES: {
+  direction: Record<ValueDirection, { label: string; tagline: string; blurb: string }>;
+  openness: Record<ValueOpenness, { label: string; tagline: string; blurb: string }>;
+} = {
+  direction: {
+    G: {
+      label: "성장형",
+      tagline: "새로움에 설레는",
+      blurb: "배우고 도전하고, 안 해본 걸 해볼 때 살아있음을 느끼는 결이에요.",
+    },
+    E: {
+      label: "평온형",
+      tagline: "여유를 아는",
+      blurb: "익숙하고 편안한 것에서 행복을 찾는, 잔잔하고 단단한 결이에요.",
+    },
+  },
+  openness: {
+    O: {
+      label: "열린형",
+      tagline: "다름도 반가운",
+      blurb: "나와 좀 달라도 새로운 이야기가 즐거운, 마음이 열린 결이에요.",
+    },
+    K: {
+      label: "익숙형",
+      tagline: "통하는 게 편한",
+      blurb: "결이 비슷해 말이 잘 통하는 사이에서 가장 편안한 결이에요.",
+    },
+  },
+};
+
+// 가치 답(뒤 4개)으로 가치 결을 계산. 45+는 평온·익숙에 쏠리기 쉬워, 동점(1:1)은
+// 과소대표될 쪽(G 성장 · O 열림)으로 깨 공유 카드 다양성을 지킨다.
+export function scoreToValue(answers: ("a" | "b")[]): ValueResult {
+  const tally: Record<ValuePole, number> = { G: 0, E: 0, O: 0, K: 0 };
+  const offset = QUESTIONS.length;
+  VALUE_QUESTIONS.forEach((question, i) => {
+    const ans = answers[offset + i];
+    if (ans !== "a" && ans !== "b") return; // 미응답은 건너뜀
+    const pick = ans === "b" ? question.b : question.a;
+    tally[pick.pole] += 1;
+  });
+  const direction: ValueDirection = tally.E > tally.G ? "E" : "G"; // 동점 → G
+  const openness: ValueOpenness = tally.K > tally.O ? "K" : "O"; // 동점 → O
+  return { direction, openness };
+}
+
+/** 가치 코드 문자열("GO","EK"…)을 ValueResult로. 잘못된 값은 null. */
+export function parseValue(v: string | null | undefined): ValueResult | null {
+  if (!v || v.length !== 2) return null;
+  const d = v[0];
+  const o = v[1];
+  if ((d === "G" || d === "E") && (o === "O" || o === "K")) {
+    return { direction: d, openness: o };
+  }
+  return null;
+}
+
+/** 가치 결이 통하는 상대에 대한 한 줄 (성사 보장 아님 — 결의 결합 설명). */
+export function valueHarmony(v: ValueResult): string {
+  const dir =
+    v.direction === "G"
+      ? "새로움을 함께 즐길 또래"
+      : "여유의 속도가 맞는 또래";
+  const open =
+    v.openness === "O"
+      ? "서로 다른 이야기도 반갑게 나눌 수 있어요"
+      : "결이 통해 말이 편하게 이어져요";
+  return `${dir}와 만나면, ${open}.`;
 }
