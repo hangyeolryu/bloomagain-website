@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { TITA, KOREAN_FONT_STACK } from "../_components/tita-brand";
 import { TitatimeCTA } from "./TitatimeCTA";
-import { SessionApply } from "./SessionApply";
+import { SessionList } from "./SessionList";
 
 // 티타임 모집 — 날짜 있는·동네·놓치면 아쉬운 이벤트로 상시 다운로드를 유발한다
 // (Timeleft 모델). 친구 만들기의 낮은 긴급도를 "이번 주 우리 동네 자리"라는
@@ -22,40 +22,9 @@ export const metadata: Metadata = {
   },
 };
 
-// ── 매주 여기만 고치면 된다 ────────────────────────────────────────────
-// 파운더가 주 1회 편성 후 이 배열을 갱신하고 재배포. 날짜는 사람이 읽는
-// 문자열(예: "7월 10일 목") — Date 계산 없이 단순하게. status로 스캐폴딩.
-type SessionStatus = "open" | "almost" | "closed" | "planning";
-interface Session {
-  district: string; // "송파구 잠실"
-  dateLabel: string; // "7월 10일 (목) 오후 2시"
-  spotsLabel: string; // "남은 자리 2 / 4"
-  status: SessionStatus;
-}
-const SESSIONS: Session[] = [
-  {
-    district: "종로·광화문 일대",
-    dateLabel: "7월 22일 (수) 오전 11시",
-    spotsLabel: "정원 4~6명 · 선착순 모집",
-    status: "open",
-  },
-  {
-    district: "다른 동네",
-    dateLabel: "매주 새로 편성",
-    spotsLabel: "관심 지역을 앱에서 알려주세요",
-    status: "planning",
-  },
-];
-
-const STATUS_STYLE: Record<
-  SessionStatus,
-  { label: string; bg: string; fg: string }
-> = {
-  open: { label: "모집 중", bg: "#E7F0EA", fg: TITA.forest },
-  almost: { label: "마감 임박", bg: "#F6E9DA", fg: "#9A6B33" },
-  closed: { label: "모집 마감", bg: "#ECECEC", fg: "#7A7A7A" },
-  planning: { label: "편성 예정", bg: TITA.surface, fg: TITA.muted },
-};
+// 모집 세션은 더 이상 여기 하드코딩하지 않는다 — 어드민(Firestore
+// meetup_sessions)에서 세팅하고 <SessionList/>가 공개 엔드포인트로 읽어 온다.
+// 미뤄야 하면 어드민에서 게시만 내리면 되고, 배포 없이 즉시 반영된다.
 
 const HOW = [
   { n: "1", t: "본인인증", d: "앱에서 NICE 본인인증. 가짜 계정·사기꾼은 못 들어와요." },
@@ -132,66 +101,7 @@ export default function TitatimePage() {
           >
             지금 모집 중인 자리
           </p>
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            {SESSIONS.map((s, i) => {
-              const st = STATUS_STYLE[s.status];
-              const applyOpen = s.status === "open" || s.status === "almost";
-              return (
-                <div
-                  key={i}
-                  style={{
-                    background: TITA.white,
-                    border: `1px solid ${TITA.sage}`,
-                    borderRadius: 16,
-                    padding: "18px 20px",
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      gap: 12,
-                    }}
-                  >
-                    <div>
-                      <div
-                        style={{
-                          fontSize: 18,
-                          fontWeight: 800,
-                          color: TITA.forestDeep,
-                          marginBottom: 4,
-                        }}
-                      >
-                        {s.district}
-                      </div>
-                      <div style={{ fontSize: 15, color: TITA.ink, marginBottom: 2 }}>
-                        {s.dateLabel}
-                      </div>
-                      <div style={{ fontSize: 13, color: TITA.muted }}>
-                        {s.spotsLabel}
-                      </div>
-                    </div>
-                    <span
-                      style={{
-                        flexShrink: 0,
-                        fontSize: 13,
-                        fontWeight: 700,
-                        color: st.fg,
-                        background: st.bg,
-                        padding: "8px 14px",
-                        borderRadius: 999,
-                      }}
-                    >
-                      {st.label}
-                    </span>
-                  </div>
-                  {/* 가격 + 신청 — 모집 중인 자리에만. 가격은 방문자 암(arm)별 */}
-                  {applyOpen && <SessionApply district={s.district} />}
-                </div>
-              );
-            })}
-          </div>
+          <SessionList />
         </section>
 
         {/* CTA */}
