@@ -163,6 +163,37 @@ export default function GyeolTestPage() {
           >
             테스트 시작하기
           </button>
+
+          {/* 테스트 건너뛰고 바로 앱 받기 — 이미 마음먹은 사람용(강한 신호).
+              /download가 기기 감지·리다이렉트 처리, 여기선 클릭 집계만. */}
+          <a
+            href="/download"
+            onClick={() => {
+              logAnalyticsEvent("app_download_click", { source: "gyeol_intro_direct" });
+              recordGyeolEvent("intro_download");
+              trackPixel("AppDownloadClick", { source: "gyeol_intro_direct" }, true);
+            }}
+            style={{
+              display: "block",
+              marginTop: 12,
+              padding: "13px 24px",
+              fontSize: 15,
+              fontWeight: 700,
+              color: TITA.forestMid,
+              background: "transparent",
+              border: `1px solid ${TITA.sage}`,
+              borderRadius: 14,
+              cursor: "pointer",
+              fontFamily: KOREAN_FONT_STACK,
+              textDecoration: "none",
+            }}
+          >
+            바로 티타에서 결 맞는 친구 만나기 →
+          </a>
+          <p style={{ fontSize: 12.5, color: TITA.mutedSoft, marginTop: 7, fontWeight: 600 }}>
+            App Store · Google Play · 무료
+          </p>
+
           <p style={{ fontSize: 13, color: TITA.mutedSoft, marginTop: 16 }}>
             나와 결이 맞는 친구 유형까지 알려드려요.
             <br />
