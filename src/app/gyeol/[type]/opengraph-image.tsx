@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 import { readFile } from "fs/promises";
 import { join } from "path";
-import { TYPES, TEMPERAMENTS, ALL_ROUTE_CODES, parseCode } from "../types";
+import { TYPES, ALL_ROUTE_CODES, parseCode } from "../types";
 
 // 결과별 공유 카드(1200×630). 링크를 스레드·카톡에 붙이면 이 카드가 프리뷰로
 // 뜬다 → 친구가 유형을 보고 "나도 해볼래" → 바이럴 루프. output:'export' 호환을
@@ -34,9 +34,8 @@ export default async function Image({
   params: Promise<{ type: string }>;
 }) {
   const { type } = await params;
-  const { base, temp } = parseCode(type);
+  const { base } = parseCode(type);
   const t = TYPES[base ?? "FDP"];
-  const tempLabel = temp ? TEMPERAMENTS[temp].label : null;
   const [bold, semibold] = await Promise.all([
     loadFont("Bold"),
     loadFont("SemiBold"),
@@ -102,21 +101,6 @@ export default async function Image({
           <div style={{ color: sage, fontSize: 38, fontWeight: 600 }}>
             {t.tagline}
           </div>
-          {tempLabel && (
-            <div
-              style={{
-                marginTop: 26,
-                color: forestDeep,
-                background: cream,
-                fontSize: 28,
-                fontWeight: 700,
-                padding: "10px 28px",
-                borderRadius: 999,
-              }}
-            >
-              {tempLabel}
-            </div>
-          )}
         </div>
 
         {/* 하단: 워드마크 */}

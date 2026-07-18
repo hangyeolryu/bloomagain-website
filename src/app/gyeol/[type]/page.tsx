@@ -20,15 +20,14 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { base, temp } = parseCode(type);
   if (!base) return { title: "결 유형 테스트 — 티타" };
   const t = TYPES[base];
-  const tempLabel = temp ? ` · ${TEMPERAMENTS[temp].label}` : "";
-  const title = `나의 결 유형: ${t.emoji} ${t.name}${tempLabel} — 티타`;
+  const title = `나의 결 유형: ${t.emoji} ${t.name} — 티타`;
   const description = `${t.tagline}. ${t.desc}`;
   return {
     title,
     description,
     openGraph: {
       title,
-      description: `${t.emoji} ${t.name}${tempLabel} · ${t.tagline}`,
+      description: `${t.emoji} ${t.name} · ${t.tagline}`,
       siteName: "티타",
       locale: "ko_KR",
       type: "website",
@@ -107,27 +106,27 @@ export default async function GyeolResultPage({ params }: Params) {
             {t.tagline}
           </p>
           {temperament && (
-            <div style={{ margin: "0 0 24px" }}>
-              <span
-                style={{
-                  display: "inline-block",
-                  fontSize: 14,
-                  fontWeight: 700,
-                  color: TITA.forestDeep,
-                  background: TITA.surface,
-                  border: `1px solid ${TITA.sage}`,
-                  borderRadius: 999,
-                  padding: "7px 16px",
-                }}
-              >
-                그중에서도 · {temperament.label}
-              </span>
+            <div style={{ margin: "0 0 24px", textAlign: "left" }}>
+              <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
+                <span style={{ color: TITA.forestMid, fontSize: 15 }}>·</span>
+                <span
+                  style={{
+                    fontSize: 16,
+                    fontWeight: 800,
+                    color: TITA.forestDeep,
+                    letterSpacing: "-0.4px",
+                  }}
+                >
+                  {temperament.title}
+                </span>
+              </div>
               <p
                 style={{
                   fontSize: 14,
                   color: TITA.muted,
-                  margin: "10px 0 0",
+                  margin: "5px 0 0",
                   lineHeight: 1.6,
+                  paddingLeft: 17,
                 }}
               >
                 {temperament.blurb}

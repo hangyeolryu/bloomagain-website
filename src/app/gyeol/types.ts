@@ -212,21 +212,19 @@ export const TYPES: Record<GyeolCode, GyeolType> = {
   },
 };
 
-// 온도(표현) 축 — 같은 유형을 두 결로 가르는 세분화 라벨.
+// 온도(표현) 축 — 같은 유형을 두 결로 가르는 세분화. '온기형/담백형' 딱지는
+// 50~70대엔 붕 떠서, 가치 결과 똑같이 딱지 없이 설명형(title + blurb)으로만.
 export const TEMPERAMENTS: Record<Temperament, {
-  label: string;
-  tagline: string;
+  title: string;
   blurb: string;
 }> = {
   W: {
-    label: "온기형",
-    tagline: "마음을 따뜻하게 나누는",
-    blurb: "고마움도 속상함도 겉으로 잘 드러내는, 온기가 느껴지는 결이에요.",
+    title: "마음을 잘 드러내는 편",
+    blurb: "고마움도 속상함도 겉으로 잘 나타나는, 온기가 느껴지는 편이에요.",
   },
   C: {
-    label: "담백형",
-    tagline: "잔잔하게, 속이 깊은",
-    blurb: "마음을 안으로 품는, 담백하지만 속 깊은 결이에요.",
+    title: "마음을 안으로 품는 편",
+    blurb: "잘 드러내진 않지만, 속이 깊고 잔잔한 편이에요.",
   },
 };
 
