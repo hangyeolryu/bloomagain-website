@@ -5,6 +5,7 @@ import { TITA, KOREAN_FONT_STACK } from "../../_components/tita-brand";
 import { TYPES, TEMPERAMENTS, ALL_ROUTE_CODES, parseCode } from "../types";
 import { ResultActions } from "../ResultActions";
 import { ValueResultCard } from "./ValueResultCard";
+import { ValueModifier } from "./ValueModifier";
 import { TeaTree } from "../TeaTree";
 
 // output: 'export' — 유형×온도 16개 + 레거시 8개를 빌드 타임에 정적 생성.
@@ -84,6 +85,8 @@ export default async function GyeolResultPage({ params }: Params) {
           <div style={{ fontSize: 72, lineHeight: 1, marginBottom: 12 }}>
             {t.emoji}
           </div>
+          {/* 가치 수식어 — 유형 이름 위에 붙어 32조합으로 세분화(클라이언트) */}
+          <ValueModifier />
           <h1
             style={{
               fontSize: 30,
