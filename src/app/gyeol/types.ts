@@ -324,32 +324,30 @@ export interface ValueResult {
   openness: ValueOpenness;
 }
 
+// '성장형/평온형' 같은 유형 딱지는 50~70대엔 자기계발 톤으로 붕 떠서, 딱지 없이
+// 따뜻한 설명(title 한 줄 + blurb)으로만 보여준다. 어느 쪽도 옳다는 톤.
 export const VALUE_AXES: {
-  direction: Record<ValueDirection, { label: string; tagline: string; blurb: string }>;
-  openness: Record<ValueOpenness, { label: string; tagline: string; blurb: string }>;
+  direction: Record<ValueDirection, { title: string; blurb: string }>;
+  openness: Record<ValueOpenness, { title: string; blurb: string }>;
 } = {
   direction: {
     G: {
-      label: "성장형",
-      tagline: "새로움에 설레는",
-      blurb: "배우고 도전하고, 안 해본 걸 해볼 때 살아있음을 느끼는 결이에요.",
+      title: "새로움이 설레는 결",
+      blurb: "새로운 걸 배우고, 안 해본 걸 해볼 때 마음이 설레는 편이에요.",
     },
     E: {
-      label: "평온형",
-      tagline: "여유를 아는",
-      blurb: "익숙하고 편안한 것에서 행복을 찾는, 잔잔하고 단단한 결이에요.",
+      title: "익숙함이 편안한 결",
+      blurb: "익숙하고 편안한 것에서 행복을 찾는, 잔잔하고 단단한 편이에요.",
     },
   },
   openness: {
     O: {
-      label: "열린형",
-      tagline: "다름도 반가운",
-      blurb: "나와 좀 달라도 새로운 이야기가 즐거운, 마음이 열린 결이에요.",
+      title: "다름도 반가운 결",
+      blurb: "나와 좀 달라도 새로운 이야기가 즐거운, 마음이 열린 편이에요.",
     },
     K: {
-      label: "익숙형",
-      tagline: "통하는 게 편한",
-      blurb: "결이 비슷해 말이 잘 통하는 사이에서 가장 편안한 결이에요.",
+      title: "통하는 사이가 좋은 결",
+      blurb: "결이 비슷해 말이 잘 통하는 사이에서 가장 편안한 편이에요.",
     },
   },
 };

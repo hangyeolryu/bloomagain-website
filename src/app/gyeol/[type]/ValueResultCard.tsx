@@ -28,31 +28,16 @@ export function ValueResultCard() {
   const dir = VALUE_AXES.direction[value.direction];
   const open = VALUE_AXES.openness[value.openness];
 
-  const row = (
-    label: string,
-    tagline: string,
-    blurb: string,
-  ) => (
-    <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-        <span
-          style={{
-            fontSize: 14,
-            fontWeight: 800,
-            color: TITA.cream,
-            background: TITA.forest,
-            borderRadius: 999,
-            padding: "5px 13px",
-            whiteSpace: "nowrap",
-          }}
-        >
-          {label}
-        </span>
-        <span style={{ fontSize: 15, fontWeight: 700, color: TITA.forestDeep }}>
-          {tagline}
+  // 유형 딱지 없이 설명형 — 따뜻한 한 줄(title) + 풀이(blurb).
+  const row = (title: string, blurb: string) => (
+    <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+      <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
+        <span style={{ color: TITA.forestMid, fontSize: 15 }}>·</span>
+        <span style={{ fontSize: 17, fontWeight: 800, color: TITA.forestDeep, letterSpacing: "-0.4px" }}>
+          {title}
         </span>
       </div>
-      <p style={{ fontSize: 14, lineHeight: 1.6, color: TITA.muted, margin: 0 }}>
+      <p style={{ fontSize: 14, lineHeight: 1.6, color: TITA.muted, margin: 0, paddingLeft: 17 }}>
         {blurb}
       </p>
     </div>
@@ -83,9 +68,9 @@ export function ValueResultCard() {
         어떻게 어울리나만큼, 무엇을 소중히 여기나도 결이에요.
       </p>
       <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-        {row(dir.label, dir.tagline, dir.blurb)}
+        {row(dir.title, dir.blurb)}
         <div style={{ height: 1, background: TITA.sage }} />
-        {row(open.label, open.tagline, open.blurb)}
+        {row(open.title, open.blurb)}
       </div>
       <p
         style={{
