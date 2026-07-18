@@ -2,7 +2,8 @@
 // GA4 로깅과 별개(병행). 무가입이라 개인정보 없음 — phase·유형·유입 소스만.
 // fire-and-forget: 실패해도 UX를 막지 않는다. keepalive로 스토어 이동 중에도 전송.
 
-type GyeolPhase = "start" | "complete" | "share" | "download";
+// intro_download = 인트로에서 테스트 건너뛰고 바로 앱 받기 클릭(강한 신호).
+type GyeolPhase = "start" | "complete" | "share" | "download" | "intro_download";
 
 // 성별·편안함은 익명 집계용(개인식별 X). gender: "f"|"m", comfort: "same"|"any"|"opp".
 // complete 시점에 함께 보내고, download 시점엔 sessionStorage에서 읽어 이어붙인다.

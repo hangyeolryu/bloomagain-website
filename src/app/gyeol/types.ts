@@ -377,6 +377,20 @@ export function parseValue(v: string | null | undefined): ValueResult | null {
   return null;
 }
 
+/** 가치 수식어 — 유형 이름 앞에 붙여 결과를 8×4=최대 32조합으로 세분화한다.
+ * 설명(8유형)·공유카드는 그대로 두고, 표시되는 정체성만 갈라 쏠림을 완화한다.
+ * 예: "새로움에 열린" + "느긋한 사색가". */
+export function valueModifier(v: ValueResult): string {
+  const key = `${v.direction}${v.openness}`;
+  const map: Record<string, string> = {
+    GO: "새로움에 열린",
+    GK: "새로움을 반기는",
+    EO: "여유롭고 열린",
+    EK: "여유로운",
+  };
+  return map[key] ?? "";
+}
+
 /** 가치 결이 통하는 상대에 대한 한 줄 (성사 보장 아님 — 결의 결합 설명). */
 export function valueHarmony(v: ValueResult): string {
   const dir =

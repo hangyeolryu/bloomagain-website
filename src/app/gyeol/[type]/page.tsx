@@ -5,6 +5,8 @@ import { TITA, KOREAN_FONT_STACK } from "../../_components/tita-brand";
 import { TYPES, TEMPERAMENTS, ALL_ROUTE_CODES, parseCode } from "../types";
 import { ResultActions } from "../ResultActions";
 import { ValueResultCard } from "./ValueResultCard";
+import { ValueModifier } from "./ValueModifier";
+import { TopDownloadCTA } from "./TopDownloadCTA";
 import { TeaTree } from "../TeaTree";
 
 // output: 'export' — 유형×온도 16개 + 레거시 8개를 빌드 타임에 정적 생성.
@@ -84,6 +86,8 @@ export default async function GyeolResultPage({ params }: Params) {
           <div style={{ fontSize: 72, lineHeight: 1, marginBottom: 12 }}>
             {t.emoji}
           </div>
+          {/* 가치 수식어 — 유형 이름 위에 붙어 32조합으로 세분화(클라이언트) */}
+          <ValueModifier />
           <h1
             style={{
               fontSize: 30,
@@ -169,6 +173,10 @@ export default async function GyeolResultPage({ params }: Params) {
             ))}
           </div>
         </section>
+
+        {/* 리빌 직후 peak CTA — 테스트 마친 사람에게만(TopDownloadCTA 내부 분기).
+            자기 결 확인하고 만족한 그 순간에 다운로드를 잡는다. */}
+        <TopDownloadCTA code={type} />
 
         {/* 가치 결 — 8유형(어울림 방식) 위에 얹는 두 번째 층. 클라이언트에서
             ?v= 또는 sessionStorage로 읽어 렌더(없으면 안 그림). */}
