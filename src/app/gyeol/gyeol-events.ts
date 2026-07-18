@@ -7,7 +7,8 @@ type GyeolPhase = "start" | "complete" | "share" | "download" | "intro_download"
 
 // 성별·편안함은 익명 집계용(개인식별 X). gender: "f"|"m", comfort: "same"|"any"|"opp".
 // complete 시점에 함께 보내고, download 시점엔 sessionStorage에서 읽어 이어붙인다.
-type GyeolExtra = { gender?: string | null; comfort?: string | null };
+// store: 다운로드 클릭 시 어느 스토어 버튼인지("ios"|"android"). 스토어별 집계용.
+type GyeolExtra = { gender?: string | null; comfort?: string | null; store?: string | null };
 
 // 익명 세션 ID — 개인식별 아님. 한 번의 테스트(탭 세션)를 시작→완료→다운클릭으로
 // 묶어 어드민이 '한 명이 어디까지 갔나'를 볼 수 있게 한다. sessionStorage라
@@ -64,6 +65,7 @@ export function recordGyeolEvent(
       gyeol_type: gyeolType ?? null,
       gender: extra?.gender ?? null,
       comfort: extra?.comfort ?? null,
+      store: extra?.store ?? null,
       source: source ?? null,
       referrer: document.referrer || null,
       path: window.location.pathname,
