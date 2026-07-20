@@ -6,10 +6,16 @@
 //
 // 테스트를 방금 마친 사람(taken)에게만 보인다. 공유 링크 방문자(!taken)는
 // 아직 자기 결을 모르니 상단 다운을 들이밀지 않는다(ResultActions와 동일 철학).
-// 리다이렉트/인앱 처리는 /download 페이지가 담당 — 여기선 클릭 집계만.
+// App Store / Google Play 두 버튼 · 스토어별 클릭 집계. 안드로이드는 intent://.
 
 import { useEffect, useState } from "react";
-import { TITA, KOREAN_FONT_STACK } from "../../_components/tita-brand";
+import {
+  TITA,
+  KOREAN_FONT_STACK,
+  APP_STORE_URL,
+  PLAY_STORE_URL,
+  PLAY_STORE_INTENT_URL,
+} from "../../_components/tita-brand";
 import { logAnalyticsEvent } from "@/lib/firebase";
 import { trackPixel } from "@/lib/pixel";
 import { recordGyeolEvent } from "../gyeol-events";
@@ -31,42 +37,66 @@ export function TopDownloadCTA({ code }: { code: string }) {
 
   if (!taken) return null;
 
-  function onClick() {
+  function download(store: "ios" | "android") {
     logAnalyticsEvent("app_download_click", {
-      store: "auto",
+      store,
       source: `gyeol_result_top_${code}`,
       gyeol_comfort: comfort ?? "",
       gyeol_gender: gender ?? "",
     });
-    recordGyeolEvent("download", code, { gender, comfort });
-    trackPixel("AppDownloadClick", { content_name: code, placement: "top" }, true);
+    recordGyeolEvent("download", code, { gender, comfort, store });
+    trackPixel("AppDownloadClick", { content_name: code, store, placement: "top" }, true);
   }
+
+  const btn: React.CSSProperties = {
+    flex: 1,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontFamily: KOREAN_FONT_STACK,
+    textDecoration: "none",
+    padding: "17px 12px",
+    fontSize: 16,
+    fontWeight: 800,
+    letterSpacing: "-0.3px",
+    color: TITA.cream,
+    background: TITA.forest,
+    borderRadius: 14,
+    boxShadow: "0 10px 26px rgba(31,78,61,0.26)",
+    border: "none",
+  };
 
   return (
     <div style={{ marginTop: 16 }}>
-      <a
-        href="/download"
-        onClick={onClick}
+      <p
         style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontFamily: KOREAN_FONT_STACK,
-          textDecoration: "none",
-          width: "100%",
-          padding: "18px 22px",
-          fontSize: 17,
-          fontWeight: 800,
-          letterSpacing: "-0.3px",
-          color: TITA.cream,
-          background: TITA.forest,
-          borderRadius: 16,
-          boxShadow: "0 10px 26px rgba(31,78,61,0.26)",
-          border: "none",
+          textAlign: "center",
+          fontSize: 14,
+          fontWeight: 700,
+          color: TITA.forestMid,
+          margin: "0 0 8px",
         }}
       >
-        🍵 이 결로, 결친구 만나러 가기 →
-      </a>
+        이 결로, 결친구 만나러 가기
+      </p>
+      <div style={{ display: "flex", gap: 10 }}>
+        <a href={APP_STORE_URL} onClick={() => download("ios")} style={btn}>
+           App Store
+        </a>
+        <a
+          href={PLAY_STORE_URL}
+          onClick={(e) => {
+            download("android");
+            if (typeof navigator !== "undefined" && /Android/.test(navigator.userAgent)) {
+              e.preventDefault();
+              window.location.href = PLAY_STORE_INTENT_URL;
+            }
+          }}
+          style={btn}
+        >
+          ▶ Google Play
+        </a>
+      </div>
       <p
         style={{
           textAlign: "center",

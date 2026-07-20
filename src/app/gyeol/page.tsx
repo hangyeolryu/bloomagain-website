@@ -100,7 +100,7 @@ export default function GyeolTestPage() {
   // 인트로에서 테스트 건너뛰고 바로 스토어로 — 클릭을 intro_download로 집계.
   function introDownload(store: "ios" | "android") {
     logAnalyticsEvent("app_download_click", { store, source: "gyeol_intro_direct" });
-    recordGyeolEvent("intro_download");
+    recordGyeolEvent("intro_download", undefined, { store });
     trackPixel("AppDownloadClick", { store, source: "gyeol_intro_direct" }, true);
   }
 

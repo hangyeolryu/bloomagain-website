@@ -112,7 +112,7 @@ export function ResultActions({
       gyeol_comfort: comfort ?? "",
       gyeol_gender: gender ?? "",
     });
-    recordGyeolEvent("download", code, { gender, comfort });
+    recordGyeolEvent("download", code, { gender, comfort, store });
     trackPixel("AppDownloadClick", { store, content_name: code }, true);
   }
 
@@ -157,15 +157,9 @@ export function ResultActions({
     }
   }
 
-  // 플랫폼별 다운로드 집계용 (href는 /download 리다이렉트 사용)
+  // 방문자 뷰의 작은 다운로드 링크용 스토어(기기 감지, 없으면 iOS 기본)
   const primaryStore: "ios" | "android" =
     platform === "android" ? "android" : "ios";
-  const primaryStoreLabel =
-    platform === "android"
-      ? "Google Play"
-      : platform === "ios"
-      ? "App Store"
-      : "App Store · Google Play";
 
   const linkBase: React.CSSProperties = {
     display: "flex",
@@ -334,42 +328,36 @@ export function ResultActions({
         </div>
       )}
 
-      {/* 1차 — 지배적 다운로드 버튼 (유일한 히어로).
-          href는 /download(기기 감지 후 올바른 스토어로 리다이렉트)로 둔다.
-          하이드레이션 전에 눌러 onClick이 아직 안 붙었어도 안드로이드 유저가
-          App Store로 새지 않는다. 하이드레이션 후엔 onClick이 UA를 재감지해
-          직접 스토어로 보내 한 홉 아낀다. */}
-      <a
-        href="/download"
-        onClick={(e) => {
-          // 인앱 브라우저(모바일): 먼저 스토어 앱 강제 실행을 시도한다. 안드로이드는
-          // intent://, iOS는 App Store 링크가 인앱에서도 대개 열린다 — 50대가 아무
-          // 조작 안 해도 설치 화면이 뜨게. 혹시 인앱이 막아 페이지에 그대로 남으면
-          // 잠시 뒤 수동 안내 시트를 폴백으로 띄운다. (다운클릭은 그대로 집계)
-          if (inApp && (platform === "ios" || platform === "android")) {
-            e.preventDefault();
-            download(platform);
-            window.location.href =
-              platform === "android" ? PLAY_STORE_INTENT_URL : APP_STORE_URL;
-            setTimeout(() => setShowInAppHint(true), 1200);
-            return;
-          }
-          const p = detectPlatform();
-          if (p === "ios" || p === "android") {
-            e.preventDefault();
-            download(p);
-            // 안드로이드는 intent://로 스토어 앱을 강제 실행 → 인앱 브라우저에서도
-            // 사용자가 아무 조작 없이 설치 화면이 뜬다(실패 시 자동 폴백).
-            window.location.href = p === "android" ? PLAY_STORE_INTENT_URL : APP_STORE_URL;
-          } else {
-            // 데스크탑: 기본 href(App Store)로 진행 — 아래 보조 링크로 양쪽 노출
+      {/* 다운로드 — App Store / Google Play 두 버튼(스토어별 클릭 집계).
+          안드로이드는 intent://로 인앱 브라우저 핸드오프 누수를 막고, 인앱이면
+          잠시 뒤 수동 안내 시트를 폴백으로 띄운다. 각 버튼이 store를 실어 집계. */}
+      <div style={{ display: "flex", gap: 10 }}>
+        <a
+          href={APP_STORE_URL}
+          onClick={() => {
             download("ios");
-          }
-        }}
-        style={heroButton}
-      >
-        🍵 티타에서 결친구 만나기
-      </a>
+            if (inApp) setTimeout(() => setShowInAppHint(true), 1200);
+          }}
+          style={{ ...heroButton, width: "auto", flex: 1, fontSize: 17, padding: "18px 12px" }}
+        >
+           App Store
+        </a>
+        <a
+          href={PLAY_STORE_URL}
+          onClick={(e) => {
+            download("android");
+            // 안드로이드는 intent://로 스토어 앱 강제 실행(인앱에서도 뜸).
+            if (typeof navigator !== "undefined" && /Android/.test(navigator.userAgent)) {
+              e.preventDefault();
+              window.location.href = PLAY_STORE_INTENT_URL;
+              if (inApp) setTimeout(() => setShowInAppHint(true), 1200);
+            }
+          }}
+          style={{ ...heroButton, width: "auto", flex: 1, fontSize: 17, padding: "18px 12px" }}
+        >
+          ▶ Google Play
+        </a>
+      </div>
       {inApp && (platform === "ios" || platform === "android") && (
         <p
           style={{
@@ -391,47 +379,8 @@ export function ResultActions({
           fontWeight: 600,
         }}
       >
-        {primaryStoreLabel} · 무료로 시작 · NICE 본인인증으로 안전하게
+        무료로 시작 · NICE 본인인증으로 안전하게
       </p>
-
-      {/* 모바일이면 반대편 스토어를 작게 노출 */}
-      {platform === "ios" && (
-        <a
-          href={PLAY_STORE_URL}
-          onClick={() => download("android")}
-          style={{ ...linkBase, fontSize: 13, color: TITA.forestMid, fontWeight: 600, padding: 4 }}
-        >
-          안드로이드는 여기 → Google Play
-        </a>
-      )}
-      {platform === "android" && (
-        <a
-          href={APP_STORE_URL}
-          onClick={() => download("ios")}
-          style={{ ...linkBase, fontSize: 13, color: TITA.forestMid, fontWeight: 600, padding: 4 }}
-        >
-          아이폰은 여기 → App Store
-        </a>
-      )}
-      {/* 데스크탑 등 — 어느 폰인지 모르니 양쪽 다 노출 */}
-      {platform === "other" && (
-        <div style={{ display: "flex", gap: 12, justifyContent: "center" }}>
-          <a
-            href={APP_STORE_URL}
-            onClick={() => download("ios")}
-            style={{ ...linkBase, fontSize: 13, color: TITA.forestMid, fontWeight: 600, padding: 4 }}
-          >
-            App Store
-          </a>
-          <a
-            href={PLAY_STORE_URL}
-            onClick={() => download("android")}
-            style={{ ...linkBase, fontSize: 13, color: TITA.forestMid, fontWeight: 600, padding: 4 }}
-          >
-            Google Play
-          </a>
-        </div>
-      )}
 
       {/* 2차 — 공유. 카카오 키가 있으면 카카오톡 버튼(45+ 최강 채널)을
           먼저, 없으면 일반 공유만. */}
