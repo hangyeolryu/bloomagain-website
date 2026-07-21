@@ -328,36 +328,64 @@ export function ResultActions({
         </div>
       )}
 
-      {/* 다운로드 — App Store / Google Play 두 버튼(스토어별 클릭 집계).
-          안드로이드는 intent://로 인앱 브라우저 핸드오프 누수를 막고, 인앱이면
-          잠시 뒤 수동 안내 시트를 폴백으로 띄운다. 각 버튼이 store를 실어 집계. */}
-      <div style={{ display: "flex", gap: 10 }}>
+      {/* 다운로드 — 설문 세션에서 이미 기기를 알고 있으니(detectPlatform),
+          스토어를 고르라고 시키지 않고 감지된 스토어로 보내는 '단일 한글 버튼'이
+          히어로. 영어 스토어명("App Store/Google Play")은 45+에게 장벽이라 노출 X.
+          store=감지값을 실어 스토어별 집계는 그대로 유지. 안드로이드는 intent://로
+          인앱 핸드오프 누수를 막고, 인앱이면 수동 안내 시트를 폴백으로 띄운다.
+          데스크탑/미상(other)만 두 스토어를 한글 라벨로 병기한다. */}
+      {platform === "other" ? (
+        <div style={{ display: "flex", gap: 10 }}>
+          <a
+            href={APP_STORE_URL}
+            onClick={() => download("ios")}
+            style={{ ...heroButton, width: "auto", flex: 1, fontSize: 16, padding: "18px 12px" }}
+          >
+            아이폰 (App Store)
+          </a>
+          <a
+            href={PLAY_STORE_URL}
+            onClick={() => download("android")}
+            style={{ ...heroButton, width: "auto", flex: 1, fontSize: 16, padding: "18px 12px" }}
+          >
+            안드로이드 (Play)
+          </a>
+        </div>
+      ) : (
         <a
-          href={APP_STORE_URL}
-          onClick={() => {
-            download("ios");
-            if (inApp) setTimeout(() => setShowInAppHint(true), 1200);
-          }}
-          style={{ ...heroButton, width: "auto", flex: 1, fontSize: 17, padding: "18px 12px" }}
-        >
-           App Store
-        </a>
-        <a
-          href={PLAY_STORE_URL}
+          href={platform === "android" ? PLAY_STORE_URL : APP_STORE_URL}
           onClick={(e) => {
-            download("android");
+            download(platform === "android" ? "android" : "ios");
             // 안드로이드는 intent://로 스토어 앱 강제 실행(인앱에서도 뜸).
-            if (typeof navigator !== "undefined" && /Android/.test(navigator.userAgent)) {
+            if (platform === "android") {
               e.preventDefault();
               window.location.href = PLAY_STORE_INTENT_URL;
-              if (inApp) setTimeout(() => setShowInAppHint(true), 1200);
             }
+            if (inApp) setTimeout(() => setShowInAppHint(true), 1200);
           }}
-          style={{ ...heroButton, width: "auto", flex: 1, fontSize: 17, padding: "18px 12px" }}
+          style={heroButton}
         >
-          ▶ Google Play
+          🍵 티타 앱 받기 (무료)
         </a>
-      </div>
+      )}
+
+      {/* 감지가 틀린 드문 경우(기기 바꿔 들어옴 등)를 위한 작은 탈출구 —
+          반대 스토어로 직접. 평소엔 눈에 안 띄게 작게. */}
+      {platform !== "other" && (
+        <a
+          href={platform === "android" ? APP_STORE_URL : PLAY_STORE_URL}
+          onClick={() => download(platform === "android" ? "ios" : "android")}
+          style={{
+            ...linkBase,
+            fontSize: 12.5,
+            color: TITA.muted,
+            fontWeight: 600,
+            padding: 4,
+          }}
+        >
+          {platform === "android" ? "아이폰으로" : "안드로이드로"} 받기 →
+        </a>
+      )}
       {inApp && (platform === "ios" || platform === "android") && (
         <p
           style={{
