@@ -228,7 +228,7 @@ export default async function GyeolResultPage({ params }: Params) {
 
         {/* 리빌 직후 peak CTA — 테스트 마친 사람에게만(TopDownloadCTA 내부 분기).
             자기 결 확인하고 만족한 그 순간에 다운로드를 잡는다. */}
-        <TopDownloadCTA code={type} />
+        <TopDownloadCTA code={type} matchName={match.name} />
 
         {/* 가치 결 — 8유형(어울림 방식) 위에 얹는 두 번째 층. 클라이언트에서
             ?v= 또는 sessionStorage로 읽어 렌더(없으면 안 그림). */}

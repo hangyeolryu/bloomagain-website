@@ -36,7 +36,13 @@ function detectPlatform(): Platform {
   return "other";
 }
 
-export function TopDownloadCTA({ code }: { code: string }) {
+export function TopDownloadCTA({
+  code,
+  matchName,
+}: {
+  code: string;
+  matchName: string;
+}) {
   const [taken, setTaken] = useState(false);
   const [comfort, setComfort] = useState<string | null>(null);
   const [gender, setGender] = useState<string | null>(null);
@@ -85,17 +91,46 @@ export function TopDownloadCTA({ code }: { code: string }) {
   };
 
   return (
-    <div style={{ marginTop: 16 }}>
+    // peak 순간을 놓치지 않게 '하이라이트 카드'로 시선을 잡는다. 흩어진
+    // 버튼보다 카드가 훨씬 클릭을 끈다. 카피는 매치 유형을 넣어 "저 사람을
+    // 만나고 싶다"는 욕구를 만든다.
+    <div
+      style={{
+        marginTop: 18,
+        background: TITA.white,
+        border: `1.5px solid ${TITA.forest}`,
+        borderRadius: 20,
+        padding: "22px 20px",
+        boxShadow: "0 14px 34px rgba(31,78,61,0.15)",
+      }}
+    >
       <p
         style={{
           textAlign: "center",
-          fontSize: 14,
-          fontWeight: 700,
+          fontSize: 12.5,
+          fontWeight: 800,
+          letterSpacing: "-0.2px",
           color: TITA.forestMid,
           margin: "0 0 8px",
         }}
       >
-        이 결로, 결친구 만나러 가기
+        결은 알았으니, 이제 만날 차례
+      </p>
+      <p
+        style={{
+          textAlign: "center",
+          fontSize: 18,
+          fontWeight: 800,
+          lineHeight: 1.5,
+          letterSpacing: "-0.5px",
+          color: TITA.forestDeep,
+          margin: "0 0 16px",
+        }}
+      >
+        당신과 결이 잘 맞는{" "}
+        <span style={{ color: TITA.forest }}>&lsquo;{matchName}&rsquo;</span>,
+        <br />
+        지금 티타에 있어요.
       </p>
       {platform === "other" ? (
         <div style={{ display: "flex", gap: 10 }}>
@@ -118,7 +153,7 @@ export function TopDownloadCTA({ code }: { code: string }) {
           }}
           style={{ ...btn, flex: "unset", width: "100%" }}
         >
-          티타 앱 받기 (무료)
+          결 맞는 친구 만나러 가기 (무료)
         </a>
       )}
       <p
@@ -127,10 +162,12 @@ export function TopDownloadCTA({ code }: { code: string }) {
           fontSize: 12.5,
           color: TITA.muted,
           fontWeight: 600,
-          margin: "8px 0 0",
+          margin: "10px 0 0",
         }}
       >
-        무료로 시작 · NICE 본인인증으로 안전하게
+        가입 없이 결과 봤죠? 앱에선 진짜 맞는 사람을 찾아줘요
+        <br />
+        무료 · NICE 본인인증으로 안전하게
       </p>
     </div>
   );
