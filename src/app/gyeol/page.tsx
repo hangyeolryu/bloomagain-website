@@ -281,7 +281,7 @@ export default function GyeolTestPage() {
               }}
             >
               <AndroidMark size={22} />
-              안드로이드
+              삼성폰
             </a>
           </div>
           <p style={{ fontSize: 12.5, color: TITA.sage, marginTop: 8, fontWeight: 600 }}>
