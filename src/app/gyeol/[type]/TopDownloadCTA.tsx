@@ -171,7 +171,7 @@ export function TopDownloadCTA({
       >
         가입 없이 결과 봤죠? 앱에선 진짜 맞는 사람을 찾아줘요
         <br />
-        무료 · NICE 본인인증으로 안전하게
+        만 45세 이상 · NICE 본인인증 — 검증된 또래만 있어 안전해요
       </p>
     </div>
   );
