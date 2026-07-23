@@ -235,7 +235,7 @@ export function ResultActions({
           }
           style={heroButton}
         >
-          🍵 나도 테스트 해보기
+          나도 테스트 해보기
         </Link>
 
         {/* 다운로드는 작은 링크로만 — 방문자에게 강요하지 않는다.
@@ -365,7 +365,7 @@ export function ResultActions({
           }}
           style={heroButton}
         >
-          🍵 티타 앱 받기 (무료)
+          티타 앱 받기 (무료)
         </a>
       )}
 
@@ -446,7 +446,7 @@ export function ResultActions({
           marginTop: 8,
         }}
       >
-        🍵 {KAKAO_JS_KEY ? "다른 방법으로 공유" : "친구의 결도 물어보세요"}
+        {KAKAO_JS_KEY ? "다른 방법으로 공유" : "친구의 결도 물어보세요"}
       </button>
       <p
         style={{
@@ -506,7 +506,7 @@ export function ResultActions({
                 padding: "16px 0", textDecoration: "none",
               }}
             >
-              🍵 스토어 열기
+              스토어 열기
             </a>
             <button
               onClick={() => setShowInAppHint(false)}

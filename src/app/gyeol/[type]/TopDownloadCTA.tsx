@@ -118,7 +118,7 @@ export function TopDownloadCTA({ code }: { code: string }) {
           }}
           style={{ ...btn, flex: "unset", width: "100%" }}
         >
-          🍵 티타 앱 받기 (무료)
+          티타 앱 받기 (무료)
         </a>
       )}
       <p
