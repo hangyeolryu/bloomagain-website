@@ -20,6 +20,7 @@ import {
 import { logAnalyticsEvent } from "@/lib/firebase";
 import { trackPixel } from "@/lib/pixel";
 import { recordGyeolEvent } from "../gyeol-events";
+import { AppleMark, AndroidMark } from "../StoreMarks";
 
 type Platform = "ios" | "android" | "other";
 
@@ -77,6 +78,7 @@ export function TopDownloadCTA({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    gap: 8,
     fontFamily: KOREAN_FONT_STACK,
     textDecoration: "none",
     padding: "17px 12px",
@@ -135,10 +137,12 @@ export function TopDownloadCTA({
       {platform === "other" ? (
         <div style={{ display: "flex", gap: 10 }}>
           <a href={APP_STORE_URL} onClick={() => download("ios")} style={btn}>
-            아이폰 (App Store)
+            <AppleMark size={20} />
+            아이폰
           </a>
           <a href={PLAY_STORE_URL} onClick={() => download("android")} style={btn}>
-            안드로이드 (Play)
+            <AndroidMark size={20} />
+            삼성폰
           </a>
         </div>
       ) : (

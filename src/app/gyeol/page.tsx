@@ -18,6 +18,7 @@ import { QUIZ_QUESTIONS, scoreToCode, scoreToValue } from "./types";
 import { logAnalyticsEvent } from "@/lib/firebase";
 import { trackPixel } from "@/lib/pixel";
 import { recordGyeolEvent } from "./gyeol-events";
+import { AppleMark, AndroidMark } from "./StoreMarks";
 
 // 결과를 더 잘 맞추기 위한 두 가지(익명). 채점(8유형)에는 반영하지 않고,
 // 결과 페이지 다운로드 훅 분기(comfort) + 대시보드 성비 집계(gender)에만 쓴다.
@@ -31,22 +32,6 @@ const COMFORTS = [
   { key: "opp", label: "이성 친구도 좋아요" },
 ] as const;
 
-// 스토어/OS 마크 — currentColor로 버튼 텍스트색을 따라간다. 익숙한 마크
-// (애플 로고 · 안드로이드 로봇)를 크게 써서 50-60대도 한눈에 알아보게.
-function AppleMark({ size = 22 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.51 4.08l-.02.01M12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25" />
-    </svg>
-  );
-}
-function AndroidMark({ size = 22 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="M17.6 9.48l1.84-3.18c.16-.31.04-.69-.26-.85-.29-.15-.65-.06-.83.22l-1.88 3.24a11.463 11.463 0 0 0-8.94 0L5.65 5.67c-.19-.29-.58-.38-.87-.2-.28.18-.37.54-.22.83L6.4 9.48C3.3 11.25 1.28 14.44 1 18h22c-.28-3.56-2.3-6.75-5.4-8.52zM7 15.25a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5zm10 0a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5z" />
-    </svg>
-  );
-}
 
 // 우리만의 찻잔 마크 — 앱 스플래시(tea_cup_icon.dart)의 도형을 그대로 SVG로.
 // 초록 배경용: 크림 잔 + 테라코타 찻물 + 크림 김(모락모락, SMIL 애니메이션).

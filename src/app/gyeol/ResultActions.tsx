@@ -24,6 +24,7 @@ import { logAnalyticsEvent } from "@/lib/firebase";
 import { trackPixel } from "@/lib/pixel";
 import { shareKakao, KAKAO_JS_KEY } from "@/lib/kakao";
 import { recordGyeolEvent } from "./gyeol-events";
+import { AppleMark, AndroidMark } from "./StoreMarks";
 
 type Platform = "ios" | "android" | "other";
 
@@ -339,16 +340,38 @@ export function ResultActions({
           <a
             href={APP_STORE_URL}
             onClick={() => download("ios")}
-            style={{ ...heroButton, width: "auto", flex: 1, fontSize: 16, padding: "18px 12px" }}
+            style={{
+              ...heroButton,
+              width: "auto",
+              flex: 1,
+              fontSize: 16,
+              padding: "18px 12px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 8,
+            }}
           >
-            아이폰 (App Store)
+            <AppleMark size={20} />
+            아이폰
           </a>
           <a
             href={PLAY_STORE_URL}
             onClick={() => download("android")}
-            style={{ ...heroButton, width: "auto", flex: 1, fontSize: 16, padding: "18px 12px" }}
+            style={{
+              ...heroButton,
+              width: "auto",
+              flex: 1,
+              fontSize: 16,
+              padding: "18px 12px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 8,
+            }}
           >
-            안드로이드 (Play)
+            <AndroidMark size={20} />
+            삼성폰
           </a>
         </div>
       ) : (
