@@ -51,6 +51,24 @@ export const metadata: Metadata = {
     title: "티타 (Tita) — 결이 맞는 친구",
     description: "오후 한 잔의 안심 티타임. 데이팅 앱이 아닙니다.",
   },
+  // 검색엔진 사이트 소유확인.
+  //  · 네이버: searchadvisor.naver.com에서 사이트 등록 시 주는 코드를
+  //    NEXT_PUBLIC_NAVER_SITE_VERIFICATION 환경변수에 넣으면 아래 메타로 나간다.
+  //    (없으면 렌더 안 됨 — 코드 받기 전엔 비워둬도 안전)
+  //  · 구글: NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION (Search Console용, 선택).
+  verification: {
+    ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+      ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }
+      : {}),
+    ...(process.env.NEXT_PUBLIC_NAVER_SITE_VERIFICATION
+      ? {
+          other: {
+            "naver-site-verification":
+                process.env.NEXT_PUBLIC_NAVER_SITE_VERIFICATION,
+          },
+        }
+      : {}),
+  },
 };
 
 export const viewport: Viewport = {
