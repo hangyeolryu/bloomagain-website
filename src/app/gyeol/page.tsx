@@ -48,6 +48,54 @@ function AndroidMark({ size = 22 }: { size?: number }) {
   );
 }
 
+// 우리만의 찻잔 마크 — 앱 스플래시(tea_cup_icon.dart)의 도형을 그대로 SVG로.
+// 초록 배경용: 크림 잔 + 테라코타 찻물 + 크림 김(모락모락, SMIL 애니메이션).
+function TeaCupMark({ size = 96 }: { size?: number }) {
+  const CREAM = "#F4EFE3";
+  const bodyD = "M18 40 L66 40 L60 66 Q42 82 24 66 Z";
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 100 100"
+      fill="none"
+      aria-hidden="true"
+      style={{ display: "inline-block" }}
+    >
+      {/* 김 세 줄기 — 순서대로 모락모락 페이드 */}
+      <g stroke={CREAM} strokeWidth={4.5} strokeLinecap="round">
+        {[
+          { d: "M34 36 C37 31 31 26 34 20", begin: "0s" },
+          { d: "M42 34 C45 29 39 24 42 17", begin: "0.6s" },
+          { d: "M50 36 C53 31 47 26 50 20", begin: "1.2s" },
+        ].map((w, i) => (
+          <path key={i} d={w.d} opacity={0}>
+            <animate
+              attributeName="opacity"
+              values="0;0.85;0"
+              dur="2.6s"
+              begin={w.begin}
+              repeatCount="indefinite"
+            />
+          </path>
+        ))}
+      </g>
+      {/* 잔 몸통 + 찻물 + 표면 + 외곽선 + 손잡이 (스플래시와 동일 순서) */}
+      <path d={bodyD} fill={CREAM} />
+      <path d="M21.5 42 L62.5 42 L57.5 63 Q42 77 26.5 63 Z" fill="#D9694C" />
+      <ellipse cx="42" cy="40" rx="24" ry="7" fill="#E8896F" />
+      <path d={bodyD} stroke={CREAM} strokeWidth={6} strokeLinejoin="round" />
+      <ellipse cx="42" cy="40" rx="24" ry="7" stroke={CREAM} strokeWidth={6} />
+      <path
+        d="M66 46 C86 45 87 66 59.5 63"
+        stroke={CREAM}
+        strokeWidth={6}
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
 export default function GyeolTestPage() {
   const router = useRouter();
   const [started, setStarted] = useState(false);
@@ -139,21 +187,10 @@ export default function GyeolTestPage() {
     >
       {!started ? (
         <div style={{ maxWidth: 480, width: "100%", textAlign: "center" }}>
-          {/* 차 이모지 대신 티타 앱 아이콘(브랜드 마크). */}
-          <img
-            src="/logo.png"
-            alt="티타"
-            width={80}
-            height={80}
-            style={{
-              display: "inline-block",
-              borderRadius: 20,
-              marginBottom: 18,
-              // 초록 아이콘이 초록 배경에 묻히지 않게 크림 링 + 드롭섀도로 띄운다.
-              boxShadow:
-                "0 0 0 1.5px rgba(251,247,240,0.28), 0 14px 30px rgba(0,0,0,0.32)",
-            }}
-          />
+          {/* 우리만의 찻잔 마크(앱 스플래시와 동일) — 김 모락모락. */}
+          <div style={{ marginBottom: 12 }}>
+            <TeaCupMark size={104} />
+          </div>
           <p
             style={{
               color: TITA.camel,
@@ -406,18 +443,9 @@ export default function GyeolTestPage() {
         </div>
       ) : (
         <div style={{ maxWidth: 480, width: "100%", textAlign: "center" }}>
-          <img
-            src="/logo.png"
-            alt="티타"
-            width={64}
-            height={64}
-            style={{
-              display: "inline-block",
-              borderRadius: 16,
-              marginBottom: 14,
-              boxShadow: "0 6px 18px rgba(31,78,61,0.18)",
-            }}
-          />
+          <div style={{ marginBottom: 8 }}>
+            <TeaCupMark size={72} />
+          </div>
           <h2
             style={{
               fontSize: 26,
