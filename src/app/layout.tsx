@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import { Suspense } from "react";
 import { AnalyticsTracker } from "./_components/AnalyticsTracker";
 import { MetaPixel } from "./_components/MetaPixel";
@@ -13,6 +14,18 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+// 고운돋움 — 흔하지 않으면서 50-60대에 편안하게 읽히는 한글 서체.
+// next/font/google은 이 폰트의 korean 서브셋을 타입으로 열어두지 않아,
+// 원본 TTF(7.2MB)를 한글 전체 음절+영문/기호만 남겨 woff2(384KB)로
+// 서브셋한 파일을 self-host 한다. 단일 굵기(400)라 굵은 제목은 브라우저
+// 합성 볼드로 표현된다(미니멀 톤). display:swap로 폴백 먼저 그린다.
+const gowunDodum = localFont({
+  src: "./_fonts/GowunDodum-subset.woff2",
+  variable: "--font-gowun",
+  weight: "400",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -89,7 +102,7 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${gowunDodum.variable} antialiased`}
       >
         {/* Suspense boundary required: AnalyticsTracker uses
             useSearchParams which Next.js needs to suspend on initial

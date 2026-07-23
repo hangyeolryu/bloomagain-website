@@ -16,9 +16,11 @@ export function TitaHeader() {
     <header
       className="sticky top-0 z-50 border-b"
       style={{
-        backgroundColor: "rgba(251, 247, 240, 0.92)",
+        // 2026-07: 딥그린으로 통일. 반투명 + blur로 스크롤 시 콘텐츠가
+        // 은은히 비치게. 하단 보더는 한 톤 더 진한 forestDeep.
+        backgroundColor: "rgba(31, 78, 61, 0.92)",
         backdropFilter: "blur(8px)",
-        borderColor: TITA.sage,
+        borderColor: TITA.forestDeep,
         fontFamily: KOREAN_FONT_STACK,
       }}
     >
@@ -27,11 +29,11 @@ export function TitaHeader() {
           <Link href="/" className="flex items-baseline gap-2">
             <span
               className="text-xl font-bold tracking-tight"
-              style={{ color: TITA.ink }}
+              style={{ color: TITA.cream }}
             >
               티타
             </span>
-            <span className="text-xs" style={{ color: TITA.muted }}>
+            <span className="text-xs" style={{ color: TITA.sage }}>
               Tita
             </span>
           </Link>
@@ -43,7 +45,7 @@ export function TitaHeader() {
               })
             }
             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-transform hover:scale-105"
-            style={{ backgroundColor: TITA.forest, color: "white" }}
+            style={{ backgroundColor: TITA.cream, color: TITA.forest }}
           >
             앱 받기 <Download className="w-3 h-3" />
           </Link>
