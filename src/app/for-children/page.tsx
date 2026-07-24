@@ -229,6 +229,50 @@ export default function ForChildrenPage() {
           </div>
         </Section>
 
+        {/* ── 4-B. 만든 사람의 약속 — 창업자 육성(신뢰) ──────────────
+            효녀·효자에게 "만든 사람도 제 부모 생각하며 만들었다"는 게 신뢰의
+            쐐기. 사실인 것만: NICE 본인인증으로 신원이 묶여 재가입 불가. */}
+        <section className="py-12 border-t" style={{ borderColor: TITA.sage }}>
+          <div className="flex items-center gap-2 mb-3">
+            <ShieldCheck className="w-4 h-4" style={{ color: TITA.forest }} />
+            <span
+              className="text-xs font-semibold tracking-wide"
+              style={{ color: TITA.forest }}
+            >
+              만든 사람의 약속
+            </span>
+          </div>
+          <div className="rounded-2xl p-6 sm:p-7" style={{ backgroundColor: TITA.forest }}>
+            <p
+              className="text-base sm:text-lg leading-relaxed"
+              style={{ color: TITA.cream }}
+            >
+              티타를 만든 저도, <strong>제 부모님을 생각하며</strong> 시작했어요. 내
+              엄마 아빠가 쓰신다면 — 그 마음으로 안전을 설계했습니다.
+            </p>
+            <p
+              className="text-sm sm:text-base leading-relaxed mt-4"
+              style={{ color: TITA.sage }}
+            >
+              그래서 나쁜 마음을 먹은 사람은 끝까지 걸러내요. 그리고 한 번 걸러진
+              사람은,{" "}
+              <strong style={{ color: TITA.cream }}>
+                본인인증(NICE)으로 신원이 묶여 다시는 들어오지 못합니다.
+              </strong>{" "}
+              이름만 바꿔 재가입하는 게 불가능하거든요.
+            </p>
+            <p
+              className="text-sm sm:text-base leading-relaxed mt-4"
+              style={{ color: TITA.sage }}
+            >
+              부모님이 안심하고 지내실 수 있게, 제가 계속 지킬게요.
+            </p>
+            <p className="text-sm font-semibold mt-5" style={{ color: TITA.camel }}>
+              — 티타를 만든 사람, 유한결 드림
+            </p>
+          </div>
+        </section>
+
         {/* ── 5. 구매 동선 — 부모님 폰에 보내는 법 ─────────────────── */}
         <Section icon={Coffee} tag="이렇게 시작해요" title="부모님 폰에 보내는 법">
           <ol className="space-y-3 mt-1">
