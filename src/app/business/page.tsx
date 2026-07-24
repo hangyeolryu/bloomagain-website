@@ -18,14 +18,20 @@ import {
   Sparkles,
   HeartHandshake,
 } from "lucide-react";
+import { TITA, KOREAN_FONT_STACK } from "../_components/tita-brand";
 
+// 공유 TITA 팔레트에 매핑. 과거 navy/lavender 명칭은 유지하되(참조 18곳) 값만
+// 포레스트 시스템으로 — gray lavender→따뜻한 surface, 파란 navySoft→forestMid.
 const BRAND = {
-  navy:      "#1F4E3D",
-  navyDeep:  "#143329",
-  navySoft:  "#2D54A1",
-  lavender:  "#EBEBEB",
-  ink:       "#1A2E26",
-  muted:     "#6B7D6E",
+  navy:      TITA.forest,      // #1F4E3D
+  navyDeep:  TITA.forestDeep,  // #143329
+  navySoft:  TITA.forestMid,   // #3A6B58 (기존 파랑 대체)
+  lavender:  TITA.surface,     // #F2EDE3 (기존 회색 대체)
+  ink:       TITA.ink,
+  muted:     TITA.muted,
+  cream:     TITA.cream,
+  sage:      TITA.sage,
+  camel:     TITA.camel,
 } as const;
 
 // ────────────────────────────────────────────────────────────────────────────
@@ -137,7 +143,10 @@ export default function BusinessPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white" style={{ color: BRAND.ink }}>
+    <div
+      className="min-h-screen"
+      style={{ color: BRAND.ink, backgroundColor: BRAND.cream, fontFamily: KOREAN_FONT_STACK }}
+    >
       {/* Header */}
       <header
         className="sticky top-0 z-50 border-b backdrop-blur"
@@ -179,45 +188,50 @@ export default function BusinessPage() {
       </header>
 
       <main>
-        {/* ── Hero ──────────────────────────────────────────────────────── */}
-        <section className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
-          <div
-            className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] mb-6"
-            style={{ background: BRAND.lavender, color: BRAND.navy }}
-          >
-            단체 라이선스
-          </div>
-          <h1
-            className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.15] tracking-tight max-w-3xl"
-            style={{ color: BRAND.ink }}
-          >
-            기관 회원에게
-            <br />
-            <span style={{ color: BRAND.navy }}>안전한 디지털 친구</span>를 제공하세요
-          </h1>
-          <p
-            className="text-lg lg:text-xl leading-relaxed mt-6 max-w-2xl"
-            style={{ color: BRAND.muted }}
-          >
-            재단·복지관·실버타운·보험사 시니어팀을 위한 티타 단체 라이선스.
-            금융권 수준의 안전 인프라와 운영 대시보드를 한 번에.
-          </p>
-          <div className="flex flex-wrap gap-3 mt-8">
-            <a
-              href="#calculator"
-              className="inline-flex items-center gap-2 rounded-full px-7 py-4 text-base font-bold text-white transition shadow-lg"
-              style={{ background: BRAND.navy }}
+        {/* ── Hero — 딥그린 밴드 ─────────────────────────────────────────
+            기관이 원하는 '성과(어르신 활력·참여·고립 예방)'를 사람 언어로
+            앞세우고, 그 아래 기관 신뢰 요소(안전·대시보드)를 받친다. */}
+        <section style={{ backgroundColor: BRAND.navy }}>
+          <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
+            <div
+              className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] mb-6"
+              style={{ background: "rgba(251,247,240,0.12)", color: BRAND.camel }}
             >
-              가격 계산기
-              <ArrowRight className="h-5 w-5" />
-            </a>
-            <a
-              href="#contact"
-              className="inline-flex items-center gap-2 rounded-full border-2 px-7 py-4 text-base font-bold transition"
-              style={{ borderColor: BRAND.navy, color: BRAND.navy }}
+              단체 라이선스
+            </div>
+            <h1
+              className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.15] tracking-tight max-w-3xl"
+              style={{ color: BRAND.cream }}
             >
-              상담 문의
-            </a>
+              우리 기관 어르신에게,
+              <br />
+              <span style={{ color: BRAND.camel }}>매주 설레는 외출</span>을.
+            </h1>
+            <p
+              className="text-lg lg:text-xl leading-relaxed mt-6 max-w-2xl"
+              style={{ color: BRAND.sage }}
+            >
+              검증된 또래 매칭으로 어르신의 고립을 줄이고, 매일에 설렘을 더합니다.
+              금융권 수준의 안전 인프라와 운영 대시보드까지 — 재단·복지관·실버타운·
+              보험사·통신사를 위한 티타 단체 라이선스.
+            </p>
+            <div className="flex flex-wrap gap-3 mt-8">
+              <a
+                href="#contact"
+                className="inline-flex items-center gap-2 rounded-full px-7 py-4 text-base font-bold transition shadow-lg"
+                style={{ background: BRAND.cream, color: BRAND.navy }}
+              >
+                도입 상담 문의
+                <ArrowRight className="h-5 w-5" />
+              </a>
+              <a
+                href="#calculator"
+                className="inline-flex items-center gap-2 rounded-full border-2 px-7 py-4 text-base font-bold transition"
+                style={{ borderColor: "rgba(251,247,240,0.5)", color: BRAND.cream }}
+              >
+                가격 계산기
+              </a>
+            </div>
           </div>
         </section>
 
