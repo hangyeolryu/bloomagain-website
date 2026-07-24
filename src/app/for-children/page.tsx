@@ -1,9 +1,10 @@
 /**
  * For Children — 50·60·70대 엄마를 둔 딸·아들을 겨냥한 랜딩.
  *
- * 포지셔닝(2026-07): "모두의 딸" — 딸이 채워줄 수 없는 건 엄마의 *또래* 친구.
- * 티타는 딸을 대체하지 않고, 딸이 유일하게 못 주는 것(같은 세대 친구)을 준다.
- * 구매자=딸·아들(30~40대, 인스타·카톡 도달), 사용자=엄마.
+ * 포지셔닝(2026-07): "새로운 하루를 선물" — '심심'이 아니라 *새로움의 격차*.
+ * 딸은 매일 새로운 곳·사람·음식을 찾아다니지만 부모님의 하루는 어제와 똑같다.
+ * 티타는 부모님이 마음 맞는 또래 친구와 새로운 찻자리를 갖게 해 매일에
+ * 새로움(이벤트)을 데려온다. 구매자=딸·아들(인스타·카톡 도달), 사용자=엄마·아빠.
  *
  * 도달 경로:
  *   - 인스타/카톡 광고(딸·아들 타겟) → 이 페이지
@@ -56,28 +57,28 @@ export default function ForChildrenPage() {
               className="text-xs font-semibold tracking-wide"
               style={{ color: TITA.camel }}
             >
-              엄마가 심심하실까 봐, 늘 마음 쓰는 딸에게
+              엄마·아빠를 둔 딸·아들에게
             </span>
           </div>
           <h1
             className="text-3xl sm:text-5xl font-extrabold leading-tight mb-5"
             style={{ color: TITA.cream, letterSpacing: "-0.025em" }}
           >
-            딸이 못 해주는 게
+            엄마 아빠에게도,
             <br />
-            딱 하나 있어요.
+            새로운 하루를 선물하세요.
           </h1>
           <p
             className="text-base sm:text-lg leading-relaxed mb-8"
             style={{ color: TITA.sage }}
           >
-            카페도 같이 가고, 여행도 모시고 가지만 —
+            나는 매일 친구들이랑 새로운 곳 가고, 새로운 걸 먹는데 —
             <br />
-            딸은 엄마의 <strong style={{ color: TITA.cream }}>또래</strong>가 될 순
-            없잖아요.
+            엄마 아빠의 하루는, <strong style={{ color: TITA.cream }}>어제와 오늘이 똑같아요.</strong>
             <br className="hidden sm:block" />
-            티타는 엄마가 <strong style={{ color: TITA.cream }}>마음 맞는 또래 친구</strong>를
-            만나는 곳이에요.
+            티타는 부모님이 마음 맞는 또래 친구와
+            <br className="hidden sm:block" />
+            <strong style={{ color: TITA.cream }}>새로운 찻자리</strong>를 갖는 곳이에요.
           </p>
           <div className="flex flex-col items-center gap-4">
             <a
@@ -92,45 +93,49 @@ export default function ForChildrenPage() {
               style={{ backgroundColor: TITA.cream, color: TITA.forest }}
             >
               <Smartphone className="w-4 h-4" />
-              엄마 폰에 보내기
+              부모님 폰에 보내기
             </a>
             <span className="text-[13px]" style={{ color: TITA.sage }}>
-              카카오톡으로 공유 → 엄마가 직접 설치해요
+              카카오톡으로 공유 → 부모님이 직접 설치해요
             </span>
           </div>
         </div>
       </section>
 
-      {/* ── 2. 공감 — "모두의 딸" ──────────────────────────────────────────
-          딸의 마음을 먼저 비춰주고, 티타가 그 마음이 닿지 못하는 자리를
-          채운다고 잇는다. 딥그린을 이어받아 상단을 하나의 브랜드 존으로. */}
+      {/* ── 2. 공감 — 매일의 대비 ──────────────────────────────────────────
+          "심심"이 아니라 '새로움의 격차'로 프레이밍. 딸의 일상 vs 부모님의
+          똑같은 하루 → 티타가 새로움을 데려온다. 딥그린을 이어받아. */}
       <section style={{ backgroundColor: TITA.forestDeep }}>
         <div className="max-w-2xl mx-auto px-5 sm:px-6 py-14">
           <p
-            className="text-center text-xs font-semibold tracking-wide mb-5"
+            className="text-center text-xs font-semibold tracking-wide mb-6"
             style={{ color: TITA.camel }}
           >
-            모두의 딸이 하는 일
+            생각해보면
           </p>
           <p
             className="text-center text-lg sm:text-xl leading-relaxed"
             style={{ color: TITA.cream }}
           >
-            심심하실까 봐 카페에 모시고 가고,
-            <br />
-            나들이도 함께 가고, 안부 전화도 자주 드리죠.
+            나는 오늘도 새로운 카페, 새로운 맛집, 새로운 사람.
           </p>
           <p
-            className="text-center text-base sm:text-lg leading-relaxed mt-5"
+            className="text-center text-lg sm:text-xl leading-relaxed mt-4"
             style={{ color: TITA.sage }}
           >
-            그래도 늘 곁에 있을 순 없고,
+            엄마 아빠는? 어제 간 곳, 어제 본 사람,
             <br />
-            내가 엄마 또래가 되어줄 수도 없어요.
-            <br />
+            어제와 똑같은 하루.
+          </p>
+          <p
+            className="text-center text-base sm:text-lg leading-relaxed mt-7"
+            style={{ color: TITA.sage }}
+          >
             <strong style={{ color: TITA.cream }}>
-              그 자리를, 결이 맞는 또래 친구가 채워요.
+              부모님의 매일에도, 설레는 새로움이 필요해요.
             </strong>
+            <br />
+            그 새로움을, 마음 맞는 또래 친구가 데려와요.
           </p>
         </div>
       </section>
@@ -162,7 +167,7 @@ export default function ForChildrenPage() {
         </Section>
 
         {/* ── 4. 안심 — 안전 4계층 ───────────────────────────────── */}
-        <Section icon={ShieldCheck} tag="안전 시스템" title="4계층으로 엄마를 지켜요">
+        <Section icon={ShieldCheck} tag="안전 시스템" title="4계층으로 부모님을 지켜요">
           <p className="mb-5" style={{ color: TITA.muted }}>
             3년간 자체 개발, 14개 청구항 특허 출원. 보이스피싱·로맨스 스캠·투자
             사기를 AI가 24시간 살펴요.
@@ -181,7 +186,7 @@ export default function ForChildrenPage() {
             <SafetyLayer
               icon={Smartphone}
               title="③ 적응형 화면"
-              body="엄마의 시력·손떨림에 맞춰 글자 크기·버튼 간격이 자동 조정. 같은 데이터로 도용 시도도 함께 차단."
+              body="부모님의 시력·손떨림에 맞춰 글자 크기·버튼 간격이 자동 조정. 같은 데이터로 도용 시도도 함께 차단."
             />
             <SafetyLayer
               icon={Lock}
@@ -211,16 +216,16 @@ export default function ForChildrenPage() {
           </div>
         </Section>
 
-        {/* ── 5. 구매 동선 — 엄마 폰에 보내는 법 ─────────────────── */}
-        <Section icon={Coffee} tag="이렇게 시작해요" title="엄마 폰에 보내는 법">
+        {/* ── 5. 구매 동선 — 부모님 폰에 보내는 법 ─────────────────── */}
+        <Section icon={Coffee} tag="이렇게 시작해요" title="부모님 폰에 보내는 법">
           <ol className="space-y-3 mt-1">
             <Step n="1" title="카카오톡으로 링크 보내기">
-              아래 버튼을 눌러 엄마에게 앱 링크를 보내요.
+              아래 버튼을 눌러 부모님께 앱 링크를 보내요.
             </Step>
-            <Step n="2" title='"엄마, 이거 안전하대. 친구 사귀는 거야"'>
-              딸의 한마디가 가장 큰 안심이에요.
+            <Step n="2" title='"엄마, 이거 재밌겠다. 친구도 사귀고"'>
+              딸의 한마디가 가장 큰 시작이에요.
             </Step>
-            <Step n="3" title="엄마가 직접 본인인증 후 시작">
+            <Step n="3" title="부모님이 직접 본인인증 후 시작">
               30초 본인인증이면 준비 끝. 곁에서 한 번만 도와드리면 돼요.
             </Step>
           </ol>
@@ -236,7 +241,7 @@ export default function ForChildrenPage() {
               className="inline-flex items-center gap-1.5 px-6 py-3 rounded-full text-sm font-semibold transition-transform hover:scale-105"
               style={{ backgroundColor: TITA.forest, color: "white" }}
             >
-              엄마 폰에 보내기 <ArrowRight className="w-4 h-4" />
+              부모님 폰에 보내기 <ArrowRight className="w-4 h-4" />
             </a>
           </div>
         </Section>
@@ -249,16 +254,16 @@ export default function ForChildrenPage() {
               a="가입·친구 매칭·모임·채팅은 모두 무료예요. 광고도 없고요. 티타 플러스(월 19,900원, 30일 무료 체험)는 메시지를 한도 없이 쓰고 매칭 인사이트를 더 깊이 보는 선택 기능이에요."
             />
             <FAQ
-              q="엄마가 디지털을 어려워하시는데…"
-              a="엄마의 시력·손떨림에 맞춰 화면이 자동으로 조정돼요. 글자 크기·버튼 간격이 사용자에 맞게 변하고, 음성으로도 인사를 보낼 수 있어요."
+              q="부모님이 디지털을 어려워하시는데…"
+              a="부모님의 시력·손떨림에 맞춰 화면이 자동으로 조정돼요. 글자 크기·버튼 간격이 사용자에 맞게 변하고, 음성으로도 인사를 보낼 수 있어요."
             />
             <FAQ
               q="자녀도 가입해야 하나요?"
               a="아니요. 티타는 엄마가 직접 쓰는 앱이에요. 자녀는 가입하지 않아도 되고, 안전장치는 앱 안에 모두 내장돼 있어요."
             />
             <FAQ
-              q="자녀가 엄마 대화를 볼 수 있나요?"
-              a="아니요. 엄마의 대화는 엄마만의 것이에요. 프라이버시는 철저히 보호돼요."
+              q="자녀가 부모님 대화를 볼 수 있나요?"
+              a="아니요. 부모님의 대화는 부모님만의 것이에요. 프라이버시는 철저히 보호돼요."
             />
             <FAQ
               q="누가 만들었나요?"
@@ -285,12 +290,12 @@ export default function ForChildrenPage() {
             className="text-2xl sm:text-3xl font-extrabold leading-tight mb-4"
             style={{ color: TITA.cream, letterSpacing: "-0.02em" }}
           >
-            {'"엄마, 이거 안전하대.'}
+            엄마 아빠에게,
             <br />
-            {'친구 사귀는 거야."'}
+            새로운 하루를 선물하세요.
           </h2>
           <p className="text-base leading-relaxed mb-8" style={{ color: TITA.sage }}>
-            딸의 한마디가, 엄마의 새 친구로 이어져요.
+            딸의 한마디가, 부모님의 새로운 하루로 이어져요.
           </p>
           <div className="flex flex-col items-center gap-4">
             <a
@@ -305,7 +310,7 @@ export default function ForChildrenPage() {
               style={{ backgroundColor: TITA.cream, color: TITA.forest }}
             >
               <Smartphone className="w-4 h-4" />
-              엄마 폰에 보내기
+              부모님 폰에 보내기
             </a>
             <Link
               href="/support"
