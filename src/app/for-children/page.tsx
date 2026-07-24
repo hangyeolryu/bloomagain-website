@@ -1,10 +1,11 @@
 /**
  * For Children — 50·60·70대 엄마를 둔 딸·아들을 겨냥한 랜딩.
  *
- * 포지셔닝(2026-07): "새로운 하루를 선물" — '심심'이 아니라 *새로움의 격차*.
- * 딸은 매일 새로운 곳·사람·음식을 찾아다니지만 부모님의 하루는 어제와 똑같다.
- * 티타는 부모님이 마음 맞는 또래 친구와 새로운 찻자리를 갖게 해 매일에
- * 새로움(이벤트)을 데려온다. 구매자=딸·아들(인스타·카톡 도달), 사용자=엄마·아빠.
+ * 포지셔닝(2026-07): "엄마도 소녀, 아빠도 소년" — 깎아내리지 않고 헌사하는 톤.
+ * 부모 안엔 여전히 소녀·소년의 마음이 살아있고(가끔 웃을 때 그 표정이 스친다),
+ * 백세 시대에 앞으로 가장 즐거울 30~40년이 남았다. 그 시간을 함께 설렐 또래
+ * 친구는 지금부터 만드는 것. '심심/외로움' 같은 연민 프레임을 피하고, 자식도
+ * 부모도 읽고 기분 좋게 시도하게. 구매자=딸·아들(인스타·카톡), 사용자=엄마·아빠.
  *
  * 도달 경로:
  *   - 인스타/카톡 광고(딸·아들 타겟) → 이 페이지
@@ -64,21 +65,17 @@ export default function ForChildrenPage() {
             className="text-3xl sm:text-5xl font-extrabold leading-tight mb-5"
             style={{ color: TITA.cream, letterSpacing: "-0.025em" }}
           >
-            엄마 아빠에게도,
+            엄마도 소녀,
             <br />
-            새로운 하루를 선물하세요.
+            아빠도 소년이에요.
           </h1>
           <p
             className="text-base sm:text-lg leading-relaxed mb-8"
             style={{ color: TITA.sage }}
           >
-            나는 매일 친구들이랑 새로운 곳 가고, 새로운 걸 먹는데 —
+            엄마도 소녀였고, 아빠도 소년이었어요.
             <br />
-            엄마 아빠의 하루는, <strong style={{ color: TITA.cream }}>어제와 오늘이 똑같아요.</strong>
-            <br className="hidden sm:block" />
-            티타는 부모님이 마음 맞는 또래 친구와
-            <br className="hidden sm:block" />
-            <strong style={{ color: TITA.cream }}>새로운 찻자리</strong>를 갖는 곳이에요.
+            그리고 그 마음은, <strong style={{ color: TITA.cream }}>지금도 그대로예요.</strong>
           </p>
           <div className="flex flex-col items-center gap-4">
             <a
@@ -102,40 +99,43 @@ export default function ForChildrenPage() {
         </div>
       </section>
 
-      {/* ── 2. 공감 — 매일의 대비 ──────────────────────────────────────────
-          "심심"이 아니라 '새로움의 격차'로 프레이밍. 딸의 일상 vs 부모님의
-          똑같은 하루 → 티타가 새로움을 데려온다. 딥그린을 이어받아. */}
+      {/* ── 2. 공감 — 여전히 살아있는 소녀·소년 + 남은 시간 ──────────────
+          깎아내리는 말(늙음·무게·심심) 없이. 웃을 때 스치는 그 반짝임은
+          여전히 살아있고, 앞으로 가장 즐거울 수십 년이 남았다는 긍정 밴드.
+          딥그린을 이어받아 상단을 하나의 브랜드 존으로. */}
       <section style={{ backgroundColor: TITA.forestDeep }}>
         <div className="max-w-2xl mx-auto px-5 sm:px-6 py-14">
-          <p
-            className="text-center text-xs font-semibold tracking-wide mb-6"
-            style={{ color: TITA.camel }}
-          >
-            생각해보면
-          </p>
           <p
             className="text-center text-lg sm:text-xl leading-relaxed"
             style={{ color: TITA.cream }}
           >
-            나는 오늘도 새로운 카페, 새로운 맛집, 새로운 사람.
+            웃을 때, 문득 소녀가 보여요.
           </p>
           <p
             className="text-center text-lg sm:text-xl leading-relaxed mt-4"
             style={{ color: TITA.sage }}
           >
-            엄마 아빠는? 어제 간 곳, 어제 본 사람,
+            엄마 안의 그 소녀는, <strong style={{ color: TITA.cream }}>여전히 살아 있어요.</strong>
+          </p>
+
+          <div
+            className="mx-auto my-8 h-px w-16"
+            style={{ backgroundColor: TITA.camel }}
+          />
+
+          <p
+            className="text-center text-lg sm:text-xl leading-relaxed"
+            style={{ color: TITA.cream }}
+          >
+            백세 시대, 엄마 아빠 앞엔
             <br />
-            어제와 똑같은 하루.
+            <strong>가장 즐거울 30년, 40년</strong>이 아직 남았어요.
           </p>
           <p
-            className="text-center text-base sm:text-lg leading-relaxed mt-7"
+            className="text-center text-base sm:text-lg leading-relaxed mt-6"
             style={{ color: TITA.sage }}
           >
-            <strong style={{ color: TITA.cream }}>
-              부모님의 매일에도, 설레는 새로움이 필요해요.
-            </strong>
-            <br />
-            그 새로움을, 마음 맞는 또래 친구가 데려와요.
+            그 시간을 더 설레게 채워줄 또래 친구는, <strong style={{ color: TITA.cream }}>지금부터.</strong>
           </p>
         </div>
       </section>
@@ -169,8 +169,8 @@ export default function ForChildrenPage() {
         {/* ── 4. 안심 — 안전 4계층 ───────────────────────────────── */}
         <Section icon={ShieldCheck} tag="안전 시스템" title="4계층으로 부모님을 지켜요">
           <p className="mb-5" style={{ color: TITA.muted }}>
-            3년간 자체 개발, 14개 청구항 특허 출원. 보이스피싱·로맨스 스캠·투자
-            사기를 AI가 24시간 살펴요.
+            직접 개발한 안전 시스템. 보이스피싱·로맨스 스캠·투자 사기를 AI가
+            24시간 살펴요.
           </p>
           <ul className="space-y-3">
             <SafetyLayer
@@ -270,7 +270,7 @@ export default function ForChildrenPage() {
               a={
                 <>
                   주식회사 이프이프(EFFEFF Co., Ltd.) · 사업자번호 466-81-04205.
-                  대표 유한결이 3년간 직접 개발했어요. 관련 기술은 14개 청구항 특허
+                  대표 유한결이 직접 개발했어요. 관련 기술은 14개 청구항 특허
                   출원 완료(PA260003).{" "}
                   <Link href="/" className="underline" style={{ color: TITA.forest }}>
                     홈페이지
@@ -290,12 +290,12 @@ export default function ForChildrenPage() {
             className="text-2xl sm:text-3xl font-extrabold leading-tight mb-4"
             style={{ color: TITA.cream, letterSpacing: "-0.02em" }}
           >
-            엄마 아빠에게,
+            엄마 안의 소녀가,
             <br />
-            새로운 하루를 선물하세요.
+            마음껏 웃을 수 있게.
           </h2>
           <p className="text-base leading-relaxed mb-8" style={{ color: TITA.sage }}>
-            딸의 한마디가, 부모님의 새로운 하루로 이어져요.
+            딸의 한마디가, 그 시작이 돼요.
           </p>
           <div className="flex flex-col items-center gap-4">
             <a
