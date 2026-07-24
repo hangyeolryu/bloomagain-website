@@ -207,7 +207,7 @@ const MARKUP = `<div class="rack">
                 <span class="pf-check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
               </div>
               <div style="flex:1;min-width:0">
-                <div class="pf-name">이현숙<span>51세</span></div>
+                <div class="pf-name">이현숙<span>56세</span></div>
                 <div class="pf-loc">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-5.7 7-11a7 7 0 1 0-14 0c0 5.3 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
                   서울 은평구
