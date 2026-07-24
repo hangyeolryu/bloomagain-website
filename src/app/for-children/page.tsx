@@ -1,395 +1,383 @@
 /**
- * For Children — landing page targeted at adult children of seniors (40s/50s).
+ * For Children — 50·60·70대 엄마를 둔 딸·아들을 겨냥한 랜딩.
  *
- * Reached from:
- *   - QR on the senior printed brochure ("자녀와 함께 보세요" line)
- *   - Direct share via KakaoTalk by 부모/자녀
- *   - SEO: "부모님 디지털 친구 안전" / "티타 자녀"
+ * 포지셔닝(2026-07): "모두의 딸" — 딸이 채워줄 수 없는 건 엄마의 *또래* 친구.
+ * 티타는 딸을 대체하지 않고, 딸이 유일하게 못 주는 것(같은 세대 친구)을 준다.
+ * 구매자=딸·아들(30~40대, 인스타·카톡 도달), 사용자=엄마.
  *
- * Goals (in order of importance):
- *   1. Reassure that 티타 is NOT a dating app.
- *   2. Make the safety stack legible to a non-technical 40대.
- *   3. Set up the "자녀가 부모님께 권하는" buying motion.
- *   4. Surface the Family Care feature as the differentiator parent apps don't have.
- *   5. Provide a one-tap path to install on parent's phone (QR).
+ * 도달 경로:
+ *   - 인스타/카톡 광고(딸·아들 타겟) → 이 페이지
+ *   - 시니어 브로슈어 QR("자녀와 함께 보세요")
+ *
+ * 목표(중요도 순):
+ *   1. "만남앱 아님" 즉시 안심 (딸의 첫 걱정).
+ *   2. 안전 스택을 비개발자 40대가 읽히게.
+ *   3. "엄마 폰에 보내는" 구매 동선(카톡 공유).
  */
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import {
-  ShieldCheck,
   Heart,
+  ShieldCheck,
   Lock,
   UserCheck,
   Sparkles,
   ArrowRight,
-  CheckCircle2,
-  AlertTriangle,
-  Phone,
   Smartphone,
   Award,
-  Mail,
+  Coffee,
+  ChevronRight,
 } from "lucide-react";
-
-// Brand tokens — keep in sync with /src/app/page.tsx and /invite/[code]/page.tsx
-const BRAND = {
-  navy:      "#1F4E3D",
-  navyDeep:  "#143329",
-  navySoft:  "#2D54A1",
-  lavender:  "#EBEBEB",
-  ink:       "#1A2E26",
-  muted:     "#6B7D6E",
-  success:   "#15803D",
-  danger:    "#B91C1C",
-} as const;
+import { TITA, KOREAN_FONT_STACK } from "../_components/tita-brand";
+import { TitaHeader } from "../_components/TitaHeader";
+import { TitaFooter } from "../_components/TitaFooter";
+import { logAnalyticsEvent } from "@/lib/firebase";
 
 export default function ForChildrenPage() {
   return (
     <div
-      className="min-h-screen flex flex-col"
-      style={{ background: BRAND.lavender, color: BRAND.ink }}
+      className="min-h-screen"
+      style={{ backgroundColor: TITA.cream, fontFamily: KOREAN_FONT_STACK }}
     >
-      {/* ── Header ──────────────────────────────────────────────────────── */}
-      <header
-        className="border-b sticky top-0 z-10"
-        style={{ background: "white", borderColor: "rgba(15,26,53,0.08)" }}
-      >
-        <nav className="mx-auto flex max-w-5xl items-center justify-between px-4 sm:px-6 py-4">
-          <Link href="/" className="flex items-center gap-2">
-            <Image
-              src="/app_icon.svg"
-              alt="티타 로고"
-              width={32}
-              height={32}
-              className="h-8 w-8 rounded-lg"
-            />
-            <span className="text-xl font-bold" style={{ color: BRAND.navy }}>
-              티타
-            </span>
-          </Link>
-          <span
-            className="text-xs sm:text-sm font-bold tracking-[0.15em] uppercase"
-            style={{ color: BRAND.muted }}
-          >
-            부모님께 권하는 분께
-          </span>
-        </nav>
-      </header>
+      <TitaHeader />
 
-      {/* ── Hero ─────────────────────────────────────────────────────────── */}
-      <section className="mx-auto w-full max-w-3xl px-4 sm:px-6 py-12 sm:py-16">
-        <div className="text-center space-y-5">
-          <div
-            className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mx-auto"
-            style={{ background: BRAND.navy }}
-          >
-            <Heart className="h-8 w-8 text-white" />
+      {/* ── 1. Hero — 딥그린 밴드. "딸이 못 해주는 게 하나 있어요" ───────── */}
+      <section className="text-center" style={{ backgroundColor: TITA.forest }}>
+        <div className="max-w-2xl mx-auto px-5 sm:px-6 pt-14 sm:pt-20 pb-16">
+          <div className="inline-flex items-center gap-2 mb-5">
+            <Heart
+              className="w-4 h-4"
+              style={{ color: TITA.camel }}
+              strokeWidth={2.5}
+              fill={TITA.camel}
+            />
+            <span
+              className="text-xs font-semibold tracking-wide"
+              style={{ color: TITA.camel }}
+            >
+              엄마가 심심하실까 봐, 늘 마음 쓰는 딸에게
+            </span>
           </div>
           <h1
-            className="text-3xl sm:text-5xl font-bold leading-tight"
-            style={{ color: BRAND.ink }}
+            className="text-3xl sm:text-5xl font-extrabold leading-tight mb-5"
+            style={{ color: TITA.cream, letterSpacing: "-0.025em" }}
           >
-            부모님께 안심하고
+            딸이 못 해주는 게
             <br />
-            권할 수 있는 친구 앱
+            딱 하나 있어요.
           </h1>
           <p
-            className="text-base sm:text-lg leading-relaxed max-w-2xl mx-auto"
-            style={{ color: BRAND.muted }}
+            className="text-base sm:text-lg leading-relaxed mb-8"
+            style={{ color: TITA.sage }}
           >
-            만남앱이 아닙니다. 신원 확인된 회원만 가입하는 친구 앱.
-            <br className="hidden sm:inline" />
-            보이스피싱·로맨스 스캠을 AI가 24시간 차단합니다.
+            카페도 같이 가고, 여행도 모시고 가지만 —
+            <br />
+            딸은 엄마의 <strong style={{ color: TITA.cream }}>또래</strong>가 될 순
+            없잖아요.
+            <br className="hidden sm:block" />
+            티타는 엄마가 <strong style={{ color: TITA.cream }}>마음 맞는 또래 친구</strong>를
+            만나는 곳이에요.
           </p>
-        </div>
-
-        {/* Hero CTA — install on parent's phone */}
-        <div
-          className="mt-10 rounded-2xl bg-white p-5 sm:p-6 shadow-sm border"
-          style={{ borderColor: "rgba(15,26,53,0.08)" }}
-        >
-          <div className="flex flex-col sm:flex-row items-center gap-5">
-            <div
-              className="flex-shrink-0 w-24 h-24 rounded-2xl flex items-center justify-center"
-              style={{ background: `${BRAND.navy}10` }}
-            >
-              <Smartphone className="h-12 w-12" style={{ color: BRAND.navy }} />
-            </div>
-            <div className="flex-1 text-center sm:text-left">
-              <p className="text-sm font-bold mb-1" style={{ color: BRAND.muted }}>
-                부모님 휴대폰으로 보내드리세요
-              </p>
-              <p className="text-base sm:text-lg font-bold" style={{ color: BRAND.ink }}>
-                {"\"엄마, 이거 한 번 봐봐. 안전하대.\""}
-              </p>
-              <p className="text-xs sm:text-sm mt-1" style={{ color: BRAND.muted }}>
-                카카오톡으로 공유 → 부모님이 직접 다운로드
-              </p>
-            </div>
-            <Link
+          <div className="flex flex-col items-center gap-4">
+            <a
               href="/download"
-              className="inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-bold text-white whitespace-nowrap"
-              style={{ background: BRAND.navy }}
+              onClick={() =>
+                logAnalyticsEvent("app_download_click", {
+                  store: "auto",
+                  source: "for_children_hero",
+                })
+              }
+              className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full text-sm font-semibold transition-transform hover:scale-105 w-full sm:w-auto"
+              style={{ backgroundColor: TITA.cream, color: TITA.forest }}
             >
-              앱 보내기
-              <ArrowRight className="h-4 w-4" />
-            </Link>
+              <Smartphone className="w-4 h-4" />
+              엄마 폰에 보내기
+            </a>
+            <span className="text-[13px]" style={{ color: TITA.sage }}>
+              카카오톡으로 공유 → 엄마가 직접 설치해요
+            </span>
           </div>
         </div>
       </section>
 
-      {/* ── Section 1: 데이팅 중심이 아닙니다 ──────────────────────────── */}
-      <section
-        className="py-14 sm:py-20"
-        style={{ background: "white" }}
-      >
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 space-y-6">
-          <div className="flex items-center gap-3">
-            <AlertTriangle
-              className="h-8 w-8 flex-shrink-0"
-              style={{ color: BRAND.danger }}
-            />
-            <h2
-              className="text-2xl sm:text-3xl font-bold"
-              style={{ color: BRAND.ink }}
-            >
-              데이팅 중심이 아닙니다
-            </h2>
-          </div>
-          <p className="text-base leading-relaxed" style={{ color: BRAND.muted }}>
-            많은 분들이 가장 먼저 묻는 질문입니다. 티타은
-            <strong style={{ color: BRAND.ink }}> 친구·모임 중심으로 설계된 앱</strong>입니다.
-            가입하시면 기본 설정이 <strong style={{ color: BRAND.ink }}>{"'친구만 원해요'"}</strong>로 시작되며,
-            원하시는 분만 설정에서 직접 인연 옵션을 열 수 있습니다.
+      {/* ── 2. 공감 — "모두의 딸" ──────────────────────────────────────────
+          딸의 마음을 먼저 비춰주고, 티타가 그 마음이 닿지 못하는 자리를
+          채운다고 잇는다. 딥그린을 이어받아 상단을 하나의 브랜드 존으로. */}
+      <section style={{ backgroundColor: TITA.forestDeep }}>
+        <div className="max-w-2xl mx-auto px-5 sm:px-6 py-14">
+          <p
+            className="text-center text-xs font-semibold tracking-wide mb-5"
+            style={{ color: TITA.camel }}
+          >
+            모두의 딸이 하는 일
           </p>
+          <p
+            className="text-center text-lg sm:text-xl leading-relaxed"
+            style={{ color: TITA.cream }}
+          >
+            심심하실까 봐 카페에 모시고 가고,
+            <br />
+            나들이도 함께 가고, 안부 전화도 자주 드리죠.
+          </p>
+          <p
+            className="text-center text-base sm:text-lg leading-relaxed mt-5"
+            style={{ color: TITA.sage }}
+          >
+            그래도 늘 곁에 있을 순 없고,
+            <br />
+            내가 엄마 또래가 되어줄 수도 없어요.
+            <br />
+            <strong style={{ color: TITA.cream }}>
+              그 자리를, 결이 맞는 또래 친구가 채워요.
+            </strong>
+          </p>
+        </div>
+      </section>
 
-          <div className="grid sm:grid-cols-2 gap-4 mt-8">
-            <DesignChoice
+      <main className="max-w-2xl mx-auto px-5 sm:px-6">
+        {/* ── 3. 딸의 첫 걱정 — 만남앱 아님 ───────────────────────── */}
+        <Section icon={Heart} tag="딸이 가장 먼저 걱정하는 것" title="만남앱이 아니에요">
+          <p className="mb-5" style={{ color: TITA.muted }}>
+            제일 먼저 드는 걱정이죠. 티타는{" "}
+            <strong style={{ color: TITA.ink }}>친구·모임 중심으로 설계된 앱</strong>
+            이에요. 가입하면 기본이{" "}
+            <strong style={{ color: TITA.ink }}>{"'친구만 원해요'"}</strong>로 시작해요.
+          </p>
+          <div className="grid sm:grid-cols-2 gap-3">
+            <CompareCard
               ok={false}
-              title="다른 SNS"
               items={["좋아요·매칭 푸시", "1:1 데이트 추천", "외모 평가", "성별 필터"]}
             />
-            <DesignChoice
+            <CompareCard
               ok={true}
-              title="티타"
               items={[
                 "관심사 모임 (산책·책·텃밭)",
-                "동네 친구 찾기",
-                "그룹 채팅",
-                "기본은 '친구만', 인연은 본인 선택",
+                "동네 또래 친구 찾기",
+                "셋넷이 만나는 찻자리",
+                "기본은 '친구만'",
               ]}
             />
           </div>
-        </div>
-      </section>
+        </Section>
 
-      {/* ── Section 2: 안전 인프라 ──────────────────────────────────────── */}
-      <section className="py-14 sm:py-20">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 space-y-8">
-          <div className="text-center space-y-3">
-            <div
-              className="inline-flex items-center justify-center w-14 h-14 rounded-xl mx-auto"
-              style={{ background: `${BRAND.navy}12` }}
-            >
-              <ShieldCheck className="h-7 w-7" style={{ color: BRAND.navy }} />
-            </div>
-            <h2
-              className="text-2xl sm:text-3xl font-bold"
-              style={{ color: BRAND.ink }}
-            >
-              4계층 안전 인프라
-            </h2>
-            <p className="text-sm sm:text-base" style={{ color: BRAND.muted }}>
-              3년간 자체 개발, 14개 청구항 특허 출원 완료
-            </p>
-          </div>
-
-          <ul className="space-y-4">
+        {/* ── 4. 안심 — 안전 4계층 ───────────────────────────────── */}
+        <Section icon={ShieldCheck} tag="안전 시스템" title="4계층으로 엄마를 지켜요">
+          <p className="mb-5" style={{ color: TITA.muted }}>
+            3년간 자체 개발, 14개 청구항 특허 출원. 보이스피싱·로맨스 스캠·투자
+            사기를 AI가 24시간 살펴요.
+          </p>
+          <ul className="space-y-3">
             <SafetyLayer
               icon={UserCheck}
               title="① 본인인증"
-              body="NICE 본인확인 서비스로 신원을 검증합니다. 중복 가입 차단, 부정 사용자 재가입 원천 봉쇄."
+              body="NICE 본인확인으로 신원을 검증해요. 검증된 또래만 가입 — 중복·재가입 원천 차단."
             />
             <SafetyLayer
               icon={Sparkles}
               title="② AI 위험 평가"
-              body="대화 맥락(LLM) + 키워드 패턴 + 행동 분산 + 인지 지문 — 4가지 지표를 종합해 위험 점수를 24시간 계산합니다. 보이스피싱·로맨스 스캠·투자 사기를 사전 탐지."
+              body="대화 맥락(LLM)·키워드·행동 패턴을 종합해 위험 점수를 24시간 계산. 사기 메시지를 사전 탐지해요."
             />
             <SafetyLayer
               icon={Smartphone}
               title="③ 적응형 화면"
-              body="부모님의 시각·운동 능력에 맞춰 글자 크기, 버튼 간격, 반응 시간이 자동 조정됩니다. 같은 데이터로 본인 여부도 함께 확인 — 도용 시도 자동 차단."
+              body="엄마의 시력·손떨림에 맞춰 글자 크기·버튼 간격이 자동 조정. 같은 데이터로 도용 시도도 함께 차단."
             />
             <SafetyLayer
               icon={Lock}
               title="④ 단계적 대응"
-              body="위험 점수가 올라가면 경고 → 메시지 발송 차단 → 계정 잠금 순으로 단계적 조치. 자녀에게 자동 알림이 갑니다."
+              body="위험 점수가 오르면 경고 → 메시지 차단 → 계정 잠금 순으로 조치해요."
             />
           </ul>
-
           <div
-            className="rounded-2xl p-5 mt-6 border"
-            style={{
-              background: `${BRAND.navy}06`,
-              borderColor: `${BRAND.navy}20`,
-            }}
+            className="rounded-xl p-4 mt-5 flex items-start gap-3"
+            style={{ backgroundColor: TITA.surface, border: `1px solid ${TITA.sage}` }}
           >
-            <div className="flex items-start gap-3">
-              <Award
-                className="h-5 w-5 flex-shrink-0 mt-0.5"
-                style={{ color: BRAND.navy }}
-              />
-              <div>
-                <p className="text-sm font-bold mb-1" style={{ color: BRAND.ink }}>
-                  특허 출원 PA260003
-                </p>
-                <p className="text-xs sm:text-sm leading-relaxed" style={{ color: BRAND.muted }}>
-                  보안·접근성 통합 시스템 (청구항 1~10), 하이브리드 매칭
-                  알고리즘 (청구항 11~14). 변리사 검토를 거친 정식 출원입니다.
-                </p>
-              </div>
+            <span
+              className="text-[10px] font-extrabold px-1.5 py-0.5 rounded mt-0.5"
+              style={{ backgroundColor: TITA.forest, color: "white", letterSpacing: "0.05em" }}
+            >
+              특허
+            </span>
+            <div>
+              <p className="text-sm font-bold mb-0.5" style={{ color: TITA.ink }}>
+                특허 출원 PA260003
+              </p>
+              <p className="text-xs leading-relaxed" style={{ color: TITA.muted }}>
+                보안·접근성 통합 시스템(청구항 1~10), 하이브리드 매칭
+                알고리즘(청구항 11~14). 변리사 검토를 거친 정식 출원이에요.
+              </p>
             </div>
           </div>
-        </div>
-      </section>
+        </Section>
 
-      {/* ── Section 4: 자주 묻는 질문 ───────────────────────────────────── */}
-      <section className="py-14 sm:py-20">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 space-y-6">
-          <h2
-            className="text-2xl sm:text-3xl font-bold text-center"
-            style={{ color: BRAND.ink }}
-          >
-            자녀분이 자주 묻는 질문
-          </h2>
+        {/* ── 5. 구매 동선 — 엄마 폰에 보내는 법 ─────────────────── */}
+        <Section icon={Coffee} tag="이렇게 시작해요" title="엄마 폰에 보내는 법">
+          <ol className="space-y-3 mt-1">
+            <Step n="1" title="카카오톡으로 링크 보내기">
+              아래 버튼을 눌러 엄마에게 앱 링크를 보내요.
+            </Step>
+            <Step n="2" title='"엄마, 이거 안전하대. 친구 사귀는 거야"'>
+              딸의 한마디가 가장 큰 안심이에요.
+            </Step>
+            <Step n="3" title="엄마가 직접 본인인증 후 시작">
+              30초 본인인증이면 준비 끝. 곁에서 한 번만 도와드리면 돼요.
+            </Step>
+          </ol>
+          <div className="mt-5">
+            <a
+              href="/download"
+              onClick={() =>
+                logAnalyticsEvent("app_download_click", {
+                  store: "auto",
+                  source: "for_children_howto",
+                })
+              }
+              className="inline-flex items-center gap-1.5 px-6 py-3 rounded-full text-sm font-semibold transition-transform hover:scale-105"
+              style={{ backgroundColor: TITA.forest, color: "white" }}
+            >
+              엄마 폰에 보내기 <ArrowRight className="w-4 h-4" />
+            </a>
+          </div>
+        </Section>
 
-          <div className="space-y-3">
+        {/* ── 6. FAQ ─────────────────────────────────────────────── */}
+        <Section tag="자녀분이 자주 묻는 질문" title="궁금한 점">
+          <div className="space-y-2.5 mt-1">
             <FAQ
               q="비용이 드나요?"
-              a="가입·친구 매칭·모임·채팅은 모두 무료입니다. 광고도 없습니다. 티타 플러스(월 19,900원, 30일 무료 체험)는 메시지를 한도 없이 쓰고 AI 맞춤 매칭 인사이트를 더 깊이 볼 수 있는 회원 기능입니다."
+              a="가입·친구 매칭·모임·채팅은 모두 무료예요. 광고도 없고요. 티타 플러스(월 19,900원, 30일 무료 체험)는 메시지를 한도 없이 쓰고 매칭 인사이트를 더 깊이 보는 선택 기능이에요."
             />
             <FAQ
-              q="부모님이 디지털을 어려워하시는데..."
-              a="부모님의 시각·운동 능력에 맞춰 화면이 자동 조정됩니다. 글자 크기, 버튼 간격이 사용자에 맞게 변합니다. 음성으로도 인사를 보내실 수 있어요."
+              q="엄마가 디지털을 어려워하시는데…"
+              a="엄마의 시력·손떨림에 맞춰 화면이 자동으로 조정돼요. 글자 크기·버튼 간격이 사용자에 맞게 변하고, 음성으로도 인사를 보낼 수 있어요."
             />
             <FAQ
               q="자녀도 가입해야 하나요?"
-              a="아니요. 자녀는 가입하지 않습니다. 부모님이 가족 연결 초대 코드를 만들어 보내시면, 자녀분은 본인인증 한 번으로 위험 알림과 주간 요약만 받아보실 수 있습니다."
+              a="아니요. 티타는 엄마가 직접 쓰는 앱이에요. 자녀는 가입하지 않아도 되고, 안전장치는 앱 안에 모두 내장돼 있어요."
             />
             <FAQ
-              q="자녀가 부모님 채팅을 볼 수 있나요?"
-              a="아니요. 부모님 프라이버시는 보호됩니다. 자녀에게는 '안부 전화 어떠세요' 같은 일반적 알림만 갑니다. 메시지 내용·위험 점수·구체적 사유는 노출되지 않습니다."
+              q="자녀가 엄마 대화를 볼 수 있나요?"
+              a="아니요. 엄마의 대화는 엄마만의 것이에요. 프라이버시는 철저히 보호돼요."
             />
             <FAQ
               q="누가 만들었나요?"
               a={
                 <>
-                  주식회사 이프이프 (EFFEFF Co., Ltd.) · 사업자번호 466-81-04205. 대표 유한결이 3년간 직접 개발했습니다.
-                  관련 기술은 14개 청구항 특허 출원 완료 (PA260003).
-                  더 자세한 정보는 <Link href="/" className="underline" style={{ color: BRAND.navy }}>홈페이지</Link>에서 확인하실 수 있습니다.
+                  주식회사 이프이프(EFFEFF Co., Ltd.) · 사업자번호 466-81-04205.
+                  대표 유한결이 3년간 직접 개발했어요. 관련 기술은 14개 청구항 특허
+                  출원 완료(PA260003).{" "}
+                  <Link href="/" className="underline" style={{ color: TITA.forest }}>
+                    홈페이지
+                  </Link>
+                  에서 더 볼 수 있어요.
                 </>
               }
             />
           </div>
-        </div>
-      </section>
+        </Section>
+      </main>
 
-      {/* ── Final CTA ───────────────────────────────────────────────────── */}
-      <section
-        className="py-16"
-        style={{ background: BRAND.navy }}
-      >
-        <div className="mx-auto max-w-2xl px-4 sm:px-6 text-center text-white space-y-5">
-          <CheckCircle2 className="h-10 w-10 mx-auto" />
-          <h2 className="text-2xl sm:text-3xl font-bold leading-tight">
-            한 마디가 가장 큰 응원입니다
-          </h2>
-          <p className="text-base sm:text-lg opacity-90 leading-relaxed">
-            {"\"엄마, 한번 봐봤는데 안전하더라."}
+      {/* ── 7. Final CTA — 딥그린 ──────────────────────────────── */}
+      <section className="text-center mt-4" style={{ backgroundColor: TITA.forest }}>
+        <div className="max-w-2xl mx-auto px-5 sm:px-6 py-16">
+          <h2
+            className="text-2xl sm:text-3xl font-extrabold leading-tight mb-4"
+            style={{ color: TITA.cream, letterSpacing: "-0.02em" }}
+          >
+            {'"엄마, 이거 안전하대.'}
             <br />
-            {"해보고 싶으면 해.\""}
+            {'친구 사귀는 거야."'}
+          </h2>
+          <p className="text-base leading-relaxed mb-8" style={{ color: TITA.sage }}>
+            딸의 한마디가, 엄마의 새 친구로 이어져요.
           </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4">
-            <Link
-              href="/download"
-              className="inline-flex items-center justify-center gap-2 rounded-full px-7 py-3 text-base font-bold bg-white"
-              style={{ color: BRAND.navy }}
-            >
-              부모님 폰에 설치하기
-              <ArrowRight className="h-5 w-5" />
-            </Link>
+          <div className="flex flex-col items-center gap-4">
             <a
-              href="mailto:ceo@effeffcorp.com?subject=티타 자녀 문의"
-              className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-white px-7 py-3 text-base font-bold text-white"
+              href="/download"
+              onClick={() =>
+                logAnalyticsEvent("app_download_click", {
+                  store: "auto",
+                  source: "for_children_cta",
+                })
+              }
+              className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full text-sm font-semibold transition-transform hover:scale-105 w-full sm:w-auto"
+              style={{ backgroundColor: TITA.cream, color: TITA.forest }}
             >
-              <Mail className="h-5 w-5" />
-              궁금한 점 문의
+              <Smartphone className="w-4 h-4" />
+              엄마 폰에 보내기
             </a>
+            <Link
+              href="/support"
+              className="inline-flex items-center gap-1.5 px-6 py-2.5 rounded-full text-[13px] font-semibold transition-colors hover:opacity-80"
+              style={{ color: TITA.cream, border: "1px solid rgba(251, 247, 240, 0.5)" }}
+            >
+              궁금한 점 문의하기 <span aria-hidden>→</span>
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* ── Footer ──────────────────────────────────────────────────────── */}
-      <footer
-        className="border-t py-8 text-center text-xs"
-        style={{
-          background: "white",
-          borderColor: "rgba(15,26,53,0.08)",
-          color: BRAND.muted,
-        }}
-      >
-        © 2026 EFFEFF Co., Ltd · 사업자번호 466-81-04205 ·{" "}
-        <a
-          href="mailto:ceo@effeffcorp.com"
-          className="underline hover:no-underline"
-        >
-          ceo@effeffcorp.com
-        </a>{" "}
-        ·{" "}
-        <Link href="/privacy" className="underline hover:no-underline">
-          개인정보처리방침
-        </Link>{" "}
-        ·{" "}
-        <Link href="/terms" className="underline hover:no-underline">
-          이용약관
-        </Link>
-      </footer>
+      <TitaFooter />
     </div>
   );
 }
 
-// ── Subcomponents ────────────────────────────────────────────────────────
+/* ── Subcomponents ─────────────────────────────────────────────────────── */
 
-function DesignChoice({
-  ok,
+function Section({
+  icon: Icon,
+  tag,
   title,
-  items,
+  children,
 }: {
-  ok: boolean;
+  icon?: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
+  tag: string;
   title: string;
-  items: string[];
+  children: React.ReactNode;
 }) {
   return (
+    <section className="py-12 border-t" style={{ borderColor: TITA.sage }}>
+      <div className="flex items-center gap-2 mb-2.5">
+        {Icon && <Icon className="w-4 h-4" style={{ color: TITA.forest }} />}
+        <span
+          className="text-xs font-semibold tracking-wide"
+          style={{ color: TITA.forest }}
+        >
+          {tag}
+        </span>
+      </div>
+      <h2
+        className="text-xl sm:text-2xl font-bold mb-4 leading-snug"
+        style={{ color: TITA.ink, letterSpacing: "-0.015em" }}
+      >
+        {title}
+      </h2>
+      <div className="text-sm leading-relaxed" style={{ color: TITA.muted }}>
+        {children}
+      </div>
+    </section>
+  );
+}
+
+function CompareCard({ ok, items }: { ok: boolean; items: string[] }) {
+  return (
     <div
-      className="rounded-2xl p-5 border-2"
+      className="rounded-xl p-4"
       style={{
-        background: ok ? `${BRAND.success}08` : `${BRAND.danger}06`,
-        borderColor: ok ? `${BRAND.success}40` : `${BRAND.danger}30`,
+        backgroundColor: ok ? TITA.surface : TITA.white,
+        border: `1px solid ${ok ? TITA.forest : TITA.sage}`,
       }}
     >
       <p
-        className="text-sm font-bold mb-3 uppercase tracking-wider"
-        style={{ color: ok ? BRAND.success : BRAND.danger }}
+        className="text-xs font-extrabold mb-2.5 tracking-wide"
+        style={{ color: ok ? TITA.forest : TITA.mutedSoft }}
       >
         {ok ? "✓ 티타" : "✗ 일반 SNS"}
       </p>
-      <p className="text-base font-bold mb-3" style={{ color: BRAND.ink }}>
-        {title}
-      </p>
-      <ul className="space-y-1.5 text-sm" style={{ color: BRAND.muted }}>
+      <ul className="space-y-1.5 text-sm" style={{ color: ok ? TITA.ink : TITA.muted }}>
         {items.map((item) => (
-          <li key={item}>• {item}</li>
+          <li key={item}>· {item}</li>
         ))}
       </ul>
     </div>
@@ -407,24 +395,50 @@ function SafetyLayer({
 }) {
   return (
     <li
-      className="rounded-xl bg-white p-5 sm:p-6 border flex items-start gap-4"
-      style={{ borderColor: "rgba(15,26,53,0.08)" }}
+      className="rounded-xl p-4 flex items-start gap-3.5"
+      style={{ backgroundColor: TITA.white, border: `1px solid ${TITA.sage}` }}
     >
       <div
-        className="flex h-10 w-10 items-center justify-center rounded-lg flex-shrink-0"
-        style={{ background: `${BRAND.navy}12` }}
+        className="flex h-9 w-9 items-center justify-center rounded-lg flex-shrink-0"
+        style={{ backgroundColor: TITA.surface }}
       >
-        <Icon className="h-5 w-5" style={{ color: BRAND.navy }} />
+        <Icon className="h-4 w-4" style={{ color: TITA.forest }} />
       </div>
       <div>
-        <p className="text-base font-bold mb-1" style={{ color: BRAND.ink }}>
+        <p className="text-[15px] font-bold mb-0.5" style={{ color: TITA.ink }}>
           {title}
         </p>
-        <p
-          className="text-sm leading-relaxed"
-          style={{ color: BRAND.muted }}
-        >
+        <p className="text-sm leading-relaxed" style={{ color: TITA.muted }}>
           {body}
+        </p>
+      </div>
+    </li>
+  );
+}
+
+function Step({
+  n,
+  title,
+  children,
+}: {
+  n: string;
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <li className="flex items-start gap-3">
+      <span
+        className="inline-flex w-7 h-7 items-center justify-center rounded-full text-xs font-bold flex-shrink-0 mt-0.5"
+        style={{ backgroundColor: TITA.forest, color: "white" }}
+      >
+        {n}
+      </span>
+      <div className="flex-1">
+        <p className="font-semibold mb-0.5" style={{ color: TITA.ink }}>
+          {title}
+        </p>
+        <p className="text-sm" style={{ color: TITA.muted }}>
+          {children}
         </p>
       </div>
     </li>
@@ -434,23 +448,20 @@ function SafetyLayer({
 function FAQ({ q, a }: { q: string; a: React.ReactNode }) {
   return (
     <details
-      className="rounded-xl bg-white p-4 sm:p-5 border group"
-      style={{ borderColor: "rgba(15,26,53,0.08)" }}
+      className="rounded-xl p-4 group"
+      style={{ backgroundColor: TITA.white, border: `1px solid ${TITA.sage}` }}
     >
       <summary
-        className="text-base font-bold cursor-pointer list-none flex items-center justify-between"
-        style={{ color: BRAND.ink }}
+        className="text-[15px] font-bold cursor-pointer list-none flex items-center justify-between"
+        style={{ color: TITA.ink }}
       >
         <span>{q}</span>
-        <Phone
+        <ChevronRight
           className="h-4 w-4 group-open:rotate-90 transition-transform flex-shrink-0 ml-3"
-          style={{ color: BRAND.muted }}
+          style={{ color: TITA.muted }}
         />
       </summary>
-      <p
-        className="text-sm leading-relaxed mt-3"
-        style={{ color: BRAND.muted }}
-      >
+      <p className="text-sm leading-relaxed mt-3" style={{ color: TITA.muted }}>
         {a}
       </p>
     </details>
