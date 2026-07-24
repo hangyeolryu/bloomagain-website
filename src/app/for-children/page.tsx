@@ -65,9 +65,9 @@ export default function ForChildrenPage() {
             className="text-3xl sm:text-5xl font-extrabold leading-tight mb-5"
             style={{ color: TITA.cream, letterSpacing: "-0.025em" }}
           >
-            엄마도 소녀,
+            엄마 안엔 소녀의 마음,
             <br />
-            아빠도 소년이에요.
+            아빠 안엔 소년의 마음.
           </h1>
           <p
             className="text-base sm:text-lg leading-relaxed mb-8"
@@ -163,6 +163,19 @@ export default function ForChildrenPage() {
                 "기본은 '친구만'",
               ]}
             />
+          </div>
+          <div
+            className="rounded-xl p-4 mt-5"
+            style={{ backgroundColor: TITA.surface, border: `1px solid ${TITA.sage}` }}
+          >
+            <p className="text-sm leading-relaxed" style={{ color: TITA.ink }}>
+              <strong>만남앱은 아니에요. 하지만—</strong>
+              <br />
+              사별·이혼으로 혼자가 되신 부모님이 새로운 인연을 바라실 수도 있죠.
+              티타는 <strong>같은 마음인 분들끼리만</strong> 이어드려요. 친구를 원하는
+              분과 인연을 원하는 분이 <strong>섞이지 않게</strong>, 언제나 본인
+              선택으로.
+            </p>
           </div>
         </Section>
 
