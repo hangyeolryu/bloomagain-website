@@ -25,6 +25,7 @@ import { trackPixel } from "@/lib/pixel";
 import { shareKakao, KAKAO_JS_KEY } from "@/lib/kakao";
 import { recordGyeolEvent } from "./gyeol-events";
 import { AppleMark, AndroidMark } from "./StoreMarks";
+import { useAgeStatus, AgeQuestion, AgeDisqualifiedNote } from "./AgeGate";
 
 type Platform = "ios" | "android" | "other";
 
@@ -91,6 +92,7 @@ export function ResultActions({
   // 인앱 브라우저 여부 + 안내 시트 표시.
   const [inApp, setInApp] = useState(false);
   const [showInAppHint, setShowInAppHint] = useState(false);
+  const ageStatus = useAgeStatus();
   useEffect(() => {
     setPlatform(detectPlatform());
     setInApp(detectInApp());
@@ -306,6 +308,14 @@ export function ResultActions({
         </p>
       </div>
 
+      {/* 나이 자기선택 게이트 — 만 45+ 전용. 미답이면 게이트, 45 미만이면
+          '공유로 유도' 뷰(다운로드 숨김), 45+면 아래 다운로드 블록. 공유
+          섹션은 상태와 무관하게 항상 노출(45 미만도 확산은 살린다). */}
+      {ageStatus === "pending" && <AgeQuestion code={code} />}
+      {ageStatus === "disqualified" && <AgeDisqualifiedNote />}
+
+      {ageStatus === "qualified" && (
+      <>
       {/* 인앱 브라우저(인스타·카톡 등) 상시 경고 — 탭 전에 미리 보여준다.
           유입의 ~90%가 인스타/스레드/페북 인앱이고, 여기선 스토어 핸드오프가
           깨져 "다운클릭했는데 설치 안 됨" 누수가 가장 크다. 눌러야 뜨는 시트
@@ -432,6 +442,8 @@ export function ResultActions({
       >
         무료로 시작 · NICE 본인인증으로 안전하게
       </p>
+      </>
+      )}
 
       {/* 2차 — 공유. 카카오 키가 있으면 카카오톡 버튼(45+ 최강 채널)을
           먼저, 없으면 일반 공유만. */}

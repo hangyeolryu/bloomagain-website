@@ -21,6 +21,7 @@ import { logAnalyticsEvent } from "@/lib/firebase";
 import { trackPixel } from "@/lib/pixel";
 import { recordGyeolEvent } from "../gyeol-events";
 import { AppleMark, AndroidMark } from "../StoreMarks";
+import { useAgeStatus, AgeQuestion } from "../AgeGate";
 
 type Platform = "ios" | "android" | "other";
 
@@ -48,6 +49,7 @@ export function TopDownloadCTA({
   const [comfort, setComfort] = useState<string | null>(null);
   const [gender, setGender] = useState<string | null>(null);
   const [platform, setPlatform] = useState<Platform>("other");
+  const ageStatus = useAgeStatus();
 
   useEffect(() => {
     setPlatform(detectPlatform());
@@ -61,6 +63,11 @@ export function TopDownloadCTA({
   }, []);
 
   if (!taken) return null;
+
+  // 나이 자기선택 전이면 다운로드 대신 게이트를 peak 자리에 띄운다. 45 미만이면
+  // 여기선 아무것도 안 보이고, 아래 ResultActions가 '공유로 유도' 뷰를 맡는다.
+  if (ageStatus === "disqualified") return null;
+  if (ageStatus === "pending") return <AgeQuestion code={code} />;
 
   function download(store: "ios" | "android") {
     logAnalyticsEvent("app_download_click", {
