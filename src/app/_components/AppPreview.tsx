@@ -41,8 +41,10 @@ const STYLE = `.tap-root{--forest:#1F4E3D; --forest-deep:#143329; --forest-mid:#
 .tap-root /* 결Q */
   .kq-label{font-size:12px;font-weight:800;letter-spacing:.02em;color:var(--gold)}
 .tap-root .kq-q{margin-top:6px;font-size:19px;font-weight:800;line-height:1.32;letter-spacing:-.02em;color:var(--ink)}
-.tap-root .qchips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
-.tap-root .qchip{font-size:14.5px;font-weight:700;color:var(--forest);background:var(--tint);border:1px solid var(--tint-line);padding:9px 15px;border-radius:999px}
+.tap-root .kq-opts{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.tap-root .opt{display:flex;align-items:center;gap:12px;padding:15px 16px;border-radius:16px;background:#F5F8F4;border:1px solid #E1EADF}
+.tap-root .opt .radio{width:20px;height:20px;border-radius:999px;border:1.8px solid #B6CDB4;flex:none}
+.tap-root .opt span{font-size:15.5px;font-weight:600;color:var(--ink);line-height:1.35}
 .tap-root .foot{margin-top:13px;font-size:12px;font-weight:500;color:var(--muted)}
 .tap-root /* 티타임 (세이지 카드) */
   .tt{background:var(--tint);border:1px solid var(--tint-line);border-radius:22px;padding:18px;margin-bottom:14px}
@@ -50,7 +52,7 @@ const STYLE = `.tap-root{--forest:#1F4E3D; --forest-deep:#143329; --forest-mid:#
 .tap-root .tt-title{margin-top:5px;font-size:19px;font-weight:800;letter-spacing:-.02em;color:var(--ink)}
 .tap-root .tt-sub{margin-top:8px;font-size:13.5px;line-height:1.55;color:var(--muted)}
 .tap-root .tt-btn{width:100%;margin-top:16px;padding:15px;border-radius:16px;border:none;background:var(--forest);color:var(--cream);
-    font-family:var(--font);font-size:16px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px}
+    font-family:var(--font);font-size:16px;font-weight:800;white-space:nowrap;display:flex;align-items:center;justify-content:center;gap:8px}
 .tap-root /* 사람 카드 */
   .sec-h{font-size:18px;font-weight:800;letter-spacing:-.02em;color:var(--ink);margin:6px 2px 12px}
 .tap-root .person .p-top{display:flex;gap:12px;align-items:flex-start}
@@ -134,13 +136,12 @@ const MARKUP = `<div class="rack">
 
             <div class="card">
               <div class="kq-label">오늘의 결Q</div>
-              <div class="kq-q">친구 만날 때<br>더 끌리는 장소는?</div>
-              <div class="qchips">
-                <span class="qchip">조용한 찻집</span>
-                <span class="qchip">활기찬 골목</span>
-                <span class="qchip">바깥 자연</span>
+              <div class="kq-q">물건이나 관계나, 나는?</div>
+              <div class="kq-opts">
+                <div class="opt"><span class="radio"></span><span>정리하고 단순하게</span></div>
+                <div class="opt"><span class="radio"></span><span>두루 품고 가는 편</span></div>
               </div>
-              <div class="foot">탭해서 바로 답해요 · 답할수록 결친구를 더 잘 찾아드려요</div>
+              <div class="foot">답할수록 결친구를 더 잘 찾아드려요</div>
             </div>
 
             <div class="tt">
@@ -156,10 +157,10 @@ const MARKUP = `<div class="rack">
             <div class="sec-h">이런 분들이 계세요</div>
             <div class="card person">
               <div class="p-top">
-                <div class="avatar">이</div>
+                <div class="avatar">황</div>
                 <div class="p-mid">
-                  <div class="p-name">이경미<span>55세 · 서울 마포구</span></div>
-                  <div class="p-desc">애들 다 크고 나니,<br>정작 내 얘기 나눌 친구가 없더라고요.</div>
+                  <div class="p-name">황정희<span>(59세 | 울산)</span></div>
+                  <div class="p-desc">인생 중반을 살았는데,<br>애들도 다 커서 멀리 있다 보니…</div>
                 </div>
                 <button class="wave">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V7a1.6 1.6 0 0 0-3.2 0M14.8 10V5a1.6 1.6 0 0 0-3.2 0v5M11.6 10.5V6.5a1.6 1.6 0 0 0-3.2 0V13"/><path d="M18 8.5a1.6 1.6 0 0 1 3.2 0c0 3-1 7.5-4.5 9.3-1.3.7-3 .9-4.3.9a6 6 0 0 1-6-5.2l-.4-2a1.6 1.6 0 0 1 2.9-1.3l1 1.6"/></svg>
