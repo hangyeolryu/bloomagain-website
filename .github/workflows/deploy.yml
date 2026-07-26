@@ -1,0 +1,99 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Firebase Hosting 자동 배포 (main 푸시 시)
+#
+# 이 사이트는 Next.js 정적 export(next.config.js의 output:'export')다.
+# 빌드가 out/ 디렉터리에 순수 정적 파일을 만들고, Firebase Hosting이 그대로
+# 서빙한다(firebase.json의 hosting.public = "out", 프로젝트 dasi-bom).
+# → 서버 런타임/Cloud Run이 없으므로 배포가 단순하다.
+#
+# 모든 앱 설정은 NEXT_PUBLIC_* 로 빌드 시점에 번들된다(클라이언트 노출값).
+# 따라서 빌드 전에 .env.production을 Secrets로 채워 준다.
+#
+# ── 필요한 GitHub Secrets (Settings → Secrets and variables → Actions) ────────
+#   인증
+#     FIREBASE_SERVICE_ACCOUNT              서비스계정 키 JSON 전체 (아래 IAM 참고)
+#   Firebase 앱 설정 (필수 — 없으면 firebase.ts 초기화 실패)
+#     NEXT_PUBLIC_FIREBASE_API_KEY
+#     NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+#     NEXT_PUBLIC_FIREBASE_PROJECT_ID
+#     NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
+#     NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+#     NEXT_PUBLIC_FIREBASE_APP_ID
+#     NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID   (선택)
+#     NEXT_PUBLIC_FIREBASE_VAPID_KEY        (선택 — 웹푸시)
+#   기능별 (선택 — 없으면 해당 기능만 비활성, 빌드는 됨)
+#     NEXT_PUBLIC_BLOOMAGAIN_BACKEND_URL    (티타임/결테스트 API)
+#     NEXT_PUBLIC_TOSS_CLIENT_KEY           (구독 결제)
+#     NEXT_PUBLIC_KAKAO_JS_KEY              (카카오 공유)
+#     NEXT_PUBLIC_META_PIXEL_ID             (광고 픽셀)
+#     NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION  (Search Console)
+#     NEXT_PUBLIC_NAVER_SITE_VERIFICATION   (네이버 서치어드바이저)
+#     NEXT_PUBLIC_JP_WAITLIST_ENDPOINT      (일본 웨이트리스트)
+#
+# ── 서비스계정 IAM 역할 (dasi-bom 프로젝트) ──────────────────────────────────
+#   정적 호스팅만 배포하므로 Firebase Hosting Admin 하나면 충분하다.
+#   (필요 시 Firebase Viewer 추가.) admin 레포와 달리 Cloud Run/Build 권한 불필요.
+#   키 발급: GCP Console → IAM → 서비스 계정 → 키 추가(JSON) →
+#            그 JSON 전체를 FIREBASE_SERVICE_ACCOUNT Secret에 붙여넣기.
+# ─────────────────────────────────────────────────────────────────────────────
+name: Deploy to Firebase Hosting
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+# 같은 브랜치 배포가 겹치지 않게 — 새 푸시가 오면 진행 중 배포는 취소.
+concurrency:
+  group: deploy-firebase-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Build & Deploy
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Write .env.production
+        run: |
+          cat > .env.production <<EOF
+          NEXT_PUBLIC_FIREBASE_API_KEY=${{ secrets.NEXT_PUBLIC_FIREBASE_API_KEY }}
+          NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=${{ secrets.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN }}
+          NEXT_PUBLIC_FIREBASE_PROJECT_ID=${{ secrets.NEXT_PUBLIC_FIREBASE_PROJECT_ID }}
+          NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=${{ secrets.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET }}
+          NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=${{ secrets.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID }}
+          NEXT_PUBLIC_FIREBASE_APP_ID=${{ secrets.NEXT_PUBLIC_FIREBASE_APP_ID }}
+          NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=${{ secrets.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID }}
+          NEXT_PUBLIC_FIREBASE_VAPID_KEY=${{ secrets.NEXT_PUBLIC_FIREBASE_VAPID_KEY }}
+          NEXT_PUBLIC_BLOOMAGAIN_BACKEND_URL=${{ secrets.NEXT_PUBLIC_BLOOMAGAIN_BACKEND_URL }}
+          NEXT_PUBLIC_TOSS_CLIENT_KEY=${{ secrets.NEXT_PUBLIC_TOSS_CLIENT_KEY }}
+          NEXT_PUBLIC_KAKAO_JS_KEY=${{ secrets.NEXT_PUBLIC_KAKAO_JS_KEY }}
+          NEXT_PUBLIC_META_PIXEL_ID=${{ secrets.NEXT_PUBLIC_META_PIXEL_ID }}
+          NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION=${{ secrets.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }}
+          NEXT_PUBLIC_NAVER_SITE_VERIFICATION=${{ secrets.NEXT_PUBLIC_NAVER_SITE_VERIFICATION }}
+          NEXT_PUBLIC_JP_WAITLIST_ENDPOINT=${{ secrets.NEXT_PUBLIC_JP_WAITLIST_ENDPOINT }}
+          EOF
+
+      - name: Build (static export → out/)
+        run: npm run build
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+
+      - name: Deploy to Firebase Hosting
+        run: npx --yes firebase-tools@latest deploy --only hosting --project dasi-bom --non-interactive

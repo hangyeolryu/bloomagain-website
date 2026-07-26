@@ -16,11 +16,9 @@ export function TitaHeader() {
     <header
       className="sticky top-0 z-50 border-b"
       style={{
-        // 2026-07: 딥그린으로 통일. 반투명 + blur로 스크롤 시 콘텐츠가
-        // 은은히 비치게. 하단 보더는 한 톤 더 진한 forestDeep.
-        backgroundColor: "rgba(31, 78, 61, 0.92)",
+        backgroundColor: "rgba(251, 247, 240, 0.92)",
         backdropFilter: "blur(8px)",
-        borderColor: TITA.forestDeep,
+        borderColor: TITA.sage,
         fontFamily: KOREAN_FONT_STACK,
       }}
     >
@@ -29,26 +27,41 @@ export function TitaHeader() {
           <Link href="/" className="flex items-baseline gap-2">
             <span
               className="text-xl font-bold tracking-tight"
-              style={{ color: TITA.cream }}
+              style={{ color: TITA.ink }}
             >
               티타
             </span>
-            <span className="text-xs" style={{ color: TITA.sage }}>
+            <span className="text-xs" style={{ color: TITA.muted }}>
               Tita
             </span>
           </Link>
-          <Link
-            href="/download"
-            onClick={() =>
-              logAnalyticsEvent("download_cta_click", {
-                source: "header",
-              })
-            }
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-transform hover:scale-105"
-            style={{ backgroundColor: TITA.cream, color: TITA.forest }}
-          >
-            앱 받기 <Download className="w-3 h-3" />
-          </Link>
+          <div className="flex items-center gap-3 sm:gap-4">
+            <Link
+              href="/blog"
+              className="relative inline-flex items-center gap-1 text-sm font-semibold transition-colors hover:opacity-70"
+              style={{ color: TITA.ink }}
+            >
+              블로그
+              <span
+                className="inline-flex items-center rounded-full px-1.5 py-px text-[9px] font-extrabold leading-none tracking-wide"
+                style={{ backgroundColor: TITA.camel, color: TITA.forestDeep }}
+              >
+                NEW
+              </span>
+            </Link>
+            <Link
+              href="/download"
+              onClick={() =>
+                logAnalyticsEvent("download_cta_click", {
+                  source: "header",
+                })
+              }
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-transform hover:scale-105"
+              style={{ backgroundColor: TITA.forest, color: "white" }}
+            >
+              앱 받기 <Download className="w-3 h-3" />
+            </Link>
+          </div>
         </div>
       </nav>
     </header>
