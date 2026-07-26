@@ -162,47 +162,79 @@ export function AgeQuestion({ code }: { code?: string }) {
   );
 }
 
-/// 45 미만 선택 시 — 부드럽게 돌려보내고 '공유'로 유도(확산은 살린다).
-export function AgeDisqualifiedNote() {
+/// 45 미만 선택 시 — 다운로드 대신 '45세 이상 친구에게 추천'을 히어로로. 못 쓰는
+/// 사람을 그냥 돌려보내지 않고, 딱 맞는 또래(부모님·이모·삼촌·선배)에게 퍼뜨리는
+/// 리퍼럴 지점으로 바꾼다. onShare가 있으면 카카오(45+ 최강 채널) 강조 버튼.
+export function AgeDisqualifiedNote({
+  onShare,
+  kakao,
+}: {
+  onShare?: () => void;
+  kakao?: boolean;
+}) {
   return (
     <div
       style={{
         marginTop: 18,
-        background: TITA.surface,
-        border: `1px solid ${TITA.sage}`,
-        borderRadius: 18,
-        padding: "20px 18px",
+        background: TITA.white,
+        border: `1.5px solid ${TITA.forest}`,
+        borderRadius: 20,
+        padding: "22px 20px",
         textAlign: "center",
+        boxShadow: "0 14px 34px rgba(31,78,61,0.15)",
       }}
     >
-      <p style={{ fontSize: 30, margin: "0 0 6px" }}>🍵</p>
+      <p style={{ fontSize: 30, margin: "0 0 8px" }}>🍵</p>
       <p
         style={{
-          fontSize: 16.5,
+          fontSize: 18,
           fontWeight: 800,
-          lineHeight: 1.55,
-          letterSpacing: "-0.4px",
+          lineHeight: 1.5,
+          letterSpacing: "-0.5px",
           color: TITA.forestDeep,
           margin: "0 0 8px",
         }}
       >
-        조금만 기다려 주세요
+        티타는 <span style={{ color: TITA.forest }}>만 45세 이상</span> 전용이에요
       </p>
       <p
         style={{
           fontSize: 14.5,
           lineHeight: 1.7,
           color: TITA.ink,
-          margin: 0,
+          margin: "0 0 18px",
           fontWeight: 600,
         }}
       >
-        티타는 지금 <b>만 45세 이상</b>만 가입할 수 있어요.
+        대신, 이 결과가 딱 맞을 것 같은
         <br />
-        대신 내 결 유형은 친구에게 공유할 수 있어요 —
+        <b>만 45세 이상 가족·친구</b>가 떠오르지 않나요?
         <br />
-        아래에서 결이 맞는 친구를 찾아보세요.
+        결이 맞을지 함께 해보자고 보내보세요.
       </p>
+      {onShare && (
+        <button
+          onClick={onShare}
+          style={{
+            width: "100%",
+            fontFamily: KOREAN_FONT_STACK,
+            padding: "16px 20px",
+            fontSize: 16,
+            fontWeight: 800,
+            letterSpacing: "-0.3px",
+            color: kakao ? "#3C1E1E" : TITA.cream,
+            background: kakao ? "#FEE500" : TITA.forest,
+            border: "none",
+            borderRadius: 14,
+            cursor: "pointer",
+            boxShadow: kakao
+              ? "0 8px 20px rgba(254,229,0,0.35)"
+              : "0 8px 20px rgba(31,78,61,0.22)",
+          }}
+        >
+          {kakao ? "카카오톡으로 추천하기" : "45세 이상 친구에게 추천하기"}
+        </button>
+      )}
     </div>
   );
 }

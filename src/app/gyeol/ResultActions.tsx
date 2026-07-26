@@ -312,7 +312,12 @@ export function ResultActions({
           '공유로 유도' 뷰(다운로드 숨김), 45+면 아래 다운로드 블록. 공유
           섹션은 상태와 무관하게 항상 노출(45 미만도 확산은 살린다). */}
       {ageStatus === "pending" && <AgeQuestion code={code} />}
-      {ageStatus === "disqualified" && <AgeDisqualifiedNote />}
+      {ageStatus === "disqualified" && (
+        <AgeDisqualifiedNote
+          onShare={KAKAO_JS_KEY ? shareToKakao : share}
+          kakao={!!KAKAO_JS_KEY}
+        />
+      )}
 
       {ageStatus === "qualified" && (
       <>
@@ -446,7 +451,10 @@ export function ResultActions({
       )}
 
       {/* 2차 — 공유. 카카오 키가 있으면 카카오톡 버튼(45+ 최강 채널)을
-          먼저, 없으면 일반 공유만. */}
+          먼저, 없으면 일반 공유만. 45 미만(disqualified)은 위 게이트 카드가
+          이미 공유를 히어로로 갖고 있어 중복을 피해 숨긴다. */}
+      {ageStatus !== "disqualified" && (
+      <>
       {KAKAO_JS_KEY && (
         <button
           onClick={shareToKakao}
@@ -495,6 +503,8 @@ export function ResultActions({
           ? `「${matchName}」와 정말 맞는지, 친구와 유형을 비교해 보세요`
           : "결이 맞는 친구인지, 서로의 유형으로 비교해 보세요"}
       </p>
+      </>
+      )}
 
       {/* 3차 — 다시 하기, 작게 */}
       <div style={{ display: "flex", justifyContent: "center", marginTop: 4 }}>
