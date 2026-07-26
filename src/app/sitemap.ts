@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { ALL_ROUTE_CODES } from "./gyeol/types";
+import { getAllPosts } from "./blog/posts";
 
 // output:'export' — 정적 생성 강제(라우트 핸들러가 빌드 타임에 파일로 emit).
 export const dynamic = "force-static";
@@ -18,6 +19,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/gyeol", priority: 0.9, freq: "weekly" },
     { path: "/titatime", priority: 0.8, freq: "weekly" },
     { path: "/download", priority: 0.8, freq: "monthly" },
+    { path: "/blog", priority: 0.7, freq: "weekly" },
     { path: "/about", priority: 0.7, freq: "monthly" },
     { path: "/matching", priority: 0.7, freq: "monthly" },
     { path: "/business", priority: 0.6, freq: "monthly" },
@@ -48,5 +50,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  return [...staticEntries, ...gyeolEntries];
+  // 블로그 글 — 실제 콘텐츠. generateStaticParams와 같은 소스(getAllPosts).
+  const blogEntries: MetadataRoute.Sitemap = getAllPosts().map((post) => ({
+    url: `${BASE}/blog/${post.slug}`,
+    lastModified: new Date(post.updated ?? post.date),
+    changeFrequency: "monthly",
+    priority: 0.7,
+  }));
+
+  return [...staticEntries, ...gyeolEntries, ...blogEntries];
 }
