@@ -35,18 +35,27 @@ export function TitaHeader() {
               Tita
             </span>
           </Link>
-          <Link
-            href="/download"
-            onClick={() =>
-              logAnalyticsEvent("download_cta_click", {
-                source: "header",
-              })
-            }
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-transform hover:scale-105"
-            style={{ backgroundColor: TITA.forest, color: "white" }}
-          >
-            앱 받기 <Download className="w-3 h-3" />
-          </Link>
+          <div className="flex items-center gap-3 sm:gap-4">
+            <Link
+              href="/blog"
+              className="text-sm font-semibold transition-colors hover:opacity-70"
+              style={{ color: TITA.ink }}
+            >
+              블로그
+            </Link>
+            <Link
+              href="/download"
+              onClick={() =>
+                logAnalyticsEvent("download_cta_click", {
+                  source: "header",
+                })
+              }
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-transform hover:scale-105"
+              style={{ backgroundColor: TITA.forest, color: "white" }}
+            >
+              앱 받기 <Download className="w-3 h-3" />
+            </Link>
+          </div>
         </div>
       </nav>
     </header>
