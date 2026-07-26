@@ -38,10 +38,16 @@ export function TitaHeader() {
           <div className="flex items-center gap-3 sm:gap-4">
             <Link
               href="/blog"
-              className="text-sm font-semibold transition-colors hover:opacity-70"
+              className="relative inline-flex items-center gap-1 text-sm font-semibold transition-colors hover:opacity-70"
               style={{ color: TITA.ink }}
             >
               블로그
+              <span
+                className="inline-flex items-center rounded-full px-1.5 py-px text-[9px] font-extrabold leading-none tracking-wide"
+                style={{ backgroundColor: TITA.camel, color: TITA.forestDeep }}
+              >
+                NEW
+              </span>
             </Link>
             <Link
               href="/download"
