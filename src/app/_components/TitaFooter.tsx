@@ -39,6 +39,14 @@ export function TitaFooter() {
         </Link>
         {" · "}
         <Link
+          href="/blog"
+          className="hover:underline"
+          style={{ color: TITA.forest }}
+        >
+          블로그
+        </Link>
+        {" · "}
+        <Link
           href="/privacy"
           className="hover:underline"
           style={{ color: TITA.forest }}
