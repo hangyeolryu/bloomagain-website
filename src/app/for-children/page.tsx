@@ -145,7 +145,7 @@ export default function ForChildrenPage() {
         <Section icon={Heart} tag="딸이 가장 먼저 걱정하는 것" title="만남앱이 아니에요">
           <p className="mb-5" style={{ color: TITA.muted }}>
             제일 먼저 드는 걱정이죠. 티타는{" "}
-            <strong style={{ color: TITA.ink }}>친구·모임 중심으로 설계된 앱</strong>
+            <strong style={{ color: TITA.ink }}>45세 이상, 검증된 또래끼리 친구가 되는 앱</strong>
             이에요. 가입하면 기본이{" "}
             <strong style={{ color: TITA.ink }}>{"'친구만 원해요'"}</strong>로 시작해요.
           </p>

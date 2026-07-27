@@ -34,7 +34,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://tita-app.com"),
   title: "티타 (Tita) — 결이 맞는 친구",
   description:
-    "오후 한 잔의 안심 티타임. 본인인증·AI 안전망으로 보호받는 결친구 매칭. 툭 던져도 착 받아주는 우리의 티키타카.",
+    "45세 이상, 검증된 또래끼리 친구가 되는 앱. 매일 질문으로 결이 맞는 또래를 찾아, 찻자리부터 가볍게. 본인인증·AI 안전망으로 안심.",
   // Icon stack — modern browsers prefer SVG; older / OS-native surfaces fall
   // back to fixed-size PNG. iOS home-screen uses the 180×180 apple-touch icon.
   icons: {
@@ -53,7 +53,7 @@ export const metadata: Metadata = {
     // images 미지정 — Next가 src/app/opengraph-image.tsx를 1200×630 OG로 자동 사용.
     title: "티타 — 오후 한 잔의 안심 티타임",
     description:
-      "결이 통하는 친구들, 천천히. 본인인증·AI 안전망으로 보호받는 친구 매칭.",
+      "45세 이상, 검증된 또래끼리 친구가 되는 앱. 결이 맞는 또래를 찾아, 찻자리부터 가볍게.",
     siteName: "티타",
     locale: "ko_KR",
     type: "website",
@@ -62,7 +62,7 @@ export const metadata: Metadata = {
     // 큰 가로 카드. 이미지는 opengraph-image.tsx를 공유.
     card: "summary_large_image",
     title: "티타 (Tita) — 결이 맞는 친구",
-    description: "오후 한 잔의 안심 티타임. 데이팅 앱이 아닙니다.",
+    description: "45세 이상, 검증된 또래끼리 친구가 되는 앱. 데이팅 앱이 아니에요.",
   },
   // 검색엔진 사이트 소유확인.
   //  · 네이버: searchadvisor.naver.com에서 사이트 등록 시 주는 코드를

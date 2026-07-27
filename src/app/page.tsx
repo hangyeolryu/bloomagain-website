@@ -73,9 +73,9 @@ export default function Home() {
             className="text-base sm:text-lg leading-relaxed mb-8"
             style={{ color: TITA.sage }}
           >
-            본인인증·AI 안전망으로 보호받는
+            45세 이상, 검증된 또래끼리 친구가 되는 앱.
             <br />
-            45세 이상, 결이 맞는 친구 매칭.
+            본인인증·AI 안전망으로 지켜드려요.
           </p>
           <div className="flex flex-col items-center gap-4">
             <a

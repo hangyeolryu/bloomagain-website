@@ -211,7 +211,7 @@ export default function BusinessPage() {
               className="text-lg lg:text-xl leading-relaxed mt-6 max-w-2xl"
               style={{ color: BRAND.sage }}
             >
-              검증된 또래 매칭으로 어르신의 고립을 줄이고, 매일에 설렘을 더합니다.
+              티타는 45세 이상, 검증된 또래끼리 친구가 되는 앱이에요. 어르신의 고립을 줄이고, 매일에 설렘을 더합니다.
               금융권 수준의 안전 인프라와 운영 대시보드까지 — 재단·복지관·실버타운·
               보험사·통신사를 위한 티타 단체 라이선스.
             </p>

@@ -297,7 +297,7 @@ export function AppPreview() {
           앱은 이렇게 생겼어요
         </h2>
         <p className="text-sm sm:text-base mb-2" style={{ color: TITA.muted }}>
-          매일 한 질문으로 결을 쌓고 · 낮에 가볍게 만나고 · 결이 맞는 또래를 만나요.
+          질문에 답하며 결을 쌓고 · 낮에 가볍게 만나고 · 결이 맞는 또래를 만나요.
         </p>
       </div>
       <style dangerouslySetInnerHTML={{ __html: STYLE }} />
