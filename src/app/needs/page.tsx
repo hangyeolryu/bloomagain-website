@@ -173,7 +173,7 @@ const WORRY_LINES: Record<string, string> = {
 
 const SITUATION_LINES: Record<string, string> = {
   empty_nest:
-    "자녀를 떠나보내고 조용해진 집 — 비슷한 시간을 보내는 또래들이 티타에서 서로의 하루를 나누고 있어요.",
+    "자녀가 독립해 조용해진 집 — 비슷한 시간을 보내는 또래들이 티타에서 서로의 하루를 나누고 있어요.",
   spouse_diff:
     "몇십 년을 함께해도 결이 다를 수 있죠. 내 결이 맞는 친구는 따로 있어요 — 티타가 찾아드려요.",
   divorce: "새로 시작하는 비슷한 길의 또래들이 티타에 있어요.",
