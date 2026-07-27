@@ -61,6 +61,7 @@ const QUESTIONS: Q[] = [
     sub: "비슷한 길을 걷는 분들을 찾아드리려고 여쭤봐요",
     options: [
       { value: "empty_nest", label: "자녀가 독립해서 집이 조용해졌어요" },
+      { value: "spouse_diff", label: "배우자와는 취미·성향이 달라요" },
       { value: "divorce", label: "이혼 후 새로 시작하고 있어요" },
       { value: "bereave", label: "배우자와 사별했어요" },
       { value: "retire", label: "은퇴하거나 일을 쉬게 됐어요" },
@@ -106,17 +107,37 @@ const QUESTIONS: Q[] = [
     ],
   },
   {
+    key: "gender",
+    title: "성별이 어떻게 되세요?",
+    sub: "모임 구성(동성끼리가 기본)에 참고해요",
+    options: [
+      { value: "f", label: "여성" },
+      { value: "m", label: "남성" },
+      { value: "na", label: "말하지 않을래요" },
+    ],
+  },
+  {
     key: "ageBand",
     title: "연령대가 어떻게 되세요?",
     sub: "딱 맞는 또래를 찾아드리려고요",
     options: [
-      { value: "45-54", label: "45–54세" },
-      { value: "55-64", label: "55–64세" },
+      { value: "45-49", label: "45–49세" },
+      { value: "50-54", label: "50–54세" },
+      { value: "55-59", label: "55–59세" },
+      { value: "60-64", label: "60–64세" },
       { value: "65plus", label: "65세 이상" },
       { value: "under45", label: "만 45세 미만" },
     ],
   },
 ];
+
+// 결큐와 공유하는 나이 게이트 키는 굵은 밴드만 안다 — 세분 밴드를 접어서 저장.
+const COARSE_AGE: Record<string, string> = {
+  "45-49": "45-54",
+  "50-54": "45-54",
+  "55-59": "55-64",
+  "60-64": "55-64",
+};
 
 // ── 결과 콘텐츠 ──────────────────────────────────────────────────────────────
 const RESULTS: Record<string, { emoji: string; head: string; body: string }> = {
@@ -153,6 +174,8 @@ const WORRY_LINES: Record<string, string> = {
 const SITUATION_LINES: Record<string, string> = {
   empty_nest:
     "자녀를 떠나보내고 조용해진 집 — 비슷한 시간을 보내는 또래들이 티타에서 서로의 하루를 나누고 있어요.",
+  spouse_diff:
+    "몇십 년을 함께해도 결이 다를 수 있죠. 내 결이 맞는 친구는 따로 있어요 — 티타가 찾아드려요.",
   divorce: "새로 시작하는 비슷한 길의 또래들이 티타에 있어요.",
   bereave:
     "비슷한 시간을 지나온 분들이 티타에서 서로에게 조용한 곁이 되고 있어요.",
@@ -211,7 +234,12 @@ export default function NeedsSurveyPage() {
     );
     // 결큐와 같은 나이 게이트 키를 공유 — 이후 /gyeol에 가도 다시 안 묻는다.
     try {
-      if (next.ageBand) window.sessionStorage.setItem("tita_gyeol_age", next.ageBand);
+      if (next.ageBand) {
+        window.sessionStorage.setItem(
+          "tita_gyeol_age",
+          COARSE_AGE[next.ageBand] ?? next.ageBand,
+        );
+      }
     } catch {
       /* ignore */
     }
@@ -304,8 +332,8 @@ export default function NeedsSurveyPage() {
   // ── 인트로 (WHY 먼저 — 제품 언급 없음) ────────────────────────────────────
   if (!started && !done) {
     return (
-      <main style={page}>
-        <div style={{ ...inner, textAlign: "center", paddingTop: 72 }}>
+      <main style={{ ...page, paddingBottom: 0, position: "relative", overflow: "hidden" }}>
+        <div style={{ ...inner, textAlign: "center", paddingTop: 56, position: "relative", zIndex: 1 }}>
           <p style={{ fontSize: 15, fontWeight: 700, color: TITA.sage, margin: "0 0 14px" }}>
             가입 없이 1분
           </p>
@@ -331,7 +359,7 @@ export default function NeedsSurveyPage() {
               margin: "0 0 36px",
             }}
           >
-            자녀 독립, 은퇴, 혼자가 된 시간 —
+            자녀 독립, 은퇴, 부쩍 많아진 나만의 시간 —
             <br />
             삶이 바뀌면, 필요한 것도 바뀝니다.
             <br />
@@ -341,9 +369,30 @@ export default function NeedsSurveyPage() {
             1분, 알아보기
           </button>
           <p style={{ fontSize: 13, color: "rgba(251,247,240,0.6)", marginTop: 14 }}>
-            질문 7개 · 이름·연락처 안 물어요
+            질문 8개 · 이름·연락처 안 물어요
           </p>
         </div>
+        {/* 하단 배경 — 딥그린과 한 몸인 50대 여성 컷아웃 (webp, 투명배경).
+            absolute 바닥 고정이라 어떤 화면에서도 하단에 보이고, 콘텐츠(z:1)가
+            위 레이어라 짧은 화면에선 자연스럽게 버튼 뒤로 깔린다. */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/needs/woman50.webp"
+          alt=""
+          aria-hidden
+          style={{
+            position: "absolute",
+            bottom: 0,
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: "auto",
+            maxWidth: "min(78%, 380px)",
+            maxHeight: "46vh",
+            zIndex: 0,
+            pointerEvents: "none",
+            userSelect: "none",
+          }}
+        />
       </main>
     );
   }
@@ -584,9 +633,10 @@ export default function NeedsSurveyPage() {
             </button>
           ))}
 
-          {/* "또는, 직접 쓸게요" — 보기 밖의 진짜 수요를 받는다 (연령대 제외).
+          {/* "또는, 직접 쓸게요" — 보기 밖의 진짜 수요를 받는다 (연령·성별 제외).
               원문은 익명으로 저장돼 어드민에서 열람 → 다음 보기·모임 기획의 재료. */}
           {q.key !== "ageBand" &&
+            q.key !== "gender" &&
             (customOpen ? (
               <div
                 style={{

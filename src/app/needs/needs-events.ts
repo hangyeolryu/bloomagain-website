@@ -12,7 +12,8 @@ export type NeedsAnswers = {
   person?: string | null; // same | any | calm | lively | other
   worry?: string | null; // scam | awkward | time | none | other  ⭐광고 각도
   funnel?: string | null; // online | offline | other
-  ageBand?: string | null; // under45 | 45-54 | 55-64 | 65plus
+  gender?: string | null; // f | m | na (결큐와 동일 코드)
+  ageBand?: string | null; // under45 | 45-49 | 50-54 | 55-59 | 60-64 | 65plus (+구버전 45-54|55-64)
   store?: string | null; // ios | android (download 시)
   // "또는, 직접 쓸게요" 원문 — 해당 문항이 "other"일 때. 보기 밖 수요 발굴용.
   momentText?: string | null;
@@ -71,6 +72,7 @@ export function recordNeedsEvent(phase: NeedsPhase, answers?: NeedsAnswers): voi
       person: answers?.person ?? null,
       worry: answers?.worry ?? null,
       funnel: answers?.funnel ?? null,
+      gender: answers?.gender ?? null,
       age_band: answers?.ageBand ?? null,
       store: answers?.store ?? null,
       moment_text: answers?.momentText ?? null,

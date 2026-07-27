@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "요즘 나에게 필요한 것 — 1분 테스트 | 티타",
   description:
-    "자녀 독립, 은퇴, 혼자가 된 시간 — 삶이 바뀌면 필요한 것도 바뀝니다. 가입 없이 1분, 지금 나에게 필요한 게 뭔지 알아보세요.",
+    "자녀 독립, 은퇴, 부쩍 많아진 나만의 시간 — 삶이 바뀌면 필요한 것도 바뀝니다. 가입 없이 1분, 지금 나에게 필요한 게 뭔지 알아보세요.",
   openGraph: {
     title: "요즘 나에게 필요한 것 — 1분 테스트",
     description:
