@@ -46,6 +46,19 @@ type Q = {
 
 const QUESTIONS: Q[] = [
   {
+    // 실태 먼저 — 제일 답하기 쉬운 질문으로 시작(방어감 0) + 경쟁자 조사
+    // (유튜브가 경쟁자인지, 이미 사교적인지, "그냥 흘러가요"=핵심 타겟).
+    key: "timeuse",
+    title: "부쩍 많아진 그 시간,\n요즘은 주로 어떻게 보내세요?",
+    options: [
+      { value: "tv", label: "TV·유튜브 보면서" },
+      { value: "solo_out", label: "혼자 산책·운동하면서" },
+      { value: "hobby_alone", label: "혼자 취미 생활하면서" },
+      { value: "with_people", label: "친구·모임 만나면서" },
+      { value: "drift", label: "글쎄요, 그냥 흘러가요" },
+    ],
+  },
+  {
     key: "moment",
     title: "문득 '누가 있었으면' 싶은\n순간이 있다면?",
     options: [
@@ -369,7 +382,7 @@ export default function NeedsSurveyPage() {
             1분, 알아보기
           </button>
           <p style={{ fontSize: 13, color: "rgba(251,247,240,0.6)", marginTop: 14 }}>
-            질문 8개 · 이름·연락처 안 물어요
+            질문 9개 · 이름·연락처 안 물어요
           </p>
         </div>
         {/* 하단 배경 — 딥그린과 한 몸인 50대 여성 컷아웃 (webp, 투명배경).

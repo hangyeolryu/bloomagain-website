@@ -6,6 +6,7 @@
 type NeedsPhase = "start" | "complete" | "download" | "share";
 
 export type NeedsAnswers = {
+  timeuse?: string | null; // tv | solo_out | hobby_alone | with_people | drift | other ⭐실태(경쟁자 조사)
   moment?: string | null; // meal | walk | talk | weekend | other
   situation?: string | null; // empty_nest | divorce | bereave | retire | no_change | other ⭐5060 세그먼트
   activity?: string | null; // walk | tea | hobby | chat | other  ⭐수요 핵심
@@ -16,6 +17,7 @@ export type NeedsAnswers = {
   ageBand?: string | null; // under45 | 45-49 | 50-54 | 55-59 | 60-64 | 65plus (+구버전 45-54|55-64)
   store?: string | null; // ios | android (download 시)
   // "또는, 직접 쓸게요" 원문 — 해당 문항이 "other"일 때. 보기 밖 수요 발굴용.
+  timeuseText?: string | null;
   momentText?: string | null;
   situationText?: string | null;
   activityText?: string | null;
@@ -66,6 +68,7 @@ export function recordNeedsEvent(phase: NeedsPhase, answers?: NeedsAnswers): voi
     }
     const body = JSON.stringify({
       phase,
+      timeuse: answers?.timeuse ?? null,
       moment: answers?.moment ?? null,
       situation: answers?.situation ?? null,
       activity: answers?.activity ?? null,
@@ -75,6 +78,7 @@ export function recordNeedsEvent(phase: NeedsPhase, answers?: NeedsAnswers): voi
       gender: answers?.gender ?? null,
       age_band: answers?.ageBand ?? null,
       store: answers?.store ?? null,
+      timeuse_text: answers?.timeuseText ?? null,
       moment_text: answers?.momentText ?? null,
       situation_text: answers?.situationText ?? null,
       activity_text: answers?.activityText ?? null,
