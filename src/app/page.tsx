@@ -109,6 +109,22 @@ export default function Home() {
               가입 없이 3분, 내 결 유형 알아보기
               <span aria-hidden>→</span>
             </Link>
+            {/* 실태형 훅 — "친구 찾는 중"인 사람만 걸리는 결큐와 달리, 모두가
+                해당되는 질문(빈 시간)으로 그물을 넓힌다 → /needs 1분 설문. */}
+            <Link
+              href="/needs"
+              onClick={() =>
+                logAnalyticsEvent("needs_entry_click", { source: "home_hero" })
+              }
+              className="inline-flex items-center gap-1.5 px-6 py-2.5 rounded-full text-[13px] font-semibold transition-colors hover:opacity-80"
+              style={{
+                color: TITA.cream,
+                border: "1px solid rgba(251, 247, 240, 0.5)",
+              }}
+            >
+              부쩍 많아진 빈 시간, 어떻게 채우고 계세요? — 1분
+              <span aria-hidden>→</span>
+            </Link>
           </div>
         </div>
       </section>
