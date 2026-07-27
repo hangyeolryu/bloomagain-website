@@ -27,6 +27,7 @@ import { TitaHeader } from "./_components/TitaHeader";
 import { TitaFooter } from "./_components/TitaFooter";
 import { PersonaStories } from "./_components/PersonaStories";
 import { AppPreview } from "./_components/AppPreview";
+import { PeopleWall } from "./_components/PeopleWall";
 import { logAnalyticsEvent } from "@/lib/firebase";
 
 export default function Home() {
@@ -133,6 +134,9 @@ export default function Home() {
 
       {/* ── 앱 화면 미리보기 (결Q · 티타임 · 결친구) ─────────────── */}
       <AppPreview />
+
+      {/* ── 이런 분들을 만나요 (또래 예시 프로필 벽) ─────────────── */}
+      <PeopleWall />
 
       <main className="max-w-2xl mx-auto px-5 sm:px-6">
         {/* ── 1-B. 왜 티타 — 결을 어떻게 알아보나 (설득 핵심) ──
