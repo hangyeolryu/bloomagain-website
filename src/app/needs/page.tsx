@@ -570,6 +570,78 @@ export default function NeedsSurveyPage() {
             </div>
           )}
 
+          {/* 사기 걱정 선택자 전용 — "어떻게 지키는지"를 그 자리에서 보여준다.
+              가장 큰 반대 이유(설문 1위)에 대한 직접 응답. 밖은 못 지키는 대신
+              밖으로 데려가려는 시도를 감지한다는 정직한 프레임(실제 유인 필터 운영 중). */}
+          {!under45 && answers.worry === "scam" && (
+            <div
+              style={{
+                marginTop: 18,
+                background: TITA.surface,
+                border: `1px solid ${TITA.sage}`,
+                borderRadius: 18,
+                padding: "20px 18px",
+              }}
+            >
+              <p
+                style={{
+                  textAlign: "center",
+                  fontSize: 15,
+                  fontWeight: 800,
+                  color: TITA.forestDeep,
+                  margin: "0 0 14px",
+                }}
+              >
+                걱정하신 부분, 티타는 이렇게 지켜요
+              </p>
+              {[
+                ["본인인증 없이는 입장 자체가 안 돼요", "NICE 실명 인증을 마친 만 45세 이상만 있어요. 익명 가입이 없어요."],
+                ["수상한 접근은 AI가 먼저 봐요", "돈 이야기, 카톡·라인으로 데려가려는 시도를 자동 감지해 경고하고 차단해요."],
+                ["처음엔 둘이 아니라 여럿이 만나요", "서넛이 함께하는 찻자리 구조라, 이상한 사람이 발 붙이기 어려워요."],
+                ["의심되면 바로 신고할 수 있어요", "확인 즉시 조치하고, 문제 계정은 다시 매칭되지 않아요."],
+              ].map(([t, b]) => (
+                <div key={t} style={{ display: "flex", gap: 10, marginBottom: 12 }}>
+                  <span
+                    style={{
+                      flexShrink: 0,
+                      width: 22,
+                      height: 22,
+                      borderRadius: 11,
+                      background: TITA.forest,
+                      color: TITA.cream,
+                      fontSize: 13,
+                      fontWeight: 800,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      marginTop: 1,
+                    }}
+                  >
+                    ✓
+                  </span>
+                  <div>
+                    <p style={{ fontSize: 14.5, fontWeight: 800, color: TITA.forestDeep, margin: "0 0 2px" }}>{t}</p>
+                    <p style={{ fontSize: 13.5, lineHeight: 1.6, color: TITA.ink, margin: 0 }}>{b}</p>
+                  </div>
+                </div>
+              ))}
+              <p
+                style={{
+                  fontSize: 13,
+                  lineHeight: 1.6,
+                  color: TITA.forestMid,
+                  fontWeight: 700,
+                  margin: "4px 0 0",
+                  textAlign: "center",
+                }}
+              >
+                앱 밖으로 데려가려는 순간이 가장 위험해요.
+                <br />
+                그래서 티타는 그 순간을 먼저 알아채고 경고해 드려요.
+              </p>
+            </div>
+          )}
+
           <div style={{ textAlign: "center", marginTop: 18 }}>
             <button
               onClick={share}
