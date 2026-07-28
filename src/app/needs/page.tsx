@@ -574,6 +574,100 @@ export default function NeedsSurveyPage() {
               친구에게도 보내기
             </button>
           </div>
+
+          {/* 신뢰 블록 — "떠나는 링크"가 아니라 그 자리에서 읽히는 안심 3단.
+              확신 있는 사람은 위에서 이미 다운로드; 망설이는 사람(어색함·사기
+              걱정)만 스크롤해 읽고, 블록 끝에서 다운로드 한 번 더. 결큐에서
+              경쟁 CTA가 다운을 0으로 만든 전례가 있어 위쪽엔 절대 안 올린다. */}
+          {!under45 && (
+            <div style={{ marginTop: 44 }}>
+              <p
+                style={{
+                  textAlign: "center",
+                  fontSize: 13,
+                  fontWeight: 800,
+                  letterSpacing: "-0.2px",
+                  color: TITA.forestMid,
+                  margin: "0 0 14px",
+                }}
+              >
+                아직 망설여진다면, 조금만 더 읽어보세요
+              </p>
+              {[
+                {
+                  t: "어떻게 만나나요?",
+                  b: "처음부터 얼굴 보는 게 아니에요. 결이 맞는 서넛이 대화방에서 먼저 인사하고, 편해지면 그때 동네 찻자리에서 만나요.",
+                },
+                {
+                  t: "누가 있나요?",
+                  b: "NICE 본인인증을 마친 만 45세 이상 또래만 있어요. 수상한 접근·사기는 AI가 지켜보다 걸러내요.",
+                },
+                {
+                  t: "누가 만들었나요?",
+                  b: "이사 후 동네 친구가 없어진 엄마를 보고, 아들이 만들었어요. 엄마가 안심하고 쓸 수 있는 것만 넣습니다.",
+                },
+              ].map((x) => (
+                <div
+                  key={x.t}
+                  style={{
+                    background: TITA.white,
+                    borderRadius: 16,
+                    padding: "18px 20px",
+                    marginBottom: 10,
+                    border: `1px solid ${TITA.sage}`,
+                  }}
+                >
+                  <p
+                    style={{
+                      fontSize: 15.5,
+                      fontWeight: 800,
+                      color: TITA.forestDeep,
+                      margin: "0 0 6px",
+                    }}
+                  >
+                    {x.t}
+                  </p>
+                  <p
+                    style={{
+                      fontSize: 14.5,
+                      lineHeight: 1.7,
+                      color: TITA.ink,
+                      margin: 0,
+                    }}
+                  >
+                    {x.b}
+                  </p>
+                </div>
+              ))}
+              <a
+                href={platform === "android" ? PLAY_STORE_URL : APP_STORE_URL}
+                onClick={(e) => {
+                  download(platform === "android" ? "android" : "ios");
+                  if (platform === "android") {
+                    e.preventDefault();
+                    window.location.href = PLAY_STORE_INTENT_URL;
+                  }
+                }}
+                style={{ ...heroBtn, marginTop: 8 }}
+              >
+                안심하고 시작하기 (무료)
+              </a>
+              <p style={{ textAlign: "center", margin: "16px 0 0" }}>
+                <a
+                  href="/"
+                  style={{
+                    fontFamily: KOREAN_FONT_STACK,
+                    fontSize: 13,
+                    fontWeight: 600,
+                    color: TITA.muted,
+                    textDecoration: "none",
+                  }}
+                >
+                  티타 더 알아보기 →
+                </a>
+              </p>
+            </div>
+          )}
         </div>
       </main>
     );
