@@ -226,6 +226,16 @@ export default function NeedsSurveyPage() {
     setAnswers(next);
     setCustomOpen(false);
     setCustomText("");
+    // 질문 하나 답할 때마다 가벼운 answer 이벤트 — 어느 질문에서 관두는지
+    // (이탈 지점) + 중도 이탈자의 부분 답변까지 남긴다.
+    recordNeedsEvent("answer", {
+      [q.key]: value,
+      ...(value === "other" && text
+        ? { [`${q.key}Text`]: text.slice(0, 200) }
+        : {}),
+      q: q.key,
+      step,
+    } as NeedsAnswers);
     if (step < QUESTIONS.length - 1) {
       setStep(step + 1);
       return;

@@ -3,9 +3,12 @@
 // 컬렉션·엔드포인트를 분리해 결큐 통계와 섞이지 않는다.
 // 겉은 테스트, 속은 수요 설문 — 답 하나하나가 광고·제품 조준 데이터.
 
-type NeedsPhase = "start" | "complete" | "download" | "share";
+type NeedsPhase = "start" | "answer" | "complete" | "download" | "share";
 
 export type NeedsAnswers = {
+  // answer 이벤트 전용 — 어느 질문·몇 번째에 답했나 (질문별 이탈 파악)
+  q?: string | null;
+  step?: number | null;
   timeuse?: string | null; // tv | solo_out | hobby_alone | with_people | drift | other ⭐실태(경쟁자 조사)
   moment?: string | null; // meal | walk | talk | weekend | other
   situation?: string | null; // empty_nest | divorce | bereave | retire | no_change | other ⭐5060 세그먼트
@@ -68,6 +71,8 @@ export function recordNeedsEvent(phase: NeedsPhase, answers?: NeedsAnswers): voi
     }
     const body = JSON.stringify({
       phase,
+      q: answers?.q ?? null,
+      step: answers?.step ?? null,
       timeuse: answers?.timeuse ?? null,
       moment: answers?.moment ?? null,
       situation: answers?.situation ?? null,
