@@ -506,6 +506,113 @@ export function ResultActions({
       </>
       )}
 
+      {/* 이런 분들이 있어요 + 안전 관리 — 결과 본 45+에게만. 홈 페르소나와
+          동일한 '상황 라벨' 방식(이름·사진 없는 각색 상황 — 실존 회원 사칭 아님).
+          니즈 설문 걱정 1위(사기 83%)에 대한 응답으로 안전 블록을 상시 노출. */}
+      {taken && ageStatus === "qualified" && (
+        <>
+          <div style={{ marginTop: 36 }}>
+            <p
+              style={{
+                textAlign: "center",
+                fontSize: 13,
+                fontWeight: 800,
+                color: TITA.forestMid,
+                margin: "0 0 12px",
+              }}
+            >
+              티타에는 이런 분들이 있어요
+            </p>
+            {[
+              ["빈 둥지의 오후", "아이들 다 키우고 나니, 낮이 참 조용하더라고요. 커피 한 잔 같이할 사람이 있었으면."],
+              ["은퇴, 그 다음", "회사를 그만두고 알았어요. 매일 보던 건 '동료'였지, 친구는 아니었다는 걸."],
+              ["연락처는 많은데", "단톡방은 가득한데, 정작 속 얘기 편히 할 사람은 없더라고요."],
+            ].map(([tag, quote]) => (
+              <div
+                key={tag}
+                style={{
+                  background: TITA.white,
+                  border: `1px solid ${TITA.sage}`,
+                  borderRadius: 16,
+                  padding: "16px 18px",
+                  marginBottom: 10,
+                }}
+              >
+                <p style={{ fontSize: 12, fontWeight: 800, color: TITA.forestMid, margin: "0 0 6px" }}>{tag}</p>
+                <p style={{ fontSize: 14.5, lineHeight: 1.65, color: TITA.ink, margin: 0 }}>&ldquo;{quote}&rdquo;</p>
+              </div>
+            ))}
+          </div>
+
+          <div
+            style={{
+              marginTop: 24,
+              background: TITA.surface,
+              border: `1px solid ${TITA.sage}`,
+              borderRadius: 18,
+              padding: "20px 18px",
+            }}
+          >
+            <p
+              style={{
+                textAlign: "center",
+                fontSize: 15,
+                fontWeight: 800,
+                color: TITA.forestDeep,
+                margin: "0 0 14px",
+              }}
+            >
+              만남이 걱정되신다면 — 티타는 이렇게 지켜요
+            </p>
+            {[
+              ["본인인증 없이는 입장 자체가 안 돼요", "NICE 실명 인증을 마친 만 45세 이상만 있어요. 익명 가입이 없어요."],
+              ["수상한 접근은 AI가 먼저 봐요", "돈 이야기, 카톡·라인으로 데려가려는 시도를 자동 감지해 경고하고 차단해요."],
+              ["처음엔 둘이 아니라 여럿이 만나요", "서넛이 함께하는 찻자리 구조라, 이상한 사람이 발 붙이기 어려워요."],
+              ["의심되면 바로 신고할 수 있어요", "확인 즉시 조치하고, 문제 계정은 다시 매칭되지 않아요."],
+            ].map(([t, b]) => (
+              <div key={t} style={{ display: "flex", gap: 10, marginBottom: 12 }}>
+                <span
+                  style={{
+                    flexShrink: 0,
+                    width: 22,
+                    height: 22,
+                    borderRadius: 11,
+                    background: TITA.forest,
+                    color: TITA.cream,
+                    fontSize: 13,
+                    fontWeight: 800,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginTop: 1,
+                  }}
+                >
+                  ✓
+                </span>
+                <div>
+                  <p style={{ fontSize: 14.5, fontWeight: 800, color: TITA.forestDeep, margin: "0 0 2px" }}>{t}</p>
+                  <p style={{ fontSize: 13.5, lineHeight: 1.6, color: TITA.ink, margin: 0 }}>{b}</p>
+                </div>
+              </div>
+            ))}
+            <p
+              style={{
+                fontSize: 13,
+                lineHeight: 1.6,
+                color: TITA.forestMid,
+                fontWeight: 700,
+                margin: "4px 0 0",
+                textAlign: "center",
+              }}
+            >
+              앱 밖으로 데려가려는 순간이 가장 위험해요.
+              <br />
+              그래서 티타는 그 순간을 먼저 알아채고 경고해 드려요.
+            </p>
+          </div>
+        </>
+      )}
+
       {/* 3차 — 다시 하기, 작게 */}
       <div style={{ display: "flex", justifyContent: "center", marginTop: 4 }}>
         <Link
