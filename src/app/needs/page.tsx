@@ -217,8 +217,13 @@ export default function NeedsSurveyPage() {
     // 랜딩을 백그라운드에서 프리로드하는데, 그때도 JS가 돌아 start가 찍히면
     // 팬텀 시작이 쌓인다 → 화면이 실제로 보일 때만 기록.
     const fire = () => {
-      recordNeedsEvent("start");
-      logAnalyticsEvent("needs_survey_start", {});
+      // performance.now() = 내비게이션 시작 기준 경과 ms. 이 effect가 도는
+      // 시점부터 탭이 실제로 먹으므로, 곧 "죽은 탭 구간"의 길이다.
+      const hydMs = Math.round(
+        typeof performance !== "undefined" ? performance.now() : 0,
+      );
+      recordNeedsEvent("start", { hydMs });
+      logAnalyticsEvent("needs_survey_start", { hyd_ms: hydMs });
       trackPixel("NeedsSurveyStart", {}, true);
     };
     if (typeof document === "undefined" || document.visibilityState === "visible") {
@@ -734,17 +739,28 @@ export default function NeedsSurveyPage() {
     <main style={page}>
       <div style={{ ...inner, paddingTop: 28 }}>
         {step === 0 && (
-          <p
-            style={{
-              textAlign: "center",
-              fontSize: 13.5,
-              fontWeight: 700,
-              color: "rgba(251,247,240,0.75)",
-              margin: "0 0 18px",
-            }}
-          >
-            요즘 나에게 필요한 것 — 가입 없이 1분, 이름·연락처 안 물어요
-          </p>
+          <div style={{ textAlign: "center", margin: "0 0 18px" }}>
+            <p
+              style={{
+                fontSize: 15,
+                fontWeight: 800,
+                color: TITA.cream,
+                margin: "0 0 4px",
+              }}
+            >
+              1분만 답하면, 지금 나에게 필요한 게 뭔지 알려드려요
+            </p>
+            <p
+              style={{
+                fontSize: 12.5,
+                fontWeight: 600,
+                color: "rgba(251,247,240,0.6)",
+                margin: 0,
+              }}
+            >
+              가입 없음 · 이름·연락처 안 물어요
+            </p>
+          </div>
         )}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 26 }}>
           <button

@@ -9,6 +9,8 @@ export type NeedsAnswers = {
   // answer 이벤트 전용 — 어느 질문·몇 번째에 답했나 (질문별 이탈 파악)
   q?: string | null;
   step?: number | null;
+  // start 전용 — 도착~인터랙티브(JS 준비) 지연 ms ("죽은 탭" 가설 검증)
+  hydMs?: number | null;
   timeuse?: string | null; // tv | solo_out | hobby_alone | with_people | drift | other ⭐실태(경쟁자 조사)
   moment?: string | null; // meal | walk | talk | weekend | other
   situation?: string | null; // empty_nest | divorce | bereave | retire | no_change | other ⭐5060 세그먼트
@@ -73,6 +75,7 @@ export function recordNeedsEvent(phase: NeedsPhase, answers?: NeedsAnswers): voi
       phase,
       q: answers?.q ?? null,
       step: answers?.step ?? null,
+      hyd_ms: answers?.hydMs ?? null,
       timeuse: answers?.timeuse ?? null,
       moment: answers?.moment ?? null,
       situation: answers?.situation ?? null,
