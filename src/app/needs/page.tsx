@@ -213,9 +213,26 @@ export default function NeedsSurveyPage() {
   const [customText, setCustomText] = useState("");
 
   useEffect(() => {
-    recordNeedsEvent("start");
-    logAnalyticsEvent("needs_survey_start", {});
-    trackPixel("NeedsSurveyStart", {}, true);
+    // start = "사람이 실제로 본" 도착. Meta 인앱 브라우저는 광고 노출 시
+    // 랜딩을 백그라운드에서 프리로드하는데, 그때도 JS가 돌아 start가 찍히면
+    // 팬텀 시작이 쌓인다 → 화면이 실제로 보일 때만 기록.
+    const fire = () => {
+      recordNeedsEvent("start");
+      logAnalyticsEvent("needs_survey_start", {});
+      trackPixel("NeedsSurveyStart", {}, true);
+    };
+    if (typeof document === "undefined" || document.visibilityState === "visible") {
+      fire();
+      return;
+    }
+    const onVisible = () => {
+      if (document.visibilityState === "visible") {
+        document.removeEventListener("visibilitychange", onVisible);
+        fire();
+      }
+    };
+    document.addEventListener("visibilitychange", onVisible);
+    return () => document.removeEventListener("visibilitychange", onVisible);
   }, []);
 
   function choose(value: string, text?: string) {
