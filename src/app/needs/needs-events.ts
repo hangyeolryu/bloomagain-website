@@ -3,7 +3,7 @@
 // 컬렉션·엔드포인트를 분리해 결큐 통계와 섞이지 않는다.
 // 겉은 테스트, 속은 수요 설문 — 답 하나하나가 광고·제품 조준 데이터.
 
-type NeedsPhase = "start" | "answer" | "complete" | "download" | "share";
+type NeedsPhase = "start" | "answer" | "abandon" | "complete" | "download" | "share";
 
 export type NeedsAnswers = {
   // answer 이벤트 전용 — 어느 질문·몇 번째에 답했나 (질문별 이탈 파악)

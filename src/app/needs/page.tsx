@@ -9,7 +9,7 @@
 //  · activity = 모임 주제 수요, worry = 광고 첫 줄 각도, ageBand = 나이 게이트 겸.
 // 결과 카드는 activity로 유형을, worry·situation으로 안심 문구를 개인화한다.
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   TITA,
   KOREAN_FONT_STACK,
@@ -233,6 +233,25 @@ export default function NeedsSurveyPage() {
     };
     document.addEventListener("visibilitychange", onVisible);
     return () => document.removeEventListener("visibilitychange", onVisible);
+  }, []);
+
+  // 나갈 때 "보고 있던 질문"을 기록 — 답도 안 하고 떠난 지점(특히 Q1)을
+  // 정확히 잡는다. keepalive fetch라 pagehide에서도 전송된다. 앱 전환 후
+  // 돌아와 계속하면 answer 이벤트가 뒤에 쌓여 어드민이 이 abandon을 무시한다.
+  const stepRef = useRef(step);
+  stepRef.current = step;
+  const doneRef = useRef(done);
+  doneRef.current = done;
+  const abandonSentRef = useRef(false);
+  useEffect(() => {
+    const onHide = () => {
+      if (doneRef.current || abandonSentRef.current) return;
+      abandonSentRef.current = true;
+      const cur = QUESTIONS[stepRef.current];
+      recordNeedsEvent("abandon", { q: cur.key as string, step: stepRef.current });
+    };
+    window.addEventListener("pagehide", onHide);
+    return () => window.removeEventListener("pagehide", onHide);
   }, []);
 
   function choose(value: string, text?: string) {
