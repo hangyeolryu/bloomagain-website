@@ -63,9 +63,13 @@ const QUESTIONS: Q[] = [
     title: "문득 '누가 있었으면' 싶은\n순간이 있다면?",
     options: [
       { value: "meal", label: "맛있는 집을 발견했을 때" },
+      { value: "meal_alone", label: "혼자 밥 먹을 때" },
       { value: "walk", label: "산책길 풍경이 좋을 때" },
       { value: "talk", label: "얘기하고 싶은 일이 생겼을 때" },
-      { value: "weekend", label: "주말이 길게 느껴질 때" },
+      { value: "goodnews", label: "좋은 일이 생겼는데 알릴 데가 없을 때" },
+      { value: "sick", label: "몸이 아픈 날" },
+      { value: "weekend", label: "주말·연휴가 길게 느껴질 때" },
+      { value: "travel", label: "여행 가고 싶은데 같이 갈 사람이 없을 때" },
     ],
   },
   {
