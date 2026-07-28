@@ -9,7 +9,7 @@
 //  · activity = 모임 주제 수요, worry = 광고 첫 줄 각도, ageBand = 나이 게이트 겸.
 // 결과 카드는 activity로 유형을, worry·situation으로 안심 문구를 개인화한다.
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   TITA,
   KOREAN_FONT_STACK,
@@ -200,7 +200,10 @@ const SITUATION_LINES: Record<string, string> = {
 };
 
 export default function NeedsSurveyPage() {
-  const [started, setStarted] = useState(false);
+  // 인트로 없이 도착 즉시 설문 시작 — 광고에서 이미 설득되고 온 사람에게
+  // 인트로는 같은 말 반복 + 탭 하나 추가일 뿐(Meta 클릭 대비 시작 누락의 주범).
+  // start 이벤트 = 페이지 도착.
+  const started = true;
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<NeedsAnswers>({});
   const [done, setDone] = useState(false);
@@ -209,12 +212,11 @@ export default function NeedsSurveyPage() {
   const [customOpen, setCustomOpen] = useState(false);
   const [customText, setCustomText] = useState("");
 
-  function begin() {
-    setStarted(true);
+  useEffect(() => {
     recordNeedsEvent("start");
     logAnalyticsEvent("needs_survey_start", {});
     trackPixel("NeedsSurveyStart", {}, true);
-  }
+  }, []);
 
   function choose(value: string, text?: string) {
     const q = QUESTIONS[step];
@@ -276,7 +278,6 @@ export default function NeedsSurveyPage() {
     setCustomOpen(false);
     setCustomText("");
     if (step > 0) setStep(step - 1);
-    else setStarted(false);
   }
 
   function download(store: "ios" | "android") {
@@ -355,74 +356,6 @@ export default function NeedsSurveyPage() {
     cursor: "pointer",
     boxShadow: "0 10px 26px rgba(31,78,61,0.28)",
   };
-
-  // ── 인트로 (WHY 먼저 — 제품 언급 없음) ────────────────────────────────────
-  if (!started && !done) {
-    return (
-      <main style={{ ...page, paddingBottom: 0, position: "relative", overflow: "hidden" }}>
-        <div style={{ ...inner, textAlign: "center", paddingTop: 56, position: "relative", zIndex: 1 }}>
-          <p style={{ fontSize: 15, fontWeight: 700, color: TITA.sage, margin: "0 0 14px" }}>
-            가입 없이 1분
-          </p>
-          <h1
-            style={{
-              fontSize: 30,
-              fontWeight: 800,
-              lineHeight: 1.4,
-              letterSpacing: "-0.8px",
-              color: TITA.cream,
-              margin: "0 0 18px",
-            }}
-          >
-            요즘 나에게
-            <br />
-            필요한 것
-          </h1>
-          <p
-            style={{
-              fontSize: 16.5,
-              lineHeight: 1.75,
-              color: "rgba(251,247,240,0.85)",
-              margin: "0 0 36px",
-            }}
-          >
-            자녀 독립, 은퇴, 부쩍 많아진 나만의 시간 —
-            <br />
-            삶이 바뀌면, 필요한 것도 바뀝니다.
-            <br />
-            지금 나에게 필요한 게 뭔지, 1분이면 나와요.
-          </p>
-          <button onClick={begin} style={{ ...heroBtn, background: TITA.cream, color: TITA.forestDeep }}>
-            1분, 알아보기
-          </button>
-          <p style={{ fontSize: 13, color: "rgba(251,247,240,0.6)", marginTop: 14 }}>
-            질문 9개 · 이름·연락처 안 물어요
-          </p>
-        </div>
-        {/* 하단 배경 — 딥그린과 한 몸인 50대 여성 컷아웃 (webp, 투명배경).
-            absolute 바닥 고정이라 어떤 화면에서도 하단에 보이고, 콘텐츠(z:1)가
-            위 레이어라 짧은 화면에선 자연스럽게 버튼 뒤로 깔린다. */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/needs/woman50.webp"
-          alt=""
-          aria-hidden
-          style={{
-            position: "absolute",
-            bottom: 0,
-            left: "50%",
-            transform: "translateX(-50%)",
-            width: "auto",
-            maxWidth: "min(78%, 380px)",
-            maxHeight: "46vh",
-            zIndex: 0,
-            pointerEvents: "none",
-            userSelect: "none",
-          }}
-        />
-      </main>
-    );
-  }
 
   // ── 결과 ──────────────────────────────────────────────────────────────────
   if (done) {
@@ -763,7 +696,20 @@ export default function NeedsSurveyPage() {
   const q = QUESTIONS[step];
   return (
     <main style={page}>
-      <div style={{ ...inner, paddingTop: 40 }}>
+      <div style={{ ...inner, paddingTop: 28 }}>
+        {step === 0 && (
+          <p
+            style={{
+              textAlign: "center",
+              fontSize: 13.5,
+              fontWeight: 700,
+              color: "rgba(251,247,240,0.75)",
+              margin: "0 0 18px",
+            }}
+          >
+            요즘 나에게 필요한 것 — 가입 없이 1분, 이름·연락처 안 물어요
+          </p>
+        )}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 26 }}>
           <button
             onClick={back}
@@ -776,6 +722,7 @@ export default function NeedsSurveyPage() {
               border: "none",
               padding: 6,
               cursor: "pointer",
+              visibility: step === 0 ? "hidden" : "visible",
             }}
           >
             ← 이전
