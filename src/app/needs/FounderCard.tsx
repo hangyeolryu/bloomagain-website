@@ -2,7 +2,8 @@
 
 // 만든 사람 — 결과 페이지 마지막 카드. 회사가 아니라 사람이 지킨다는 약속을
 // 얼굴·이름과 함께 두고, 그 자리에서 바로 연락할 수 있는 폼을 붙인다.
-// 사진(public/needs/founder.jpg)이 아직 없어도 깨지지 않게 onError로 숨긴다.
+// 사진(public/needs/founder.jpg)이 없어도 깨지지 않게 onError로 숨긴다.
+// ?v=1 — 사진 배포 전에 방문한 브라우저가 404를 캐시해 계속 안 뜨던 문제 우회.
 
 import { useState } from "react";
 import { TITA, KOREAN_FONT_STACK } from "../_components/tita-brand";
@@ -90,7 +91,7 @@ export function FounderCard({ source }: { source?: string }) {
         {photoOk && (
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            src="/needs/founder.jpg"
+            src="/needs/founder.jpg?v=1"
             alt="티타를 만든 유한결"
             onError={() => setPhotoOk(false)}
             style={{
