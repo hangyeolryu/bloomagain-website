@@ -656,77 +656,84 @@ export default function NeedsSurveyPage() {
             </div>
           )}
 
-          {/* 사기 걱정 선택자 전용 — "어떻게 지키는지"를 그 자리에서 보여준다.
-              가장 큰 반대 이유(설문 1위)에 대한 직접 응답. 밖은 못 지키는 대신
-              밖으로 데려가려는 시도를 감지한다는 정직한 프레임(실제 유인 필터 운영 중). */}
-          {!under45 && answers.worry === "scam" && (
-            <div
-              style={{
-                marginTop: 18,
-                background: TITA.surface,
-                border: `1px solid ${TITA.sage}`,
-                borderRadius: 18,
-                padding: "20px 18px",
-              }}
-            >
-              <p
+          {/* 두 걱정 허물기 — 설문 데이터: 걱정의 90%가 사기(60%)·어색함(30%).
+              안심 "문구"가 아니라 실제 작동 "방식"을 시연한다(명단 공개·티타지기
+              첫 질문·넛지 = 전부 실제 운영 기능). 전원 노출, 본인 걱정 먼저. */}
+          {!under45 && (() => {
+            const scamBlock = (
+              <div
+                key="scam"
                 style={{
-                  textAlign: "center",
-                  fontSize: 15,
-                  fontWeight: 800,
-                  color: TITA.forestDeep,
-                  margin: "0 0 14px",
+                  marginTop: 18,
+                  background: TITA.surface,
+                  border: `1px solid ${TITA.sage}`,
+                  borderRadius: 18,
+                  padding: "20px 18px",
                 }}
               >
-                걱정하신 부분, 티타는 이렇게 지켜요
-              </p>
-              {[
-                ["본인인증 없이는 입장 자체가 안 돼요", "NICE 실명 인증을 마친 만 45세 이상만 있어요. 익명 가입이 없어요."],
-                ["수상한 접근은 AI가 먼저 봐요", "돈 이야기, 카톡·라인으로 데려가려는 시도를 자동 감지해 경고하고 차단해요."],
-                ["처음엔 둘이 아니라 여럿이 만나요", "서넛이 함께하는 찻자리 구조라, 이상한 사람이 발 붙이기 어려워요."],
-                ["의심되면 바로 신고할 수 있어요", "확인 즉시 조치하고, 문제 계정은 다시 매칭되지 않아요."],
-              ].map(([t, b]) => (
-                <div key={t} style={{ display: "flex", gap: 10, marginBottom: 12 }}>
-                  <span
-                    style={{
-                      flexShrink: 0,
-                      width: 22,
-                      height: 22,
-                      borderRadius: 11,
-                      background: TITA.forest,
-                      color: TITA.cream,
-                      fontSize: 13,
-                      fontWeight: 800,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      marginTop: 1,
-                    }}
-                  >
-                    ✓
-                  </span>
-                  <div>
-                    <p style={{ fontSize: 14.5, fontWeight: 800, color: TITA.forestDeep, margin: "0 0 2px" }}>{t}</p>
-                    <p style={{ fontSize: 13.5, lineHeight: 1.6, color: TITA.ink, margin: 0 }}>{b}</p>
+                <p style={{ textAlign: "center", fontSize: 15, fontWeight: 800, color: TITA.forestDeep, margin: "0 0 14px" }}>
+                  이상한 사람이 걱정된다면 — 티타는 이렇게 지켜요
+                </p>
+                {[
+                  ["본인인증 없이는 입장 자체가 안 돼요", "NICE 실명 인증을 마친 만 45세 이상만 있어요. 익명 가입이 없어요."],
+                  ["수상한 접근은 AI가 먼저 봐요", "돈 이야기, 카톡·라인으로 데려가려는 시도를 자동 감지해 경고하고 차단해요."],
+                  ["처음엔 둘이 아니라 여럿이 만나요", "서넛이 함께하는 찻자리 구조라, 이상한 사람이 발 붙이기 어려워요."],
+                  ["의심되면 바로 신고할 수 있어요", "확인 즉시 조치하고, 문제 계정은 다시 매칭되지 않아요."],
+                ].map(([t, b]) => (
+                  <div key={t} style={{ display: "flex", gap: 10, marginBottom: 12 }}>
+                    <span style={{ flexShrink: 0, width: 22, height: 22, borderRadius: 11, background: TITA.forest, color: TITA.cream, fontSize: 13, fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "center", marginTop: 1 }}>✓</span>
+                    <div>
+                      <p style={{ fontSize: 14.5, fontWeight: 800, color: TITA.forestDeep, margin: "0 0 2px" }}>{t}</p>
+                      <p style={{ fontSize: 13.5, lineHeight: 1.6, color: TITA.ink, margin: 0 }}>{b}</p>
+                    </div>
                   </div>
-                </div>
-              ))}
-              <p
+                ))}
+                <p style={{ fontSize: 13, lineHeight: 1.6, color: TITA.forestMid, fontWeight: 700, margin: "4px 0 0", textAlign: "center" }}>
+                  앱 밖으로 데려가려는 순간이 가장 위험해요.
+                  <br />
+                  그래서 티타는 그 순간을 먼저 알아채고 경고해 드려요.
+                </p>
+              </div>
+            );
+            const awkwardBlock = (
+              <div
+                key="awkward"
                 style={{
-                  fontSize: 13,
-                  lineHeight: 1.6,
-                  color: TITA.forestMid,
-                  fontWeight: 700,
-                  margin: "4px 0 0",
-                  textAlign: "center",
+                  marginTop: 18,
+                  background: TITA.surface,
+                  border: `1px solid ${TITA.sage}`,
+                  borderRadius: 18,
+                  padding: "20px 18px",
                 }}
               >
-                앱 밖으로 데려가려는 순간이 가장 위험해요.
-                <br />
-                그래서 티타는 그 순간을 먼저 알아채고 경고해 드려요.
-              </p>
-            </div>
-          )}
+                <p style={{ textAlign: "center", fontSize: 15, fontWeight: 800, color: TITA.forestDeep, margin: "0 0 14px" }}>
+                  어색할까 걱정된다면 — 첫 자리는 이렇게 흘러가요
+                </p>
+                {[
+                  ["1", "들어가면 누가 있는지 먼저 보여요", "이름 옆에 여성·남성까지 — 모르는 사람들 속에 던져지지 않아요."],
+                  ["2", "첫 마디는 티타지기가 대신 꺼내요", "\"OO님부터 가볍게 여쭤볼게요\" — 말 걸 고민을 할 필요가 없어요."],
+                  ["3", "답만 해도 대화가 시작돼요", "짧게 한 줄이면 충분하고, 듣고만 있어도 괜찮아요."],
+                  ["4", "조용해지면 티타가 살짝 이어줘요", "답이 없으면 다음 이야기를 대신 청해 드려요."],
+                ].map(([n, t, b]) => (
+                  <div key={t} style={{ display: "flex", gap: 10, marginBottom: 12 }}>
+                    <span style={{ flexShrink: 0, width: 22, height: 22, borderRadius: 11, background: TITA.camel, color: TITA.forestDeep, fontSize: 12.5, fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "center", marginTop: 1 }}>{n}</span>
+                    <div>
+                      <p style={{ fontSize: 14.5, fontWeight: 800, color: TITA.forestDeep, margin: "0 0 2px" }}>{t}</p>
+                      <p style={{ fontSize: 13.5, lineHeight: 1.6, color: TITA.ink, margin: 0 }}>{b}</p>
+                    </div>
+                  </div>
+                ))}
+                <p style={{ fontSize: 13, lineHeight: 1.6, color: TITA.forestMid, fontWeight: 700, margin: "4px 0 0", textAlign: "center" }}>
+                  용기 내는 건 티타가 할게요.
+                  <br />
+                  당신은 편하게 앉아 계시면 돼요.
+                </p>
+              </div>
+            );
+            return answers.worry === "awkward"
+              ? [awkwardBlock, scamBlock]
+              : [scamBlock, awkwardBlock];
+          })()}
 
           {/* 사회적 증거 — 상황 맞춤 우선 정렬 3장 (상황 라벨 페르소나) */}
           {!under45 && (
