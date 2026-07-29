@@ -730,9 +730,11 @@ export default function NeedsSurveyPage() {
                 </p>
               </div>
             );
-            return answers.worry === "awkward"
-              ? [awkwardBlock, scamBlock]
-              : [scamBlock, awkwardBlock];
+            // 답한 걱정에 맞는 블록만 — 사기 선택자에겐 사기 허물기,
+            // 어색함 선택자에겐 어색함 허물기. 걱정 없음/시간 부담은 둘 다.
+            if (answers.worry === "scam") return [scamBlock];
+            if (answers.worry === "awkward") return [awkwardBlock];
+            return [scamBlock, awkwardBlock];
           })()}
 
           {/* 사회적 증거 — 상황 맞춤 우선 정렬 3장 (상황 라벨 페르소나) */}
@@ -823,7 +825,7 @@ export default function NeedsSurveyPage() {
                 },
                 {
                   t: "누가 만들었나요?",
-                  b: "이사 후 동네 친구가 없어진 엄마를 보고, 아들이 만들었어요. 엄마가 안심하고 쓸 수 있는 것만 넣습니다.",
+                  b: "이사 후 동네 친구가 없어진 엄마를 보고, 딸이 만들었어요. 엄마가 안심하고 쓸 수 있는 것만 넣습니다.",
                 },
               ].map((x) => (
                 <div
