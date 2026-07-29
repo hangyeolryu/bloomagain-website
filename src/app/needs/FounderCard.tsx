@@ -98,7 +98,7 @@ export function FounderCard({ source }: { source?: string }) {
               height: 64,
               borderRadius: 32,
               objectFit: "cover",
-              objectPosition: "center top",
+              objectPosition: "center",
               flexShrink: 0,
               border: `1px solid ${TITA.sage}`,
             }}
