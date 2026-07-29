@@ -91,7 +91,10 @@ const QUESTIONS: Q[] = [
     options: [
       { value: "walk", label: "동네 산책" },
       { value: "tea", label: "차 한잔, 맛있는 집" },
-      { value: "hobby", label: "취미 함께 (독서·문화·운동)" },
+      { value: "culture", label: "전시·공연 나들이" },
+      { value: "exercise", label: "운동·등산 같이" },
+      { value: "travel", label: "같이 여행" },
+      { value: "hobby", label: "취미·배움 함께" },
       { value: "chat", label: "그냥 편한 수다" },
     ],
   },
@@ -173,6 +176,21 @@ const RESULTS: Record<string, { emoji: string; head: string; body: string }> = {
     head: "같이 즐길 사람",
     body: "혼자서도 즐겁지만, 같이 하면 계속하게 돼요. 취미가 같은 또래만큼 이야기가 잘 통하는 사이도 없죠.",
   },
+  culture: {
+    emoji: "🎭",
+    head: "같이 나들이할 사람",
+    body: "전시도 공연도, 같이 봐야 이야기가 남죠. 보고 나와서 차 한잔에 감상을 나눌 사람이 있으면 더요.",
+  },
+  exercise: {
+    emoji: "🥾",
+    head: "같이 걷고 움직일 사람",
+    body: "운동은 혼자면 사흘, 같이면 석 달이죠. 약속이 생기면 몸이 먼저 움직여요.",
+  },
+  travel: {
+    emoji: "🧳",
+    head: "같이 떠날 사람",
+    body: "가고 싶은 곳은 많은데 같이 갈 사람이 없어 미뤄둔 여행 — 동행이 생기면 계획이 됩니다.",
+  },
   chat: {
     emoji: "💬",
     head: "말이 통하는 사람",
@@ -194,7 +212,8 @@ const CHIP_LABELS: Record<string, string> = {
   empty_nest: "자녀 독립", spouse_diff: "배우자와 결이 다름", divorce: "새 출발",
   bereave: "혼자가 된 시간", retire: "은퇴 후", no_change: "요즘의 나",
   // activity
-  walk: "동네 산책", tea: "차 한잔·맛집", hobby: "취미 함께", chat: "편한 수다",
+  walk: "동네 산책", tea: "차 한잔·맛집", culture: "전시·공연", exercise: "운동·등산",
+  travel: "같이 여행", hobby: "취미·배움", chat: "편한 수다",
   // worry
   scam: "사기 걱정", awkward: "어색함 걱정", time: "시간 부담", none: "걱정 없음",
 };
@@ -203,6 +222,9 @@ const CHIP_LABELS: Record<string, string> = {
 const ACTIVITY_WAIT: Record<string, string> = {
   walk: "같이 걸을 분들이",
   tea: "마주 앉아 차 한잔할 분들이",
+  culture: "같이 나들이할 분들이",
+  exercise: "같이 운동할 분들이",
+  travel: "같이 떠날 분들이",
   hobby: "취미를 같이할 분들이",
   chat: "말이 통하는 분들이",
 };
