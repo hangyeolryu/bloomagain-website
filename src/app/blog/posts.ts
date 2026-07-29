@@ -454,7 +454,7 @@ export const POSTS: BlogPost[] = [
         type: "image",
         src: "/blog/insight-05/card-4.png",
         alt: "그 가벼운 마주침을 티타가 만들어요 — 가까운 동네에서 자주 부담 없이 차 한 잔부터 시작한다는 티타 인사이트 카드",
-        caption: "my.tita.app",
+        caption: "@titakorea",
       },
       {
         type: "p",
@@ -556,7 +556,7 @@ export const POSTS: BlogPost[] = [
         type: "image",
         src: "/blog/insight-04/card-4.png",
         alt: "그 꾸준함을 티타가 도와요 — 결이 맞는 사람과 가까운 동네에서 차 한 잔, 관계를 이어가는 습관을 만든다는 티타 인사이트 카드",
-        caption: "my.tita.app",
+        caption: "@titakorea",
       },
       {
         type: "p",
@@ -671,7 +671,7 @@ export const POSTS: BlogPost[] = [
         type: "image",
         src: "/blog/insight-03/card-4.png",
         alt: "티타가 하는 일이 바로 그거예요 — 결이 맞는 사람과 가까운 동네에서 차 한 잔, 끊긴 관계를 다시 연결한다는 티타 인사이트 카드",
-        caption: "my.tita.app",
+        caption: "@titakorea",
       },
       {
         type: "p",
