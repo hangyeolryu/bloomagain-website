@@ -66,7 +66,22 @@ export function recordNeedsEvent(phase: NeedsPhase, answers?: NeedsAnswers): voi
     let source = params.get("utm_source") || params.get("source");
     if (!source && document.referrer) {
       try {
-        source = new URL(document.referrer).hostname;
+        // utm이 잘려서 오는 경우가 있다(쓰레드 l.threads.com 리다이렉트가
+        // 쿼리스트링을 떨어뜨림). referrer 호스트를 읽기 쉬운 이름으로
+        // 정규화하되 `_ref` 접미사로 "태그 유실 유입"임을 남긴다.
+        const host = new URL(document.referrer).hostname.replace(/^www\./, "");
+        const platform = /threads\./.test(host)
+          ? "threads"
+          : /instagram\./.test(host)
+            ? "ig"
+            : /facebook\.|fb\./.test(host)
+              ? "fb"
+              : /kakao/.test(host)
+                ? "kakao"
+                : /naver\./.test(host)
+                  ? "naver"
+                  : host;
+        source = `${platform}_ref`;
       } catch {
         /* ignore */
       }
