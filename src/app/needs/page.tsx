@@ -708,30 +708,68 @@ export default function NeedsSurveyPage() {
                       textAlign: "center",
                     }}
                   >
-                    굳이 앱 밖에서 이야기하자는 분,
+                    만나는 건 좋아요.
                     <br />
-                    한 번 더 생각해 보세요
+                    다만 연락은 티타 안에서 하세요
                   </p>
                   <p
                     style={{
                       fontSize: 13.5,
                       lineHeight: 1.75,
                       color: TITA.ink,
-                      margin: 0,
+                      margin: "0 0 12px",
                       textAlign: "center",
                     }}
                   >
-                    여기서도 얼마든지 이야기할 수 있는데
+                    차 마시고 산책하는 건 저희가 바라는 일이에요.
                     <br />
-                    굳이 카톡으로, 문자로 옮기자고 한다면 — 왜 그럴까요?
+                    다만 <b>굳이</b> 카톡·문자로 옮기자는 분은 한 번 더 생각해 보세요.
                     <br />
                     <br />
-                    티타 안에서는 수상한 말이 오가면 AI가 먼저 알아챕니다.
+                    사기는 무언가를 주고받아야 성립해요 — 링크, 송금, 앱 설치.
+                    <br />
+                    티타 안에서는 그런 말이 오가면 AI가 먼저 알아챕니다.
                     <br />
                     <b>밖으로 나가는 순간, 그 보호가 사라져요.</b>
-                    <br />
-                    그걸 아는 사람일수록 밖으로 데려가려 합니다.
                   </p>
+                  <div
+                    style={{
+                      background: TITA.white,
+                      border: `1px solid ${TITA.sage}`,
+                      borderRadius: 14,
+                      padding: "14px 16px",
+                      textAlign: "left",
+                    }}
+                  >
+                    <p
+                      style={{
+                        fontSize: 13.5,
+                        fontWeight: 800,
+                        color: TITA.forestDeep,
+                        margin: "0 0 8px",
+                      }}
+                    >
+                      만나실 때는 이것만 지켜주세요
+                    </p>
+                    {[
+                      "처음엔 낮에, 사람 있는 카페에서",
+                      "누가 부탁해도 내 휴대폰은 맡기지 마세요 — 잠깐이면 된다고 해도요",
+                      "돈·계좌·앱 설치 이야기가 나오면 그 자리에서 멈추세요",
+                      "연락은 티타 안에서 — 그래야 무슨 일이 있어도 기록이 남아요",
+                    ].map((line) => (
+                      <p
+                        key={line}
+                        style={{
+                          fontSize: 13,
+                          lineHeight: 1.65,
+                          color: TITA.ink,
+                          margin: "0 0 5px",
+                        }}
+                      >
+                        · {line}
+                      </p>
+                    ))}
+                  </div>
                 </div>
               </div>
             );
