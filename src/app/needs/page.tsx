@@ -689,11 +689,50 @@ export default function NeedsSurveyPage() {
                     </div>
                   </div>
                 ))}
-                <p style={{ fontSize: 13, lineHeight: 1.6, color: TITA.forestMid, fontWeight: 700, margin: "4px 0 0", textAlign: "center" }}>
-                  앱 밖으로 데려가려는 순간이 가장 위험해요.
-                  <br />
-                  그래서 티타는 그 순간을 먼저 알아채고 경고해 드려요.
-                </p>
+                {/* "굳이" 신호 — 이동 자체가 아니라 이유 없이 서두르는 게 신호.
+                    (서사 원본: docs/product/in_app_safety_narrative_2026_07.md) */}
+                <div
+                  style={{
+                    marginTop: 14,
+                    paddingTop: 14,
+                    borderTop: `1px dashed ${TITA.sage}`,
+                  }}
+                >
+                  <p
+                    style={{
+                      fontSize: 15,
+                      fontWeight: 800,
+                      lineHeight: 1.55,
+                      color: TITA.forestDeep,
+                      margin: "0 0 8px",
+                      textAlign: "center",
+                    }}
+                  >
+                    굳이 앱 밖에서 이야기하자는 분,
+                    <br />
+                    한 번 더 생각해 보세요
+                  </p>
+                  <p
+                    style={{
+                      fontSize: 13.5,
+                      lineHeight: 1.75,
+                      color: TITA.ink,
+                      margin: 0,
+                      textAlign: "center",
+                    }}
+                  >
+                    여기서도 얼마든지 이야기할 수 있는데
+                    <br />
+                    굳이 카톡으로, 문자로 옮기자고 한다면 — 왜 그럴까요?
+                    <br />
+                    <br />
+                    티타 안에서는 수상한 말이 오가면 AI가 먼저 알아챕니다.
+                    <br />
+                    <b>밖으로 나가는 순간, 그 보호가 사라져요.</b>
+                    <br />
+                    그걸 아는 사람일수록 밖으로 데려가려 합니다.
+                  </p>
+                </div>
               </div>
             );
             const awkwardBlock = (
