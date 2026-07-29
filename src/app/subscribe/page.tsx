@@ -158,6 +158,35 @@ export default function SubscribePage() {
           </div>
         </section>
 
+        {/* 과금 서사 — 기능 제한이 아니라 '대화를 지키는 비용'.
+            (원본: bloomagain-korea/docs/product/in_app_safety_narrative_2026_07.md §3)
+            ⚠️ 공포 마케팅 금지 — 선택지 제시로만. */}
+        <section
+          className="rounded-2xl border p-6 mb-8"
+          style={{ borderColor: TITA.sage, background: TITA.surface }}
+        >
+          <h2 className="text-lg font-bold mb-3" style={{ color: TITA.forestDeep }}>
+            대화를 지키는 데 드는 비용이에요
+          </h2>
+          <p className="text-[15px] leading-relaxed mb-3" style={{ color: TITA.ink }}>
+            티타는 대화가 오갈 때마다 AI가 사기·유인 신호를 확인합니다.
+            돈 이야기, 카톡·문자로 데려가려는 시도를 그때그때 잡아내요.
+            그 확인에 비용이 듭니다.
+          </p>
+          <p className="text-[15px] leading-relaxed mb-3 font-bold" style={{ color: TITA.forestDeep }}>
+            한 달 커피 한 잔 값으로, 여기서 나누는 모든 이야기를 지킬 수 있어요.
+          </p>
+          <p className="text-sm leading-relaxed" style={{ color: TITA.muted }}>
+            만나서 차 마시고 산책하는 건 저희가 바라는 일이에요.
+            다만 <b>연락은 티타 안에서</b> 하세요 — 아끼려고 밖에서 이야기하는
+            순간, 지켜드릴 방법이 없어집니다.
+          </p>
+          <p className="mt-3 text-sm leading-relaxed" style={{ color: TITA.muted }}>
+            무료로도 계속 쓰실 수 있어요. 본인인증·사기 차단 같은 안전 기능은
+            <b> 요금과 상관없이 모두에게</b> 동일하게 제공합니다.
+          </p>
+        </section>
+
         {/* WHY pay — 4가지 frame */}
         <section className="mb-8">
           <h2 className="text-lg font-bold mb-4" style={{ color: TITA.forestDeep }}>
