@@ -611,6 +611,23 @@ export default function NeedsSurveyPage() {
                   결이 맞는 분들 보러 가기 (무료)
                 </a>
               )}
+              {/* 감지가 틀린 드문 경우(태블릿 등) 탈출구 — 결큐와 동일 패턴 */}
+              {platform !== "other" && (
+                <a
+                  href={platform === "android" ? APP_STORE_URL : PLAY_STORE_URL}
+                  onClick={() => download(platform === "android" ? "ios" : "android")}
+                  style={{
+                    display: "block",
+                    marginTop: 10,
+                    fontSize: 12.5,
+                    color: TITA.muted,
+                    fontWeight: 600,
+                    textDecoration: "none",
+                  }}
+                >
+                  {platform === "android" ? "아이폰" : "안드로이드"}이라면 여기로
+                </a>
+              )}
               <p style={{ fontSize: 12.5, color: TITA.muted, fontWeight: 600, margin: "10px 0 0" }}>
                 만 45세 이상 · NICE 본인인증 — 검증된 또래만 있어 안전해요
               </p>
