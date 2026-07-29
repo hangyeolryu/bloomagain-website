@@ -188,6 +188,35 @@ const WORRY_LINES: Record<string, string> = {
   none: "티타는 NICE 본인인증을 마친 45세 이상 또래만 있어 안심하고 시작할 수 있어요.",
 };
 
+// "당신의 답" 거울 칩 — 완주 보상을 가시화해 다운로드의 근거로 만든다.
+const CHIP_LABELS: Record<string, string> = {
+  // situation
+  empty_nest: "자녀 독립", spouse_diff: "배우자와 결이 다름", divorce: "새 출발",
+  bereave: "혼자가 된 시간", retire: "은퇴 후", no_change: "요즘의 나",
+  // activity
+  walk: "동네 산책", tea: "차 한잔·맛집", hobby: "취미 함께", chat: "편한 수다",
+  // worry
+  scam: "사기 걱정", awkward: "어색함 걱정", time: "시간 부담", none: "걱정 없음",
+};
+
+// 다운로드 카드 헤드라인 — activity 개인화 ("그 사람들"이 기다린다는 그림).
+const ACTIVITY_WAIT: Record<string, string> = {
+  walk: "같이 걸을 분들이",
+  tea: "마주 앉아 차 한잔할 분들이",
+  hobby: "취미를 같이할 분들이",
+  chat: "말이 통하는 분들이",
+};
+
+// 사회적 증거 — 홈/결큐와 동일한 '상황 라벨' 페르소나(각색, 실존 사칭 아님).
+// 응답자 상황과 맞는 카드를 맨 위로 올린다.
+const PERSONA_CARDS: { key: string; tag: string; quote: string }[] = [
+  { key: "empty_nest", tag: "빈 둥지의 오후", quote: "아이들 다 키우고 나니, 낮이 참 조용하더라고요. 커피 한 잔 같이할 사람이 있었으면." },
+  { key: "retire", tag: "은퇴, 그 다음", quote: "회사를 그만두고 알았어요. 매일 보던 건 '동료'였지, 친구는 아니었다는 걸." },
+  { key: "spouse_diff", tag: "가족 말고, 내 사람", quote: "남편도 자식도 각자 바빠요. 나에게도 '내 사람'이 필요하더라고요." },
+  { key: "any", tag: "연락처는 많은데", quote: "단톡방은 가득한데, 정작 속 얘기 편히 할 사람은 없더라고요." },
+  { key: "hobby", tag: "혼자라 미뤄둔 것들", quote: "새 취미를 시작하고 싶은데, 혼자 가려니 영 용기가 안 나더라고요." },
+];
+
 const SITUATION_LINES: Record<string, string> = {
   empty_nest:
     "자녀가 독립해 조용해진 집 — 비슷한 시간을 보내는 또래들이 티타에서 서로의 하루를 나누고 있어요.",
@@ -465,6 +494,36 @@ export default function NeedsSurveyPage() {
                 {situationLine}
               </p>
             )}
+            {/* 거울 칩 — "나를 읽었네" 보상. 답 3개를 그대로 되비춘다. */}
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                justifyContent: "center",
+                gap: 8,
+                marginTop: 18,
+              }}
+            >
+              {[answers.situation, answers.activity, answers.worry]
+                .map((k) => (k ? CHIP_LABELS[k] : null))
+                .filter(Boolean)
+                .map((label) => (
+                  <span
+                    key={label}
+                    style={{
+                      fontSize: 12.5,
+                      fontWeight: 700,
+                      color: TITA.forestMid,
+                      background: TITA.surface,
+                      border: `1px solid ${TITA.sage}`,
+                      borderRadius: 999,
+                      padding: "6px 12px",
+                    }}
+                  >
+                    {label}
+                  </span>
+                ))}
+            </div>
           </div>
 
           {under45 ? (
@@ -503,7 +562,21 @@ export default function NeedsSurveyPage() {
             >
               <p
                 style={{
-                  fontSize: 15.5,
+                  fontSize: 18,
+                  fontWeight: 800,
+                  lineHeight: 1.5,
+                  letterSpacing: "-0.4px",
+                  color: TITA.forestDeep,
+                  margin: "0 0 10px",
+                }}
+              >
+                {ACTIVITY_WAIT[answers.activity ?? "chat"] ?? "결이 맞는 분들이"}
+                <br />
+                티타에서 기다려요
+              </p>
+              <p
+                style={{
+                  fontSize: 14.5,
                   lineHeight: 1.7,
                   color: TITA.ink,
                   fontWeight: 600,
@@ -535,7 +608,7 @@ export default function NeedsSurveyPage() {
                   }}
                   style={heroBtn}
                 >
-                  그 사람, 티타에서 만나기 (무료)
+                  결이 맞는 분들 보러 가기 (무료)
                 </a>
               )}
               <p style={{ fontSize: 12.5, color: TITA.muted, fontWeight: 600, margin: "10px 0 0" }}>
@@ -613,6 +686,46 @@ export default function NeedsSurveyPage() {
                 <br />
                 그래서 티타는 그 순간을 먼저 알아채고 경고해 드려요.
               </p>
+            </div>
+          )}
+
+          {/* 사회적 증거 — 상황 맞춤 우선 정렬 3장 (상황 라벨 페르소나) */}
+          {!under45 && (
+            <div style={{ marginTop: 24 }}>
+              <p
+                style={{
+                  textAlign: "center",
+                  fontSize: 13,
+                  fontWeight: 800,
+                  color: TITA.forestMid,
+                  margin: "0 0 12px",
+                }}
+              >
+                티타에는 이런 분들이 있어요
+              </p>
+              {[...PERSONA_CARDS]
+                .sort((a, b) =>
+                  (b.key === answers.situation ? 1 : 0) -
+                  (a.key === answers.situation ? 1 : 0),
+                )
+                .slice(0, 3)
+                .map((c) => (
+                  <div
+                    key={c.tag}
+                    style={{
+                      background: TITA.white,
+                      border: `1px solid ${TITA.sage}`,
+                      borderRadius: 16,
+                      padding: "16px 18px",
+                      marginBottom: 10,
+                    }}
+                  >
+                    <p style={{ fontSize: 12, fontWeight: 800, color: TITA.forestMid, margin: "0 0 6px" }}>{c.tag}</p>
+                    <p style={{ fontSize: 14.5, lineHeight: 1.65, color: TITA.ink, margin: 0 }}>
+                      &ldquo;{c.quote}&rdquo;
+                    </p>
+                  </div>
+                ))}
             </div>
           )}
 
