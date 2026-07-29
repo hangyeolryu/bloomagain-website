@@ -174,7 +174,7 @@ export default function SubscribePage() {
             그 확인에 비용이 듭니다.
           </p>
           <p className="text-[15px] leading-relaxed mb-3 font-bold" style={{ color: TITA.forestDeep }}>
-            한 달 커피 한 잔 값으로, 여기서 나누는 모든 이야기를 지킬 수 있어요.
+            하루 660원 — 여기서 나누는 모든 이야기를 지키는 값이에요.
           </p>
           <p className="text-sm leading-relaxed" style={{ color: TITA.muted }}>
             만나서 차 마시고 산책하는 건 저희가 바라는 일이에요.
