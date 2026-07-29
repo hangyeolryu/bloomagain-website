@@ -21,6 +21,7 @@ import { logAnalyticsEvent } from "@/lib/firebase";
 import { trackPixel } from "@/lib/pixel";
 import { recordNeedsEvent, type NeedsAnswers } from "./needs-events";
 import { AppleMark, AndroidMark } from "../gyeol/StoreMarks";
+import { FounderCard } from "./FounderCard";
 
 type Platform = "ios" | "android" | "other";
 
@@ -732,8 +733,10 @@ export default function NeedsSurveyPage() {
             );
             // 답한 걱정에 맞는 블록만 — 사기 선택자에겐 사기 허물기,
             // 어색함 선택자에겐 어색함 허물기. 걱정 없음/시간 부담은 둘 다.
+            // 사기 선택자 = 사기 블록만. 어색함 선택자도 안전은 늘 궁금하므로
+            // 어색함 먼저 + 사기 블록도 함께. 그 외(시간·없음)는 둘 다.
             if (answers.worry === "scam") return [scamBlock];
-            if (answers.worry === "awkward") return [awkwardBlock];
+            if (answers.worry === "awkward") return [awkwardBlock, scamBlock];
             return [scamBlock, awkwardBlock];
           })()}
 
@@ -823,10 +826,6 @@ export default function NeedsSurveyPage() {
                   t: "누가 있나요?",
                   b: "NICE 본인인증을 마친 만 45세 이상 또래만 있어요. 수상한 접근·사기는 AI가 지켜보다 걸러내요.",
                 },
-                {
-                  t: "누가 만들었나요?",
-                  b: "이사 후 동네 친구가 없어진 엄마를 보고, 딸이 만들었어요. 엄마가 안심하고 쓸 수 있는 것만 넣습니다.",
-                },
               ].map((x) => (
                 <div
                   key={x.t}
@@ -889,6 +888,9 @@ export default function NeedsSurveyPage() {
               </p>
             </div>
           )}
+
+          {/* 마지막 — 만든 사람의 얼굴·이름·약속 + 문의 창구 */}
+          <FounderCard source="needs_result" />
         </div>
       </main>
     );
