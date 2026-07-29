@@ -24,6 +24,8 @@ import { logAnalyticsEvent } from "@/lib/firebase";
 import { trackPixel } from "@/lib/pixel";
 import { shareKakao, KAKAO_JS_KEY } from "@/lib/kakao";
 import { recordGyeolEvent } from "./gyeol-events";
+import { AppleMark, AndroidMark } from "./StoreMarks";
+import { useAgeStatus, AgeQuestion, AgeDisqualifiedNote } from "./AgeGate";
 
 type Platform = "ios" | "android" | "other";
 
@@ -90,6 +92,7 @@ export function ResultActions({
   // 인앱 브라우저 여부 + 안내 시트 표시.
   const [inApp, setInApp] = useState(false);
   const [showInAppHint, setShowInAppHint] = useState(false);
+  const ageStatus = useAgeStatus();
   useEffect(() => {
     setPlatform(detectPlatform());
     setInApp(detectInApp());
@@ -235,7 +238,7 @@ export function ResultActions({
           }
           style={heroButton}
         >
-          🍵 나도 테스트 해보기
+          나도 테스트 해보기
         </Link>
 
         {/* 다운로드는 작은 링크로만 — 방문자에게 강요하지 않는다.
@@ -305,6 +308,19 @@ export function ResultActions({
         </p>
       </div>
 
+      {/* 나이 자기선택 게이트 — 만 45+ 전용. 미답이면 게이트, 45 미만이면
+          '공유로 유도' 뷰(다운로드 숨김), 45+면 아래 다운로드 블록. 공유
+          섹션은 상태와 무관하게 항상 노출(45 미만도 확산은 살린다). */}
+      {ageStatus === "pending" && <AgeQuestion code={code} />}
+      {ageStatus === "disqualified" && (
+        <AgeDisqualifiedNote
+          onShare={KAKAO_JS_KEY ? shareToKakao : share}
+          kakao={!!KAKAO_JS_KEY}
+        />
+      )}
+
+      {ageStatus === "qualified" && (
+      <>
       {/* 인앱 브라우저(인스타·카톡 등) 상시 경고 — 탭 전에 미리 보여준다.
           유입의 ~90%가 인스타/스레드/페북 인앱이고, 여기선 스토어 핸드오프가
           깨져 "다운클릭했는데 설치 안 됨" 누수가 가장 크다. 눌러야 뜨는 시트
@@ -339,16 +355,38 @@ export function ResultActions({
           <a
             href={APP_STORE_URL}
             onClick={() => download("ios")}
-            style={{ ...heroButton, width: "auto", flex: 1, fontSize: 16, padding: "18px 12px" }}
+            style={{
+              ...heroButton,
+              width: "auto",
+              flex: 1,
+              fontSize: 16,
+              padding: "18px 12px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 8,
+            }}
           >
-            아이폰 (App Store)
+            <AppleMark size={20} />
+            아이폰
           </a>
           <a
             href={PLAY_STORE_URL}
             onClick={() => download("android")}
-            style={{ ...heroButton, width: "auto", flex: 1, fontSize: 16, padding: "18px 12px" }}
+            style={{
+              ...heroButton,
+              width: "auto",
+              flex: 1,
+              fontSize: 16,
+              padding: "18px 12px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 8,
+            }}
           >
-            안드로이드 (Play)
+            <AndroidMark size={20} />
+            삼성폰
           </a>
         </div>
       ) : (
@@ -365,7 +403,7 @@ export function ResultActions({
           }}
           style={heroButton}
         >
-          🍵 티타 앱 받기 (무료)
+          티타 앱 받기 (무료)
         </a>
       )}
 
@@ -409,9 +447,14 @@ export function ResultActions({
       >
         무료로 시작 · NICE 본인인증으로 안전하게
       </p>
+      </>
+      )}
 
       {/* 2차 — 공유. 카카오 키가 있으면 카카오톡 버튼(45+ 최강 채널)을
-          먼저, 없으면 일반 공유만. */}
+          먼저, 없으면 일반 공유만. 45 미만(disqualified)은 위 게이트 카드가
+          이미 공유를 히어로로 갖고 있어 중복을 피해 숨긴다. */}
+      {ageStatus !== "disqualified" && (
+      <>
       {KAKAO_JS_KEY && (
         <button
           onClick={shareToKakao}
@@ -446,7 +489,7 @@ export function ResultActions({
           marginTop: 8,
         }}
       >
-        🍵 {KAKAO_JS_KEY ? "다른 방법으로 공유" : "친구의 결도 물어보세요"}
+        {KAKAO_JS_KEY ? "다른 방법으로 공유" : "친구의 결도 물어보세요"}
       </button>
       <p
         style={{
@@ -460,6 +503,115 @@ export function ResultActions({
           ? `「${matchName}」와 정말 맞는지, 친구와 유형을 비교해 보세요`
           : "결이 맞는 친구인지, 서로의 유형으로 비교해 보세요"}
       </p>
+      </>
+      )}
+
+      {/* 이런 분들이 있어요 + 안전 관리 — 결과 본 45+에게만. 홈 페르소나와
+          동일한 '상황 라벨' 방식(이름·사진 없는 각색 상황 — 실존 회원 사칭 아님).
+          니즈 설문 걱정 1위(사기 83%)에 대한 응답으로 안전 블록을 상시 노출. */}
+      {taken && ageStatus === "qualified" && (
+        <>
+          <div style={{ marginTop: 36 }}>
+            <p
+              style={{
+                textAlign: "center",
+                fontSize: 13,
+                fontWeight: 800,
+                color: TITA.forestMid,
+                margin: "0 0 12px",
+              }}
+            >
+              티타에는 이런 분들이 있어요
+            </p>
+            {[
+              ["빈 둥지의 오후", "아이들 다 키우고 나니, 낮이 참 조용하더라고요. 커피 한 잔 같이할 사람이 있었으면."],
+              ["은퇴, 그 다음", "회사를 그만두고 알았어요. 매일 보던 건 '동료'였지, 친구는 아니었다는 걸."],
+              ["연락처는 많은데", "단톡방은 가득한데, 정작 속 얘기 편히 할 사람은 없더라고요."],
+            ].map(([tag, quote]) => (
+              <div
+                key={tag}
+                style={{
+                  background: TITA.white,
+                  border: `1px solid ${TITA.sage}`,
+                  borderRadius: 16,
+                  padding: "16px 18px",
+                  marginBottom: 10,
+                }}
+              >
+                <p style={{ fontSize: 12, fontWeight: 800, color: TITA.forestMid, margin: "0 0 6px" }}>{tag}</p>
+                <p style={{ fontSize: 14.5, lineHeight: 1.65, color: TITA.ink, margin: 0 }}>&ldquo;{quote}&rdquo;</p>
+              </div>
+            ))}
+          </div>
+
+          <div
+            style={{
+              marginTop: 24,
+              background: TITA.surface,
+              border: `1px solid ${TITA.sage}`,
+              borderRadius: 18,
+              padding: "20px 18px",
+            }}
+          >
+            <p
+              style={{
+                textAlign: "center",
+                fontSize: 15,
+                fontWeight: 800,
+                color: TITA.forestDeep,
+                margin: "0 0 14px",
+              }}
+            >
+              만남이 걱정되신다면 — 티타는 이렇게 지켜요
+            </p>
+            {[
+              ["본인인증 없이는 입장 자체가 안 돼요", "NICE 실명 인증을 마친 만 45세 이상만 있어요. 익명 가입이 없어요."],
+              ["수상한 접근은 AI가 먼저 봐요", "돈 이야기, 카톡·라인으로 데려가려는 시도를 자동 감지해 경고하고 차단해요."],
+              ["처음엔 둘이 아니라 여럿이 만나요", "서넛이 함께하는 찻자리 구조라, 이상한 사람이 발 붙이기 어려워요."],
+              ["의심되면 바로 신고할 수 있어요", "확인 즉시 조치하고, 문제 계정은 다시 매칭되지 않아요."],
+            ].map(([t, b]) => (
+              <div key={t} style={{ display: "flex", gap: 10, marginBottom: 12 }}>
+                <span
+                  style={{
+                    flexShrink: 0,
+                    width: 22,
+                    height: 22,
+                    borderRadius: 11,
+                    background: TITA.forest,
+                    color: TITA.cream,
+                    fontSize: 13,
+                    fontWeight: 800,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginTop: 1,
+                  }}
+                >
+                  ✓
+                </span>
+                <div>
+                  <p style={{ fontSize: 14.5, fontWeight: 800, color: TITA.forestDeep, margin: "0 0 2px" }}>{t}</p>
+                  <p style={{ fontSize: 13.5, lineHeight: 1.6, color: TITA.ink, margin: 0 }}>{b}</p>
+                </div>
+              </div>
+            ))}
+            <p
+              style={{
+                fontSize: 13,
+                lineHeight: 1.6,
+                color: TITA.forestMid,
+                fontWeight: 700,
+                margin: "4px 0 0",
+                textAlign: "center",
+              }}
+            >
+              앱 밖으로 데려가려는 순간이 가장 위험해요.
+              <br />
+              그래서 티타는 그 순간을 먼저 알아채고 경고해 드려요.
+            </p>
+          </div>
+        </>
+      )}
 
       {/* 3차 — 다시 하기, 작게 */}
       <div style={{ display: "flex", justifyContent: "center", marginTop: 4 }}>
@@ -506,7 +658,7 @@ export function ResultActions({
                 padding: "16px 0", textDecoration: "none",
               }}
             >
-              🍵 스토어 열기
+              스토어 열기
             </a>
             <button
               onClick={() => setShowInAppHint(false)}

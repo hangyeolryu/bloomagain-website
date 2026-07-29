@@ -9,6 +9,40 @@ import { ValueModifier } from "./ValueModifier";
 import { TopDownloadCTA } from "./TopDownloadCTA";
 import { TeaTree } from "../TeaTree";
 
+// 우리만의 찻잔 마크(밝은 배경용: 초록 잔 + 테라코타 찻물). 앱 스플래시
+// tea_cup_icon.dart와 동일 도형. 결과 페이지 상단 브랜드 헤더로.
+function TeaCupResult({ size = 52 }: { size?: number }) {
+  const GREEN = "#1F4E3D";
+  const body = "M18 40 L66 40 L60 66 Q42 82 24 66 Z";
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 100 100"
+      fill="none"
+      aria-hidden="true"
+      style={{ display: "inline-block" }}
+    >
+      <g stroke={GREEN} strokeWidth={4.5} strokeLinecap="round" opacity={0.4}>
+        <path d="M34 36 C37 31 31 26 34 21" />
+        <path d="M42 34 C45 29 39 24 42 18" />
+        <path d="M50 36 C53 31 47 26 50 21" />
+      </g>
+      <path d={body} fill={GREEN} />
+      <path d="M21.5 42 L62.5 42 L57.5 63 Q42 77 26.5 63 Z" fill="#D9694C" />
+      <ellipse cx="42" cy="40" rx="24" ry="7" fill="#E8896F" />
+      <path d={body} stroke={GREEN} strokeWidth={6} strokeLinejoin="round" />
+      <ellipse cx="42" cy="40" rx="24" ry="7" stroke={GREEN} strokeWidth={6} />
+      <path
+        d="M66 46 C86 45 87 66 59.5 63"
+        stroke={GREEN}
+        strokeWidth={6}
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
 // output: 'export' — 유형×온도 16개 + 레거시 8개를 빌드 타임에 정적 생성.
 export function generateStaticParams() {
   return ALL_ROUTE_CODES.map((type) => ({ type }));
@@ -59,6 +93,9 @@ export default async function GyeolResultPage({ params }: Params) {
       }}
     >
       <div style={{ maxWidth: 480, width: "100%" }}>
+        <div style={{ textAlign: "center", marginBottom: 6 }}>
+          <TeaCupResult size={50} />
+        </div>
         <p
           style={{
             textAlign: "center",
@@ -83,7 +120,21 @@ export default async function GyeolResultPage({ params }: Params) {
             border: `1px solid ${TITA.sage}`,
           }}
         >
-          <div style={{ fontSize: 72, lineHeight: 1, marginBottom: 12 }}>
+          <div
+            style={{
+              width: 104,
+              height: 104,
+              borderRadius: 999,
+              background: TITA.surface,
+              border: `1px solid ${TITA.sage}`,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: 56,
+              lineHeight: 1,
+              margin: "0 auto 18px",
+            }}
+          >
             {t.emoji}
           </div>
           {/* 가치 수식어 — 유형 이름 위에 붙어 32조합으로 세분화(클라이언트) */}
@@ -163,7 +214,8 @@ export default async function GyeolResultPage({ params }: Params) {
                   fontSize: 13,
                   fontWeight: 600,
                   color: TITA.forestDeep,
-                  background: TITA.surface,
+                  background: TITA.white,
+                  border: `1px solid ${TITA.sage}`,
                   padding: "8px 14px",
                   borderRadius: 999,
                 }}
@@ -176,7 +228,7 @@ export default async function GyeolResultPage({ params }: Params) {
 
         {/* 리빌 직후 peak CTA — 테스트 마친 사람에게만(TopDownloadCTA 내부 분기).
             자기 결 확인하고 만족한 그 순간에 다운로드를 잡는다. */}
-        <TopDownloadCTA code={type} />
+        <TopDownloadCTA code={type} matchName={match.name} />
 
         {/* 가치 결 — 8유형(어울림 방식) 위에 얹는 두 번째 층. 클라이언트에서
             ?v= 또는 sessionStorage로 읽어 렌더(없으면 안 그림). */}

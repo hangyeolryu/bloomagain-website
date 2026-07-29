@@ -29,8 +29,10 @@ export const TITA = {
 // Korean-first font stack. Geist (the project default) only ships Latin
 // glyphs; without this fallback, Korean characters fall back to whatever
 // the OS picks and look inconsistent across iOS/Android/desktop.
+// 1순위: 고운돋움(next/font가 --font-gowun 변수로 주입). 웹폰트가 로드되기
+// 전/실패 시엔 아래 OS 폰트로 폴백해 깨지지 않게 한다.
 export const KOREAN_FONT_STACK =
-  '-apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans CJK KR", "Noto Sans KR", "Malgun Gothic", Pretendard, sans-serif';
+  'var(--font-gowun), -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans CJK KR", "Noto Sans KR", "Malgun Gothic", Pretendard, sans-serif';
 
 // Store URLs — exposed here so every page's "앱 받기" button points at
 // the same destination. Easier than threading these through props.

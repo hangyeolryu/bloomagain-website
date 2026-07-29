@@ -18,6 +18,7 @@ import { QUIZ_QUESTIONS, scoreToCode, scoreToValue } from "./types";
 import { logAnalyticsEvent } from "@/lib/firebase";
 import { trackPixel } from "@/lib/pixel";
 import { recordGyeolEvent } from "./gyeol-events";
+import { AppleMark, AndroidMark } from "./StoreMarks";
 
 // 결과를 더 잘 맞추기 위한 두 가지(익명). 채점(8유형)에는 반영하지 않고,
 // 결과 페이지 다운로드 훅 분기(comfort) + 대시보드 성비 집계(gender)에만 쓴다.
@@ -30,6 +31,55 @@ const COMFORTS = [
   { key: "any", label: "상관없어요, 결만 맞으면" },
   { key: "opp", label: "이성 친구도 좋아요" },
 ] as const;
+
+
+// 우리만의 찻잔 마크 — 앱 스플래시(tea_cup_icon.dart)의 도형을 그대로 SVG로.
+// 초록 배경용: 크림 잔 + 테라코타 찻물 + 크림 김(모락모락, SMIL 애니메이션).
+function TeaCupMark({ size = 96 }: { size?: number }) {
+  const CREAM = "#F4EFE3";
+  const bodyD = "M18 40 L66 40 L60 66 Q42 82 24 66 Z";
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 100 100"
+      fill="none"
+      aria-hidden="true"
+      style={{ display: "inline-block" }}
+    >
+      {/* 김 세 줄기 — 순서대로 모락모락 페이드 */}
+      <g stroke={CREAM} strokeWidth={4.5} strokeLinecap="round">
+        {[
+          { d: "M34 36 C37 31 31 26 34 20", begin: "0s" },
+          { d: "M42 34 C45 29 39 24 42 17", begin: "0.6s" },
+          { d: "M50 36 C53 31 47 26 50 20", begin: "1.2s" },
+        ].map((w, i) => (
+          <path key={i} d={w.d} opacity={0}>
+            <animate
+              attributeName="opacity"
+              values="0;0.85;0"
+              dur="2.6s"
+              begin={w.begin}
+              repeatCount="indefinite"
+            />
+          </path>
+        ))}
+      </g>
+      {/* 잔 몸통 + 찻물 + 표면 + 외곽선 + 손잡이 (스플래시와 동일 순서) */}
+      <path d={bodyD} fill={CREAM} />
+      <path d="M21.5 42 L62.5 42 L57.5 63 Q42 77 26.5 63 Z" fill="#D9694C" />
+      <ellipse cx="42" cy="40" rx="24" ry="7" fill="#E8896F" />
+      <path d={bodyD} stroke={CREAM} strokeWidth={6} strokeLinejoin="round" />
+      <ellipse cx="42" cy="40" rx="24" ry="7" stroke={CREAM} strokeWidth={6} />
+      <path
+        d="M66 46 C86 45 87 66 59.5 63"
+        stroke={CREAM}
+        strokeWidth={6}
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
 
 export default function GyeolTestPage() {
   const router = useRouter();
@@ -108,9 +158,11 @@ export default function GyeolTestPage() {
     <main
       style={{
         minHeight: "100dvh",
-        background: `linear-gradient(160deg, ${TITA.cream} 0%, ${TITA.surface} 100%)`,
+        // 2026-07: 홈과 통일 — 딥그린 배경. 텍스트는 크림/세이지, 카드·주요
+        // 버튼은 크림 반전으로 초록 위에서 또렷하게.
+        background: `linear-gradient(160deg, ${TITA.forest} 0%, ${TITA.forestDeep} 100%)`,
         fontFamily: KOREAN_FONT_STACK,
-        color: TITA.ink,
+        color: TITA.cream,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -120,10 +172,13 @@ export default function GyeolTestPage() {
     >
       {!started ? (
         <div style={{ maxWidth: 480, width: "100%", textAlign: "center" }}>
-          <div style={{ fontSize: 52, marginBottom: 8 }}>🍵</div>
+          {/* 우리만의 찻잔 마크(앱 스플래시와 동일) — 김 모락모락. */}
+          <div style={{ marginBottom: 12 }}>
+            <TeaCupMark size={104} />
+          </div>
           <p
             style={{
-              color: TITA.forestMid,
+              color: TITA.camel,
               fontWeight: 700,
               letterSpacing: "-0.5px",
               fontSize: 15,
@@ -139,7 +194,7 @@ export default function GyeolTestPage() {
               letterSpacing: "-1.2px",
               lineHeight: 1.3,
               margin: "0 0 16px",
-              color: TITA.forestDeep,
+              color: TITA.cream,
             }}
           >
             나는 어떤 결의
@@ -150,11 +205,12 @@ export default function GyeolTestPage() {
             style={{
               fontSize: 16,
               lineHeight: 1.7,
-              color: TITA.muted,
+              color: TITA.sage,
               margin: "0 0 32px",
             }}
           >
-            18개의 질문으로 알아보는 나의 <b style={{ color: TITA.ink }}>결 유형</b>.
+            18개의 질문으로 알아보는 나의{" "}
+            <b style={{ color: TITA.cream }}>결 유형</b>.
             <br />
             3분이면 충분해요. 가입 없이 바로 시작.
           </p>
@@ -165,13 +221,13 @@ export default function GyeolTestPage() {
               padding: "18px 24px",
               fontSize: 18,
               fontWeight: 700,
-              color: TITA.cream,
-              background: TITA.forest,
+              color: TITA.forest,
+              background: TITA.cream,
               border: "none",
-              borderRadius: 16,
+              borderRadius: 999,
               cursor: "pointer",
               fontFamily: KOREAN_FONT_STACK,
-              boxShadow: "0 8px 24px rgba(31,78,61,0.24)",
+              boxShadow: "0 10px 26px rgba(0,0,0,0.22)",
             }}
           >
             테스트 시작하기
@@ -184,11 +240,11 @@ export default function GyeolTestPage() {
             style={{
               fontSize: 14,
               fontWeight: 700,
-              color: TITA.forestMid,
-              margin: "14px 0 8px",
+              color: TITA.camel,
+              margin: "16px 0 10px",
             }}
           >
-            바로 티타에서 결 맞는 친구 만나기
+            바로 앱 받기 · 어떤 폰이세요?
           </p>
           <div style={{ display: "flex", gap: 10 }}>
             <a
@@ -199,18 +255,21 @@ export default function GyeolTestPage() {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                padding: "14px 12px",
-                fontSize: 15,
+                gap: 9,
+                padding: "15px 12px",
+                fontSize: 16,
                 fontWeight: 700,
                 color: TITA.cream,
-                background: TITA.forest,
-                borderRadius: 12,
+                background: "transparent",
+                border: "1.5px solid rgba(251,247,240,0.55)",
+                borderRadius: 999,
                 cursor: "pointer",
                 fontFamily: KOREAN_FONT_STACK,
                 textDecoration: "none",
               }}
             >
-               App Store
+              <AppleMark size={22} />
+              아이폰
             </a>
             <a
               href={PLAY_STORE_URL}
@@ -230,25 +289,28 @@ export default function GyeolTestPage() {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                padding: "14px 12px",
-                fontSize: 15,
+                gap: 9,
+                padding: "15px 12px",
+                fontSize: 16,
                 fontWeight: 700,
                 color: TITA.cream,
-                background: TITA.forest,
-                borderRadius: 12,
+                background: "transparent",
+                border: "1.5px solid rgba(251,247,240,0.55)",
+                borderRadius: 999,
                 cursor: "pointer",
                 fontFamily: KOREAN_FONT_STACK,
                 textDecoration: "none",
               }}
             >
-              ▶ Google Play
+              <AndroidMark size={22} />
+              삼성폰
             </a>
           </div>
-          <p style={{ fontSize: 12.5, color: TITA.mutedSoft, marginTop: 8, fontWeight: 600 }}>
+          <p style={{ fontSize: 12.5, color: TITA.sage, marginTop: 8, fontWeight: 600 }}>
             무료 · NICE 본인인증으로 안전하게
           </p>
 
-          <p style={{ fontSize: 13, color: TITA.mutedSoft, marginTop: 16 }}>
+          <p style={{ fontSize: 13, color: TITA.sage, opacity: 0.85, marginTop: 16 }}>
             나와 결이 맞는 친구 유형까지 알려드려요.
             <br />
             티타에선 답할수록 더 또렷해져, 진짜 맞는 사람을 찾아줘요.
@@ -263,7 +325,7 @@ export default function GyeolTestPage() {
                 display: "flex",
                 justifyContent: "space-between",
                 fontSize: 13,
-                color: TITA.muted,
+                color: TITA.sage,
                 marginBottom: 8,
                 fontWeight: 600,
               }}
@@ -277,7 +339,7 @@ export default function GyeolTestPage() {
                 style={{
                   background: "none",
                   border: "none",
-                  color: step === 0 ? TITA.mutedSoft : TITA.forestMid,
+                  color: step === 0 ? "rgba(214,226,216,0.45)" : TITA.cream,
                   cursor: step === 0 ? "default" : "pointer",
                   fontSize: 13,
                   fontWeight: 600,
@@ -291,7 +353,7 @@ export default function GyeolTestPage() {
             <div
               style={{
                 height: 6,
-                background: TITA.sage,
+                background: "rgba(251,247,240,0.18)",
                 borderRadius: 999,
                 overflow: "hidden",
               }}
@@ -300,7 +362,7 @@ export default function GyeolTestPage() {
                 style={{
                   height: "100%",
                   width: `${((step + 1) / total) * 100}%`,
-                  background: TITA.forest,
+                  background: TITA.camel,
                   borderRadius: 999,
                   transition: "width 0.3s ease",
                 }}
@@ -315,7 +377,7 @@ export default function GyeolTestPage() {
               fontWeight: 800,
               letterSpacing: "-0.8px",
               lineHeight: 1.4,
-              color: TITA.forestDeep,
+              color: TITA.cream,
               margin: "0 0 28px",
               minHeight: 68,
             }}
@@ -366,25 +428,27 @@ export default function GyeolTestPage() {
         </div>
       ) : (
         <div style={{ maxWidth: 480, width: "100%", textAlign: "center" }}>
-          <div style={{ fontSize: 44, marginBottom: 8 }}>🍵</div>
+          <div style={{ marginBottom: 8 }}>
+            <TeaCupMark size={72} />
+          </div>
           <h2
             style={{
               fontSize: 26,
               fontWeight: 800,
               letterSpacing: "-0.8px",
               lineHeight: 1.35,
-              color: TITA.forestDeep,
+              color: TITA.cream,
               margin: "0 0 8px",
             }}
           >
             마지막으로, 딱 두 가지만
           </h2>
-          <p style={{ fontSize: 15, lineHeight: 1.6, color: TITA.muted, margin: "0 0 28px" }}>
+          <p style={{ fontSize: 15, lineHeight: 1.6, color: TITA.sage, margin: "0 0 28px" }}>
             결과를 더 잘 맞춰드릴게요. (선택 · 익명으로 집계돼요)
           </p>
 
           {/* 성별 */}
-          <p style={{ fontSize: 14, fontWeight: 700, color: TITA.forestMid, margin: "0 0 10px", textAlign: "left" }}>
+          <p style={{ fontSize: 14, fontWeight: 700, color: TITA.camel, margin: "0 0 10px", textAlign: "left" }}>
             나는
           </p>
           <div style={{ display: "flex", gap: 10, marginBottom: 24 }}>
@@ -399,9 +463,9 @@ export default function GyeolTestPage() {
                     padding: "16px 12px",
                     fontSize: 16,
                     fontWeight: 700,
-                    color: on ? TITA.cream : TITA.ink,
-                    background: on ? TITA.forest : TITA.white,
-                    border: `2px solid ${on ? TITA.forest : TITA.sage}`,
+                    color: on ? TITA.forestDeep : TITA.ink,
+                    background: on ? TITA.camel : TITA.cream,
+                    border: `2px solid ${on ? TITA.camel : "transparent"}`,
                     borderRadius: 14,
                     cursor: "pointer",
                     fontFamily: KOREAN_FONT_STACK,
@@ -414,10 +478,10 @@ export default function GyeolTestPage() {
           </div>
 
           {/* 편안함 */}
-          <p style={{ fontSize: 14, fontWeight: 700, color: TITA.forestMid, margin: "0 0 4px", textAlign: "left" }}>
+          <p style={{ fontSize: 14, fontWeight: 700, color: TITA.camel, margin: "0 0 4px", textAlign: "left" }}>
             어떤 분들과 함께일 때 더 편안하세요?
           </p>
-          <p style={{ fontSize: 12.5, color: TITA.mutedSoft, margin: "0 0 10px", textAlign: "left" }}>
+          <p style={{ fontSize: 12.5, color: TITA.sage, opacity: 0.85, margin: "0 0 10px", textAlign: "left" }}>
             친구로서요 🙂
           </p>
           <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 28 }}>
@@ -432,9 +496,9 @@ export default function GyeolTestPage() {
                     fontSize: 16,
                     fontWeight: 600,
                     textAlign: "left",
-                    color: on ? TITA.cream : TITA.ink,
-                    background: on ? TITA.forest : TITA.white,
-                    border: `2px solid ${on ? TITA.forest : TITA.sage}`,
+                    color: on ? TITA.forestDeep : TITA.ink,
+                    background: on ? TITA.camel : TITA.cream,
+                    border: `2px solid ${on ? TITA.camel : "transparent"}`,
                     borderRadius: 14,
                     cursor: "pointer",
                     fontFamily: KOREAN_FONT_STACK,
@@ -453,23 +517,23 @@ export default function GyeolTestPage() {
               padding: "18px 24px",
               fontSize: 18,
               fontWeight: 700,
-              color: TITA.cream,
-              background: TITA.forest,
+              color: TITA.forest,
+              background: TITA.cream,
               border: "none",
-              borderRadius: 16,
+              borderRadius: 999,
               cursor: "pointer",
               fontFamily: KOREAN_FONT_STACK,
-              boxShadow: "0 8px 24px rgba(31,78,61,0.24)",
+              boxShadow: "0 10px 26px rgba(0,0,0,0.22)",
             }}
           >
-            결과 보기 🍵
+            결과 보기
           </button>
           <button
             onClick={finish}
             style={{
               background: "none",
               border: "none",
-              color: TITA.mutedSoft,
+              color: TITA.sage,
               cursor: "pointer",
               fontSize: 13,
               fontWeight: 600,

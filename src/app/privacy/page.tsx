@@ -24,9 +24,9 @@ export default function PrivacyPage() {
       activeKey="privacy"
       title="개인정보 처리방침"
       subtitle="다시 봄 (Tita Korea)"
-      versionTag="v2.0"
-      effectiveDate="2026년 5월 19일"
-      lastUpdated="2026년 5월 19일"
+      versionTag="v2.1"
+      effectiveDate="2026년 7월 27일"
+      lastUpdated="2026년 7월 27일"
       toc={TOC}
     >
       <section id="summary" className="bg-slate-50 border border-slate-200 rounded-lg p-6 -mt-2 mb-10">
@@ -36,7 +36,7 @@ export default function PrivacyPage() {
         <h3>1. 수집하는 데이터</h3>
         <ul>
           <li><strong>프로필 데이터</strong>: 이름, 생년월일, 성별, 이메일, 휴대폰 번호, 본인인증값(CI/DI), 프로필 사진, 관심사, 지역, 자기소개, 접근성 설정 등</li>
-          <li><strong>채팅·메시지 데이터</strong>: 대화 메시지 내용(스캠 분석 및 안전 보호 목적)</li>
+          <li><strong>채팅·메시지 데이터</strong>: 대화 메시지 내용(스캠 분석·안전 보호 및 서비스 품질 개선 목적, 권한 있는 운영자 열람 가능 — 접근 기록됨)</li>
           <li><strong>안전·이용 데이터</strong>: 서비스 이용 기록, 접속 로그, 기기 정보, 신뢰도·위험 점수, 안전 이벤트 이력, FCM 토큰</li>
           <li><strong>안녕감 측정 데이터</strong> (선택 동의): 외로움·웰빙·우울 등 표준 척도 응답 및 자체 일일 질문 응답</li>
           <li><strong>기관 PoC 식별자</strong> (해당 시): 가입 기관(50플러스재단 캠퍼스, 노인복지관 등) 코드</li>
@@ -94,6 +94,7 @@ export default function PrivacyPage() {
               <li>4단계 안전 시스템 (특허 출원 PA260003): CI 인증 → AI 위험 점수 → 적응형 UI → 멤버 상호 보호</li>
               <li>로맨스 스캠·피싱 패턴 감지 및 차단 시도</li>
               <li>사용자 위험 점수 누적 및 관리자 검토 후 제재 가능</li>
+              <li><strong>운영자 대화 열람</strong>: 안전 보호(신고·위험 대응) 및 서비스 품질 개선(예: 모임 대화가 원활히 이어지는지 점검)을 위해, 회사의 권한 있는 운영자가 대화 내용을 열람할 수 있습니다. 모든 열람은 열람자·시각·대상 대화방이 감사 로그로 기록되며, 접근 권한은 최소한의 인원으로 제한됩니다.</li>
               <li><strong>중요:</strong> 모든 사기를 감지하거나 차단할 수 있음을 보장하지 않습니다.</li>
             </ul>
           </li>
@@ -136,7 +137,7 @@ export default function PrivacyPage() {
             <strong>자동수집항목</strong>:
             <ul>
               <li>기기 정보, 접속 로그, 쿠키, 서비스 이용 기록</li>
-              <li>대화 메시지 메타데이터(빈도·길이·시각); 본문은 안전 분석 외 별도 보존되지 않음</li>
+              <li>대화 메시지 본문 및 메타데이터(빈도·길이·시각). 본문은 채팅 기능 제공, 안전 분석 및 서비스 품질 개선을 위해 저장·처리되며, 권한 있는 운영자가 열람할 수 있습니다(제2조·제4조 참조)</li>
               <li>사용자 임베딩 벡터(768차원, 30일 캐시)</li>
               <li>신뢰도 점수, 위험 점수, 안전 이벤트 이력</li>
               <li>FCM 토큰(푸시 알림 전송용)</li>
@@ -170,7 +171,7 @@ export default function PrivacyPage() {
             </ul>
           </li>
           <li>사용자 임베딩 벡터: 30일 캐시 후 자동 갱신</li>
-          <li>대화 메시지 메타데이터: 90일 보유 후 자동 삭제</li>
+          <li>대화 메시지: 메타데이터(빈도·길이·시각)는 90일 보유 후 자동 삭제됩니다. 본문은 채팅 기능 제공 및 안전·품질 점검을 위해 대화방이 유지되는 동안 보관되며, 대화방 삭제 또는 관련 내부 방침에 따라 파기됩니다.</li>
           <li>안전 이벤트 이력 및 위험 점수: 서비스 안전을 위해 내부 방침에 따라 보관</li>
           <li><strong>설문 응답 데이터</strong>: 사용자 동의에 따라 보유. 동의 철회 시 즉시 삭제.</li>
           <li><strong>결제·세금계산서 정보</strong>: 「국세기본법」 및 「전자상거래법」에 따라 5년간 보관</li>
@@ -355,6 +356,7 @@ export default function PrivacyPage() {
         <ul>
           <li><strong>v1.0 공고·시행</strong>: 2026년 1월 1일</li>
           <li><strong>v2.0 공고·시행</strong>: 2026년 5월 19일</li>
+          <li><strong>v2.1 공고·시행</strong>: 2026년 7월 27일 — 안전·품질 목적의 운영자 대화 열람 및 감사 로그 명시, 대화 본문 보유·처리 조항 명확화</li>
         </ul>
         <h3>v2.0 주요 변경사항</h3>
         <ol>
