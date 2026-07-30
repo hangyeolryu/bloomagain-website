@@ -48,7 +48,7 @@ type Tier = {
 };
 
 const TIERS: Tier[] = [
-  { minCount:   1, pricePerMember: 0,     label: "베타",    blurb: "1년 무료 베타 진행 중" },
+  { minCount:   1, pricePerMember: 0,     label: "파일럿",  blurb: "6개월 무료 파일럿 진행 중" },
   { minCount: 100, pricePerMember: 8000,  label: "스타터",  blurb: "복지관·소규모 재단" },
   { minCount: 500, pricePerMember: 6000,  label: "스탠다드", blurb: "중규모 실버타운" },
   { minCount: 1000, pricePerMember: 5000, label: "엔터프라이즈", blurb: "광역 재단·보험사 컨소시엄" },
@@ -68,8 +68,8 @@ const useCases = [
     icon: Building2,
     title: "재단·복지관",
     description:
-      "회원 디지털 친구 만들기 프로그램의 안전한 도구로 통합. 첫 1년 무료 베타로 도메인 데이터를 같이 쌓습니다.",
-    pilotPeriod: "1년 무료",
+      "회원 디지털 친구 만들기 프로그램의 안전한 도구로 통합. 6개월 무료 파일럿으로 도메인 데이터를 같이 쌓고, 끝나면 성과 자료를 정리해 드립니다.",
+    pilotPeriod: "6개월 무료",
   },
   {
     icon: HeartHandshake,
@@ -511,9 +511,9 @@ export default function BusinessPage() {
                       style={{ color: BRAND.navy }}
                     />
                     <div className="text-sm" style={{ color: BRAND.ink }}>
-                      <strong>1년 무료 베타 진행 중.</strong> 100명 미만 기관도
-                      베타 조건으로 무료 운영 가능합니다. 1년 후 단가는 협의로
-                      결정합니다.
+                      <strong>6개월 무료 파일럿 진행 중.</strong> 100명 미만
+                      기관도 파일럿 조건으로 무료 운영 가능합니다. 파일럿이 끝나면
+                      성과 자료를 정리해 드리고, 이후 단가는 협의로 결정합니다.
                     </div>
                   </div>
                 </div>
