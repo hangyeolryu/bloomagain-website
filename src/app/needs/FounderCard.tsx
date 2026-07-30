@@ -49,7 +49,7 @@ export function FounderCard({ source }: { source?: string }) {
       setSent(true);
       logAnalyticsEvent("web_contact_sent", { source: source ?? "needs_result" });
     } catch {
-      setErr("잠시 후 다시 시도해 주세요. 계속 안 되면 hello@tita-app.com으로 보내주세요.");
+      setErr("잠시 후 다시 시도해 주세요. 계속 안 되면 ceo@effeffcorp.com으로 보내주세요.");
     } finally {
       setSending(false);
     }
