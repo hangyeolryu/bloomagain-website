@@ -3,7 +3,12 @@
 // 컬렉션·엔드포인트를 분리해 결큐 통계와 섞이지 않는다.
 // 겉은 테스트, 속은 수요 설문 — 답 하나하나가 광고·제품 조준 데이터.
 
-type NeedsPhase = "start" | "answer" | "abandon" | "complete" | "download" | "share";
+// skip_* = 설문을 건너뛰고 앱만 받는 우회로(2026-08-01). 첫 질문에서 78%가
+// 떠나는데 그때까지 다운로드 버튼이 결과 화면에만 있어, 받고 싶어도 받을 데가
+// 없었다. download와 별개 phase로 둬서 "완주→다운 41%" 지표가 흐려지지 않게 한다.
+type NeedsPhase =
+  | "start" | "answer" | "abandon" | "complete" | "download" | "share"
+  | "skip_open" | "skip_age" | "skip_download";
 
 export type NeedsAnswers = {
   // answer 이벤트 전용 — 어느 질문·몇 번째에 답했나 (질문별 이탈 파악)

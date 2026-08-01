@@ -263,6 +263,10 @@ export default function NeedsSurveyPage() {
   // "또는, 직접 쓸게요" — 보기 밖의 진짜 수요를 받는 입력. 연령대 문항 제외.
   const [customOpen, setCustomOpen] = useState(false);
   const [customText, setCustomText] = useState("");
+  // 설문을 건너뛰고 앱만 받으려는 사람 — 첫 질문에서만 열린다. null=안 열림.
+  const [skipBand, setSkipBand] = useState<"none" | "ok" | "under45">("none");
+  const [skipOpen, setSkipOpen] = useState(false);
+  const skipRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     // start = "사람이 실제로 본" 도착. Meta 인앱 브라우저는 광고 노출 시
@@ -377,6 +381,31 @@ export default function NeedsSurveyPage() {
     recordNeedsEvent("download", { ...answers, store });
     logAnalyticsEvent("app_download_click", { store, source: "needs_survey" });
     trackPixel("AppDownloadClick", { store, source: "needs" }, true);
+  }
+
+  // 설문 없이 앱만 받는 우회로. 도착한 사람의 78%가 첫 질문에서 떠나는데,
+  // 그때까지 다운로드는 결과 화면에만 있어 받을 방법 자체가 없었다.
+  // 다만 티타는 만 45세 이상 전용이라, 결큐와 같이 나이를 한 번 묻고 보낸다 —
+  // 안 물으면 설치하고 본인인증에서 튕긴다(결큐 시도자의 43%가 나이 미달이었다).
+  function openSkip() {
+    setSkipOpen(true);
+    recordNeedsEvent("skip_open", { step });
+    // 카드가 보기 목록 아래에 열려 화면 밖이다 — 안 끌어오면 눌러도
+    // 아무 일 없는 것처럼 보인다.
+    requestAnimationFrame(() => {
+      skipRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+  }
+
+  function skipAge(band: "45-49" | "50-54" | "55-59" | "60-64" | "65plus" | "under45") {
+    recordNeedsEvent("skip_age", { ageBand: band, step });
+    setSkipBand(band === "under45" ? "under45" : "ok");
+  }
+
+  function skipDownload(store: "ios" | "android") {
+    recordNeedsEvent("skip_download", { store, step });
+    logAnalyticsEvent("app_download_click", { store, source: "needs_skip" });
+    trackPixel("AppDownloadClick", { store, source: "needs_skip" }, true);
   }
 
   async function share() {
@@ -1159,6 +1188,153 @@ export default function NeedsSurveyPage() {
               </button>
             ))}
         </div>
+
+        {/* 설문을 건너뛰고 앱만 받는 길 — 첫 질문에서만 연다.
+            여기서 78%가 떠나는데 다운로드는 결과 화면에만 있어, 받고 싶어도
+            받을 데가 없었다(2026-08-01). 다만 눈에 띄는 버튼으로 두면 설문
+            자체를 잡아먹는다 — 결큐에서 경쟁 CTA가 다운을 0으로 만든 전례가
+            있다. 그래서 보기 아래 조용한 글줄 하나로만 둔다. */}
+        {step === 0 && !skipOpen && (
+          <p style={{ textAlign: "center", margin: "22px 0 0" }}>
+            <button
+              onClick={openSkip}
+              style={{
+                fontFamily: KOREAN_FONT_STACK,
+                fontSize: 13.5,
+                fontWeight: 600,
+                color: "rgba(251,247,240,0.55)",
+                background: "transparent",
+                border: "none",
+                textDecoration: "underline",
+                textUnderlineOffset: 3,
+                cursor: "pointer",
+                padding: 6,
+              }}
+            >
+              설문은 접어두고, 앱만 받을게요
+            </button>
+          </p>
+        )}
+
+        {step === 0 && skipOpen && (
+          <div
+            ref={skipRef}
+            style={{
+              marginTop: 22,
+              background: TITA.white,
+              border: `1.5px solid ${TITA.forest}`,
+              borderRadius: 20,
+              padding: "20px 18px",
+              boxShadow: "0 14px 34px rgba(31,78,61,0.15)",
+            }}
+          >
+            {skipBand === "none" && (
+              <>
+                <p style={{ textAlign: "center", fontSize: 17, fontWeight: 800, lineHeight: 1.5, letterSpacing: "-0.5px", color: TITA.forestDeep, margin: "0 0 4px" }}>
+                  티타는 <span style={{ color: TITA.forest }}>만 45세 이상</span> 전용이에요
+                </p>
+                <p style={{ textAlign: "center", fontSize: 13.5, color: TITA.muted, fontWeight: 600, margin: "0 0 16px" }}>
+                  연령대만 알려주시면 바로 보내드릴게요
+                </p>
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  {([
+                    ["45-49", "45–49세"], ["50-54", "50–54세"],
+                    ["55-59", "55–59세"], ["60-64", "60–64세"], ["65plus", "65세 이상"],
+                  ] as const).map(([band, label]) => (
+                    <button
+                      key={band}
+                      onClick={() => skipAge(band)}
+                      style={{
+                        fontFamily: KOREAN_FONT_STACK,
+                        fontSize: 15.5,
+                        fontWeight: 800,
+                        letterSpacing: "-0.3px",
+                        color: TITA.cream,
+                        background: TITA.forest,
+                        border: "none",
+                        borderRadius: 13,
+                        padding: "14px 12px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                  <button
+                    onClick={() => skipAge("under45")}
+                    style={{
+                      fontFamily: KOREAN_FONT_STACK,
+                      fontSize: 14,
+                      fontWeight: 700,
+                      color: TITA.muted,
+                      background: "transparent",
+                      border: `1px solid ${TITA.sage}`,
+                      borderRadius: 12,
+                      padding: "13px 12px",
+                      cursor: "pointer",
+                      marginTop: 2,
+                    }}
+                  >
+                    만 45세 미만이에요
+                  </button>
+                </div>
+              </>
+            )}
+
+            {skipBand === "ok" && (
+              <>
+                <p style={{ textAlign: "center", fontSize: 17, fontWeight: 800, lineHeight: 1.5, letterSpacing: "-0.5px", color: TITA.forestDeep, margin: "0 0 14px" }}>
+                  받으시면 바로 시작할 수 있어요
+                </p>
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  <a
+                    href={platform === "android" ? PLAY_STORE_URL : APP_STORE_URL}
+                    onClick={() => skipDownload(platform === "android" ? "android" : "ios")}
+                    style={{ ...heroBtn, display: "flex", alignItems: "center", justifyContent: "center", gap: 8, textDecoration: "none" }}
+                  >
+                    {platform === "android" ? <AndroidMark /> : <AppleMark />}
+                    티타 받기
+                  </a>
+                  <a
+                    href={platform === "android" ? APP_STORE_URL : PLAY_STORE_URL}
+                    onClick={() => skipDownload(platform === "android" ? "ios" : "android")}
+                    style={{
+                      fontFamily: KOREAN_FONT_STACK,
+                      textAlign: "center",
+                      fontSize: 13.5,
+                      fontWeight: 700,
+                      color: TITA.muted,
+                      textDecoration: "underline",
+                      textUnderlineOffset: 3,
+                      padding: 8,
+                    }}
+                  >
+                    {platform === "android" ? "아이폰이신가요?" : "안드로이드이신가요?"}
+                  </a>
+                </div>
+              </>
+            )}
+
+            {skipBand === "under45" && (
+              <>
+                <p style={{ textAlign: "center", fontSize: 17, fontWeight: 800, lineHeight: 1.5, letterSpacing: "-0.5px", color: TITA.forestDeep, margin: "0 0 8px" }}>
+                  아직은 티타를 쓰실 수 없어요
+                </p>
+                <p style={{ textAlign: "center", fontSize: 14, lineHeight: 1.7, color: TITA.ink, fontWeight: 600, margin: "0 0 16px" }}>
+                  대신, 요즘 부쩍 혼자인 시간이 많아지신
+                  <br />
+                  <b>만 45세 이상 가족·친구</b>가 떠오르지 않나요?
+                </p>
+                <button
+                  onClick={share}
+                  style={{ ...heroBtn, width: "100%", border: "none", cursor: "pointer" }}
+                >
+                  그분께 알려주기
+                </button>
+              </>
+            )}
+          </div>
+        )}
       </div>
     </main>
   );
