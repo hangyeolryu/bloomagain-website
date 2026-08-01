@@ -130,7 +130,7 @@ const QUESTIONS: Q[] = [
   {
     key: "gender",
     title: "성별이 어떻게 되세요?",
-    sub: "모임 구성(동성끼리가 기본)에 참고해요",
+    sub: "모임 구성에 참고해요 — 동성만 원하시면 앱에서 그렇게 둘 수 있어요",
     options: [
       { value: "f", label: "여성" },
       { value: "m", label: "남성" },
@@ -202,7 +202,7 @@ const RESULTS: Record<string, { emoji: string; head: string; body: string }> = {
 const WORRY_LINES: Record<string, string> = {
   scam: "걱정하시는 것, 저희도 제일 신경 써요 — 티타는 NICE 본인인증을 마친 45세 이상 또래만 있고, 수상한 접근은 AI가 걸러내요.",
   awkward:
-    "어색할까 걱정되시죠? 티타의 찻자리는 둘이 아니라 서넛이 함께라, 말없이 있어도 어색하지 않아요.",
+    "어색할까 걱정되시죠? 티타의 티타임은 둘이 아니라 서넛이 함께라, 말없이 있어도 어색하지 않아요.",
   time: "부담 없이 — 온라인 대화부터 천천히, 시간 날 때만 하면 돼요.",
   none: "티타는 NICE 본인인증을 마친 45세 이상 또래만 있어 안심하고 시작할 수 있어요.",
 };
@@ -637,6 +637,29 @@ export default function NeedsSurveyPage() {
               >
                 {worryLine}
               </p>
+
+              {/* 동성 선호자의 다운로드 전환이 유독 낮다(29% vs 상관없음 47%,
+                  완주 95명 기준). 답할 때 본 건 성별 문항의 작은 부제 한 줄뿐이라,
+                  정작 받기 직전엔 자기 답이 반영된다는 확인이 없다. 여기서
+                  되돌려준다. 편성은 실제로 양방향 하드 규칙이라 지킬 수 있는 약속. */}
+              {answers.person === "same" && (
+                <p
+                  style={{
+                    fontSize: 13.5,
+                    lineHeight: 1.65,
+                    fontWeight: 700,
+                    color: TITA.forestMid,
+                    background: TITA.surface,
+                    border: `1px solid ${TITA.sage}`,
+                    borderRadius: 12,
+                    padding: "11px 13px",
+                    margin: "0 0 16px",
+                  }}
+                >
+                  동성 또래가 편하다고 하셨죠. 앱에서 ‘동성만’으로 두시면
+                  이성은 아예 자리에 들어오지 않아요.
+                </p>
+              )}
               {platform === "other" ? (
                 <div style={{ display: "flex", gap: 10 }}>
                   <a href={APP_STORE_URL} onClick={() => download("ios")} style={{ ...heroBtn, flex: 1 }}>
@@ -707,7 +730,7 @@ export default function NeedsSurveyPage() {
                 {[
                   ["본인인증 없이는 입장 자체가 안 돼요", "NICE 실명 인증을 마친 만 45세 이상만 있어요. 익명 가입이 없어요."],
                   ["수상한 접근은 AI가 먼저 봐요", "돈 이야기, 카톡·라인으로 데려가려는 시도를 자동 감지해 경고하고 차단해요."],
-                  ["처음엔 둘이 아니라 여럿이 만나요", "서넛이 함께하는 찻자리 구조라, 이상한 사람이 발 붙이기 어려워요."],
+                  ["처음엔 둘이 아니라 여럿이 만나요", "서넛이 함께하는 티타임 구조라, 이상한 사람이 발 붙이기 어려워요."],
                   ["의심되면 바로 신고할 수 있어요", "확인 즉시 조치하고, 문제 계정은 다시 매칭되지 않아요."],
                 ].map(([t, b]) => (
                   <div key={t} style={{ display: "flex", gap: 10, marginBottom: 12 }}>
@@ -926,7 +949,7 @@ export default function NeedsSurveyPage() {
               {[
                 {
                   t: "어떻게 만나나요?",
-                  b: "처음부터 얼굴 보는 게 아니에요. 결이 맞는 서넛이 대화방에서 먼저 인사하고, 편해지면 그때 동네 찻자리에서 만나요.",
+                  b: "처음부터 얼굴 보는 게 아니에요. 결이 맞는 서넛이 대화방에서 먼저 인사하고, 편해지면 그때 동네에서 티타임을 가져요.",
                 },
                 {
                   t: "누가 있나요?",
