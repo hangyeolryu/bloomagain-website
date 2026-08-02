@@ -73,14 +73,25 @@ export const metadata: Metadata = {
     ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
       ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }
       : {}),
-    ...(process.env.NEXT_PUBLIC_NAVER_SITE_VERIFICATION
-      ? {
-          other: {
+    other: {
+      // Meta 도메인 인증. 환경변수로 두지 않고 값을 박는다 — 네이버·구글처럼
+      // env 조건부로 두면 변수를 안 넣은 배포에서 태그가 통째로 사라지는데,
+      // 메타는 그걸 "인증 취소"로 읽는다(2026-08-03: 넣었다고 기억하는데 소스에
+      // 없었고, git 이력에도 한 번도 커밋된 적이 없었다).
+      //
+      // 이 값은 비밀이 아니다. 공개 페이지의 <head>에 그대로 노출되는 게 목적이라
+      // 저장소에 있어도 위험하지 않다.
+      //
+      // 주의: Meta는 <head>의 **정적** HTML에서만 찾는다. JS로 심으면 실패한다.
+      // Next 메타데이터 API는 서버에서 렌더하므로 안전하다.
+      "facebook-domain-verification": "ywhiaax1hqr55mmjwiastcsoskeq05",
+      ...(process.env.NEXT_PUBLIC_NAVER_SITE_VERIFICATION
+        ? {
             "naver-site-verification":
                 process.env.NEXT_PUBLIC_NAVER_SITE_VERIFICATION,
-          },
-        }
-      : {}),
+          }
+        : {}),
+    },
   },
 };
 
