@@ -47,16 +47,31 @@ type Q = {
 
 const QUESTIONS: Q[] = [
   {
-    // 실태 먼저 — 제일 답하기 쉬운 질문으로 시작(방어감 0) + 경쟁자 조사
-    // (유튜브가 경쟁자인지, 이미 사교적인지, "그냥 흘러가요"=핵심 타겟).
-    key: "timeuse",
-    title: "부쩍 많아진 그 시간,\n요즘은 주로 어떻게 보내세요?",
+    // 상황을 먼저 묻는다(2026-08-04). 원래 첫 질문은 "그 시간을 어떻게
+    // 보내세요?"였고 도착한 사람의 58%(1098명 중 639명)가 아무것도 안 누르고
+    // 나갔다. 한 번만 누르면 그다음 이탈은 질문당 한 자릿수다 — 막힌 건 설문
+    // 길이가 아니라 첫 클릭이었다.
+    //
+    // 그 질문은 보기 다섯 중 넷이 자기 고백이었다(TV만 본다 / 혼자다 / 그냥
+    // 흘러간다). 유일하게 떳떳한 "친구·모임 만나면서"를 고르면 이 앱이 필요
+    // 없다는 뜻이 되고. 처음 온 사람에게 첫 클릭으로 자기 진단을 시킨 셈이다.
+    //
+    // 상황은 평가가 아니라 사실이라 누르는 값이 싸다. 광고도 이미 "자녀는
+    // 독립하고, 일은 한가해지고"로 상황을 말하고 있어서, 다음 화면이 "어느
+    // 쪽이세요?"로 이어지는 게 자연스럽다.
+    //
+    // 보기 순서: 가벼운 것(자녀 독립·은퇴) 먼저. 사별·이혼을 첫 화면 맨 위에
+    // 두지 않는다 — 사실 질문이어도 낯선 화면이 처음 묻기엔 무겁다.
+    key: "situation",
+    title: "요즘 어떤 시기를\n지나고 계세요?",
+    sub: "비슷한 길을 걷는 분들을 찾아드리려고 여쭤봐요",
     options: [
-      { value: "tv", label: "TV·유튜브 보면서" },
-      { value: "solo_out", label: "혼자 산책·운동하면서" },
-      { value: "hobby_alone", label: "혼자 취미 생활하면서" },
-      { value: "with_people", label: "친구·모임 만나면서" },
-      { value: "drift", label: "글쎄요, 그냥 흘러가요" },
+      { value: "empty_nest", label: "자녀가 독립해서 집이 조용해졌어요" },
+      { value: "retire", label: "은퇴하거나 일을 쉬게 됐어요" },
+      { value: "spouse_diff", label: "배우자와는 취미·성향이 달라요" },
+      { value: "divorce", label: "이혼 후 새로 시작하고 있어요" },
+      { value: "bereave", label: "배우자와 사별했어요" },
+      { value: "no_change", label: "큰 변화는 없어요" },
     ],
   },
   {
@@ -74,16 +89,17 @@ const QUESTIONS: Q[] = [
     ],
   },
   {
-    key: "situation",
-    title: "요즘 내 시간이 많아졌다면,\n어떤 변화가 있으셨나요?",
-    sub: "비슷한 길을 걷는 분들을 찾아드리려고 여쭤봐요",
+    // 원래 첫 질문. 상황을 먼저 묻기로 하면서 여기로 내렸다 — 답은 여전히
+    // 귀하다(유튜브가 경쟁자인지, 이미 사교적인지, "그냥 흘러가요"=핵심 타겟).
+    // 다만 첫 클릭으로 시키기엔 값이 너무 비쌌다.
+    key: "timeuse",
+    title: "부쩍 많아진 그 시간,\n요즘은 주로 어떻게 보내세요?",
     options: [
-      { value: "empty_nest", label: "자녀가 독립해서 집이 조용해졌어요" },
-      { value: "spouse_diff", label: "배우자와는 취미·성향이 달라요" },
-      { value: "divorce", label: "이혼 후 새로 시작하고 있어요" },
-      { value: "bereave", label: "배우자와 사별했어요" },
-      { value: "retire", label: "은퇴하거나 일을 쉬게 됐어요" },
-      { value: "no_change", label: "큰 변화는 없어요" },
+      { value: "tv", label: "TV·유튜브 보면서" },
+      { value: "solo_out", label: "혼자 산책·운동하면서" },
+      { value: "hobby_alone", label: "혼자 취미 생활하면서" },
+      { value: "with_people", label: "친구·모임 만나면서" },
+      { value: "drift", label: "글쎄요, 그냥 흘러가요" },
     ],
   },
   {
@@ -460,7 +476,7 @@ export default function NeedsSurveyPage() {
     // 것과 같다. 13이면 49px이라 손가락 최소치(44)는 넉넉히 넘으면서 화면 안에
     // 다 들어온다. 글씨 크기는 그대로다 — 5060에게 줄이면 안 되는 건 여백이
     // 아니라 글씨다.
-    padding: "13px 18px",
+    padding: "11px 18px",
     cursor: "pointer",
     boxShadow: "0 6px 18px rgba(0,0,0,0.12)",
   };
@@ -1053,7 +1069,9 @@ export default function NeedsSurveyPage() {
                 밀어내고 있었다. 안 읽히는 방어 문구보다 보이는 출구가 낫다. */}
           </div>
         )}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 26 }}>
+        {/* 진행 줄. 이 줄의 키는 "← 이전"이 정한다 — 첫 질문에선 감춰도
+            자리는 그대로 차지해서, 여백을 줄이려면 여기 padding부터 손대야 한다. */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
           <button
             onClick={back}
             style={{
@@ -1063,7 +1081,7 @@ export default function NeedsSurveyPage() {
               color: "rgba(251,247,240,0.7)",
               background: "transparent",
               border: "none",
-              padding: 6,
+              padding: 3,
               cursor: "pointer",
               visibility: step === 0 ? "hidden" : "visible",
             }}
@@ -1103,13 +1121,13 @@ export default function NeedsSurveyPage() {
           {q.title}
         </h2>
         {q.sub && (
-          <p style={{ fontSize: 13.5, color: "rgba(251,247,240,0.65)", margin: "0 0 20px", fontWeight: 600 }}>
+          <p style={{ fontSize: 13.5, color: "rgba(251,247,240,0.65)", margin: "0 0 14px", fontWeight: 600 }}>
             {q.sub}
           </p>
         )}
         {!q.sub && <div style={{ height: 12 }} />}
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
           {q.options.map((o) => (
             <button key={o.value} onClick={() => choose(o.value)} style={optionBtn}>
               {o.label}
