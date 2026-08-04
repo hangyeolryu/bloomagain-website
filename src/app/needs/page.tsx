@@ -455,7 +455,12 @@ export default function NeedsSurveyPage() {
     background: TITA.cream,
     border: "none",
     borderRadius: 16,
-    padding: "18px 20px",
+    // 여백이 18이면 보기 하나가 61px이 되고, 다섯 개를 쌓으면 아래의 "앱 먼저
+    // 받기"가 작은 화면(375×667)에서 접힌 자리 밑으로 밀린다 — 안 보이면 없는
+    // 것과 같다. 13이면 49px이라 손가락 최소치(44)는 넉넉히 넘으면서 화면 안에
+    // 다 들어온다. 글씨 크기는 그대로다 — 5060에게 줄이면 안 되는 건 여백이
+    // 아니라 글씨다.
+    padding: "13px 18px",
     cursor: "pointer",
     boxShadow: "0 6px 18px rgba(0,0,0,0.12)",
   };
@@ -1042,16 +1047,10 @@ export default function NeedsSurveyPage() {
             >
               1분만 답하면, 지금 나에게 필요한 게 뭔지 알려드려요
             </p>
-            <p
-              style={{
-                fontSize: 12.5,
-                fontWeight: 600,
-                color: "rgba(251,247,240,0.6)",
-                margin: 0,
-              }}
-            >
-              가입 없음 · 이름·연락처 안 물어요
-            </p>
+            {/* "가입 없음 · 이름·연락처 안 물어요"를 뺐다. 안심 문구였지만
+                366명이 첫 질문에서 그냥 나가는 동안 아무것도 못 막았고, 그
+                자리(19px + 여백)가 아래의 "앱 먼저 받기"를 화면 밖으로
+                밀어내고 있었다. 안 읽히는 방어 문구보다 보이는 출구가 낫다. */}
           </div>
         )}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 26 }}>
@@ -1108,9 +1107,9 @@ export default function NeedsSurveyPage() {
             {q.sub}
           </p>
         )}
-        {!q.sub && <div style={{ height: 20 }} />}
+        {!q.sub && <div style={{ height: 12 }} />}
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
           {q.options.map((o) => (
             <button key={o.value} onClick={() => choose(o.value)} style={optionBtn}>
               {o.label}
@@ -1204,6 +1203,10 @@ export default function NeedsSurveyPage() {
                   border: "1.5px dashed rgba(251,247,240,0.4)",
                   boxShadow: "none",
                   textAlign: "center",
+                  // 보기가 아니라 보기 밖으로 나가는 길이다 — 보기와 같은 덩치면
+                  // 여섯 번째 보기처럼 읽힌다. 한 급 낮춰 목록에서 빼낸다.
+                  fontSize: 14.5,
+                  padding: "10px 16px",
                   fontWeight: 600,
                 }}
               >
@@ -1213,30 +1216,64 @@ export default function NeedsSurveyPage() {
         </div>
 
         {/* 설문을 건너뛰고 앱만 받는 길 — 첫 질문에서만 연다.
-            여기서 78%가 떠나는데 다운로드는 결과 화면에만 있어, 받고 싶어도
-            받을 데가 없었다(2026-08-01). 다만 눈에 띄는 버튼으로 두면 설문
-            자체를 잡아먹는다 — 결큐에서 경쟁 CTA가 다운을 0으로 만든 전례가
-            있다. 그래서 보기 아래 조용한 글줄 하나로만 둔다. */}
+            이탈이 여기 한 곳에 몰려 있다. 8/1~8/4 도착 548명 중 366명(67%)이
+            첫 질문에서 아무것도 안 누르고 나갔고, 반대로 첫 질문만 넘긴 101명은
+            54명(53%)이 완주해 그중 57%가 앱을 받았다. 설문이 긴 게 아니라
+            첫 화면이 문제다.
+
+            처음엔 이 길을 회색 밑줄 글줄 하나로 뒀는데(2026-08-01), 366명 중
+            12명(3.3%)만 눌렀고 실제 다운로드는 3건이었다. 사실상 없는 것과 같다.
+
+            그렇다고 채운 버튼으로 올리면 설문 자체를 잡아먹는다 — 결큐에서
+            경쟁 CTA가 다운을 0으로 만든 전례가 있다. 그래서 급을 나눈다:
+            보기는 크림으로 **채우고**, 이 길은 **테두리만** 준다. 모양도 보기의
+            둥근 사각(16)이 아니라 알약(999)이라 "보기 중 하나"로 안 읽힌다.
+            위의 가로줄은 여기서부터 다른 길이라는 표시다. */}
         {step === 0 && !skipOpen && (
-          <p style={{ textAlign: "center", margin: "22px 0 0" }}>
+          <div style={{ margin: "10px 0 0" }}>
+            <div
+              style={{
+                height: 1,
+                background: "rgba(251,247,240,0.16)",
+                margin: "0 0 12px",
+              }}
+            />
             <button
               onClick={openSkip}
               style={{
+                display: "block",
+                width: "100%",
                 fontFamily: KOREAN_FONT_STACK,
-                fontSize: 13.5,
-                fontWeight: 600,
-                color: "rgba(251,247,240,0.55)",
+                fontSize: 15.5,
+                fontWeight: 700,
+                letterSpacing: "-0.3px",
+                color: TITA.cream,
                 background: "transparent",
-                border: "none",
-                textDecoration: "underline",
-                textUnderlineOffset: 3,
+                border: "1.5px solid rgba(251,247,240,0.55)",
+                borderRadius: 999,
+                padding: "15px 20px",
                 cursor: "pointer",
-                padding: 6,
               }}
             >
-              설문은 접어두고, 앱만 받을게요
+              티타 앱 먼저 받아볼게요
             </button>
-          </p>
+            <p
+              style={{
+                textAlign: "center",
+                fontSize: 13,
+                fontWeight: 600,
+                color: "rgba(251,247,240,0.55)",
+                margin: "8px 0 0",
+              }}
+            >
+              {/* 이 화면까지 "티타"가 한 번도 안 나온다 — 광고를 누르고 온
+                  사람은 설문만 보고 있어서, 버튼에 브랜드명만 쓰면 "티타가
+                  뭔데?"가 된다. 그래서 무엇인지를 버튼 바로 밑에서 한 줄로
+                  말한다. 나이를 여기서 미리 밝히면 다음 화면의 연령대 질문도
+                  갑작스럽지 않고, 만 45세 미만은 설치 전에 걸러진다. */}
+              만 45세 이상, 결이 맞는 또래를 만나는 앱
+            </p>
+          </div>
         )}
 
         {step === 0 && skipOpen && (
