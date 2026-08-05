@@ -69,6 +69,18 @@ export function recordNeedsEvent(phase: NeedsPhase, answers?: NeedsAnswers): voi
   try {
     const params = new URLSearchParams(window.location.search);
     let source = params.get("utm_source") || params.get("source");
+    // 소재 단위 추적(2026-08-05). utm_source만 받던 탓에 "어떤 소재가 앱을
+    // 받게 하는가"를 물어볼 데이터가 아예 없었다 — 채널(ig/meta5060) 두
+    // 덩어리로만 보였다.
+    //
+    // Meta 광고 URL에 동적 파라미터를 넣어 보낸다:
+    //   ?utm_source=meta&utm_campaign={{campaign.name}}
+    //    &utm_content={{ad.name}}&utm_term={{placement}}
+    // 값이 길거나 이상할 수 있으니 잘라서 담는다(서버도 한 번 더 자른다).
+    const tag = (k: string) => {
+      const v = params.get(k);
+      return v && v.trim() ? v.trim().slice(0, 120) : null;
+    };
     if (!source && document.referrer) {
       try {
         // utm이 잘려서 오는 경우가 있다(쓰레드 l.threads.com 리다이렉트가
@@ -114,6 +126,10 @@ export function recordNeedsEvent(phase: NeedsPhase, answers?: NeedsAnswers): voi
       worry_text: answers?.worryText ?? null,
       funnel_text: answers?.funnelText ?? null,
       source: source ?? null,
+      campaign: tag("utm_campaign"),
+      content: tag("utm_content"),
+      term: tag("utm_term") ?? tag("placement"),
+      medium: tag("utm_medium"),
       referrer: document.referrer || null,
       session_id: getNeedsSessionId(),
       in_app: isInAppBrowser(),
