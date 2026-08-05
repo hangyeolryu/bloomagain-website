@@ -11,6 +11,10 @@ type NeedsPhase =
   | "skip_open" | "skip_age" | "skip_download";
 
 export type NeedsAnswers = {
+  /** 어느 랜딩인가. /enjoy 같은 새 페이지가 자기 이름을 남긴다. */
+  variant?: string | null;
+  /** 만나기 편한 동네 (/enjoy 2번 문항). */
+  district?: string | null;
   // answer 이벤트 전용 — 어느 질문·몇 번째에 답했나 (질문별 이탈 파악)
   q?: string | null;
   step?: number | null;
@@ -142,6 +146,8 @@ export function recordNeedsEvent(phase: NeedsPhase, answers?: NeedsAnswers): voi
       person_text: answers?.personText ?? null,
       worry_text: answers?.worryText ?? null,
       funnel_text: answers?.funnelText ?? null,
+      variant: answers?.variant ?? null,
+      district: answers?.district ?? null,
       source: source ?? null,
       campaign: tag("utm_campaign"),
       content: tag("utm_content"),
