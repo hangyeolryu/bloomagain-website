@@ -404,6 +404,13 @@ export default function NeedsSurveyPage() {
       worry: next.worry ?? "",
       age_band: next.ageBand ?? "",
     });
+    // 완주자도 Q9에서 나이를 답한다 — 같은 청중 규칙을 쓸 수 있게 같은
+    // 이벤트를 남긴다(건너뛰기 경로와 이름을 맞춰야 청중이 하나로 모인다).
+    if (next.ageBand === "under45") {
+      trackPixel("NeedsUnderage", {}, true);
+    } else if (next.ageBand) {
+      trackPixel("NeedsAgeQualified", { age_band: next.ageBand }, true);
+    }
     trackPixel(
       "NeedsSurveyComplete",
       {
@@ -457,6 +464,17 @@ export default function NeedsSurveyPage() {
 
   function skipAge(band: "45-49" | "50-54" | "55-59" | "60-64" | "65plus" | "under45") {
     recordNeedsEvent("skip_age", { ageBand: band, step });
+    // 리타게팅용 픽셀(2026-08-05). 여기가 나이를 **자기 입으로 밝히는** 유일한
+    // 지점이라, 광고 청중을 정확히 가를 수 있는 유일한 신호이기도 하다.
+    //
+    //  - 자격자: "45+인데 아직 앱을 안 받은 사람"만 다시 부를 수 있다.
+    //  - 미달자: 제외 청중으로 쓴다. 결큐 시도자의 43%가 만 45세 미만이었는데,
+    //    그분들을 다시 부르는 건 돈만 쓰고 본인인증에서 막히는 일이다.
+    if (band === "under45") {
+      trackPixel("NeedsUnderage", {}, true);
+    } else {
+      trackPixel("NeedsAgeQualified", { age_band: band }, true);
+    }
     setSkipBand(band === "under45" ? "under45" : "ok");
   }
 

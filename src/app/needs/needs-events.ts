@@ -77,9 +77,26 @@ export function recordNeedsEvent(phase: NeedsPhase, answers?: NeedsAnswers): voi
     //   ?utm_source=meta&utm_campaign={{campaign.name}}
     //    &utm_content={{ad.name}}&utm_term={{placement}}
     // 값이 길거나 이상할 수 있으니 잘라서 담는다(서버도 한 번 더 자른다).
+    // 값이 두 가지로 망가져 들어온다(2026-08-05 실측).
+    //  1) `{{campaign.name}}` 그대로 — Meta가 매크로를 치환 못 한 광고다.
+    //     그냥 저장하면 어드민에 캠페인 이름이 "{{campaign.name}}"으로 뜨고,
+    //     여러 광고가 한 줄로 뭉쳐 아무것도 못 읽는다. 버리지도 않는다 —
+    //     버리면 "태그 이전"과 섞여 광고 설정이 잘못된 걸 눈치 못 챈다.
+    //  2) 이중 인코딩 — params.get()이 한 번 풀어도 %ED%99%8D처럼 남는다.
+    //     한 번 더 풀어 한글 이름이 읽히게 한다.
     const tag = (k: string) => {
-      const v = params.get(k);
-      return v && v.trim() ? v.trim().slice(0, 120) : null;
+      let v = params.get(k);
+      if (!v || !v.trim()) return null;
+      v = v.trim();
+      if (/^\{\{.*\}\}$/.test(v)) return "(치환 안 됨)";
+      if (/%[0-9A-Fa-f]{2}/.test(v)) {
+        try {
+          v = decodeURIComponent(v.replace(/\+/g, " "));
+        } catch {
+          /* 잘못된 인코딩이면 원본을 쓴다 */
+        }
+      }
+      return v.slice(0, 120);
     };
     if (!source && document.referrer) {
       try {
