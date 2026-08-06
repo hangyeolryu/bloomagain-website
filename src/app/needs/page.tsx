@@ -1069,19 +1069,35 @@ export default function NeedsSurveyPage() {
                   </p>
                 </div>
               ))}
-              <a
-                href={platform === "android" ? PLAY_STORE_URL : APP_STORE_URL}
-                onClick={(e) => {
-                  download(platform === "android" ? "android" : "ios");
-                  if (platform === "android") {
-                    e.preventDefault();
-                    window.location.href = PLAY_STORE_INTENT_URL;
-                  }
-                }}
-                style={{ ...heroBtn, marginTop: 8 }}
-              >
-                안심하고 시작하기 (무료)
-              </a>
+              {/* 기기를 못 알아본 접속을 App Store로 흘려보내면 안 된다. 위 744번
+                  줄은 이미 두 버튼으로 갈라 주는데 여기만 빠져 있었다 — 그래서
+                  iOS 클릭 27건 중 18건이 허수로 잡혔다(2026-08-06). */}
+              {platform === "other" ? (
+                <div style={{ display: "flex", gap: 10, marginTop: 8 }}>
+                  <a href={APP_STORE_URL} onClick={() => download("ios")} style={{ ...heroBtn, flex: 1 }}>
+                    <AppleMark size={20} />
+                    아이폰
+                  </a>
+                  <a href={PLAY_STORE_URL} onClick={() => download("android")} style={{ ...heroBtn, flex: 1 }}>
+                    <AndroidMark size={20} />
+                    삼성폰
+                  </a>
+                </div>
+              ) : (
+                <a
+                  href={platform === "android" ? PLAY_STORE_URL : APP_STORE_URL}
+                  onClick={(e) => {
+                    download(platform === "android" ? "android" : "ios");
+                    if (platform === "android") {
+                      e.preventDefault();
+                      window.location.href = PLAY_STORE_INTENT_URL;
+                    }
+                  }}
+                  style={{ ...heroBtn, marginTop: 8 }}
+                >
+                  안심하고 시작하기 (무료)
+                </a>
+              )}
               <p style={{ textAlign: "center", margin: "16px 0 0" }}>
                 <a
                   href="/"
@@ -1430,6 +1446,21 @@ export default function NeedsSurveyPage() {
                   받으시면 바로 시작할 수 있어요
                 </p>
                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  {platform === "other" ? (
+                    // 기기를 못 알아봤으면 고르시게 둔다. 임의로 한쪽에 보내면
+                    // 엉뚱한 스토어로 가고, 집계도 그쪽으로 쏠린다.
+                    <div style={{ display: "flex", gap: 10 }}>
+                      <a href={APP_STORE_URL} onClick={() => skipDownload("ios")} style={{ ...heroBtn, flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 6, textDecoration: "none" }}>
+                        <AppleMark size={20} />
+                        아이폰
+                      </a>
+                      <a href={PLAY_STORE_URL} onClick={() => skipDownload("android")} style={{ ...heroBtn, flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 6, textDecoration: "none" }}>
+                        <AndroidMark size={20} />
+                        삼성폰
+                      </a>
+                    </div>
+                  ) : (
+                  <>
                   <a
                     href={platform === "android" ? PLAY_STORE_URL : APP_STORE_URL}
                     onClick={() => skipDownload(platform === "android" ? "android" : "ios")}
@@ -1454,6 +1485,8 @@ export default function NeedsSurveyPage() {
                   >
                     {platform === "android" ? "아이폰이신가요?" : "안드로이드이신가요?"}
                   </a>
+                  </>
+                  )}
                 </div>
               </>
             )}

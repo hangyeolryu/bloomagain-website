@@ -330,36 +330,64 @@ export default function EnjoyPage() {
             첫마디도 티타가 꺼내드리니 편하게 오시면 돼요.
           </p>
 
-          <a
-            href={platform === "android" ? PLAY_STORE_URL : APP_STORE_URL}
-            onClick={(e) => {
-              download(platform === "android" ? "android" : "ios");
-              if (platform === "android") {
-                e.preventDefault();
-                window.location.href = PLAY_STORE_INTENT_URL;
-              }
-            }}
-            style={bigBtn}
-          >
-            {platform === "android" ? <AndroidMark /> : <AppleMark />}
-            티타 받기
-          </a>
-          <a
-            href={platform === "android" ? APP_STORE_URL : PLAY_STORE_URL}
-            onClick={() => download(platform === "android" ? "ios" : "android")}
-            style={{
-              display: "block",
-              textAlign: "center",
-              fontSize: 13.5,
-              fontWeight: 700,
-              color: C.muted,
-              textDecoration: "underline",
-              textUnderlineOffset: 3,
-              padding: 14,
-            }}
-          >
-            {platform === "android" ? "아이폰이신가요?" : "안드로이드이신가요?"}
-          </a>
+          {/* 기기를 못 알아본 경우엔 두 스토어를 나란히 준다.
+              전에는 "안드로이드가 아니면 App Store"였는데, 그러면 기기를 못
+              읽은 접속이 전부 iOS로 집계된다 — 실제로 iOS 클릭 27건 중 18건이
+              그렇게 만들어진 허수였다(2026-08-06). 지표만 흐린 게 아니라,
+              UA가 이상하게 잡힌 안드로이드 사용자를 엉뚱한 스토어로 보낸다. */}
+          {platform === "other" ? (
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              <a
+                href={APP_STORE_URL}
+                onClick={() => download("ios")}
+                style={bigBtn}
+              >
+                <AppleMark />
+                App Store에서 받기
+              </a>
+              <a
+                href={PLAY_STORE_URL}
+                onClick={() => download("android")}
+                style={{ ...bigBtn, background: C.white, color: C.terra, border: `1.5px solid ${C.terra}` }}
+              >
+                <AndroidMark />
+                Google Play에서 받기
+              </a>
+            </div>
+          ) : (
+            <>
+              <a
+                href={platform === "android" ? PLAY_STORE_URL : APP_STORE_URL}
+                onClick={(e) => {
+                  download(platform === "android" ? "android" : "ios");
+                  if (platform === "android") {
+                    e.preventDefault();
+                    window.location.href = PLAY_STORE_INTENT_URL;
+                  }
+                }}
+                style={bigBtn}
+              >
+                {platform === "android" ? <AndroidMark /> : <AppleMark />}
+                티타 받기
+              </a>
+              <a
+                href={platform === "android" ? APP_STORE_URL : PLAY_STORE_URL}
+                onClick={() => download(platform === "android" ? "ios" : "android")}
+                style={{
+                  display: "block",
+                  textAlign: "center",
+                  fontSize: 13.5,
+                  fontWeight: 700,
+                  color: C.muted,
+                  textDecoration: "underline",
+                  textUnderlineOffset: 3,
+                  padding: 14,
+                }}
+              >
+                {platform === "android" ? "아이폰이신가요?" : "안드로이드이신가요?"}
+              </a>
+            </>
+          )}
 
           <p style={{ fontSize: 12.5, lineHeight: 1.7, color: C.muted, textAlign: "center", margin: "18px 0 0" }}>
             만 45세 이상 · 본인인증 · 셋넷이 함께
