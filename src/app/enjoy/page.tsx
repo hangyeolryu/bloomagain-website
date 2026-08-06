@@ -237,6 +237,14 @@ export default function EnjoyPage() {
     }
   }
 
+  // 설문을 안 하고 바로 받는 길. phase를 download와 나눈다 — 섞으면
+  // "완주한 사람이 얼마나 받나"를 못 읽는다(/needs가 8/1에 같은 이유로 나눴다).
+  function skipDownload(store: "ios" | "android") {
+    recordNeedsEvent("skip_download", { variant: VARIANT, ...answers, store });
+    logAnalyticsEvent("app_download_click", { store, source: "enjoy_skip" });
+    trackPixel("AppDownloadClick", { store, source: "enjoy_skip" }, true);
+  }
+
   function explain() {
     if (!explained) recordNeedsEvent("explain", { variant: VARIANT });
     setExplained(true);
@@ -309,6 +317,25 @@ export default function EnjoyPage() {
     border: `1px solid ${C.line}`,
     borderRadius: 999,
     padding: "11px 12px",
+    cursor: "pointer",
+  };
+  // 탈출구 두 개보다는 세고, 보기(흰 카드)와는 확실히 다르게. 답을 유도하는
+  // 화면이라 이게 제일 눈에 띄면 안 된다.
+  const getBtn: React.CSSProperties = {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 7,
+    width: "100%",
+    fontFamily: KOREAN_FONT_STACK,
+    textDecoration: "none",
+    fontSize: 14.5,
+    fontWeight: 800,
+    color: C.terra,
+    background: "transparent",
+    border: `1.5px solid ${C.terra}`,
+    borderRadius: 999,
+    padding: "12px 16px",
     cursor: "pointer",
   };
   const bigBtn: React.CSSProperties = {
@@ -529,6 +556,41 @@ export default function EnjoyPage() {
               >
                 티타가 뭔가요?
               </button>
+            </div>
+
+            {/* 설문에 답할 생각이 없는 사람에게도 길을 준다. /needs 실측으로는
+                답 안 한 396명 중 3명(1%)만 이 길로 갔다 — 큰 기대는 안 한다.
+                다만 지금은 그 1%마저 통째로 잃고 있다. */}
+            <div style={{ marginTop: 8 }}>
+              {platform === "other" ? (
+                // 기기를 못 알아봤으면 고르시게 둔다. 임의로 한쪽에 보내면
+                // 엉뚱한 스토어로 가고 집계도 그쪽으로 쏠린다(8/6에 겪었다).
+                <div style={{ display: "flex", gap: 8 }}>
+                  <a href={APP_STORE_URL} onClick={() => skipDownload("ios")} style={{ ...getBtn, flex: 1 }}>
+                    <AppleMark size={17} />
+                    아이폰
+                  </a>
+                  <a href={PLAY_STORE_URL} onClick={() => skipDownload("android")} style={{ ...getBtn, flex: 1 }}>
+                    <AndroidMark size={17} />
+                    삼성폰
+                  </a>
+                </div>
+              ) : (
+                <a
+                  href={platform === "android" ? PLAY_STORE_URL : APP_STORE_URL}
+                  onClick={(e) => {
+                    skipDownload(platform === "android" ? "android" : "ios");
+                    if (platform === "android") {
+                      e.preventDefault();
+                      window.location.href = PLAY_STORE_INTENT_URL;
+                    }
+                  }}
+                  style={getBtn}
+                >
+                  {platform === "android" ? <AndroidMark size={17} /> : <AppleMark size={17} />}
+                  티타 받으러 가기
+                </a>
+              )}
             </div>
 
             {explained && (
