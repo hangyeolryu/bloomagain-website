@@ -146,6 +146,11 @@ export default function EnjoyPage() {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [done, setDone] = useState(false);
   const [platform, setPlatform] = useState<"ios" | "android" | "other">("other");
+  // "티타가 뭔가요?"를 펼쳤나. 첫 화면에서 46%가 나가는데 안드로이드 이탈자가
+  // 중앙값 34초를 보고도 아무것도 안 눌렀다 — 안 보여서도 어려워서도 아니라
+  // 누를 이유를 못 찾은 것이다(2026-08-06). 이걸 누르는 사람이 많으면
+  // "티타가 뭔지 몰라서"가 원인이라는 뜻이다.
+  const [explained, setExplained] = useState(false);
 
   useEffect(() => setPlatform(detectPlatform()), []);
 
@@ -232,6 +237,11 @@ export default function EnjoyPage() {
     }
   }
 
+  function explain() {
+    if (!explained) recordNeedsEvent("explain", { variant: VARIANT });
+    setExplained(true);
+  }
+
   function back() {
     if (done) {
       setDone(false);
@@ -288,6 +298,18 @@ export default function EnjoyPage() {
     padding: "13px 18px",
     cursor: "pointer",
     boxShadow: "0 4px 14px rgba(160,90,70,0.10)",
+  };
+  // 보기와 확실히 달라 보여야 한다 — 아홉 번째 보기처럼 보이면 답으로 오해한다.
+  const escapeBtn: React.CSSProperties = {
+    fontFamily: KOREAN_FONT_STACK,
+    fontSize: 13.5,
+    fontWeight: 700,
+    color: C.muted,
+    background: "transparent",
+    border: `1px solid ${C.line}`,
+    borderRadius: 999,
+    padding: "11px 12px",
+    cursor: "pointer",
   };
   const bigBtn: React.CSSProperties = {
     display: "flex",
@@ -486,6 +508,52 @@ export default function EnjoyPage() {
             </button>
           ))}
         </div>
+
+        {/* 첫 화면에만 탈출구를 둔다. 여기서 46%가 나가는데, 누를 게 보기밖에
+            없어서 안 맞으면 나가는 것 말고 할 수 있는 게 없었다.
+            둘 중 어느 쪽이 눌리는지로 원인이 갈린다 — "내 답이 없다"인지
+            "이게 뭔지 모르겠다"인지. */}
+        {step === 0 && (
+          <div style={{ marginTop: 14 }}>
+            <div style={{ display: "flex", gap: 8 }}>
+              <button
+                onClick={() => choose("unsure")}
+                style={{ ...escapeBtn, flex: 1 }}
+              >
+                아직 잘 모르겠어요
+              </button>
+              <button
+                onClick={explain}
+                style={{ ...escapeBtn, flex: 1 }}
+                aria-expanded={explained}
+              >
+                티타가 뭔가요?
+              </button>
+            </div>
+
+            {explained && (
+              // 과장하지 않는다. 본인인증은 누구인지를 확인할 뿐 의도를 거르지
+              // 못한다 — "이상한 사람 못 들어와요"류는 쓰지 않는다.
+              <div
+                style={{
+                  marginTop: 8,
+                  background: C.white,
+                  border: `1px solid ${C.line}`,
+                  borderRadius: 14,
+                  padding: "14px 16px",
+                  fontSize: 13.5,
+                  lineHeight: 1.75,
+                  color: C.ink,
+                }}
+              >
+                만 45세 이상만 들어오는 앱이에요. 결이 맞는 서넛이 모여
+                차 한잔하거나(티타임), 만나기 전에 대화부터 나눕니다.
+                둘 다 티타가 자리를 잡아드려요.
+                <span style={{ color: C.muted }}> 들어오시려면 본인인증을 하셔야 해요.</span>
+              </div>
+            )}
+          </div>
+        )}
 
         <p style={{ fontSize: 12.5, color: C.muted, textAlign: "center", margin: "18px 0 0" }}>
           가입 없이 30초 · 만 45세 이상

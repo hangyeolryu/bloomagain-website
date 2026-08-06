@@ -8,7 +8,10 @@
 // 없었다. download와 별개 phase로 둬서 "완주→다운 41%" 지표가 흐려지지 않게 한다.
 type NeedsPhase =
   | "start" | "answer" | "abandon" | "complete" | "download" | "share"
-  | "skip_open" | "skip_age" | "skip_download";
+  | "skip_open" | "skip_age" | "skip_download"
+  // "티타가 뭔가요?"를 펼쳐 봤다(2026-08-06). answer로 안 세는 이유 — 답을
+  // 한 게 아니라서, 섞으면 첫 질문 답변율이 부풀어 오른다.
+  | "explain";
 
 export type NeedsAnswers = {
   /** 어느 랜딩인가. /enjoy 같은 새 페이지가 자기 이름을 남긴다. */
