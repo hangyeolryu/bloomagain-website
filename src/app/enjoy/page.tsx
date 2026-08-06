@@ -52,7 +52,7 @@ const C = {
 } as const;
 
 type Q = {
-  key: "activity" | "district" | "ageBand";
+  key: "activity" | "district" | "outing" | "ageBand";
   title: string;
   sub?: string;
   options: { value: string; label: string }[];
@@ -89,8 +89,31 @@ const QUESTIONS: Q[] = [
       { value: "yeongdeungpo", label: "영등포·구로·양천·강서" },
       { value: "nowon", label: "노원·도봉·강북·성북" },
       { value: "gangdong", label: "광진·성동·동대문·중랑·강동" },
-      { value: "gyeonggi", label: "경기·인천" },
+      // 경기·인천이 응답의 33%로 단일 최대 블록인데 한 칸이라, 어디에 자리를
+      // 열지 알 수가 없었다. 40분 안에 모일 수 있는 묶음으로 쪼갠다.
+      { value: "incheon", label: "인천·부천·김포" },
+      { value: "gg_north", label: "고양·파주·의정부" },
+      { value: "gg_south", label: "성남·용인·수원" },
+      { value: "gg_west", label: "안양·광명·안산" },
       { value: "etc", label: "그 외 지역" },
+    ],
+  },
+  {
+    key: "outing",
+    title: "요즘 바깥 활동은\n어떠세요?",
+    sub: "편하게 고르시면 돼요",
+    // /needs 아홉 문항 중 앱 받기를 실제로 예측한 답은 둘뿐이었고, 그중 하나가
+    // "혼자서라도 나간다"였다(34% 대 18%, p=0.013). 나머지 — 사기 걱정, 연령,
+    // 지금 상황, 활동 종류 — 는 전부 차이가 없었다. 유일하게 검증된 행동
+    // 신호라 밝은판으로 옮겨 온다.
+    //
+    // 세 번째에 두는 이유: "나가고 싶은데 잘 안 된다"에는 자기 고백이 조금
+    // 섞인다. /needs가 그런 질문을 첫 화면에 뒀다가 80%를 잃었다.
+    options: [
+      { value: "solo_out", label: "혼자서라도 나가는 편" },
+      { value: "want_out", label: "나가고 싶은데 잘 안 돼요" },
+      { value: "home", label: "집이 편해요" },
+      { value: "has_group", label: "이미 다니는 모임이 있어요" },
     ],
   },
   {
@@ -186,7 +209,7 @@ export default function EnjoyPage() {
       variant: VARIANT,
       q: q.key,
       step,
-      ...(q.key === "district" ? { district: value } : { [q.key]: value }),
+      [q.key]: value,
     });
     if (step < QUESTIONS.length - 1) {
       setStep(step + 1);
@@ -197,6 +220,7 @@ export default function EnjoyPage() {
       variant: VARIANT,
       activity: next.activity,
       district: next.district,
+      outing: next.outing,
       ageBand: next.ageBand,
     });
     logAnalyticsEvent("enjoy_complete", { activity: next.activity ?? "" });
