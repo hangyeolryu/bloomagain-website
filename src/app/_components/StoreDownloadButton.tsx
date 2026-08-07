@@ -123,6 +123,13 @@ export function StoreDownloadButton({
 
   const isAndroid = platform === "android";
 
+  // 문자 본문에는 우리 페이지가 아니라 **스토어 주소**를 담는다. 페이지 주소를
+  // 보내면 사용자가 문자에서 링크를 눌러도 여기로 다시 와서 한 번 더 눌러야
+  // 한다. 목적은 설치이므로 한 단계를 없앤다.
+  const smsBody = encodeURIComponent(
+    `티타 앱 설치 링크예요.\n${isAndroid ? PLAY_STORE_URL : APP_STORE_URL}`
+  );
+
   return (
     <div>
       <a
@@ -141,17 +148,22 @@ export function StoreDownloadButton({
         {children ?? label}
       </a>
 
-      {/* 인앱 브라우저(인스타·카톡)는 App Store 핸드오프를 삼키는 일이 잦다.
-          iOS에서 웹뷰를 프로그램으로 탈출하는 방법은 없다 — 사용자가 직접
-          "Safari로 열기"를 눌러야 한다. 그런데 45+ 사용자에게 그 안내를 작은
-          회색 각주로 두면 아무도 못 찾는다. 인앱일 때는 안내가 주인공이어야
-          한다. 주소 복사 버튼도 같이 준다 — ⋯ 메뉴를 못 찾는 분들의 유일한
-          탈출구다. */}
+      {/* 인앱 브라우저(인스타·카톡)에서 iOS는 스토어로 못 간다.
+          WKWebView는 유니버설 링크를 앱으로 넘기지 않고, 호스트 앱이 직접
+          처리해 주지 않는 한 apps.apple.com 링크 탭은 아무 일도 일으키지
+          않는다. 커스텀 스킴(itms-apps://)은 더 확실히 막힌다. 웹페이지가
+          프로그램으로 웹뷰를 탈출하는 방법은 없다.
+
+          그래서 남는 건 사용자가 이 링크를 웹뷰 밖으로 꺼내는 것뿐이다.
+          "⋯ 눌러 Safari로 열기"가 정석이지만 45+ 사용자에게는 실패율이 높다.
+          그보다 문자로 보내는 편이 낫다 — sms: 는 시스템 스킴이라 인앱
+          브라우저도 메시지 앱으로 넘겨주고, 문자 앱에서 링크를 누르면 그건
+          웹뷰 밖이라 스토어가 정상적으로 열린다. 손가락 두 번이면 끝난다. */}
       {inApp && (
         <div
           style={{
             margin: "14px 0 0",
-            padding: "16px 18px",
+            padding: "18px 18px 16px",
             borderRadius: 16,
             background: TITA.surface,
             border: `1.5px solid ${TITA.camel}`,
@@ -161,13 +173,13 @@ export function StoreDownloadButton({
           <p
             style={{
               margin: 0,
-              fontSize: 15.5,
+              fontSize: 16.5,
               fontWeight: 800,
               lineHeight: 1.5,
               color: TITA.forestDeep,
             }}
           >
-            버튼이 안 눌리시나요?
+            버튼이 안 눌리시죠?
           </p>
           <p
             style={{
@@ -177,17 +189,44 @@ export function StoreDownloadButton({
               color: TITA.ink,
             }}
           >
-            지금은 인스타그램 안에서 보고 계셔서 그렇습니다.
+            잘못 누르신 게 아니에요. 지금은{" "}
+            <b>인스타그램 안에서 보고 계셔서</b> 설치 화면으로 넘어가지 않습니다.
             <br />
-            <b>오른쪽 위 ⋯ </b>을 누르고{" "}
-            <b>{isAndroid ? "‘다른 브라우저로 열기’" : "‘Safari로 열기’"}</b>를
-            고르신 뒤 다시 눌러주세요.
+            아래 버튼을 누르시면 <b>문자로 링크를 보내드려요.</b> 그 문자를 열고
+            링크를 누르시면 바로 설치됩니다.
           </p>
+
+          {/* sms: 는 시스템 스킴이라 인앱 브라우저도 메시지 앱으로 넘겨준다.
+              iOS는 수신자 없이 sms:&body=, 안드로이드는 sms:?body= 를 쓴다. */}
+          <a
+            href={
+              isAndroid
+                ? `sms:?body=${smsBody}`
+                : `sms:&body=${smsBody}`
+            }
+            onClick={() => safeTrack(isAndroid ? "android" : "ios", `${source}_sms`)}
+            style={{
+              display: "block",
+              marginTop: 16,
+              padding: "15px 16px",
+              fontSize: 16,
+              fontWeight: 800,
+              textAlign: "center",
+              borderRadius: 999,
+              background: TITA.forest,
+              color: TITA.cream,
+              textDecoration: "none",
+              fontFamily: KOREAN_FONT_STACK,
+            }}
+          >
+            문자로 링크 받기
+          </a>
+
           <button
             type="button"
             onClick={copyLink}
             style={{
-              marginTop: 14,
+              marginTop: 10,
               width: "100%",
               padding: "13px 16px",
               fontSize: 15,
@@ -200,8 +239,21 @@ export function StoreDownloadButton({
               cursor: "pointer",
             }}
           >
-            {copied ? "복사됐어요 — 브라우저에 붙여넣으세요" : "주소 복사하기"}
+            {copied ? "복사됐어요 — 주소창에 붙여넣으세요" : "주소 복사하기"}
           </button>
+
+          <p
+            style={{
+              margin: "14px 0 0",
+              fontSize: 13.5,
+              lineHeight: 1.6,
+              color: TITA.muted,
+            }}
+          >
+            익숙하시면 오른쪽 위 <b>⋯</b> → {" "}
+            <b>{isAndroid ? "‘다른 브라우저로 열기’" : "‘Safari로 열기’"}</b> 도
+            됩니다.
+          </p>
         </div>
       )}
 
