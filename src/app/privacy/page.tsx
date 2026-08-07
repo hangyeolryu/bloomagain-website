@@ -8,6 +8,7 @@ const TOC = [
   { id: "section-4", label: "제4조 (처리 및 보유 기간)" },
   { id: "section-5", label: "제5조 (제3자 제공)" },
   { id: "section-5-2", label: "제5조의2 (광고·분석 쿠키·픽셀)" },
+  { id: "section-5-3", label: "제5조의3 (앱의 설치·광고 성과 측정)" },
   { id: "section-6", label: "제6조 (연구 목적 활용 동의)" },
   { id: "section-7", label: "제7조 (정신건강 위기 대응)" },
   { id: "section-8", label: "제8조 (이용자의 권리)" },
@@ -24,9 +25,9 @@ export default function PrivacyPage() {
       activeKey="privacy"
       title="개인정보 처리방침"
       subtitle="다시 봄 (Tita Korea)"
-      versionTag="v2.1"
-      effectiveDate="2026년 7월 27일"
-      lastUpdated="2026년 7월 27일"
+      versionTag="v2.3"
+      effectiveDate="2026년 8월 7일"
+      lastUpdated="2026년 8월 7일"
       toc={TOC}
     >
       <section id="summary" className="bg-slate-50 border border-slate-200 rounded-lg p-6 -mt-2 mb-10">
@@ -58,7 +59,7 @@ export default function PrivacyPage() {
           <li><strong>사용자 안녕감 측정</strong> (선택 동의): 본인 외로움·웰빙 변화 대시보드 제공</li>
           <li><strong>연구·통계 활용</strong> (선택 동의): 익명 집계 데이터의 학술 publish 및 정책 연구</li>
           <li><strong>기관 PoC 보고</strong> (선택 동의): 가입 기관에 익명 집계 결과 보고</li>
-          <li>별도의 광고용 목적으로 개인을 식별 가능한 형태의 분석을 수행하지 않습니다. (마케팅 웹사이트 tita-app.com은 광고 성과 측정을 위해 개인을 식별하지 않는 쿠키·픽셀을 사용합니다 — 제5조의2 참조.)</li>
+          <li>별도의 광고용 목적으로 개인을 식별 가능한 형태의 분석을 수행하지 않습니다. (마케팅 웹사이트 tita-app.com은 광고 성과 측정을 위해 개인을 식별하지 않는 쿠키·픽셀을 사용합니다 — 제5조의2 참조. 앱은 설치·가입 등 성과 측정을 위해 광고 식별자를 사용할 수 있으며, 그 범위와 거부 방법은 제5조의3에서 따로 정합니다.)</li>
         </ul>
       </section>
 
@@ -268,6 +269,47 @@ export default function PrivacyPage() {
         </ol>
       </section>
 
+      <section id="section-5-3">
+        <h2>제5조의3 (앱의 설치·광고 성과 측정)</h2>
+        <p>
+          본 조항은 <strong>티타 앱</strong>에 적용됩니다. 앱을 알리는 광고가 실제로
+          닿았는지 확인하기 위한 것이며, 앱 안에서 나누신 대화나 프로필과는 분리되어
+          있습니다.
+        </p>
+        <ol>
+          <li>
+            <strong>사용 도구</strong>: Meta(Facebook) 앱 이벤트 SDK,
+            Google/Firebase Analytics.
+          </li>
+          <li>
+            <strong>수집 정보</strong>: 광고 식별자(iOS의 IDFA, Android의 광고 ID),
+            기기·앱 버전 정보, 그리고 <strong>앱 설치·실행·가입 완료·본인인증 완료·
+            구독 결제</strong>와 같은 이벤트의 발생 사실과 시각.
+          </li>
+          <li>
+            <strong>보내지 않는 것</strong>: 대화 내용, 프로필 사진·소개, 일일 질문
+            답변, 본인인증으로 확인된 실명·생년월일·연락처는 광고 도구로 전송되지
+            않습니다. 회원 아이디를 광고 플랫폼에 전달하는 &lsquo;고급
+            매칭(Advanced Matching)&rsquo; 기능도 사용하지 않습니다.
+          </li>
+          <li>
+            <strong>이용 목적</strong>: 광고 효과 측정, 어떤 광고를 통해 앱을 알게
+            되셨는지 파악, 광고 예산 배분.
+          </li>
+          <li>
+            <strong>동의와 거부</strong>: iOS에서는 앱이 &lsquo;추적 허용&rsquo;을
+            여쭙고, <strong>허용하지 않으시면 광고 식별자를 사용하지 않습니다</strong>.
+            Android에서는 <em>설정 &gt; Google &gt; 광고</em>에서 광고 ID를 삭제하거나
+            맞춤 광고를 끄실 수 있습니다. 어느 쪽을 고르셔도 앱 이용에는 제한이
+            없습니다.
+          </li>
+          <li>
+            <strong>국외 이전</strong>: 위 정보는 Meta Platforms, Inc.(미국) 및
+            Google LLC(미국)의 서버로 전송·처리될 수 있습니다.
+          </li>
+        </ol>
+      </section>
+
       <section id="section-6" className="bg-blue-50 border-l-4 border-blue-400 rounded-r p-6 my-8">
         <h2 className="!mt-0">제6조 (연구 목적 활용 동의)</h2>
         <ol>
@@ -365,6 +407,7 @@ export default function PrivacyPage() {
           <li><strong>v2.0 공고·시행</strong>: 2026년 5월 19일</li>
           <li><strong>v2.1 공고·시행</strong>: 2026년 7월 27일 — 안전·품질 목적의 운영자 대화 열람 및 감사 로그 명시, 대화 본문 보유·처리 조항 명확화</li>
           <li><strong>v2.2 공고·시행</strong>: 2026년 7월 29일 — 문의 접수·응대 목적 및 문의 시 수집 항목·보유 기간 명시(웹 문의 폼 도입)</li>
+          <li><strong>v2.3 공고·시행</strong>: 2026년 8월 7일 — 앱의 설치·광고 성과 측정 조항 신설(제5조의3). 앱 광고 이벤트 SDK 도입에 따라 수집 항목(광고 식별자, 설치·가입·결제 이벤트), 보내지 않는 항목, 동의·거부 방법, 국외 이전을 명시</li>
         </ul>
         <h3>v2.0 주요 변경사항</h3>
         <ol>
