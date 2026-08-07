@@ -55,11 +55,37 @@ export function StoreDownloadButton({
   // 나가고, 마운트 후 실제 기기로 좁힌다(하이드레이션 불일치 방지).
   const [platform, setPlatform] = useState<Platform>("other");
   const [inApp, setInApp] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     setPlatform(detectPlatform());
     setInApp(detectInApp());
   }, []);
+
+  // 인앱 브라우저 탈출용. navigator.clipboard는 오래된 웹뷰에 없을 수 있어
+  // execCommand로 폴백한다. 어느 쪽도 안 되면 조용히 넘어간다 —
+  // 실패해도 위의 ⋯ 안내가 남아 있다.
+  async function copyLink() {
+    const url = window.location.href;
+    try {
+      await navigator.clipboard.writeText(url);
+    } catch {
+      try {
+        const el = document.createElement("textarea");
+        el.value = url;
+        el.style.position = "fixed";
+        el.style.opacity = "0";
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand("copy");
+        document.body.removeChild(el);
+      } catch {
+        return;
+      }
+    }
+    setCopied(true);
+    setTimeout(() => setCopied(false), 3000);
+  }
 
   const btn: CSSProperties = {
     display: "inline-flex",
@@ -115,22 +141,68 @@ export function StoreDownloadButton({
         {children ?? label}
       </a>
 
-      {/* 인앱 브라우저는 스토어 핸드오프가 깨진다 — 자동 탈출은 브라우저
-          보안상 불가라, 여는 법을 알려주는 게 최선이다. */}
+      {/* 인앱 브라우저(인스타·카톡)는 App Store 핸드오프를 삼키는 일이 잦다.
+          iOS에서 웹뷰를 프로그램으로 탈출하는 방법은 없다 — 사용자가 직접
+          "Safari로 열기"를 눌러야 한다. 그런데 45+ 사용자에게 그 안내를 작은
+          회색 각주로 두면 아무도 못 찾는다. 인앱일 때는 안내가 주인공이어야
+          한다. 주소 복사 버튼도 같이 준다 — ⋯ 메뉴를 못 찾는 분들의 유일한
+          탈출구다. */}
       {inApp && (
-        <p
+        <div
           style={{
-            margin: "10px 0 0",
-            fontSize: 12.5,
-            lineHeight: 1.6,
-            color: TITA.muted,
+            margin: "14px 0 0",
+            padding: "16px 18px",
+            borderRadius: 16,
+            background: TITA.surface,
+            border: `1.5px solid ${TITA.camel}`,
             fontFamily: KOREAN_FONT_STACK,
           }}
         >
-          설치가 안 되면 오른쪽 위 <b>⋯</b> 을 눌러{" "}
-          <b>{isAndroid ? "다른 브라우저로 열기" : "Safari로 열기"}</b>를
-          선택해 주세요.
-        </p>
+          <p
+            style={{
+              margin: 0,
+              fontSize: 15.5,
+              fontWeight: 800,
+              lineHeight: 1.5,
+              color: TITA.forestDeep,
+            }}
+          >
+            버튼이 안 눌리시나요?
+          </p>
+          <p
+            style={{
+              margin: "8px 0 0",
+              fontSize: 15,
+              lineHeight: 1.7,
+              color: TITA.ink,
+            }}
+          >
+            지금은 인스타그램 안에서 보고 계셔서 그렇습니다.
+            <br />
+            <b>오른쪽 위 ⋯ </b>을 누르고{" "}
+            <b>{isAndroid ? "‘다른 브라우저로 열기’" : "‘Safari로 열기’"}</b>를
+            고르신 뒤 다시 눌러주세요.
+          </p>
+          <button
+            type="button"
+            onClick={copyLink}
+            style={{
+              marginTop: 14,
+              width: "100%",
+              padding: "13px 16px",
+              fontSize: 15,
+              fontWeight: 700,
+              borderRadius: 999,
+              border: `1.5px solid ${TITA.forest}`,
+              background: copied ? TITA.forest : "transparent",
+              color: copied ? TITA.cream : TITA.forest,
+              fontFamily: KOREAN_FONT_STACK,
+              cursor: "pointer",
+            }}
+          >
+            {copied ? "복사됐어요 — 브라우저에 붙여넣으세요" : "주소 복사하기"}
+          </button>
+        </div>
       )}
 
       {/* 기기 오감지 대비 탈출구 */}
