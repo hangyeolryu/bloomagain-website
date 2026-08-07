@@ -149,13 +149,80 @@ export function StoreDownloadButton({
   return (
     <div>
       {iosInApp ? (
-        <a
-          href={smsHref}
-          onClick={() => safeTrack("ios", `${source}_sms`)}
-          style={btn}
+        // 아이폰 + 인앱 브라우저에서는 누를 수 있는 길이 없다. 스토어 링크는
+        // 빈 화면이 되고, 웹뷰를 프로그램으로 탈출할 방법도 없다. 그래서
+        // 버튼 대신 "App Store에서 티타 검색"을 안내한다 — 45+ 사용자에게
+        // 가장 익숙한 경로이고(TV 광고가 늘 쓰는 문장), 중간에 실패할 단계가
+        // 없다. 어느 앱을 눌러야 하는지 헷갈리지 않게 아이콘과 개발사도 같이
+        // 보여준다.
+        <div
+          style={{
+            ...btn,
+            display: "block",
+            background: TITA.surface,
+            color: TITA.ink,
+            border: `1.5px solid ${TITA.camel}`,
+            padding: "20px 20px 18px",
+            textAlign: "center",
+            cursor: "default",
+          }}
         >
-          문자로 설치 링크 받기
-        </a>
+          <p
+            style={{
+              margin: 0,
+              fontSize: 16.5,
+              fontWeight: 800,
+              lineHeight: 1.5,
+              color: TITA.forestDeep,
+            }}
+          >
+            아이폰은 여기서 설치가 안 돼요
+          </p>
+          <p
+            style={{
+              margin: "10px 0 0",
+              fontSize: 15.5,
+              lineHeight: 1.7,
+              fontWeight: 500,
+            }}
+          >
+            인스타그램이 막아 둔 것이라 저희가 어쩔 수 없어요.
+            <br />
+            <b style={{ fontSize: 17 }}>App Store</b>를 열고{" "}
+            <b style={{ fontSize: 17, color: TITA.forest }}>티타</b>를 검색해
+            주세요.
+          </p>
+
+          {/* 검색 결과에서 어느 앱인지 알아볼 수 있게 */}
+          <div
+            style={{
+              marginTop: 16,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 12,
+              padding: "12px 14px",
+              borderRadius: 14,
+              background: TITA.white,
+              border: `1px solid ${TITA.sage}`,
+            }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/logo.png"
+              alt="티타 앱 아이콘"
+              width={44}
+              height={44}
+              style={{ borderRadius: 10, flex: "0 0 auto" }}
+            />
+            <div style={{ textAlign: "left", lineHeight: 1.4 }}>
+              <div style={{ fontSize: 16, fontWeight: 800 }}>티타</div>
+              <div style={{ fontSize: 13, color: TITA.muted }}>
+                만든 곳 · EFFEFF
+              </div>
+            </div>
+          </div>
+        </div>
       ) : (
         <a
           // href를 항상 진짜 스토어 주소로 둔다 — JS가 죽어도 이동한다.
@@ -200,7 +267,7 @@ export function StoreDownloadButton({
                   color: TITA.forestDeep,
                 }}
               >
-                왜 문자로 받나요?
+                검색이 번거로우시면
               </p>
               <p
                 style={{
@@ -210,13 +277,28 @@ export function StoreDownloadButton({
                   color: TITA.ink,
                 }}
               >
-                지금 <b>인스타그램 안에서</b> 보고 계셔서, 여기서는 설치 화면이
-                열리지 않고 <b>빈 화면</b>만 나옵니다. 인스타그램이 막아 둔
-                것이라 저희가 어쩔 수 없어요.
-                <br />
-                위 버튼을 누르시면 <b>문자 앱이 열립니다.</b> 그대로 나에게
-                보내고, 문자 속 링크를 누르시면 설치 화면이 뜹니다.
+                아래 버튼을 누르면 <b>문자 앱이 열립니다.</b> 나에게 보낸 뒤
+                문자 속 링크를 누르시면 설치 화면이 바로 떠요.
               </p>
+              <a
+                href={smsHref}
+                onClick={() => safeTrack("ios", `${source}_sms`)}
+                style={{
+                  display: "block",
+                  marginTop: 16,
+                  padding: "15px 16px",
+                  fontSize: 16,
+                  fontWeight: 800,
+                  textAlign: "center",
+                  borderRadius: 999,
+                  background: TITA.forest,
+                  color: TITA.cream,
+                  textDecoration: "none",
+                  fontFamily: KOREAN_FONT_STACK,
+                }}
+              >
+                문자로 링크 받기
+              </a>
             </>
           ) : (
             <>
