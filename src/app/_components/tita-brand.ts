@@ -36,7 +36,11 @@ export const KOREAN_FONT_STACK =
 
 // Store URLs — exposed here so every page's "앱 받기" button points at
 // the same destination. Easier than threading these through props.
-export const APP_STORE_URL = "https://apps.apple.com/app/id6751523550";
+// 스토어프론트(/kr/)를 반드시 붙인다. 빼면 애플이 접속 국가를 보고 302로
+// 다시 보내는데, iOS는 리다이렉트를 거친 유니버설 링크를 App Store 앱으로
+// 넘기지 않는 경우가 있다 — 탭해도 웹페이지만 뜨고 앱이 안 열린다.
+// 최종 주소를 그대로 두어 홉을 없앤다. (티타는 한국 전용이라 /kr/ 고정)
+export const APP_STORE_URL = "https://apps.apple.com/kr/app/id6751523550";
 export const PLAY_STORE_URL =
   "https://play.google.com/store/apps/details?id=com.bloomagain.bloomagain";
 
