@@ -12,29 +12,28 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { TITA, KOREAN_FONT_STACK, APP_STORE_URL, PLAY_STORE_INTENT_URL } from "../_components/tita-brand";
 import { StoreDownloadButton } from "../_components/StoreDownloadButton";
+import {
+  detectPlatform,
+  detectInApp,
+  canAutoRedirectToStore,
+} from "../_components/store-env";
 import { logAnalyticsEvent } from "@/lib/firebase";
-
-function detectPlatform(): "ios" | "android" | "other" {
-  if (typeof navigator === "undefined") return "other";
-  const ua = navigator.userAgent;
-  // iPadOS 13+ Safari는 데스크탑 UA로 위장 → 터치 지원 Mac을 iOS로 본다.
-  const iPadOS =
-    /Macintosh/.test(ua) &&
-    typeof document !== "undefined" &&
-    "ontouchend" in document;
-  if (/iPad|iPhone|iPod/.test(ua) || iPadOS) return "ios";
-  if (/Android/.test(ua)) return "android";
-  return "other";
-}
 
 export default function DownloadPage() {
   const [redirected, setRedirected] = useState(false);
+  const [inAppBrowser, setInAppBrowser] = useState(false);
 
   useEffect(() => {
     const platform = detectPlatform();
-    if (platform !== "ios" && platform !== "android") return;
+    const inApp = detectInApp();
+    setInAppBrowser(inApp);
 
-    // 자동 이동도 집계 대상 — source로 수동 클릭과 구분한다.
+    // 인스타·카톡 인앱 브라우저의 iOS에서는 자동 이동을 하지 않는다. JS가
+    // 일으킨 이동은 유니버설 링크로 처리되지 않아 App Store 앱이 안 뜨고,
+    // 웹뷰 안에 apps.apple.com 웹페이지만 남아 막다른 길이 된다.
+    // 대신 아래 버튼을 사용자가 직접 탭하게 한다 — 탭은 제스처라 정상 동작.
+    if (!canAutoRedirectToStore(platform, inApp)) return;
+
     // 집계가 던져도 이동은 반드시 일어나야 하므로 try/catch로 감싼다.
     try {
       logAnalyticsEvent("app_download_click", {
@@ -80,7 +79,9 @@ export default function DownloadPage() {
       <p className="text-sm mb-8" style={{ color: TITA.muted }}>
         {redirected
           ? "스토어가 안 열리면 아래를 눌러주세요"
-          : "아래에서 앱을 받아주세요"}
+          : inAppBrowser
+            ? "아래 버튼을 눌러 스토어로 가세요"
+            : "아래에서 앱을 받아주세요"}
       </p>
 
       <div className="w-full max-w-xs">

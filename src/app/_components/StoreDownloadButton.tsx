@@ -8,7 +8,9 @@
 //      iOS Safari는 ITP·프라이빗 모드에서 firebase analytics가 예외를 던지는
 //      일이 잦아, 집계 한 줄 때문에 버튼 전체가 먹통이 된다.
 //   ② intent:// 를 iOS에도 걸어 버림 → Safari는 조용히 무시한다(에러도 없음).
-//   ③ 인앱 브라우저(인스타·카톡)에서 스토어 핸드오프가 깨짐.
+//   ③ 인앱 브라우저(인스타·카톡)에서 JS로 스토어를 열려고 함 → iOS는
+//      유니버설 링크를 "사용자 제스처로 시작된 이동"에서만 앱으로 넘긴다.
+//      스크립트가 일으킨 이동은 웹뷰 안에서 apps.apple.com 웹페이지로 끝난다.
 //
 // 그래서 이 컴포넌트는
 //   · 항상 진짜 <a href>를 둔다. JS가 죽어도 브라우저가 이동시킨다.
@@ -18,6 +20,7 @@
 //   · 기기 오감지에 대비해 반대 스토어 탈출구를 항상 남긴다.
 
 import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
+import { detectPlatform, detectInApp, type Platform } from "./store-env";
 import {
   TITA,
   KOREAN_FONT_STACK,
@@ -26,28 +29,6 @@ import {
   PLAY_STORE_INTENT_URL,
 } from "./tita-brand";
 import { logAnalyticsEvent } from "@/lib/firebase";
-
-type Platform = "ios" | "android" | "other";
-
-function detectPlatform(): Platform {
-  if (typeof navigator === "undefined") return "other";
-  const ua = navigator.userAgent;
-  // iPadOS 13+ Safari는 데스크탑 UA로 위장 → 터치 지원 Mac을 iOS로 본다.
-  const iPadOS =
-    /Macintosh/.test(ua) &&
-    typeof document !== "undefined" &&
-    "ontouchend" in document;
-  if (/iPad|iPhone|iPod/.test(ua) || iPadOS) return "ios";
-  if (/Android/.test(ua)) return "android";
-  return "other";
-}
-
-function detectInApp(): boolean {
-  if (typeof navigator === "undefined") return false;
-  return /Instagram|FBAN|FBAV|FB_IAB|KAKAOTALK|NAVER\(inapp|Line\//.test(
-    navigator.userAgent
-  );
-}
 
 // 집계는 절대 이동을 막지 않는다. 이 컴포넌트의 핵심 안전장치.
 function safeTrack(store: "ios" | "android", source: string) {
