@@ -1,624 +1,519 @@
-"use client";
+import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
+import { TITA, KOREAN_FONT_STACK } from "../_components/tita-brand";
+import { StoreDownloadButton } from "../_components/StoreDownloadButton";
 
-/**
- * /enjoy — "506070, 이제 즐길 때" 밝은판 랜딩 (3문항).
- *
- * ── 왜 따로 만드는가 ────────────────────────────────────────────────────────
- * /needs(9문항)는 도착 1134명 중 913명(80%)이 **첫 질문에서** 빠졌다. 그런데
- * 첫 질문만 넘기면 57%가 끝까지 간다 — 아홉 문항을 지나며 잃는 건 96명뿐이다.
- * 길이가 아니라 첫 화면이 문제였다.
- *
- * 그 첫 질문이 "그 시간을 어떻게 보내세요?"였고, 보기 다섯 중 넷이 자기
- * 고백이었다(TV만 본다 / 혼자다 / 그냥 흘러간다). 8/4에 이걸 '삶의 변화'로
- * 바꿔봤다가 더 나빠져서 되돌렸다(56.5% → 70.4%, z=2.77 p=0.0056). 사별·이혼이
- * 첫 화면에 보이니 더 사적이었던 것이다.
- *
- * 두 번의 실패가 축을 알려줬다. 중요한 건 '사실이냐 평가냐'가 아니라
- * **얼마나 사적이냐**다. 그래서 여기는 가장 덜 사적인 질문으로 연다 —
- * "뭐가 제일 하고 싶으세요?" 고백도, 가족사도 없다.
- *
- * 문항은 셋뿐이다. 실제로 서비스가 쓰는 값이 활동·지역·나이라서다. 나머지
- * 리서치용 문항은 /needs에서 이미 132명분을 받았다.
- *
- * ── 색 ──────────────────────────────────────────────────────────────────────
- * 딥그린이 아니라 연분홍/테라코타. 광고 소재(506070 캐러셀)와 같은 팔레트라
- * 광고를 누른 사람이 같은 화면에 도착한 느낌을 받는다. 딥그린으로 받으면
- * "다른 데로 왔나" 싶어진다.
- */
+// /enjoy — "506070, 이제 즐길 때. 근데 누구랑?" 캠페인 랜딩.
+//
+// 광고(인스타 카드·딥그린 광고)에서 바로 떨어지는 페이지라 목표는 하나,
+// 앱 설치다. 그래서 헤더/네비 없이 단일 열로 가고, 다운로드 CTA를 위·아래
+// 두 번 둔다.
+//
+// 다운로드 버튼은 반드시 <StoreDownloadButton/>을 쓴다. 페이지마다 CTA를
+// 새로 짜다가 iOS에서 "눌러도 아무 일 없는" 사고가 반복돼서 만든 컴포넌트다
+// (항상 진짜 <a href>, 집계는 try/catch, intent://는 안드로이드 전용).
 
-import { useEffect, useRef, useState } from "react";
-import {
-  APP_STORE_URL,
-  PLAY_STORE_URL,
-  PLAY_STORE_INTENT_URL,
-  KOREAN_FONT_STACK,
-} from "../_components/tita-brand";
-import { logAnalyticsEvent } from "@/lib/firebase";
-import { trackPixel } from "@/lib/pixel";
-import { recordNeedsEvent } from "../needs/needs-events";
-import { AppleMark, AndroidMark } from "../gyeol/StoreMarks";
+const BASE = "https://tita-app.com";
 
-const VARIANT = "enjoy";
-
-// 광고 캐러셀과 같은 색. 새로 만들지 않는다.
-const C = {
-  blush: "#F7E4E1",
-  ink: "#1A1A1A",
-  terra: "#C85A3A",
-  terraDeep: "#A8482D",
-  muted: "#786E6C",
-  white: "#FFFFFF",
-  line: "#E7CFCA",
-} as const;
-
-type Q = {
-  key: "activity" | "district" | "outing" | "ageBand";
-  title: string;
-  sub?: string;
-  options: { value: string; label: string }[];
+export const metadata: Metadata = {
+  title: "이제 좀 즐기려는데, 누구랑 가죠? — 결이 맞는 친구 찾기 | 티타",
+  description:
+    "시간도 여유도 생겼는데 같이 갈 사람이 없습니다. 친구가 없어서가 아니라 취향이 맞는 친구가 없어서입니다. 만 45세 이상, 결이 맞는 또래를 가까운 동네에서 만나세요.",
+  keywords: [
+    "5060 친구",
+    "506070",
+    "중년 친구 만들기",
+    "취미 친구",
+    "동네 친구",
+    "여행 같이 갈 사람",
+    "티타",
+  ],
+  alternates: { canonical: `${BASE}/enjoy/` },
+  openGraph: {
+    title: "506070, 이제 즐길 때 — 근데, 누구랑 가죠?",
+    description:
+      "하고 싶던 걸 같이 할, 결이 맞는 친구부터 찾아요. 만 45세 이상 · NICE 본인인증.",
+    url: `${BASE}/enjoy/`,
+    siteName: "티타",
+    locale: "ko_KR",
+    type: "website",
+    images: [
+      {
+        url: `${BASE}/marketing/ad-who-to-enjoy-with.png`,
+        width: 1080,
+        height: 1350,
+        alt: "506070 이제 즐길 때 — 근데, 누구랑 가죠?",
+      },
+    ],
+  },
 };
 
-// 활동 보기는 /needs 4번 문항의 실측 분포를 따랐다(차 한잔 23 · 취미배움 18 ·
-// 수다 18 · 여행 16 · 전시공연 10 · 운동등산 8). 고르게 갈리는 게 첫 질문으로
-// 좋다 — 누구나 자기 답이 있다. 광고에 쓴 낱말(전시·연극·뮤지컬·여행)이
-// 보기에 그대로 있어야 "방금 본 그거"로 이어진다.
-const QUESTIONS: Q[] = [
+// 인사이트 #10 카드 — 광고에서 본 그림을 랜딩에서 다시 만나게 해 이어붙인다.
+const CARDS = [
+  { src: "/blog/insight-10/card-1.png", alt: "이제 좀 즐기려는데, 누구랑 가죠?" },
+  { src: "/blog/insight-10/card-2.png", alt: "친구가 없는 게 아니라 취향이 맞는 친구가 없는 것" },
+  { src: "/blog/insight-10/card-3.png", alt: "우리 친구는 대부분 우연히 정해졌다" },
+  { src: "/blog/insight-10/card-4.png", alt: "이제는 고를 때예요" },
+  { src: "/blog/insight-10/card-5.png", alt: "하고 싶던 걸, 결이 맞는 사람과" },
+];
+
+const WANTS = [
+  "여행",
+  "전시·공연",
+  "등산·둘레길",
+  "7080 통기타",
+  "사진",
+  "악기 배우기",
+  "맛집",
+  "골프·탁구",
+];
+
+const SAFETY = [
+  "만 45세 이상 · NICE 본인인증 완료자만",
+  "처음엔 1:1이 아니라 여럿이 모여요",
+  "위험한 접근은 AI가 실시간으로 감지해요",
+  "연애가 아니라 친구가 먼저예요",
+];
+
+const FAQ = [
   {
-    key: "activity",
-    title: "뭐가 제일\n하고 싶으세요?",
-    sub: "고르시면 그걸 같이 할 분들을 찾아드려요",
-    options: [
-      { value: "culture", label: "전시·공연 나들이" },
-      { value: "theater", label: "연극·뮤지컬" },
-      { value: "travel", label: "같이 여행" },
-      { value: "tea", label: "차 한잔, 맛있는 집" },
-      { value: "hobby", label: "취미·배움 함께" },
-      { value: "exercise", label: "운동·등산 같이" },
-      { value: "walk", label: "동네 산책" },
-      { value: "chat", label: "그냥 편한 수다" },
-    ],
+    q: "왜 오래된 친구와는 취향이 안 맞을까요?",
+    a: "대부분의 친구 관계가 ‘근접성’으로 만들어졌기 때문입니다. 1950년 MIT 웨스트게이트 연구에서 친구의 약 65%가 다섯 집 이내 사람이었습니다. 같은 동네·학교·직장이라 가까워진 것이지, 취향이 맞아 고른 관계가 아니었습니다.",
   },
   {
-    key: "district",
-    title: "어디서 만나기\n편하세요?",
-    sub: "가까운 분들끼리 모아드려요",
-    options: [
-      { value: "gangnam", label: "강남·서초·송파" },
-      { value: "jongno", label: "종로·중구·용산" },
-      { value: "mapo", label: "마포·서대문·은평" },
-      { value: "yeongdeungpo", label: "영등포·구로·양천·강서" },
-      { value: "nowon", label: "노원·도봉·강북·성북" },
-      { value: "gangdong", label: "광진·성동·동대문·중랑·강동" },
-      // 경기·인천이 응답의 33%로 단일 최대 블록인데 한 칸이라, 어디에 자리를
-      // 열지 알 수가 없었다. 40분 안에 모일 수 있는 묶음으로 쪼갠다.
-      { value: "incheon", label: "인천·부천·김포" },
-      { value: "gg_north", label: "고양·파주·의정부" },
-      { value: "gg_south", label: "성남·용인·수원" },
-      { value: "gg_west", label: "안양·광명·안산" },
-      { value: "etc", label: "그 외 지역" },
-    ],
+    q: "이 나이에 친구를 가려 사귀는 게 이기적인가요?",
+    a: "아닙니다. 스탠퍼드대 카스텐슨의 사회정서적 선택이론에 따르면 나이가 들수록 사람은 관계를 더 선별하고 정서적으로 의미 있는 관계에 집중합니다. 아는 사람 수는 줄지만 가까운 관계의 밀도는 높아지는, 자연스러운 발달 변화입니다.",
   },
   {
-    key: "outing",
-    title: "요즘 바깥 활동은\n어떠세요?",
-    sub: "편하게 고르시면 돼요",
-    // /needs 아홉 문항 중 앱 받기를 실제로 예측한 답은 둘뿐이었고, 그중 하나가
-    // "혼자서라도 나간다"였다(34% 대 18%, p=0.013). 나머지 — 사기 걱정, 연령,
-    // 지금 상황, 활동 종류 — 는 전부 차이가 없었다. 유일하게 검증된 행동
-    // 신호라 밝은판으로 옮겨 온다.
-    //
-    // 세 번째에 두는 이유: "나가고 싶은데 잘 안 된다"에는 자기 고백이 조금
-    // 섞인다. /needs가 그런 질문을 첫 화면에 뒀다가 80%를 잃었다.
-    options: [
-      { value: "solo_out", label: "혼자서라도 나가는 편" },
-      { value: "want_out", label: "나가고 싶은데 잘 안 돼요" },
-      { value: "home", label: "집이 편해요" },
-      { value: "has_group", label: "이미 다니는 모임이 있어요" },
-    ],
-  },
-  {
-    key: "ageBand",
-    title: "연령대가\n어떻게 되세요?",
-    // 만 45세 이상 전용임을 여기서 밝힌다. 설치 뒤 본인인증에서 튕기는 것보다
-    // 지금 아는 편이 서로 낫다 — 결큐 시도자의 43%가 만 45세 미만이었다.
-    sub: "티타는 만 45세 이상만 이용하실 수 있어요",
-    options: [
-      { value: "45-49", label: "45–49세" },
-      { value: "50-54", label: "50–54세" },
-      { value: "55-59", label: "55–59세" },
-      { value: "60-64", label: "60–64세" },
-      { value: "65plus", label: "65세 이상" },
-      { value: "under45", label: "만 45세 미만이에요" },
-    ],
+    q: "취향이 맞는 또래는 어디서 만나나요?",
+    a: "티타는 관심사와 삶의 결을 기준으로 가까운 동네의 또래를 이어 줍니다. 전시·등산·공연처럼 하고 싶은 일을 적어 두면 비슷한 시기를 지나는 분들과 연결되고, NICE 본인인증과 AI 안전망으로 안심하고 시작할 수 있습니다.",
   },
 ];
 
-function detectPlatform(): "ios" | "android" | "other" {
-  if (typeof navigator === "undefined") return "other";
-  const ua = navigator.userAgent || "";
-  if (/iPhone|iPad|iPod/.test(ua)) return "ios";
-  if (/Android/.test(ua)) return "android";
-  return "other";
-}
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: FAQ.map((f) => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a },
+  })),
+};
+
+const card: React.CSSProperties = {
+  background: TITA.white,
+  borderRadius: 20,
+  padding: "26px 24px",
+  border: `1px solid ${TITA.sage}`,
+};
+
+const h2: React.CSSProperties = {
+  fontSize: 22,
+  fontWeight: 800,
+  lineHeight: 1.38,
+  letterSpacing: "-0.02em",
+  margin: "0 0 12px",
+  color: TITA.ink,
+};
+
+const body: React.CSSProperties = {
+  fontSize: 16,
+  lineHeight: 1.72,
+  color: TITA.ink,
+  margin: 0,
+  opacity: 0.86,
+};
+
+const srcLine: React.CSSProperties = {
+  fontSize: 12.5,
+  color: TITA.mutedSoft,
+  margin: "12px 0 0",
+  lineHeight: 1.5,
+};
 
 export default function EnjoyPage() {
-  const [step, setStep] = useState(0);
-  const [answers, setAnswers] = useState<Record<string, string>>({});
-  const [done, setDone] = useState(false);
-  const [platform, setPlatform] = useState<"ios" | "android" | "other">("other");
-  // "티타가 뭔가요?"를 펼쳤나. 첫 화면에서 46%가 나가는데 안드로이드 이탈자가
-  // 중앙값 34초를 보고도 아무것도 안 눌렀다 — 안 보여서도 어려워서도 아니라
-  // 누를 이유를 못 찾은 것이다(2026-08-06). 이걸 누르는 사람이 많으면
-  // "티타가 뭔지 몰라서"가 원인이라는 뜻이다.
-  const [explained, setExplained] = useState(false);
-
-  useEffect(() => setPlatform(detectPlatform()), []);
-
-  // start는 화면이 실제로 보일 때만 쏜다. Meta 인앱 브라우저는 광고를 띄울 때
-  // 랜딩을 미리 로드하는데, 그때도 찍히면 팬텀 도착이 쌓인다(/needs에서
-  // 겪은 문제 그대로).
-  const firedRef = useRef(false);
-  useEffect(() => {
-    const fire = () => {
-      if (firedRef.current) return;
-      firedRef.current = true;
-      const hydMs = Math.round(
-        typeof performance !== "undefined" ? performance.now() : 0,
-      );
-      recordNeedsEvent("start", { variant: VARIANT, hydMs });
-      logAnalyticsEvent("enjoy_start", { hyd_ms: hydMs });
-      trackPixel("EnjoyStart", {}, true);
-    };
-    if (typeof document === "undefined" || document.visibilityState === "visible") {
-      fire();
-      return;
-    }
-    const onVisible = () => {
-      if (document.visibilityState === "visible") fire();
-    };
-    document.addEventListener("visibilitychange", onVisible);
-    return () => document.removeEventListener("visibilitychange", onVisible);
-  }, []);
-
-  // 나갈 때 보고 있던 질문을 남긴다 — 어디서 관두는지 잡는 유일한 방법.
-  const stepRef = useRef(step);
-  stepRef.current = step;
-  const doneRef = useRef(done);
-  doneRef.current = done;
-  const abandonRef = useRef(false);
-  useEffect(() => {
-    const onHide = () => {
-      if (doneRef.current || abandonRef.current) return;
-      // 한 번도 보인 적 없는 페이지는 이탈로 세지 않는다. start를 못 쐈다는
-      // 건 화면에 뜬 적이 없다는 뜻이다(/needs에서 이 구멍 때문에 검사
-      // 트래픽이 '첫 질문 이탈'로 잡혔다).
-      if (!firedRef.current) return;
-      abandonRef.current = true;
-      recordNeedsEvent("abandon", {
-        variant: VARIANT,
-        q: QUESTIONS[stepRef.current].key,
-        step: stepRef.current,
-      });
-    };
-    window.addEventListener("pagehide", onHide);
-    return () => window.removeEventListener("pagehide", onHide);
-  }, []);
-
-  const underage = answers.ageBand === "under45";
-
-  function choose(value: string) {
-    const q = QUESTIONS[step];
-    const next = { ...answers, [q.key]: value };
-    setAnswers(next);
-    recordNeedsEvent("answer", {
-      variant: VARIANT,
-      q: q.key,
-      step,
-      [q.key]: value,
-    });
-    if (step < QUESTIONS.length - 1) {
-      setStep(step + 1);
-      return;
-    }
-    setDone(true);
-    recordNeedsEvent("complete", {
-      variant: VARIANT,
-      activity: next.activity,
-      district: next.district,
-      outing: next.outing,
-      ageBand: next.ageBand,
-    });
-    logAnalyticsEvent("enjoy_complete", { activity: next.activity ?? "" });
-    if (value === "under45") {
-      trackPixel("NeedsUnderage", {}, true);
-    } else {
-      trackPixel("NeedsAgeQualified", { age_band: value }, true);
-      trackPixel("EnjoyComplete", { activity: next.activity ?? "" }, true);
-    }
-  }
-
-  // 설문을 안 하고 바로 받는 길. phase를 download와 나눈다 — 섞으면
-  // "완주한 사람이 얼마나 받나"를 못 읽는다(/needs가 8/1에 같은 이유로 나눴다).
-  function skipDownload(store: "ios" | "android") {
-    recordNeedsEvent("skip_download", { variant: VARIANT, ...answers, store });
-    logAnalyticsEvent("app_download_click", { store, source: "enjoy_skip" });
-    trackPixel("AppDownloadClick", { store, source: "enjoy_skip" }, true);
-  }
-
-  function explain() {
-    if (!explained) recordNeedsEvent("explain", { variant: VARIANT });
-    setExplained(true);
-  }
-
-  function back() {
-    if (done) {
-      setDone(false);
-      return;
-    }
-    if (step > 0) setStep(step - 1);
-  }
-
-  function download(store: "ios" | "android") {
-    recordNeedsEvent("download", { variant: VARIANT, ...answers, store });
-    logAnalyticsEvent("app_download_click", { store, source: "enjoy" });
-    trackPixel("AppDownloadClick", { store, source: "enjoy" }, true);
-  }
-
-  async function share() {
-    recordNeedsEvent("share", { variant: VARIANT });
-    const data = {
-      title: "506070, 이제 즐길 때",
-      text: "전시, 연극, 뮤지컬, 여행 — 같이 할 분을 찾는 곳이에요. 만 45세 이상.",
-      url: "https://tita-app.com/enjoy",
-    };
-    try {
-      if (typeof navigator !== "undefined" && navigator.share) {
-        await navigator.share(data);
-      } else {
-        await navigator.clipboard.writeText(data.url);
-      }
-    } catch {
-      /* 사용자가 취소한 것 — 조용히 넘긴다 */
-    }
-  }
-
-  const page: React.CSSProperties = {
-    minHeight: "100dvh",
-    background: C.blush,
-    fontFamily: KOREAN_FONT_STACK,
-    display: "flex",
-    justifyContent: "center",
-    padding: "20px 20px 40px",
-  };
-  const inner: React.CSSProperties = { width: "100%", maxWidth: 460 };
-  const optionBtn: React.CSSProperties = {
-    width: "100%",
-    textAlign: "left",
-    fontFamily: KOREAN_FONT_STACK,
-    fontSize: 16.5,
-    fontWeight: 700,
-    lineHeight: 1.5,
-    letterSpacing: "-0.3px",
-    color: C.ink,
-    background: C.white,
-    border: "none",
-    borderRadius: 14,
-    padding: "13px 18px",
-    cursor: "pointer",
-    boxShadow: "0 4px 14px rgba(160,90,70,0.10)",
-  };
-  // 보기와 확실히 달라 보여야 한다 — 아홉 번째 보기처럼 보이면 답으로 오해한다.
-  const escapeBtn: React.CSSProperties = {
-    fontFamily: KOREAN_FONT_STACK,
-    fontSize: 13.5,
-    fontWeight: 700,
-    color: C.muted,
-    background: "transparent",
-    border: `1px solid ${C.line}`,
-    borderRadius: 999,
-    padding: "11px 12px",
-    cursor: "pointer",
-  };
-  // 탈출구 두 개보다는 세고, 보기(흰 카드)와는 확실히 다르게. 답을 유도하는
-  // 화면이라 이게 제일 눈에 띄면 안 된다.
-  const getBtn: React.CSSProperties = {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 7,
-    width: "100%",
-    fontFamily: KOREAN_FONT_STACK,
-    textDecoration: "none",
-    fontSize: 14.5,
-    fontWeight: 800,
-    color: C.terra,
-    background: "transparent",
-    border: `1.5px solid ${C.terra}`,
-    borderRadius: 999,
-    padding: "12px 16px",
-    cursor: "pointer",
-  };
-  const bigBtn: React.CSSProperties = {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 8,
-    width: "100%",
-    fontFamily: KOREAN_FONT_STACK,
-    textDecoration: "none",
-    fontSize: 17,
-    fontWeight: 800,
-    letterSpacing: "-0.3px",
-    color: C.white,
-    background: C.terra,
-    border: "none",
-    borderRadius: 999,
-    padding: "17px 24px",
-    cursor: "pointer",
-  };
-
-  // ── 결과 ──────────────────────────────────────────────────────────────────
-  if (done) {
-    if (underage) {
-      return (
-        <main style={page}>
-          <div style={inner}>
-            <div style={{ height: 40 }} />
-            <h1 style={{ fontSize: 25, fontWeight: 800, lineHeight: 1.45, color: C.ink, margin: "0 0 10px", letterSpacing: "-0.6px" }}>
-              아직은 티타를
-              <br />
-              쓰실 수 없어요
-            </h1>
-            <p style={{ fontSize: 15, lineHeight: 1.7, color: C.muted, margin: "0 0 26px" }}>
-              티타는 만 45세 이상만 이용하실 수 있어요.
-              <br />
-              대신, 요즘 즐길 거리를 찾고 계신{" "}
-              <b style={{ color: C.ink }}>만 45세 이상 가족·친구</b>가
-              <br />
-              떠오르지 않으세요?
-            </p>
-            <button onClick={share} style={bigBtn}>
-              그분께 알려주기
-            </button>
-          </div>
-        </main>
-      );
-    }
-    const chosen = QUESTIONS[0].options.find((o) => o.value === answers.activity);
-    return (
-      <main style={page}>
-        <div style={inner}>
-          <div style={{ height: 32 }} />
-          <p style={{ fontSize: 14, fontWeight: 700, color: C.terra, margin: "0 0 8px" }}>
-            고르셨어요
-          </p>
-          <h1 style={{ fontSize: 26, fontWeight: 800, lineHeight: 1.45, color: C.ink, margin: "0 0 14px", letterSpacing: "-0.6px" }}>
-            {chosen?.label ?? "함께할 거리"},
-            <br />
-            같이 하실 분들을 찾아드릴게요
-          </h1>
-          <p style={{ fontSize: 15, lineHeight: 1.75, color: C.muted, margin: "0 0 28px" }}>
-            결이 통하는 서넛이 모이면 티타가 알려드려요.
-            <br />
-            첫마디도 티타가 꺼내드리니 편하게 오시면 돼요.
-          </p>
-
-          {/* 기기를 못 알아본 경우엔 두 스토어를 나란히 준다.
-              전에는 "안드로이드가 아니면 App Store"였는데, 그러면 기기를 못
-              읽은 접속이 전부 iOS로 집계된다 — 실제로 iOS 클릭 27건 중 18건이
-              그렇게 만들어진 허수였다(2026-08-06). 지표만 흐린 게 아니라,
-              UA가 이상하게 잡힌 안드로이드 사용자를 엉뚱한 스토어로 보낸다. */}
-          {platform === "other" ? (
-            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              <a
-                href={APP_STORE_URL}
-                onClick={() => download("ios")}
-                style={bigBtn}
-              >
-                <AppleMark />
-                App Store에서 받기
-              </a>
-              <a
-                href={PLAY_STORE_URL}
-                onClick={() => download("android")}
-                style={{ ...bigBtn, background: C.white, color: C.terra, border: `1.5px solid ${C.terra}` }}
-              >
-                <AndroidMark />
-                Google Play에서 받기
-              </a>
-            </div>
-          ) : (
-            <>
-              <a
-                href={platform === "android" ? PLAY_STORE_URL : APP_STORE_URL}
-                onClick={(e) => {
-                  download(platform === "android" ? "android" : "ios");
-                  if (platform === "android") {
-                    e.preventDefault();
-                    window.location.href = PLAY_STORE_INTENT_URL;
-                  }
-                }}
-                style={bigBtn}
-              >
-                {platform === "android" ? <AndroidMark /> : <AppleMark />}
-                티타 받기
-              </a>
-              <a
-                href={platform === "android" ? APP_STORE_URL : PLAY_STORE_URL}
-                onClick={() => download(platform === "android" ? "ios" : "android")}
-                style={{
-                  display: "block",
-                  textAlign: "center",
-                  fontSize: 13.5,
-                  fontWeight: 700,
-                  color: C.muted,
-                  textDecoration: "underline",
-                  textUnderlineOffset: 3,
-                  padding: 14,
-                }}
-              >
-                {platform === "android" ? "아이폰이신가요?" : "안드로이드이신가요?"}
-              </a>
-            </>
-          )}
-
-          <p style={{ fontSize: 12.5, lineHeight: 1.7, color: C.muted, textAlign: "center", margin: "18px 0 0" }}>
-            만 45세 이상 · 본인인증 · 셋넷이 함께
-            <br />
-            실명과 연락처는 다른 회원에게 보이지 않아요
-          </p>
-        </div>
-      </main>
-    );
-  }
-
-  // ── 질문 ──────────────────────────────────────────────────────────────────
-  const q = QUESTIONS[step];
   return (
-    <main style={page}>
-      <div style={inner}>
-        {step === 0 && (
-          <p style={{ fontSize: 15, fontWeight: 800, color: C.terra, textAlign: "center", margin: "8px 0 14px", letterSpacing: "-0.3px" }}>
-            506070, 이제 즐길 때
-          </p>
-        )}
+    <main
+      style={{
+        minHeight: "100dvh",
+        background: `linear-gradient(170deg, ${TITA.cream} 0%, ${TITA.surface} 100%)`,
+        fontFamily: KOREAN_FONT_STACK,
+        color: TITA.ink,
+        display: "flex",
+        justifyContent: "center",
+        padding: "40px 20px 64px",
+      }}
+    >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
 
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
-          <button
-            onClick={back}
+      <div
+        style={{
+          maxWidth: 520,
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+          gap: 20,
+        }}
+      >
+        {/* Hero */}
+        <header style={{ textAlign: "center", padding: "8px 0 4px" }}>
+          <p
             style={{
-              fontFamily: KOREAN_FONT_STACK,
               fontSize: 14,
-              fontWeight: 700,
-              color: C.muted,
-              background: "transparent",
-              border: "none",
-              padding: 3,
-              cursor: "pointer",
-              visibility: step === 0 ? "hidden" : "visible",
+              fontWeight: 800,
+              letterSpacing: "0.02em",
+              color: TITA.camel,
+              margin: "0 0 12px",
             }}
           >
-            ← 이전
-          </button>
-          <div style={{ display: "flex", gap: 6 }}>
-            {QUESTIONS.map((_, i) => (
-              <span
-                key={i}
+            506070, 이제 즐길 때
+          </p>
+          <h1
+            style={{
+              fontSize: 34,
+              fontWeight: 800,
+              lineHeight: 1.28,
+              letterSpacing: "-0.03em",
+              margin: "0 0 16px",
+              color: TITA.ink,
+            }}
+          >
+            근데,
+            <br />
+            <span style={{ color: TITA.forest }}>누구랑</span> 가죠?
+          </h1>
+          <p
+            style={{
+              fontSize: 17,
+              lineHeight: 1.65,
+              color: TITA.muted,
+              margin: 0,
+            }}
+          >
+            시간도 생기고 여유도 생겼는데,
+            <br />
+            막상 달력을 펴면 여기서 멈춥니다.
+          </p>
+        </header>
+
+        <StoreDownloadButton
+          source="enjoy_hero"
+          label="티타 앱 받기 (무료)"
+          style={{ width: "100%", padding: "18px 22px", fontSize: 17 }}
+        />
+
+        {/* 데이터 */}
+        <section style={card}>
+          <h2 style={h2}>가장 외로운 순간은 아플 때가 아니었어요</h2>
+          <p style={body}>
+            티타에 답해 주신 300여 분께 언제 가장 혼자라고 느끼시는지
+            여쭤봤습니다.
+          </p>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 10,
+              margin: "18px 0 0",
+            }}
+          >
+            {[
+              { label: "여행 가고 싶을 때", pct: 28.0, on: true },
+              { label: "얘기하고 싶을 때", pct: 24.4, on: true },
+              { label: "아플 때", pct: 6.8, on: false },
+            ].map((r) => (
+              <div key={r.label}>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    fontSize: 14.5,
+                    fontWeight: 700,
+                    marginBottom: 6,
+                    color: r.on ? TITA.ink : TITA.muted,
+                  }}
+                >
+                  <span>{r.label}</span>
+                  <span>{r.pct}%</span>
+                </div>
+                <div
+                  style={{
+                    height: 10,
+                    borderRadius: 999,
+                    background: TITA.surface,
+                    overflow: "hidden",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: `${(r.pct / 28) * 100}%`,
+                      height: "100%",
+                      borderRadius: 999,
+                      background: r.on ? TITA.forest : TITA.mutedSoft,
+                    }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+          <p style={{ ...body, marginTop: 18 }}>
+            비어 있는 자리는 <b>도와줄 사람이 없는 자리</b>가 아니라,{" "}
+            <b>좋은 걸 함께 나눌 사람이 없는 자리</b>였습니다. 즐길 준비는 이미
+            되어 있는 겁니다.
+          </p>
+          <p style={srcLine}>
+            출처 · 티타 니즈 설문 (2026-07~08, 300여 명). 광고 유입 자발적
+            응답이라 전국 대표성은 없습니다.
+          </p>
+        </section>
+
+        {/* 진짜 이유 */}
+        <section style={card}>
+          <h2 style={h2}>
+            친구가 없는 게 아니에요.
+            <br />
+            <span style={{ color: TITA.forest }}>취향이 맞는</span> 친구가 없는
+            거죠.
+          </h2>
+          <p style={body}>
+            고향 친구, 전 직장 동료, 동네 이웃. 오래 알았고 편한 사이입니다.
+            그런데 전시를 같이 보러 가자고, 통기타 공연을 같이 가자고는 말이 잘
+            안 떨어집니다. <b>오래 알았다는 것과 결이 맞는다는 건 다른 문제</b>
+            니까요.
+          </p>
+        </section>
+
+        {/* 근접성 효과 */}
+        <section style={card}>
+          <h2 style={h2}>
+            우리 친구는 대부분 <span style={{ color: TITA.forest }}>우연히</span>{" "}
+            정해졌어요
+          </h2>
+          <p style={body}>
+            1950년 심리학자 레온 페스팅거 연구팀이 MIT 기혼 학생 기숙단지에서
+            누가 누구와 친해지는지 조사했습니다. 결과는 단순했습니다.{" "}
+            <b>친구의 약 65%가 다섯 집 이내</b>에 사는 사람이었습니다.
+          </p>
+          <p style={{ ...body, marginTop: 14 }}>
+            심리학은 이걸 <b>근접성 효과</b>라고 부릅니다. 같은 동네여서, 같은
+            반이어서, 같은 부서여서 친해진 겁니다.{" "}
+            <b>좋은 친구들이지만, 내가 고른 사람들은 아니었습니다.</b>
+          </p>
+          <p
+            style={{
+              margin: "18px 0 0",
+              padding: "16px 18px",
+              borderRadius: 14,
+              background: TITA.surface,
+              fontSize: 15.5,
+              lineHeight: 1.65,
+              fontWeight: 700,
+              color: TITA.forestDeep,
+            }}
+          >
+            그러니 취향 맞는 친구가 없는 건 까다로워서가 아닙니다. 애초에 고를
+            기회가 없었을 뿐입니다.
+          </p>
+          <p style={srcLine}>
+            출처 · Festinger, Schachter &amp; Back, 「Social Pressures in
+            Informal Groups」 (1950)
+          </p>
+        </section>
+
+        {/* 카스텐슨 */}
+        <section style={card}>
+          <h2 style={h2}>
+            그리고 이제는, <span style={{ color: TITA.forest }}>고를 때</span>가
+            됐어요
+          </h2>
+          <p style={body}>
+            스탠퍼드대 로라 카스텐슨의 <b>사회정서적 선택이론</b>에 따르면,
+            남은 시간이 유한하게 느껴질수록 사람은 관계에서 더 <b>선별적</b>이
+            됩니다. 아는 사람 수는 줄지만 가까운 관계의 밀도는 오히려{" "}
+            <b>높아집니다.</b>
+          </p>
+          <p style={{ ...body, marginTop: 14 }}>
+            “아무나 말고, 나와 맞는 사람과 시간을 보내고 싶다”는 마음은
+            까탈스러워진 게 아니라 <b>발달심리학이 예측하는 자연스러운 변화</b>
+            입니다. 젊을 땐 넓히는 게 과제였다면, 지금은 <b>고르는 게 과제</b>
+            입니다.
+          </p>
+          <p style={srcLine}>
+            출처 · Laura L. Carstensen, Socioemotional Selectivity Theory
+          </p>
+        </section>
+
+        {/* 카드 스트립 */}
+        <section>
+          <p
+            style={{
+              fontSize: 13,
+              fontWeight: 700,
+              color: TITA.muted,
+              margin: "0 0 10px",
+              paddingLeft: 2,
+            }}
+          >
+            티타 인사이트 · 관계수업 #10
+          </p>
+          <div
+            style={{
+              display: "flex",
+              gap: 12,
+              overflowX: "auto",
+              paddingBottom: 6,
+              WebkitOverflowScrolling: "touch",
+            }}
+          >
+            {CARDS.map((c) => (
+              <Image
+                key={c.src}
+                src={c.src}
+                alt={c.alt}
+                width={216}
+                height={270}
                 style={{
-                  width: i === step ? 18 : 7,
-                  height: 7,
-                  borderRadius: 4,
-                  background: i <= step ? C.terra : C.line,
-                  transition: "all .2s",
+                  borderRadius: 14,
+                  border: `1px solid ${TITA.sage}`,
+                  flex: "0 0 auto",
+                  height: "auto",
                 }}
               />
             ))}
           </div>
-          <span style={{ fontSize: 13, fontWeight: 700, color: C.muted }}>
-            {step + 1}/{QUESTIONS.length}
-          </span>
-        </div>
+        </section>
 
-        <h2 style={{ fontSize: 24, fontWeight: 800, lineHeight: 1.42, letterSpacing: "-0.6px", color: C.ink, margin: "0 0 6px", whiteSpace: "pre-line" }}>
-          {q.title}
-        </h2>
-        {q.sub && (
-          <p style={{ fontSize: 13.5, color: C.muted, fontWeight: 600, margin: "0 0 16px" }}>
-            {q.sub}
+        {/* 하고 싶던 것 */}
+        <section style={card}>
+          <h2 style={h2}>
+            하고 싶던 걸,{" "}
+            <span style={{ color: TITA.forest }}>결이 맞는 사람</span>과
+          </h2>
+          <p style={body}>
+            관심사를 적어 두면 비슷한 시기를 지나는 또래와 가까운 동네에서
+            이어집니다. 오래 알아서가 아니라 <b>취향이 맞아서</b> 만나는
+            관계입니다.
           </p>
-        )}
-
-        <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
-          {q.options.map((o) => (
-            <button key={o.value} onClick={() => choose(o.value)} style={optionBtn}>
-              {o.label}
-            </button>
-          ))}
-        </div>
-
-        {/* 첫 화면에만 탈출구를 둔다. 여기서 46%가 나가는데, 누를 게 보기밖에
-            없어서 안 맞으면 나가는 것 말고 할 수 있는 게 없었다.
-            둘 중 어느 쪽이 눌리는지로 원인이 갈린다 — "내 답이 없다"인지
-            "이게 뭔지 모르겠다"인지. */}
-        {step === 0 && (
-          <div style={{ marginTop: 14 }}>
-            <div style={{ display: "flex", gap: 8 }}>
-              <button
-                onClick={() => choose("unsure")}
-                style={{ ...escapeBtn, flex: 1 }}
-              >
-                아직 잘 모르겠어요
-              </button>
-              <button
-                onClick={explain}
-                style={{ ...escapeBtn, flex: 1 }}
-                aria-expanded={explained}
-              >
-                티타가 뭔가요?
-              </button>
-            </div>
-
-            {/* 설문에 답할 생각이 없는 사람에게도 길을 준다. /needs 실측으로는
-                답 안 한 396명 중 3명(1%)만 이 길로 갔다 — 큰 기대는 안 한다.
-                다만 지금은 그 1%마저 통째로 잃고 있다. */}
-            <div style={{ marginTop: 8 }}>
-              {platform === "other" ? (
-                // 기기를 못 알아봤으면 고르시게 둔다. 임의로 한쪽에 보내면
-                // 엉뚱한 스토어로 가고 집계도 그쪽으로 쏠린다(8/6에 겪었다).
-                <div style={{ display: "flex", gap: 8 }}>
-                  <a href={APP_STORE_URL} onClick={() => skipDownload("ios")} style={{ ...getBtn, flex: 1 }}>
-                    <AppleMark size={17} />
-                    아이폰
-                  </a>
-                  <a href={PLAY_STORE_URL} onClick={() => skipDownload("android")} style={{ ...getBtn, flex: 1 }}>
-                    <AndroidMark size={17} />
-                    삼성폰
-                  </a>
-                </div>
-              ) : (
-                <a
-                  href={platform === "android" ? PLAY_STORE_URL : APP_STORE_URL}
-                  onClick={(e) => {
-                    skipDownload(platform === "android" ? "android" : "ios");
-                    if (platform === "android") {
-                      e.preventDefault();
-                      window.location.href = PLAY_STORE_INTENT_URL;
-                    }
-                  }}
-                  style={getBtn}
-                >
-                  {platform === "android" ? <AndroidMark size={17} /> : <AppleMark size={17} />}
-                  티타 받으러 가기
-                </a>
-              )}
-            </div>
-
-            {explained && (
-              // 과장하지 않는다. 본인인증은 누구인지를 확인할 뿐 의도를 거르지
-              // 못한다 — "이상한 사람 못 들어와요"류는 쓰지 않는다.
-              <div
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 8,
+              marginTop: 18,
+            }}
+          >
+            {WANTS.map((w) => (
+              <span
+                key={w}
                 style={{
-                  marginTop: 8,
-                  background: C.white,
-                  border: `1px solid ${C.line}`,
-                  borderRadius: 14,
-                  padding: "14px 16px",
-                  fontSize: 13.5,
-                  lineHeight: 1.75,
-                  color: C.ink,
+                  fontSize: 14.5,
+                  fontWeight: 700,
+                  color: TITA.forestDeep,
+                  background: TITA.surface,
+                  border: `1px solid ${TITA.sage}`,
+                  borderRadius: 999,
+                  padding: "9px 15px",
                 }}
               >
-                만 45세 이상만 들어오는 앱이에요. 결이 맞는 서넛이 모여
-                차 한잔하거나(티타임), 만나기 전에 대화부터 나눕니다.
-                둘 다 티타가 자리를 잡아드려요.
-                <span style={{ color: C.muted }}> 들어오시려면 본인인증을 하셔야 해요.</span>
-              </div>
-            )}
+                {w}
+              </span>
+            ))}
           </div>
-        )}
+        </section>
 
-        <p style={{ fontSize: 12.5, color: C.muted, textAlign: "center", margin: "18px 0 0" }}>
-          가입 없이 30초 · 만 45세 이상
+        {/* 안심 */}
+        <section
+          style={{
+            background: TITA.forest,
+            borderRadius: 20,
+            padding: "26px 24px",
+            color: TITA.cream,
+          }}
+        >
+          <p style={{ fontSize: 18, fontWeight: 800, margin: "0 0 16px" }}>
+            안심하고 시작하셔도 돼요
+          </p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            {SAFETY.map((s) => (
+              <div key={s} style={{ display: "flex", gap: 10 }}>
+                <span style={{ color: TITA.camel, fontSize: 15 }}>✓</span>
+                <span style={{ fontSize: 15.5, lineHeight: 1.55, opacity: 0.95 }}>
+                  {s}
+                </span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* CTA */}
+        <section style={{ textAlign: "center", padding: "8px 0 0" }}>
+          <p
+            style={{
+              fontSize: 19,
+              fontWeight: 800,
+              lineHeight: 1.5,
+              margin: "0 0 16px",
+              letterSpacing: "-0.02em",
+            }}
+          >
+            젊을 땐 우연이 친구를 정했습니다.
+            <br />
+            이제는 <span style={{ color: TITA.forest }}>당신이 정할 차례</span>
+            입니다.
+          </p>
+          <StoreDownloadButton
+            source="enjoy_bottom"
+            label="티타 앱 받기 (무료)"
+            style={{ width: "100%", padding: "18px 22px", fontSize: 17 }}
+          />
+        </section>
+
+        {/* FAQ */}
+        <section style={card}>
+          <h2 style={h2}>자주 묻는 질문</h2>
+          <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+            {FAQ.map((f) => (
+              <div key={f.q}>
+                <p
+                  style={{
+                    fontSize: 16,
+                    fontWeight: 800,
+                    margin: "0 0 6px",
+                    color: TITA.forestDeep,
+                  }}
+                >
+                  {f.q}
+                </p>
+                <p style={{ ...body, fontSize: 15.5 }}>{f.a}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <p
+          style={{
+            textAlign: "center",
+            marginTop: 4,
+            fontSize: 13.5,
+            lineHeight: 2,
+            color: TITA.mutedSoft,
+          }}
+        >
+          <Link href="/blog/who-to-enjoy-it-with/" style={{ color: TITA.muted }}>
+            더 자세한 글 읽기
+          </Link>
+          {"  ·  "}
+          <Link href="/gyeol/" style={{ color: TITA.muted }}>
+            내 결 유형 알아보기
+          </Link>
+          {"  ·  "}
+          <Link href="/" style={{ color: TITA.muted }}>
+            티타 홈
+          </Link>
         </p>
       </div>
     </main>
