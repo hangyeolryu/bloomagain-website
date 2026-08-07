@@ -123,42 +123,61 @@ export function StoreDownloadButton({
 
   const isAndroid = platform === "android";
 
+  // 인스타 인앱 브라우저의 iOS — 여기서는 스토어 링크가 작동하지 않는다.
+  // 실측: apps.apple.com 링크를 누르면 웹뷰가 이동은 하는데 **빈 흰 화면**이
+  // 뜬다. App Store 앱으로 넘어가지도, 웹페이지가 그려지지도 않는다.
+  //
+  // 그래서 이 조합에서는 스토어 버튼을 1순위에 두지 않는다. 눌러도 설치가
+  // 안 되는 데다, 사용자가 빈 화면으로 끌려가면서 이 페이지의 안내까지 통째로
+  // 잃기 때문이다(돌아오려면 X를 눌러야 한다). 안 되는 길로 보내는 버튼은
+  // 없느니만 못하다.
+  //
+  // 안드로이드 인앱은 다르다 — intent:// 가 Play 스토어 앱을 실제로 띄우므로
+  // 기존 버튼을 그대로 쓴다.
+  const iosInApp = inApp && !isAndroid;
+
   // 문자 본문에는 우리 페이지가 아니라 **스토어 주소**를 담는다. 페이지 주소를
   // 보내면 사용자가 문자에서 링크를 눌러도 여기로 다시 와서 한 번 더 눌러야
   // 한다. 목적은 설치이므로 한 단계를 없앤다.
   const smsBody = encodeURIComponent(
     `티타 앱 설치 링크예요.\n${isAndroid ? PLAY_STORE_URL : APP_STORE_URL}`
   );
+  // sms: 는 시스템 스킴이라 인앱 브라우저도 메시지 앱으로 넘겨준다.
+  // iOS는 수신자 없이 sms:&body=, 안드로이드는 sms:?body= 를 쓴다.
+  const smsHref = isAndroid ? `sms:?body=${smsBody}` : `sms:&body=${smsBody}`;
 
   return (
     <div>
-      <a
-        // href를 항상 진짜 스토어 주소로 둔다 — JS가 죽어도 이동한다.
-        href={isAndroid ? PLAY_STORE_URL : APP_STORE_URL}
-        onClick={(e) => {
-          safeTrack(isAndroid ? "android" : "ios", source);
-          // intent:// 는 안드로이드 전용. iOS에서는 절대 쓰지 않는다.
-          if (isAndroid) {
-            e.preventDefault();
-            window.location.href = PLAY_STORE_INTENT_URL;
-          }
-        }}
-        style={btn}
-      >
-        {children ?? label}
-      </a>
+      {iosInApp ? (
+        <a
+          href={smsHref}
+          onClick={() => safeTrack("ios", `${source}_sms`)}
+          style={btn}
+        >
+          문자로 설치 링크 받기
+        </a>
+      ) : (
+        <a
+          // href를 항상 진짜 스토어 주소로 둔다 — JS가 죽어도 이동한다.
+          href={isAndroid ? PLAY_STORE_URL : APP_STORE_URL}
+          onClick={(e) => {
+            safeTrack(isAndroid ? "android" : "ios", source);
+            // intent:// 는 안드로이드 전용. iOS에서는 절대 쓰지 않는다.
+            if (isAndroid) {
+              e.preventDefault();
+              window.location.href = PLAY_STORE_INTENT_URL;
+            }
+          }}
+          style={btn}
+        >
+          {children ?? label}
+        </a>
+      )}
 
-      {/* 인앱 브라우저(인스타·카톡)에서 iOS는 스토어로 못 간다.
-          WKWebView는 유니버설 링크를 앱으로 넘기지 않고, 호스트 앱이 직접
-          처리해 주지 않는 한 apps.apple.com 링크 탭은 아무 일도 일으키지
-          않는다. 커스텀 스킴(itms-apps://)은 더 확실히 막힌다. 웹페이지가
-          프로그램으로 웹뷰를 탈출하는 방법은 없다.
-
-          그래서 남는 건 사용자가 이 링크를 웹뷰 밖으로 꺼내는 것뿐이다.
-          "⋯ 눌러 Safari로 열기"가 정석이지만 45+ 사용자에게는 실패율이 높다.
-          그보다 문자로 보내는 편이 낫다 — sms: 는 시스템 스킴이라 인앱
-          브라우저도 메시지 앱으로 넘겨주고, 문자 앱에서 링크를 누르면 그건
-          웹뷰 밖이라 스토어가 정상적으로 열린다. 손가락 두 번이면 끝난다. */}
+      {/* 인앱 브라우저 안내.
+          iOS에서는 위 버튼이 이미 문자 보내기이므로, 여기서는 왜 그런지만
+          설명하고 대안(주소 복사 / Safari로 열기)을 준다. 안드로이드는 위
+          버튼이 정상 동작하므로 이 안내는 실패했을 때의 보조 수단이다. */}
       {inApp && (
         <div
           style={{
@@ -170,63 +189,86 @@ export function StoreDownloadButton({
             fontFamily: KOREAN_FONT_STACK,
           }}
         >
-          <p
-            style={{
-              margin: 0,
-              fontSize: 16.5,
-              fontWeight: 800,
-              lineHeight: 1.5,
-              color: TITA.forestDeep,
-            }}
-          >
-            버튼이 안 눌리시죠?
-          </p>
-          <p
-            style={{
-              margin: "8px 0 0",
-              fontSize: 15,
-              lineHeight: 1.7,
-              color: TITA.ink,
-            }}
-          >
-            잘못 누르신 게 아니에요. 지금은{" "}
-            <b>인스타그램 안에서 보고 계셔서</b> 설치 화면으로 넘어가지 않습니다.
-            <br />
-            아래 버튼을 누르시면 <b>문자로 링크를 보내드려요.</b> 그 문자를 열고
-            링크를 누르시면 바로 설치됩니다.
-          </p>
-
-          {/* sms: 는 시스템 스킴이라 인앱 브라우저도 메시지 앱으로 넘겨준다.
-              iOS는 수신자 없이 sms:&body=, 안드로이드는 sms:?body= 를 쓴다. */}
-          <a
-            href={
-              isAndroid
-                ? `sms:?body=${smsBody}`
-                : `sms:&body=${smsBody}`
-            }
-            onClick={() => safeTrack(isAndroid ? "android" : "ios", `${source}_sms`)}
-            style={{
-              display: "block",
-              marginTop: 16,
-              padding: "15px 16px",
-              fontSize: 16,
-              fontWeight: 800,
-              textAlign: "center",
-              borderRadius: 999,
-              background: TITA.forest,
-              color: TITA.cream,
-              textDecoration: "none",
-              fontFamily: KOREAN_FONT_STACK,
-            }}
-          >
-            문자로 링크 받기
-          </a>
+          {iosInApp ? (
+            <>
+              <p
+                style={{
+                  margin: 0,
+                  fontSize: 16.5,
+                  fontWeight: 800,
+                  lineHeight: 1.5,
+                  color: TITA.forestDeep,
+                }}
+              >
+                왜 문자로 받나요?
+              </p>
+              <p
+                style={{
+                  margin: "8px 0 0",
+                  fontSize: 15,
+                  lineHeight: 1.7,
+                  color: TITA.ink,
+                }}
+              >
+                지금 <b>인스타그램 안에서</b> 보고 계셔서, 여기서는 설치 화면이
+                열리지 않고 <b>빈 화면</b>만 나옵니다. 인스타그램이 막아 둔
+                것이라 저희가 어쩔 수 없어요.
+                <br />
+                위 버튼을 누르시면 <b>문자 앱이 열립니다.</b> 그대로 나에게
+                보내고, 문자 속 링크를 누르시면 설치 화면이 뜹니다.
+              </p>
+            </>
+          ) : (
+            <>
+              <p
+                style={{
+                  margin: 0,
+                  fontSize: 16.5,
+                  fontWeight: 800,
+                  lineHeight: 1.5,
+                  color: TITA.forestDeep,
+                }}
+              >
+                설치가 안 되시나요?
+              </p>
+              <p
+                style={{
+                  margin: "8px 0 0",
+                  fontSize: 15,
+                  lineHeight: 1.7,
+                  color: TITA.ink,
+                }}
+              >
+                지금 인스타그램 안에서 보고 계셔서 막혔을 수 있어요. 아래
+                버튼으로 문자를 받으신 뒤, 문자 속 링크를 눌러주세요.
+              </p>
+              <a
+                href={smsHref}
+                onClick={() => safeTrack("android", `${source}_sms`)}
+                style={{
+                  display: "block",
+                  marginTop: 16,
+                  padding: "15px 16px",
+                  fontSize: 16,
+                  fontWeight: 800,
+                  textAlign: "center",
+                  borderRadius: 999,
+                  background: TITA.forest,
+                  color: TITA.cream,
+                  textDecoration: "none",
+                  fontFamily: KOREAN_FONT_STACK,
+                }}
+              >
+                문자로 링크 받기
+              </a>
+            </>
+          )}
 
           <button
             type="button"
             onClick={copyLink}
             style={{
-              marginTop: 10,
+              marginTop: 14,
               width: "100%",
               padding: "13px 16px",
               fontSize: 15,
@@ -250,14 +292,16 @@ export function StoreDownloadButton({
               color: TITA.muted,
             }}
           >
-            익숙하시면 오른쪽 위 <b>⋯</b> → {" "}
+            익숙하시면 오른쪽 위 <b>⋯</b> →{" "}
             <b>{isAndroid ? "‘다른 브라우저로 열기’" : "‘Safari로 열기’"}</b> 도
             됩니다.
           </p>
         </div>
       )}
 
-      {/* 기기 오감지 대비 탈출구 */}
+      {/* 기기 오감지 대비 탈출구. iOS 인앱에서는 숨긴다 — 반대 스토어 링크도
+          같은 웹뷰 안에서 빈 화면이 될 뿐이라, 또 하나의 막다른 길이 된다. */}
+      {!iosInApp && (
       <a
         href={isAndroid ? APP_STORE_URL : PLAY_STORE_URL}
         onClick={() => safeTrack(isAndroid ? "ios" : "android", `${source}_alt`)}
@@ -273,6 +317,7 @@ export function StoreDownloadButton({
       >
         {isAndroid ? "아이폰이신가요?" : "안드로이드폰이신가요?"}
       </a>
+      )}
     </div>
   );
 }
