@@ -1,18 +1,17 @@
 "use client";
 
-// 티타 다운로드 페이지 — UA 감지로 자동 store 리다이렉트, 그 외(데스크탑·
-// 알 수 없음)는 두 store 버튼을 보여줌. 호스팅된 QR 코드나 SNS 링크가
-// 가장 자주 도착하는 페이지라 첫 인상은 최소·신뢰 톤.
+// 티타 다운로드 페이지 — QR·SNS 링크가 가장 자주 도착하는 곳이라 첫 인상은
+// 최소·신뢰 톤. iOS/안드로이드는 감지되는 즉시 스토어로 자동 이동시킨다.
+//
+// 자동 이동이 실패해도(스토어 링크 문제·인앱 브라우저 차단 등) 막다른 길이
+// 되면 안 되므로, 본문의 수동 버튼은 항상 렌더한다. 그 버튼은 페이지마다
+// 새로 짜지 않고 <StoreDownloadButton/>을 쓴다 — 항상 진짜 <a href>를 두고,
+// 집계 실패가 이동을 막지 않으며, intent://는 안드로이드에만 건다.
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import {
-  TITA,
-  KOREAN_FONT_STACK,
-  APP_STORE_URL,
-  PLAY_STORE_URL,
-  PLAY_STORE_INTENT_URL,
-} from "../_components/tita-brand";
+import { TITA, KOREAN_FONT_STACK, APP_STORE_URL, PLAY_STORE_INTENT_URL } from "../_components/tita-brand";
+import { StoreDownloadButton } from "../_components/StoreDownloadButton";
 import { logAnalyticsEvent } from "@/lib/firebase";
 
 function detectPlatform(): "ios" | "android" | "other" {
@@ -33,26 +32,24 @@ export default function DownloadPage() {
 
   useEffect(() => {
     const platform = detectPlatform();
-    if (platform === "ios") {
-      // Track the auto-redirect as a download click so analytics reflects
-      // the actual mobile traffic, not just desktop manual clicks below.
-      // `source: 'auto_redirect'` lets us separate intent from incidental
-      // visits in the dashboard.
+    if (platform !== "ios" && platform !== "android") return;
+
+    // 자동 이동도 집계 대상 — source로 수동 클릭과 구분한다.
+    // 집계가 던져도 이동은 반드시 일어나야 하므로 try/catch로 감싼다.
+    try {
       logAnalyticsEvent("app_download_click", {
-        store: "ios",
+        store: platform,
         source: "auto_redirect",
       });
-      window.location.href = APP_STORE_URL;
-      setRedirected(true);
-    } else if (platform === "android") {
-      logAnalyticsEvent("app_download_click", {
-        store: "android",
-        source: "auto_redirect",
-      });
-      // intent:// 로 스토어 앱을 강제 실행 (인앱 브라우저에서도 열림, 실패 시 폴백).
-      window.location.href = PLAY_STORE_INTENT_URL;
-      setRedirected(true);
+    } catch {
+      /* 집계 실패는 무시 */
     }
+
+    // 안드로이드는 intent://로 스토어 앱을 강제 실행(인앱 브라우저에서도 열림,
+    // 실패 시 browser_fallback_url로 자동 폴백). iOS는 https 유니버설 링크.
+    window.location.href =
+      platform === "android" ? PLAY_STORE_INTENT_URL : APP_STORE_URL;
+    setRedirected(true);
   }, []);
 
   return (
@@ -82,64 +79,19 @@ export default function DownloadPage() {
       </h1>
       <p className="text-sm mb-8" style={{ color: TITA.muted }}>
         {redirected
-          ? "스토어로 이동 중..."
+          ? "스토어가 안 열리면 아래를 눌러주세요"
           : "아래에서 앱을 받아주세요"}
       </p>
 
-      <div className="flex flex-col gap-3 w-full max-w-xs">
-        <a
-          href={APP_STORE_URL}
-          onClick={() =>
-            logAnalyticsEvent("app_download_click", {
-              store: "ios",
-              source: "download_page",
-            })
-          }
-          className="flex items-center justify-center gap-3 rounded-2xl px-6 py-3.5 font-medium transition-transform hover:scale-105"
-          style={{ backgroundColor: "black", color: "white" }}
-        >
-          <svg
-            viewBox="0 0 24 24"
-            className="w-5 h-5 fill-white"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" />
-          </svg>
-          <div className="text-left">
-            <div className="text-[10px] opacity-80">Download on the</div>
-            <div className="text-sm font-semibold leading-tight">App Store</div>
-          </div>
-        </a>
-
-        <a
-          href={PLAY_STORE_URL}
-          onClick={() =>
-            logAnalyticsEvent("app_download_click", {
-              store: "android",
-              source: "download_page",
-            })
-          }
-          className="flex items-center justify-center gap-3 rounded-2xl px-6 py-3.5 font-medium transition-transform hover:scale-105"
-          style={{ backgroundColor: TITA.forest, color: "white" }}
-        >
-          <svg
-            viewBox="0 0 24 24"
-            className="w-5 h-5 fill-white"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path d="M3.18 23.76c.3.17.64.22.99.14l12.45-7.2-2.78-2.78-10.66 9.84zm-1.1-20.2A1.99 1.99 0 0 0 2 4.56v14.88c0 .56.22 1.06.58 1.42l.08.07 8.34-8.34v-.2L2.08 3.56zm17.67 7.43-2.67-1.54-3.12 3.12 3.12 3.12 2.69-1.55c.77-.44.77-1.71-.02-2.15zM4.17.24 16.62 7.44l-2.78 2.78L3.18.38A1.31 1.31 0 0 1 4.17.24z" />
-          </svg>
-          <div className="text-left">
-            <div className="text-[10px] opacity-80">Get it on</div>
-            <div className="text-sm font-semibold leading-tight">Google Play</div>
-          </div>
-        </a>
+      <div className="w-full max-w-xs">
+        <StoreDownloadButton
+          source="download_page"
+          label="티타 앱 받기 (무료)"
+          style={{ width: "100%", padding: "17px 22px", fontSize: 17 }}
+        />
       </div>
 
-      <p
-        className="mt-10 text-xs"
-        style={{ color: TITA.mutedSoft }}
-      >
+      <p className="mt-10 text-xs" style={{ color: TITA.mutedSoft }}>
         결이 맞는 친구
       </p>
     </main>

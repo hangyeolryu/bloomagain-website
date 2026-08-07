@@ -18,6 +18,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/", priority: 1.0, freq: "weekly" },
     { path: "/gyeol", priority: 0.9, freq: "weekly" },
     { path: "/titatime", priority: 0.8, freq: "weekly" },
+    { path: "/enjoy", priority: 0.8, freq: "monthly" },
     { path: "/download", priority: 0.8, freq: "monthly" },
     { path: "/blog", priority: 0.7, freq: "weekly" },
     { path: "/about", priority: 0.7, freq: "monthly" },
