@@ -4,6 +4,9 @@ import type { Metadata } from "next";
 // 이 서버 layout이 테스트 입구의 제목·설명·OG 텍스트를 담당한다.
 // (결과 페이지 /gyeol/[type]는 자체 generateMetadata로 이 값을 덮어쓴다.)
 export const metadata: Metadata = {
+  // 정규 URL. trailingSlash: true 라 반드시 끝 슬래시까지 적는다 —
+  // 빠뜨리면 301되는 주소를 정규 주소로 선언하는 꼴이 된다.
+  alternates: { canonical: "/gyeol/" },
   title: "결 유형 테스트 — 나는 어떤 결일까? | 티타",
   description:
     "MBTI 말고, 사람과 사람 사이의 결. 14개 질문 3분으로 나의 결 유형과 잘 맞는 친구를 알아봐요. 가입 없이 바로.",

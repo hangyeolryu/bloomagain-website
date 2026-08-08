@@ -7,6 +7,9 @@ import { TITA } from "../_components/tita-brand";
 // /ja/gyeol からロゴ/ホームで戻る先としても機能する。
 
 export const metadata: Metadata = {
+  // 정규 URL. trailingSlash: true 라 반드시 끝 슬래시까지 적는다 —
+  // 빠뜨리면 301되는 주소를 정규 주소로 선언하는 꼴이 된다.
+  alternates: { canonical: "/ja/" },
   title: "ティタ — 波長の合う同世代と、昼にゆるやかに",
   description:
     "本人確認を済ませた、波長の合う同世代と昼にゆるやかに集まる、安心のティータイム。45歳以上・恋愛／婚活ではありません。日本の各都市で順次オープン予定。",

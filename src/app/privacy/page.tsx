@@ -1,3 +1,12 @@
+import type { Metadata } from "next";
+
+// 정규 URL만 선언한다. title/description은 루트 레이아웃 것을 그대로 상속.
+// 이게 없으면 Google이 "사용자가 선택한 표준 없음"으로 색인에서 제외한다.
+// trailingSlash: true 라 끝 슬래시까지 적어야 301을 가리키지 않는다.
+export const metadata: Metadata = {
+  alternates: { canonical: "/privacy/" },
+};
+
 import LegalLayout from "../_components/legal/LegalLayout";
 
 const TOC = [

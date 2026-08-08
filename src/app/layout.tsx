@@ -32,6 +32,10 @@ export const metadata: Metadata = {
   // metadataBase가 있어야 opengraph-image / twitter-image URL이 절대경로로
   // 풀린다. 없으면 링크 공유 시 프리뷰 이미지가 깨진다.
   metadataBase: new URL("https://tita-app.com"),
+  // 홈("/")의 정규 URL. 루트 페이지는 "use client"라 metadata를 직접 export
+  // 못 해서 여기 둔다. 레이아웃 metadata는 하위로 상속되므로, 색인 대상
+  // 페이지는 각자 alternates를 선언해 이 값을 덮어써야 한다(전부 선언해 뒀다).
+  alternates: { canonical: "/" },
   title: "티타 (Tita) — 결이 맞는 친구",
   description:
     "45세 이상, 검증된 또래끼리 친구가 되는 앱. 매일 질문으로 결이 맞는 또래를 찾아, 찻자리부터 가볍게. 본인인증·AI 안전망으로 안심.",

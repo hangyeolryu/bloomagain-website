@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 
 // 니즈 설문 랜딩 — 5060 광고 전용 진입점. 결 테스트(/gyeol)와 별개 퍼널.
 export const metadata: Metadata = {
+  // 정규 URL. trailingSlash: true 라 반드시 끝 슬래시까지 적는다 —
+  // 빠뜨리면 301되는 주소를 정규 주소로 선언하는 꼴이 된다.
+  alternates: { canonical: "/needs/" },
   title: "요즘 나에게 필요한 것 — 1분 테스트 | 티타",
   description:
     "자녀 독립, 은퇴, 부쩍 많아진 나만의 시간 — 삶이 바뀌면 필요한 것도 바뀝니다. 가입 없이 1분, 지금 나에게 필요한 게 뭔지 알아보세요.",

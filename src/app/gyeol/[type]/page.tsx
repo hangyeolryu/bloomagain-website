@@ -61,6 +61,8 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   return {
     title,
     description,
+    // 정규 URL. trailingSlash: true 라 끝 슬래시까지 적는다.
+    alternates: { canonical: `/gyeol/${base}/` },
     openGraph: {
       title,
       description: `${t.emoji} ${t.name} · ${t.tagline}`,

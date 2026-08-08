@@ -3,6 +3,9 @@ import type { Metadata } from "next";
 // page.tsx は "use client" のため metadata を直接 export できない。
 // このサーバー layout が診断入口のタイトル・説明・OGテキストを担う。
 export const metadata: Metadata = {
+  // 정규 URL. trailingSlash: true 라 반드시 끝 슬래시까지 적는다 —
+  // 빠뜨리면 301되는 주소를 정규 주소로 선언하는 꼴이 된다.
+  alternates: { canonical: "/ja/gyeol/" },
   title: "波長タイプ診断 — あなたはどんな波長の人？ | ティタ",
   description:
     "MBTIじゃなくて、人と人のあいだの「波長」。12の質問・3分で、あなたの波長タイプと相性のいい友だちがわかります。登録なしで、すぐ。45歳以上のための、安心して集えるティタ。",
