@@ -10,9 +10,8 @@
   좌여백 84 · 제목 58(줄간격 77) · 보조 36(줄간격 55) · 배경 (246,228,226)
 제목·보조 모두 한 줄 안에서 색과 굵기를 섞을 수 있다.
 
-⚠️ 원본을 덮어쓰므로 두 번 돌리면 안 된다. 다시 돌릴 일이 있으면
-   git에서 원본을 되살린 뒤 실행한다:
-     git checkout HEAD -- public/blog/insight-09/card-2.png card-3.png
+원본을 덮어쓰지만 같은 띠를 지우고 같은 내용을 다시 그리므로 여러 번 돌려도
+결과는 같다. 카피를 바꿀 때는 이 파일만 고쳐 다시 돌리면 된다.
 """
 from PIL import Image, ImageDraw, ImageFont
 
@@ -22,8 +21,17 @@ FD = ("/Users/hangyeolryu/Documents/projects/bloomagain-website"
       "/src/app/fonts")
 BOLD, SEMI = f"{FD}/Pretendard-Bold.otf", f"{FD}/Pretendard-SemiBold.otf"
 
+# Pretendard 가변 폰트는 웹 저장소에 Bold·SemiBold OTF만 있어 없다. 출처 줄은
+# 그보다 얇은 Regular(400)로 그려져 있어서 앱 저장소의 가변 폰트를 빌려 쓴다.
+# SemiBold로 그리면 눈에 띌 만큼 굵어진다.
+VAR = ("/Users/hangyeolryu/Documents/projects/bloomagain-korea"
+       "/assets/fonts/PretendardVariable.ttf")
+
 BG = (246, 228, 226)
 INK, TERRA, GREY = (26, 26, 26), (200, 90, 58), (130, 122, 120)
+# 출처 줄 회색은 본문 회색보다 연하다. 원본에서 픽셀로 뽑은 값.
+SRC_GREY = (154, 143, 141)
+SRC_SIZE, SRC_Y, SRC_BAND = 28, 1154, (1145, 1195)
 MARGIN = 84
 MAXW = 1080 - MARGIN * 2
 T_SIZE, T_STEP = 58, 77
@@ -75,6 +83,21 @@ def retext(path, title, sub, title_top, sub_top):
     print("saved", path)
 
 
+def retext_source(path, source):
+    """하단 '출처 …' 줄만 교체한다. 제목·보조 띠와 겹치지 않는다."""
+    im = Image.open(path).convert("RGB")
+    d = ImageDraw.Draw(im)
+    d.rectangle([0, SRC_BAND[0], im.width, SRC_BAND[1]], fill=BG)
+    pre = ImageFont.truetype(BOLD, SRC_SIZE)
+    body = ImageFont.truetype(VAR, SRC_SIZE)
+    body.set_variation_by_axes([400])
+    d.text((MARGIN, SRC_Y), "출처 ", font=pre, fill=SRC_GREY)
+    off = d.textbbox((0, 0), "출처 ", font=pre)[2]
+    d.text((MARGIN + off, SRC_Y), source, font=body, fill=SRC_GREY)
+    im.save(path, "PNG")
+    print("saved(source)", path)
+
+
 # ── card-2 · '점수를 매기느라' → '내 말을 되짚느라' ──────────────────────────
 # 채점이라는 말이 기계적이었다. 실제로 벌어지는 일은 방금 한 내 말을
 # 되돌려 보는 것이라 '되짚느라'가 정확하다. 한 줄이 줄어 위치를 다시 잡았다.
@@ -101,3 +124,8 @@ retext(
      [("어색한 게 아니라, ", GREY, False), ("오랜만인 거예요.", INK, True)]],
     title_top=420, sub_top=729,
 )
+
+# 출처를 학술지 게재 연도로 맞춘다. 카드는 '캔자스대 (2018)'이었는데 그건
+# 대학 보도자료가 나온 해다. 글의 출처 목록은 논문이 실린
+# Journal of Social and Personal Relationships (2019)를 적고 있어 서로 어긋났다.
+retext_source(f"{D}/card-3.png", "Jeffrey Hall (2019)")
