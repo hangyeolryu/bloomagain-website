@@ -187,8 +187,8 @@ export const POSTS: BlogPost[] = [
     ],
   },
   {
-    slug: "liking-gap-why-conversations-stall",
-    title: "상대는 아마, 당신을 더 좋아했을 겁니다 — 대화가 안 이어지는 진짜 이유",
+    slug: "506070-what-to-do-with-whom",
+    title: "506070, 이제 즐길 때 — 그런데 뭘 하고, 누구랑 하죠?",
     description:
       "고향친구·동네친구는 좋은 사이지만, 취향이 맞아서 된 관계는 아닙니다. 근접성 연구와 티타 설문으로 본 ‘하고 싶은 걸 같이 할 사람’ 이야기.",
     date: "2026-08-05",
