@@ -31,6 +31,12 @@ from firebase_admin import firestore
 
 APPLY = "--apply" in sys.argv
 NO_PUSH = "--no-push" in sys.argv
+# --only <slug>: 그 글 하나만 올린다. 웹에는 여러 편이 올라가 있어도 앱에는
+# 한 편씩 내보내야 할 때가 있다 — 새 글이 여럿이면 회원이 새 글 알림을
+# 연달아 받고, 주제가 겹치는 글이 나란히 뜨면 같은 글이 두 번 올라온 것처럼
+# 보인다. 지정하지 않은 글은 새로 만들지도, 갱신하지도 않는다.
+ONLY = (sys.argv[sys.argv.index("--only") + 1]
+        if "--only" in sys.argv else None)
 SITE = "https://tita-app.com"
 WEB = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -43,6 +49,10 @@ posts = json.loads(raw[raw.index("["):raw.rindex("]") + 1])
 
 skipped = [p["slug"] for p in posts if p.get("audience") == "founder"]
 posts = [p for p in posts if p.get("audience") != "founder"]
+if ONLY:
+    if ONLY not in [p["slug"] for p in posts]:
+        sys.exit(f"--only {ONLY}: posts.ts에 없는 slug입니다")
+    posts = [p for p in posts if p["slug"] == ONLY]
 
 
 def absolutize(v):
@@ -93,7 +103,7 @@ for p in posts:
     if APPLY:
         doc.set(data, merge=True)   # 기존 문서의 pushSent를 덮지 않는다
 
-print(f"앱 대상 글: {len(posts)}편")
+print(f"앱 대상 글: {len(posts)}편" + (f"  (--only {ONLY})" if ONLY else ""))
 if skipped:
     print(f"\n[앱 제외 — 파운더 스토리] {len(skipped)}편")
     for s in skipped:
