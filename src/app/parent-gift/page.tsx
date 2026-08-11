@@ -38,6 +38,9 @@ import {
 } from "../_components/tita-brand";
 
 export const metadata: Metadata = {
+  // 정규 URL. trailingSlash: true 라 반드시 끝 슬래시까지 적는다 —
+  // 빠뜨리면 301되는 주소를 정규 주소로 선언하는 꼴이 된다.
+  alternates: { canonical: "/parent-gift/" },
   title: "어머니께 6개월 무료를 선물하세요 — 티타 창립회원",
   description:
     "결이 통하는 평생 친구들. 창립회원 500명 한정 · 6개월 무료 · 평생 가격 잠금. 만 45세 이상 본인인증, 친구 우선 (의도는 본인이 선택).",

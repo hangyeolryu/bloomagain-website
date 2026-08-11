@@ -9,6 +9,9 @@ import { SessionList } from "./SessionList";
 // 희소성으로 끌어올린다. 밀도가 낮아도 시작할 수 있게 '모집중/편성예정'으로 운영.
 
 export const metadata: Metadata = {
+  // 정규 URL. trailingSlash: true 라 반드시 끝 슬래시까지 적는다 —
+  // 빠뜨리면 301되는 주소를 정규 주소로 선언하는 꼴이 된다.
+  alternates: { canonical: "/titatime/" },
   title: "동네 티타임 — 결이 통하는 3~4명과 차 한 잔 | 티타",
   description:
     "만 45세 이상, 본인인증 된 우리 동네 이웃 3~4명과 낮에 카페에서 90분. 데이팅 앱이 아니라 결이 통하는 친구를 만나는 소규모 티타임. 이번 주 모집 중.",

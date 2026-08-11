@@ -1,4 +1,7 @@
 export const metadata = {
+  // 정규 URL. trailingSlash: true 라 반드시 끝 슬래시까지 적는다 —
+  // 빠뜨리면 301되는 주소를 정규 주소로 선언하는 꼴이 된다.
+  alternates: { canonical: "/csae-standards/" },
   title: "Tita – Safety Standards against Child Sexual Abuse and Exploitation (CSAE)",
 };
 
