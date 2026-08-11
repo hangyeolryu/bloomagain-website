@@ -77,10 +77,10 @@ const cards=[
    mid:H(56,'남 일엔 현명한데','<span class="o">내 일엔 아니에요.</span>')
       +SUB('심리학은 이걸 <em>솔로몬의 역설</em>이라 불러요.<br>나이가 들어도 저절로 사라지지 않았습니다.<br>무례해지는 순간은 대개 여기죠.',33) },
 
- { page:5, src:'Kross & Grossmann, JEP: General (2012)', foot:'티타 · @titakorea →',
+ { page:5, src:'Kross & Grossmann, JEP: General (2012)', foot:'저장하기 ♡',
    mid:H(48,'<span class="o">멀리서 보는 사람</span>처럼','상상해 보세요.')
-      +`<div class="ex"><div><span>화가 올라올 때</span>‘나는 왜’ 대신 ‘○○은 지금 왜 화가 났을까’</div><div><span>말이 나가기 전에</span>벽에 붙은 파리가 본다면 뭐라고 할까</div><div><span>상대 말이 거슬릴 때</span>‘무엇이 걱정돼서 저렇게 말할까’</div></div>`
-      +`<div class="close"><div class="t">이 한 문장으로 지혜로운 추론이 <b>실제로 올라갔어요.</b><br>다만 거리를 둘 <b>상대</b>가 있어야 연습이 됩니다.</div><div class="tags"><span>만 45세 이상</span><span>NICE 본인인증</span><span>1:1 아닌 여럿이</span></div></div>` },
+      +`<div class="ex"><div><span>화가 올라올 때</span>‘나는 왜’ 대신 ‘○○은 지금 왜 화가 났을까’</div><div><span>말이 나가기 전에</span>지금 이 말, 남이 들으면 어떻게 들릴까</div><div><span>상대 말이 거슬릴 때</span>‘무엇이 걱정돼서 저렇게 말할까’</div></div>`
+      +`<div class="close"><div class="t">이 세 문장이면 충분합니다.<br>필요할 때 꺼내 보시게 <b>저장</b>해 두세요.</div><div class="tags"><span>관계 연구, 매주 한 편</span><span>@titakorea</span></div></div>` },
 ];
 
 (async()=>{
