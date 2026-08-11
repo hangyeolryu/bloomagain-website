@@ -35,7 +35,10 @@ import { recordNeedsEvent } from "../needs/needs-events";
 // 아이폰 인앱(인스타·카톡)에서 빈 화면으로 끝난다 — WKWebView가 유니버설
 // 링크를 앱으로 안 넘긴다. 이 컴포넌트는 안드로이드는 스토어를 열고,
 // 아이폰 인앱에서는 "App Store에서 티타 검색"을 안내한다.
-import { StoreDownloadButton } from "../_components/StoreDownloadButton";
+import {
+  StoreDownloadButton,
+  type StoreKind,
+} from "../_components/StoreDownloadButton";
 
 const VARIANT = "enjoy";
 
@@ -238,13 +241,13 @@ export default function EnjoyPage() {
 
   // 설문을 안 하고 바로 받는 길. phase를 download와 나눈다 — 섞으면
   // "완주한 사람이 얼마나 받나"를 못 읽는다(/needs가 8/1에 같은 이유로 나눴다).
-  // 설문을 안 하고 바로 받는 길. phase를 download와 나눈다 — 섞으면
-  // "완주한 사람이 얼마나 받나"를 못 읽는다(/needs가 8/1에 같은 이유로 나눴다).
   //
-  // 어느 스토어로 갔는지는 StoreDownloadButton이 app_download_click으로
-  // 따로 남긴다. 여기서 store를 또 추측하면 그 판별과 어긋난다.
-  function skipDownload() {
-    recordNeedsEvent("skip_download", { variant: VARIANT, ...answers });
+  // store는 StoreDownloadButton이 넘겨준다. 기기 판별을 그 컴포넌트가 하므로
+  // 여기서 또 추측하면 판별과 어긋난다. 8/8~8/10에는 이 값을 아예 안 받아서
+  // needs_survey_events의 store가 사흘간 통째로 비었다 — 다운로드 수는
+  // 멀쩡한데 iOS/안드로이드 구분만 사라져 어드민에서 "전환 0"으로 보였다.
+  function skipDownload(store?: StoreKind) {
+    recordNeedsEvent("skip_download", { variant: VARIANT, ...answers, store });
     trackPixel("AppDownloadClick", { source: "enjoy_skip" }, true);
   }
 
@@ -261,10 +264,9 @@ export default function EnjoyPage() {
     if (step > 0) setStep(step - 1);
   }
 
-  // 설문을 끝내고 받는 길. 어느 스토어로 갔는지는 StoreDownloadButton이
-  // app_download_click으로 남긴다 — 여기서 또 추측하면 그 판별과 어긋난다.
-  function download() {
-    recordNeedsEvent("download", { variant: VARIANT, ...answers });
+  // 설문을 끝내고 받는 길. store는 skipDownload와 같은 이유로 버튼에서 받는다.
+  function download(store?: StoreKind) {
+    recordNeedsEvent("download", { variant: VARIANT, ...answers, store });
     trackPixel("AppDownloadClick", { source: "enjoy" }, true);
   }
 
@@ -410,9 +412,11 @@ export default function EnjoyPage() {
           {/* 기기 판별·인앱 안내는 StoreDownloadButton이 전부 맡는다.
               여기서 다시 짜지 않는다 — 페이지마다 새로 짜다가 아이폰에서
               "눌러도 아무 일도 안 나는" 사고가 반복됐다. */}
-          <div onClickCapture={() => download()}>
-            <StoreDownloadButton source="enjoy_result" label="티타 받기" />
-          </div>
+          <StoreDownloadButton
+            source="enjoy_result"
+            label="티타 받기"
+            onStoreClick={(store) => download(store)}
+          />
 
           <p style={{ fontSize: 12.5, lineHeight: 1.7, color: C.muted, textAlign: "center", margin: "18px 0 0" }}>
             만 45세 이상 · 본인인증 · 셋넷이 함께
@@ -516,11 +520,12 @@ export default function EnjoyPage() {
 
                 skipDownload로 따로 세서 "완주한 사람이 얼마나 받나"를 흐리지
                 않는다. 기기 판별과 아이폰 인앱 안내는 버튼이 알아서 한다. */}
-            <div style={{ marginTop: 8 }} onClickCapture={() => skipDownload()}>
+            <div style={{ marginTop: 8 }}>
               <StoreDownloadButton
                 source="enjoy_skip"
                 label="티타 받으러 가기"
                 style={getBtn}
+                onStoreClick={(store) => skipDownload(store)}
               />
             </div>
 

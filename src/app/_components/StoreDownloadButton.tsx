@@ -30,12 +30,27 @@ import {
 } from "./tita-brand";
 import { logAnalyticsEvent } from "@/lib/firebase";
 
+export type StoreKind = "ios" | "android";
+
 // 집계는 절대 이동을 막지 않는다. 이 컴포넌트의 핵심 안전장치.
-function safeTrack(store: "ios" | "android", source: string) {
+//
+// onStoreClick은 호출한 쪽이 자기 저장소에도 남기고 싶을 때 쓴다(/enjoy는
+// needs_survey_events에 남긴다). 여기서도 try/catch로 감싼다 — 남의 집계가
+// 터져서 스토어로 못 가는 일은 없어야 한다.
+function safeTrack(
+  store: StoreKind,
+  source: string,
+  onStoreClick?: (store: StoreKind, source: string) => void,
+) {
   try {
     logAnalyticsEvent("app_download_click", { store, source });
   } catch {
     /* 집계 실패는 무시 — 스토어로 보내는 게 우선 */
+  }
+  try {
+    onStoreClick?.(store, source);
+  } catch {
+    /* 위와 같다 */
   }
 }
 
@@ -44,12 +59,22 @@ export function StoreDownloadButton({
   label = "앱 다운로드",
   style,
   children,
+  onStoreClick,
 }: {
   /** 어느 페이지/위치에서 눌렀는지 (집계용) */
   source: string;
   label?: string;
   style?: CSSProperties;
   children?: ReactNode;
+  /**
+   * 스토어로 보낼 때 호출된다. 어느 스토어인지는 이 컴포넌트만 안다(기기
+   * 판별을 여기서 하므로). 호출한 쪽이 자기 집계에 그 값을 남길 통로다.
+   *
+   * 이게 없어서 8/8~8/10 사흘간 needs_survey_events의 store가 통째로 비었다.
+   * 다운로드 클릭 수는 멀쩡히 쌓이는데 iOS/안드로이드 구분만 사라져서,
+   * 어드민에서는 "전환이 0이 됐다"처럼 보였다.
+   */
+  onStoreClick?: (store: StoreKind, source: string) => void;
 }) {
   // SSR에서는 기기를 알 수 없다. 정적 내보내기라 첫 페인트는 항상 "other"로
   // 나가고, 마운트 후 실제 기기로 좁힌다(하이드레이션 불일치 방지).
@@ -107,12 +132,12 @@ export function StoreDownloadButton({
   if (platform === "other") {
     return (
       <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-        <a href={APP_STORE_URL} onClick={() => safeTrack("ios", source)} style={btn}>
+        <a href={APP_STORE_URL} onClick={() => safeTrack("ios", source, onStoreClick)} style={btn}>
           아이폰
         </a>
         <a
           href={PLAY_STORE_URL}
-          onClick={() => safeTrack("android", source)}
+          onClick={() => safeTrack("android", source, onStoreClick)}
           style={{ ...btn, backgroundColor: TITA.forestMid }}
         >
           안드로이드
@@ -228,7 +253,7 @@ export function StoreDownloadButton({
           // href를 항상 진짜 스토어 주소로 둔다 — JS가 죽어도 이동한다.
           href={isAndroid ? PLAY_STORE_URL : APP_STORE_URL}
           onClick={(e) => {
-            safeTrack(isAndroid ? "android" : "ios", source);
+            safeTrack(isAndroid ? "android" : "ios", source, onStoreClick);
             // intent:// 는 안드로이드 전용. iOS에서는 절대 쓰지 않는다.
             if (isAndroid) {
               e.preventDefault();
@@ -282,7 +307,7 @@ export function StoreDownloadButton({
               </p>
               <a
                 href={smsHref}
-                onClick={() => safeTrack("ios", `${source}_sms`)}
+                onClick={() => safeTrack("ios", `${source}_sms`, onStoreClick)}
                 style={{
                   display: "block",
                   marginTop: 16,
@@ -326,7 +351,7 @@ export function StoreDownloadButton({
               </p>
               <a
                 href={smsHref}
-                onClick={() => safeTrack("android", `${source}_sms`)}
+                onClick={() => safeTrack("android", `${source}_sms`, onStoreClick)}
                 style={{
                   display: "block",
                   marginTop: 16,
@@ -386,7 +411,7 @@ export function StoreDownloadButton({
       {!iosInApp && (
       <a
         href={isAndroid ? APP_STORE_URL : PLAY_STORE_URL}
-        onClick={() => safeTrack(isAndroid ? "ios" : "android", `${source}_alt`)}
+        onClick={() => safeTrack(isAndroid ? "ios" : "android", `${source}_alt`, onStoreClick)}
         style={{
           display: "block",
           marginTop: 8,
