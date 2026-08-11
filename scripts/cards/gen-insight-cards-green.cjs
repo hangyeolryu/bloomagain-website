@@ -62,25 +62,25 @@ const SUB=(t,size=36)=>`<div class="sub" style="margin-top:46px;font-size:${size
 
 const cards=[
  { page:1, foot:'넘겨보세요 ›',
-   mid:H(58,'예의와 여유는','<span class="o">성품이 아니라 습관</span>이었어요.')
-      +SUB('연구가 재 본 어른다움의 정체 —<br><em>한 발 물러서서 보는 것</em>이었습니다.',37) },
+   mid:H(60,'얄팍한 수는','<span class="o">표가 납니다.</span>')
+      +SUB('더 커 보이려는 순간<br>정확히 그만큼 <em>작아 보입니다.</em><br>상대는 다 느끼고 있어요.',36) },
 
- { page:2, src:'Roberts 외, 92개 종단연구 메타분석 (2006)', foot:'넘겨보세요 ›',
-   mid:H(56,'‘어른답다’는 건','<span class="o">막연한 칭찬이 아니에요.</span>')
-      +SUB('92개 추적연구에서 실제로 오른 항목 —<br><em>성실성 · 정서적 안정 · 우호성</em>.<br>우리가 어른답다고 부르는 게 정확히 이것들이죠.',34) },
+ { page:2, src:'Scopelliti 외, Psychological Science (2015)', foot:'넘겨보세요 ›',
+   mid:H(54,'나는 감탄을 기대하고,','상대는 <span class="o">짜증</span>을 느낍니다.')
+      +SUB('자랑한 쪽은 <em>“함께 기뻐할 것”</em>이라 믿었어요.<br>듣는 쪽이 실제로 느낀 건 달랐습니다.<br>내 기분을 상대에게 덧씌운 거죠.',33) },
 
- { page:3, src:'Grossmann 외, PNAS (2010)', foot:'넘겨보세요 ›',
-   mid:H(54,'여유는 감정이 식은 게','아니라 <span class="o">거리</span>였어요.')
-      +SUB('갈등 앞에서 가장 현명한 건 <em>60~90세</em>.<br>메말라서가 아니라 <em>판을 넓게 봐서</em>였습니다.',35) },
+ { page:3, src:'Sezer, Gino & Norton (JPSP) · 9개 연구', foot:'넘겨보세요 ›',
+   mid:H(52,'겸손한 척은','<span class="o">그냥 자랑보다 나빠요.</span>')
+      +SUB('호감도·유능감·부탁 수용률이 모두 떨어졌어요.<br>불평으로 감싼 쪽은 <em>그냥 불평보다도</em> 못했고요.<br>이유는 하나 — 진실돼 보이지 않아서.',32) },
 
- { page:4, src:'Grossmann & Kross, Psych. Science (2014)', foot:'넘겨보세요 ›',
-   mid:H(56,'남 일엔 현명한데','<span class="o">내 일엔 아니에요.</span>')
-      +SUB('심리학은 이걸 <em>솔로몬의 역설</em>이라 불러요.<br>나이가 들어도 저절로 사라지지 않았습니다.<br>무례해지는 순간은 대개 여기죠.',33) },
+ { page:4, src:'Skowronski 외, JPSP (1998) · 특성 전이', foot:'넘겨보세요 ›',
+   mid:H(52,'깎아내린 말은','<span class="o">나에게 옮겨 붙습니다.</span>')
+      +SUB('누가 잔인하다고 전한 사람이<br><em>잔인한 사람으로</em> 기억됐어요.<br>판단이 아니라 자동 연상이라 막을 수도 없어요.',32) },
 
- { page:5, src:'Kross & Grossmann, JEP: General (2012)', foot:'저장하기 ♡',
-   mid:H(48,'<span class="o">멀리서 보는 사람</span>처럼','상상해 보세요.')
-      +`<div class="ex"><div><span>화가 올라올 때</span>‘나는 왜’ 대신 ‘○○은 지금 왜 화가 났을까’</div><div><span>말이 나가기 전에</span>지금 이 말, 남이 들으면 어떻게 들릴까</div><div><span>상대 말이 거슬릴 때</span>‘무엇이 걱정돼서 저렇게 말할까’</div></div>`
-      +`<div class="close"><div class="t">이 세 문장이면 충분합니다.<br>필요할 때 꺼내 보시게 <b>저장</b>해 두세요.</div><div class="tags"><span>관계 연구, 매주 한 편</span><span>@titakorea</span></div></div>` },
+ { page:5, src:'Bruk 외 (2018) · 아름다운 실수 효과', foot:'저장하기 ♡',
+   mid:H(52,'반대로 <span class="o">약점</span>은','<span class="o">나에게만 흉합니다.</span>')
+      +SUB('먼저 사과하는 일, 실수를 인정하는 일 —<br>내가 하면 나약해 보이고<br><em>남이 하면 용기로 보입니다.</em>',32)
+      +`<div class="close"><div class="t">꾸미면 들키고, <b>인정하면 올라갑니다.</b><br>감추려는 시도만은 감춰지지 않아요.</div><div class="tags"><span>관계 연구, 매주 한 편</span><span>@titakorea</span></div></div>` },
 ];
 
 (async()=>{
