@@ -6,6 +6,10 @@ const CHROME = '/opt/pw-browsers/chromium-1194/chrome-linux/chrome';
 // 대신한다. font-weight를 아예 쓰지 않아 브라우저의 가짜 볼드(합성 굵기)도 막는다.
 const CSS = `
 @font-face{font-family:Gowun;font-weight:400;src:url('fonts/GowunDodum-Regular.woff2') format('woff2')}
+/* 색 대비 — 배경 #F6E4E2 기준 명도비를 맞춘 값이다. 라벨이 2.6:1로
+   큰 글씨 최소 기준(3:1)에도 못 미쳐 전체를 올렸다.
+   표제 12.9:1 · 본문 9.1:1 · 라벨 8.1:1(+획 보정) · 배지 6.0:1 · 출처 5.4:1
+   45+ 사용자와 작은 피드 썸네일을 함께 고려한 값이라 더 낮추지 말 것. */
 *{margin:0;padding:0;box-sizing:border-box;font-weight:400}
 html,body{width:1080px;height:1350px}
 .card{width:1080px;height:1350px;background:#F6E4E2;padding:96px 84px;display:flex;flex-direction:column;font-family:Gowun,sans-serif;-webkit-font-smoothing:antialiased}
@@ -15,7 +19,7 @@ html,body{width:1080px;height:1350px}
 .c1{position:absolute;width:56px;height:56px;left:0;border-radius:50%;background:#C15A3C}
 .c2{position:absolute;width:56px;height:56px;left:32px;border-radius:50%;background:#35503F}
 .tita{font-size:52px;color:#26221F;letter-spacing:.06em}
-.badge{background:#EAD7D5;color:#7C6F6D;font-size:28px;border-radius:999px;padding:14px 30px;letter-spacing:.01em}
+.badge{background:#EAD7D5;color:#4F4340;font-size:28px;border-radius:999px;-webkit-text-stroke:.3px #4F4340;padding:14px 30px;letter-spacing:.01em}
 .mid{flex:1;display:flex;flex-direction:column;justify-content:center}
 /* 고운돋움은 400 하나뿐이라 굵기를 못 올린다. 합성 볼드는 획을 옆으로 밀어
    뭉개므로 쓰지 않고, text-stroke로 외곽선을 균일하게 덧그려 자소 모양을
@@ -25,25 +29,25 @@ h3{line-height:1.34;color:#26221F;letter-spacing:-.015em;-webkit-text-stroke:1.1
 h3 .o{-webkit-text-stroke-color:#C15A3C}
 h3 .line{display:block}
 .o{color:#C15A3C}
-.sub{color:#5F5350;line-height:1.68;letter-spacing:-.005em}
+.sub{color:#433936;-webkit-text-stroke:.22px #433936;line-height:1.68;letter-spacing:-.005em}
 /* 굵기 대신 색 + 옅은 형광 하이라이트로 강조한다 */
-.sub em{font-style:normal;color:#26221F;box-shadow:inset 0 -.34em rgba(193,90,60,.16);padding:0 .06em}
+.sub em{font-style:normal;color:#26221F;box-shadow:inset 0 -.34em rgba(193,90,60,.24);padding:0 .06em}
 .pair{margin-top:46px;display:flex;flex-direction:column;gap:18px}
-.pair div{background:rgba(255,255,255,.66);border-radius:22px;padding:28px 34px;font-size:35px;color:#3A302D;letter-spacing:-.015em;display:flex;justify-content:space-between;align-items:center}
+.pair div{background:rgba(255,255,255,.78);border-radius:22px;padding:28px 34px;font-size:35px;color:#3A302D;letter-spacing:-.015em;display:flex;justify-content:space-between;align-items:center}
 .pair .up{color:#35503F;font-size:42px}
 .pair .dn{color:#C15A3C;font-size:42px}
 /* 마무리 카드 — 여기서 끝난다는 신호를 주고, 티타가 뭘 하는지 한 줄로 남긴다 */
-.close{margin-top:52px;background:rgba(255,255,255,.72);border-radius:26px;padding:34px 36px}
+.close{margin-top:52px;background:rgba(255,255,255,.82);border-radius:26px;padding:34px 36px}
 .close .t{font-size:34px;color:#26221F;line-height:1.5;letter-spacing:-.015em}
 .close .t b{font-weight:400;color:#C15A3C}
 .close .tags{margin-top:22px;display:flex;flex-wrap:wrap;gap:12px}
-.close .tags span{background:#F6E4E2;color:#7C6F6D;font-size:26px;padding:12px 22px;border-radius:999px}
+.close .tags span{background:#F6E4E2;color:#5F534F;font-size:26px;padding:12px 22px;border-radius:999px}
 .bot{display:flex;justify-content:space-between;align-items:flex-end;margin-top:auto}
-.src{font-size:28px;color:#9A8F8D;letter-spacing:-.005em}
-.src span{color:#7C6F6D}
+.src{font-size:28px;color:#574B48;letter-spacing:-.005em;-webkit-text-stroke:.3px #574B48}
+.src span{color:#4A3F3C;-webkit-text-stroke-color:#4A3F3C}
 .foot{margin-top:24px;font-size:37px;color:#C15A3C;letter-spacing:.01em}
 .pg{display:flex;flex-direction:column;align-items:flex-end;gap:16px}
-.num{font-size:33px;color:#9A8F8D}
+.num{font-size:33px;color:#665A57;-webkit-text-stroke:.3px #665A57}
 .dots{display:flex;gap:11px}
 .dot{width:15px;height:15px;border-radius:50%}`;
 
