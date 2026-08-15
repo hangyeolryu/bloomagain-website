@@ -179,7 +179,7 @@ export const POSTS: BlogPost[] = [
         type: "p",
         text: "그러니 이건 **글을 쓰는 쪽에서 풀 수 있는 문제가 아닙니다.** 더 잘 쓴다고, 더 정확히 물어본다고 해결되지 않습니다. 다행히 다른 쪽에 답이 있었습니다.",
       },
-      { type: "h2", text: "첫 한 줄이 물꼬를 틉니다" },
+      { type: "h2", text: "첫 한 줄이 다음을 부릅니다" },
       {
         type: "image",
         src: "/blog/insight-14/card-4.png",
