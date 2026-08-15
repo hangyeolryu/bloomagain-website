@@ -69,7 +69,7 @@ const cards=[
    mid:H(54,'돌려 말하면','<span class="o">오히려 눈에 띄어요.</span>')
       +SUB('겸손이나 불평으로 한 겹 싼 말은<br>담백하게 말한 것보다 <em>호감을 덜 얻었어요.</em><br>감추려던 쑥스러움이 제일 잘 보인 셈이죠.',32) },
 
- { page:3, src:'Scopelliti 외, Psychological Science (2015)', foot:'넘겨보세요 ›',
+ { page:3, src:'Scopelliti 외, “I Call It Bragging” (2015)', foot:'넘겨보세요 ›',
    mid:H(52,'나는 <span class="o">그냥 이야기</span>인데,','상대에겐 <span class="o">자랑</span>이에요.')
       +SUB('연구 논문 제목이 딱 그거였어요.<br>“당신은 자기표현이라 하고, 나는 자랑이라 한다.”<br>감탄은 <em>생각보다 적었고</em>, 불편함은 <em>생각보다 컸어요.</em>',31) },
 
