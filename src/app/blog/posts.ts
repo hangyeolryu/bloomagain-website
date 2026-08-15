@@ -39,6 +39,14 @@ export interface BlogPost {
   sources: BlogSource[];
   faq?: { q: string; a: string }[];
   /**
+   * 여러 편이 이어지는 글이면 묶음 이름과 순서를 적는다. 본문 아래에
+   * 시리즈 목차가 붙어 앞뒤 편으로 바로 넘어갈 수 있다.
+   *
+   * 앱 동기화(sync_blog_to_app.py)는 필드를 명시적으로 골라 복사하므로
+   * 이 값은 웹에만 반영된다 — 앱 목차까지 필요해지면 그때 스크립트를 고친다.
+   */
+  series?: { name: string; order: number };
+  /**
    * 이 글을 누구에게 보일지.
    *
    * 기본(생략) = 회원용. 웹에 실리고 앱 '티타 이야기' 탭에도 동기화되며
@@ -71,6 +79,7 @@ export const POSTS: BlogPost[] = [
     ],
     cover: "/blog/insight-13/card-1.png",
     readingMinutes: 6,
+    series: { name: "어른다움 3부작", order: 3 },
     body: [
       {
         type: "p",
@@ -276,6 +285,7 @@ export const POSTS: BlogPost[] = [
     ],
     cover: "/blog/insight-12/card-1.png",
     readingMinutes: 6,
+    series: { name: "어른다움 3부작", order: 2 },
     body: [
       {
         type: "p",
@@ -461,6 +471,7 @@ export const POSTS: BlogPost[] = [
     ],
     cover: "/blog/insight-11/card-1.png",
     readingMinutes: 6,
+    series: { name: "어른다움 3부작", order: 1 },
     body: [
       {
         type: "p",
@@ -2453,6 +2464,13 @@ export const POSTS: BlogPost[] = [
     ],
   },
 ];
+
+/** 같은 묶음의 글을 순서대로. 시리즈 목차 렌더에 쓴다. */
+export function getSeries(name: string): BlogPost[] {
+  return POSTS.filter((p) => p.series?.name === name).sort(
+    (a, b) => (a.series!.order ?? 0) - (b.series!.order ?? 0)
+  );
+}
 
 export function getAllPosts(): BlogPost[] {
   // 최신 글이 위로. 날짜가 같으면 0을 반환해 배열 순서를 유지(안정 정렬) —

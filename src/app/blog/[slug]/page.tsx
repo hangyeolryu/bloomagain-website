@@ -5,7 +5,7 @@ import Image from "next/image";
 import { ArrowLeft, Download } from "lucide-react";
 import { TITA, KOREAN_FONT_STACK } from "../../_components/tita-brand";
 import { TitaFooter } from "../../_components/TitaFooter";
-import { getAllPosts, getPost, type Block } from "../posts";
+import { getAllPosts, getPost, getSeries, type Block } from "../posts";
 
 const BASE = "https://tita-app.com";
 
@@ -286,6 +286,66 @@ export default async function BlogPostPage({ params }: Params) {
           </div>
 
           {/* 출처 */}
+          {/* 시리즈 목차 — 이어지는 글이면 본문 끝에서 바로 다음 편으로.
+              현재 글은 링크가 아니라 표시만 해 어디쯤인지 알 수 있게 한다. */}
+          {post.series && (
+            <nav
+              className="mt-12 rounded-2xl p-5"
+              style={{
+                backgroundColor: TITA.white,
+                border: `1px solid ${TITA.sage}`,
+              }}
+              aria-label={post.series.name}
+            >
+              <p
+                className="text-xs font-bold mb-3"
+                style={{ color: TITA.camel, letterSpacing: "0.02em" }}
+              >
+                {post.series.name}
+              </p>
+              <ol className="space-y-2">
+                {getSeries(post.series.name).map((s) => {
+                  const here = s.slug === post.slug;
+                  return (
+                    <li key={s.slug} className="flex gap-2.5 items-start">
+                      <span
+                        className="text-sm shrink-0 tabular-nums"
+                        style={{
+                          color: here ? TITA.forest : TITA.mutedSoft,
+                          fontWeight: here ? 800 : 600,
+                        }}
+                      >
+                        {s.series!.order}
+                      </span>
+                      {here ? (
+                        <span
+                          className="text-sm leading-snug"
+                          style={{ color: TITA.ink, fontWeight: 800 }}
+                        >
+                          {s.title}
+                          <span
+                            className="ml-1.5 text-xs"
+                            style={{ color: TITA.camel, fontWeight: 700 }}
+                          >
+                            지금 보는 글
+                          </span>
+                        </span>
+                      ) : (
+                        <Link
+                          href={`/blog/${s.slug}/`}
+                          className="text-sm leading-snug underline underline-offset-2"
+                          style={{ color: TITA.forest }}
+                        >
+                          {s.title}
+                        </Link>
+                      )}
+                    </li>
+                  );
+                })}
+              </ol>
+            </nav>
+          )}
+
           <section
             className="mt-12 pt-6 border-t"
             style={{ borderColor: TITA.sage }}
