@@ -62,16 +62,16 @@ const SUB=(t,size=36)=>`<div class="sub" style="margin-top:46px;font-size:${size
 
 const cards=[
  { page:1, foot:'넘겨보세요 ›',
-   mid:H(50,'요즘 사람들은','말이 안 통한다고요?','<span class="o">사실 우리도 그래요.</span>')
-      +SUB('모임에서도 각자 자기 얘기만 하다 헤어지고<br>정성껏 쓴 글에는 답이 없습니다.<br><em>세대 문제가 아니었어요.</em>',34) },
+   mid:H(50,'요즘은 다들','<span class="o">정이 없어졌다고요?</span>')
+      +SUB('모임에서도 각자 자기 얘기만 하다 헤어지고<br>마음먹고 올린 글에는 답이 없습니다.<br>그런데 <em>1968년에도 똑같았어요.</em>',34) },
 
- { page:2, src:'Darley & Latané (1968) · 방관자 효과', foot:'넘겨보세요 ›',
-   mid:H(50,'보는 사람이 많을수록','<span class="o">아무도 나서지 않아요.</span>')
-      +SUB('각자 “누군가 하겠지” 하고 기다리는 겁니다.<br>이걸 밝혀낸 게 <em>1968년</em>이에요.<br>스마트폰도 인터넷도 없던 때입니다.',33) },
+ { page:2, src:'Darley & Latané (1968)', foot:'넘겨보세요 ›',
+   mid:H(48,'나서지 않은 사람들은','<span class="o">무심하지 않았습니다.</span>')
+      +SUB('오히려 나서서 도운 사람들보다 더 불안해했어요.<br>연구진이 남긴 기록입니다.<br><em>“갈등이 계속되고 있다는 신호였다.”</em>',32) },
 
- { page:3, src:'Nielsen, 참여 불평등', foot:'넘겨보세요 ›',
-   mid:H(54,'읽는 사람은 원래','<span class="o">훨씬 많아요.</span>')
-      +SUB('온라인 모임은 <em>대부분이 읽기만</em> 하고<br>극소수가 거의 모든 글을 씁니다.<br>이 관찰도 SNS가 자리 잡기 전에 나왔어요.',33) },
+ { page:3, src:'Latané & Darley (1968) · 다원적 무지', foot:'넘겨보세요 ›',
+   mid:H(48,'다들 서로의','<span class="o">눈치를 보고 있었어요.</span>')
+      +SUB('애매할 때 사람은 남의 얼굴을 봅니다.<br>그런데 그 사람도 태연한 척 나를 보고 있어요.<br>그 태연함을 서로 <em>‘무관심’으로 읽습니다.</em>',31) },
 
  { page:4, src:'Muchnik, Aral & Taylor, Science (2013)', foot:'넘겨보세요 ›',
    mid:H(50,'첫 한 줄이','<span class="o">판을 바꿉니다.</span>')
