@@ -170,15 +170,6 @@ export const POSTS: BlogPost[] = [
         type: "p",
         text: "우리가 감추려 애쓰는 것들이 사실 **밖에서는 흉이 아니었다**는 뜻입니다. 모른다고 말하는 것, 틀렸다고 인정하는 것, 먼저 미안하다고 하는 것. 안에서는 지는 것 같지만 보는 사람 눈에는 그럴 수 있는 사람으로 보입니다.",
       },
-      { type: "h2", text: "또래끼리는 더 잘 압니다" },
-      {
-        type: "p",
-        text: "여기에 하나만 덧붙이겠습니다. 지난 글에서 다룬 연구인데, 갈등 상황을 주고 앞으로 어떻게 흘러갈지 추론하게 했더니 **60~90세가 젊은 층보다 더 정확했습니다.** 여러 입장을 함께 헤아리고, 말 뒤의 사정을 읽는 능력이 나이와 함께 올라갔습니다.",
-      },
-      {
-        type: "p",
-        text: "그러니 또래 앞에서는 굳이 애쓰지 않으셔도 됩니다. 상대도 살아온 만큼 압니다. 힘주지 않은 말이 **오히려 더 잘 전해지는 자리**입니다.",
-      },
       { type: "h2", text: "여유는 참는 게 아니라, 애쓸 일이 줄어드는 것" },
       {
         type: "p",
@@ -194,7 +185,7 @@ export const POSTS: BlogPost[] = [
       },
       {
         type: "quote",
-        text: "잘 보이려 애쓰지 않는 것 — 그게 가장 잘 보이는 방법이었습니다.",
+        text: "덜 하는 쪽이 더 편했습니다. 그게 여유의 정체였고요.",
       },
     ],
     sources: [
@@ -217,11 +208,6 @@ export const POSTS: BlogPost[] = [
         label:
           "Bruk, Scholl & Bless, 「Beautiful Mess Effect」 (2018) — 자신의 취약성은 나약함으로, 타인의 취약성은 용기로 평가한다",
         url: "https://www.bps.org.uk/psychologist/beautiful-mess-effect",
-      },
-      {
-        label:
-          "Grossmann 외, 「Reasoning about social conflicts improves into old age」 (PNAS, 2010) — 60~90세가 젊은·중년층보다 사회적 갈등 추론에서 우수",
-        url: "https://www.pnas.org/doi/10.1073/pnas.1001715107",
       },
     ],
     faq: [
