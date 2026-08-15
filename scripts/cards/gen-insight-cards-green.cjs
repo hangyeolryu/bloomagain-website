@@ -62,25 +62,25 @@ const SUB=(t,size=36)=>`<div class="sub" style="margin-top:46px;font-size:${size
 
 const cards=[
  { page:1, foot:'넘겨보세요 ›',
-   mid:H(58,'꾸미지 않아도 돼요.','<span class="o">어차피 티가 나거든요.</span>')
-      +SUB('오랜만에 새 사람을 만나는 자리.<br>나도 모르게 말을 다듬게 되죠.<br>그런데 그 다듬은 게 <em>거의 다 보입니다.</em>',34) },
+   mid:H(54,'글을 올렸는데 답이 없는 건','<span class="o">안 읽어서가 아니에요.</span>')
+      +SUB('다들 읽고 있어요.<br>다만 <em>첫 한 줄</em>을 서로 기다리는 중입니다.',35) },
 
- { page:2, src:'Sezer, Gino & Norton (JPSP) · 아홉 개 연구', foot:'넘겨보세요 ›',
-   mid:H(54,'돌려 말하면','<span class="o">오히려 눈에 띄어요.</span>')
-      +SUB('겸손이나 불평으로 한 겹 싼 말은<br>담백하게 말한 것보다 <em>호감을 덜 얻었어요.</em><br>감추려던 쑥스러움이 제일 잘 보인 셈이죠.',32) },
+ { page:2, src:'Nielsen, 참여 불평등', foot:'넘겨보세요 ›',
+   mid:H(54,'읽는 사람은 원래','<span class="o">훨씬 많아요.</span>')
+      +SUB('온라인 모임은 <em>대부분이 읽기만</em> 하고<br>극소수가 거의 모든 글을 씁니다.<br>흔적을 안 남길 뿐, 안 본 게 아니에요.',33) },
 
- { page:3, src:'Scopelliti 외, Psychological Science (2015)', foot:'넘겨보세요 ›',
-   mid:H(52,'힘줘 말해도 그만큼','<span class="o">전해지진 않아요.</span>')
-      +SUB('말한 쪽은 <em>함께 기뻐해 줄 거라</em> 생각했지만<br>듣는 쪽 마음은 그만큼 따라가지 않았어요.<br>손주 사진도, 여행 이야기도 <em>한 문장이면</em> 충분합니다.',31) },
+ { page:3, src:'Markey, Computers in Human Behavior (2000)', foot:'넘겨보세요 ›',
+   mid:H(50,'보는 사람이 많을수록','<span class="o">아무도 나서지 않아요.</span>')
+      +SUB('채팅방 인원이 많을수록 답이 <em>늦게</em> 왔어요.<br>각자 “누군가 하겠지” 하고 기다린 거죠.<br>안 봐서가 아니라 <em>다들 보고 있어서</em>입니다.',32) },
 
- { page:4, src:'Skowronski 외, JPSP (1998) · 특성 전이', foot:'넘겨보세요 ›',
-   mid:H(50,'남 이야기는 그 사람이 아니라','<span class="o">나에게 남아요.</span>')
-      +SUB('누가 인색하더라 전하면, 나중에 남는 건<br><em>전한 사람의 인색한 인상</em>이었어요.<br>다행히 <em>좋은 이야기의 따뜻함</em>도 똑같이 남습니다.',31) },
+ { page:4, src:'Muchnik, Aral & Taylor, Science (2013)', foot:'넘겨보세요 ›',
+   mid:H(50,'첫 한 줄이','<span class="o">판을 바꿉니다.</span>')
+      +SUB('10만 건 넘는 글에 무작위로 첫 반응을 달았더니 —<br>다음 사람이 반응할 확률이 <em>32% 올랐어요.</em><br>나쁜 반응은 그렇게 번지지 않았고요.',32) },
 
- { page:5, src:'Bruk 외 (2018) · 아름다운 실수 효과', foot:'저장하기 ♡',
-   mid:H(54,'우리,','<span class="o">자연스럽게 만나요.</span>')
-      +SUB('모른다고 말하는 일, 먼저 사과하는 일 —<br>내가 하면 나약해 보이지만<br><em>남이 하면 용기로 보입니다.</em>',32)
-      +`<div class="close"><div class="t">차 한 잔 놓고, <b>오늘 무슨 일이 있었는지</b>부터.<br>그거면 충분합니다.</div><div class="tags"><span>관계 연구, 매주 한 편</span><span>@titakorea</span></div></div>` },
+ { page:5, foot:'저장하기 ♡',
+   mid:H(54,'우리 서로','<span class="o">아는 척 해 볼까요.</span>')
+      +SUB('잘 쓴 답글이 아니라<br><em>읽었다는 기척</em> 하나면 됩니다.',35)
+      +`<div class="close"><div class="t">우리는 <b>조금 더 나은 날</b>을 보내려고 모였잖아요.<br>서로 스쳐 지나가기엔 아까운 사이입니다.</div><div class="tags"><span>관계 연구, 매주 한 편</span><span>@titakorea</span></div></div>` },
 ];
 
 (async()=>{
