@@ -62,25 +62,25 @@ const SUB=(t,size=36)=>`<div class="sub" style="margin-top:46px;font-size:${size
 
 const cards=[
  { page:1, foot:'넘겨보세요 ›',
-   mid:H(56,'여유 있어 보이는 사람은','<span class="o">덜 하고 있었어요.</span>')
-      +SUB('자랑을 덜 하고, 포장을 덜 하고,<br>남 이야기를 덜 합니다.<br>왜 그게 <em>여유로 읽히는지</em> 알아봤어요.',35) },
+   mid:H(58,'꾸미지 않아도 돼요.','<span class="o">어차피 티가 나거든요.</span>')
+      +SUB('오랜만에 새 사람을 만나는 자리.<br>나도 모르게 말을 다듬게 되죠.<br>그런데 그 다듬은 게 <em>거의 다 보입니다.</em>',34) },
 
- { page:2, src:'Scopelliti 외, Psychological Science (2015)', foot:'넘겨보세요 ›',
-   mid:H(54,'내가 느끼는 만큼','<span class="o">상대가 느끼진 않아요.</span>')
-      +SUB('말한 쪽은 <em>함께 기뻐해 줄 거라</em> 생각했지만<br>듣는 쪽 마음은 그만큼 따라가지 않았어요.<br>좋은 일도 <em>짧게</em> 말하는 편이 편합니다.',33) },
+ { page:2, src:'Sezer, Gino & Norton (JPSP) · 아홉 개 연구', foot:'넘겨보세요 ›',
+   mid:H(54,'돌려 말하면','<span class="o">오히려 눈에 띄어요.</span>')
+      +SUB('겸손이나 불평으로 한 겹 싼 말은<br>담백하게 말한 것보다 <em>호감을 덜 얻었어요.</em><br>감추려던 쑥스러움이 제일 잘 보인 셈이죠.',32) },
 
- { page:3, src:'Sezer, Gino & Norton (JPSP) · 9개 연구', foot:'넘겨보세요 ›',
-   mid:H(56,'돌려 말하지 않아도','<span class="o">괜찮아요.</span>')
-      +SUB('겸손이나 불평으로 감싼 말은<br>담백하게 말한 것보다 <em>호감을 덜 얻었어요.</em><br>좋으면 좋다고, 힘들면 힘들다고.',33) },
+ { page:3, src:'Scopelliti 외, Psychological Science (2015)', foot:'넘겨보세요 ›',
+   mid:H(52,'힘줘 말해도 그만큼','<span class="o">전해지진 않아요.</span>')
+      +SUB('말한 쪽은 <em>함께 기뻐해 줄 거라</em> 생각했지만<br>듣는 쪽 마음은 그만큼 따라가지 않았어요.<br>손주 사진도, 여행 이야기도 <em>한 문장이면</em> 충분합니다.',31) },
 
  { page:4, src:'Skowronski 외, JPSP (1998) · 특성 전이', foot:'넘겨보세요 ›',
-   mid:H(52,'남 이야기는 그 사람이 아니라','<span class="o">나에게 남아요.</span>')
-      +SUB('전한 성격이 <em>말한 사람 쪽에 붙어서</em> 기억돼요.<br>좋은 이야기를 하면 그 따뜻함도 똑같이요.<br>남 얘길 잘 안 하는 분이 단단해 보이는 이유죠.',31) },
+   mid:H(50,'남 이야기는 그 사람이 아니라','<span class="o">나에게 남아요.</span>')
+      +SUB('누가 인색하더라 전하면, 나중에 남는 건<br><em>전한 사람의 인색한 인상</em>이었어요.<br>다행히 <em>좋은 이야기의 따뜻함</em>도 똑같이 남습니다.',31) },
 
  { page:5, src:'Bruk 외 (2018) · 아름다운 실수 효과', foot:'저장하기 ♡',
-   mid:H(54,'인정하는 쪽이','<span class="o">오히려 커 보여요.</span>')
-      +SUB('먼저 사과하는 일, 모른다고 말하는 일 —<br>안에서는 지는 것 같지만<br><em>밖에서는 그럴 수 있는 사람</em>으로 보입니다.',32)
-      +`<div class="close"><div class="t">여유는 참는 게 아니라 <b>애쓸 일이 줄어드는 것.</b><br>덜 하는 쪽이 실은 더 편합니다.</div><div class="tags"><span>관계 연구, 매주 한 편</span><span>@titakorea</span></div></div>` },
+   mid:H(54,'우리,','<span class="o">자연스럽게 만나요.</span>')
+      +SUB('모른다고 말하는 일, 먼저 사과하는 일 —<br>내가 하면 나약해 보이지만<br><em>남이 하면 용기로 보입니다.</em>',32)
+      +`<div class="close"><div class="t">차 한 잔 놓고, <b>오늘 무슨 일이 있었는지</b>부터.<br>그거면 충분합니다.</div><div class="tags"><span>관계 연구, 매주 한 편</span><span>@titakorea</span></div></div>` },
 ];
 
 (async()=>{
