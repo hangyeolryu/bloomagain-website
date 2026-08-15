@@ -5,7 +5,7 @@ const CHROME = '/opt/pw-browsers/chromium-1194/chrome-linux/chrome';
 // GowunDodum은 400 한 종류뿐이다. 굵기로 위계를 못 만들므로 크기·색·하이라이트로
 // 대신한다. font-weight를 아예 쓰지 않아 브라우저의 가짜 볼드(합성 굵기)도 막는다.
 const CSS = `
-@font-face{font-family:Gowun;font-weight:400;src:url('fonts/GowunDodum-Regular.ttf') format('truetype')}
+@font-face{font-family:Gowun;font-weight:400;src:url('fonts/GowunDodum-Regular.woff2') format('woff2')}
 /* 색 대비 — 딥그린 배경(#1F4E3D→#143329) 기준 명도비를 맞춘 값이다. 라벨이 2.6:1로
    큰 글씨 최소 기준(3:1)에도 못 미쳐 전체를 올렸다.
    표제 12.9:1 · 본문 9.1:1 · 라벨 8.1:1(+획 보정) · 배지 6.0:1 · 출처 5.4:1
@@ -62,16 +62,16 @@ const SUB=(t,size=36)=>`<div class="sub" style="margin-top:46px;font-size:${size
 
 const cards=[
  { page:1, foot:'넘겨보세요 ›',
-   mid:H(54,'글을 올렸는데 답이 없는 건','<span class="o">안 읽어서가 아니에요.</span>')
-      +SUB('다들 읽고 있어요.<br>다만 <em>첫 한 줄</em>을 서로 기다리는 중입니다.',35) },
+   mid:H(50,'요즘 사람들은','말이 안 통한다고요?','<span class="o">사실 우리도 그래요.</span>')
+      +SUB('모임에서도 각자 자기 얘기만 하다 헤어지고<br>정성껏 쓴 글에는 답이 없습니다.<br><em>세대 문제가 아니었어요.</em>',34) },
 
- { page:2, src:'Nielsen, 참여 불평등', foot:'넘겨보세요 ›',
-   mid:H(54,'읽는 사람은 원래','<span class="o">훨씬 많아요.</span>')
-      +SUB('온라인 모임은 <em>대부분이 읽기만</em> 하고<br>극소수가 거의 모든 글을 씁니다.<br>흔적을 안 남길 뿐, 안 본 게 아니에요.',33) },
-
- { page:3, src:'Markey, Computers in Human Behavior (2000)', foot:'넘겨보세요 ›',
+ { page:2, src:'Darley & Latané (1968) · 방관자 효과', foot:'넘겨보세요 ›',
    mid:H(50,'보는 사람이 많을수록','<span class="o">아무도 나서지 않아요.</span>')
-      +SUB('채팅방 인원이 많을수록 답이 <em>늦게</em> 왔어요.<br>각자 “누군가 하겠지” 하고 기다린 거죠.<br>안 봐서가 아니라 <em>다들 보고 있어서</em>입니다.',32) },
+      +SUB('각자 “누군가 하겠지” 하고 기다리는 겁니다.<br>이걸 밝혀낸 게 <em>1968년</em>이에요.<br>스마트폰도 인터넷도 없던 때입니다.',33) },
+
+ { page:3, src:'Nielsen, 참여 불평등', foot:'넘겨보세요 ›',
+   mid:H(54,'읽는 사람은 원래','<span class="o">훨씬 많아요.</span>')
+      +SUB('온라인 모임은 <em>대부분이 읽기만</em> 하고<br>극소수가 거의 모든 글을 씁니다.<br>이 관찰도 SNS가 자리 잡기 전에 나왔어요.',33) },
 
  { page:4, src:'Muchnik, Aral & Taylor, Science (2013)', foot:'넘겨보세요 ›',
    mid:H(50,'첫 한 줄이','<span class="o">판을 바꿉니다.</span>')
@@ -87,13 +87,13 @@ const cards=[
   const b=await chromium.launch({executablePath:CHROME});
   const p=await b.newPage({viewport:{width:1080,height:1350},deviceScaleFactor:1});
   for(const s of cards){
-    const f=`_gd_${s.page}.html`;
+    const f=`_i14_${s.page}.html`;
     fs.writeFileSync(f,`<!doctype html><html><head><meta charset="utf-8"><style>${CSS}</style></head><body>${card(s)}</body></html>`);
     await p.goto('file://'+process.cwd()+'/'+f,{waitUntil:'load'});
     await p.evaluate(()=>document.fonts.ready);
     if(!(await p.evaluate(()=>document.fonts.check('400 66px Gowun')))) throw new Error('font fail '+s.page);
     await p.waitForTimeout(160);
-    await p.screenshot({path:`gd_card${s.page}.png`});
+    await p.screenshot({path:`i14_card${s.page}.png`});
     console.log('rendered',s.page);
   }
   await b.close();
