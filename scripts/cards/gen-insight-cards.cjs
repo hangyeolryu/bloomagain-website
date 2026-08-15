@@ -5,7 +5,7 @@ const CHROME = '/opt/pw-browsers/chromium-1194/chrome-linux/chrome';
 // GowunDodum은 400 한 종류뿐이다. 굵기로 위계를 못 만들므로 크기·색·하이라이트로
 // 대신한다. font-weight를 아예 쓰지 않아 브라우저의 가짜 볼드(합성 굵기)도 막는다.
 const CSS = `
-@font-face{font-family:Gowun;font-weight:400;src:url('fonts/GowunDodum-Regular.woff2') format('woff2')}
+@font-face{font-family:Gowun;font-weight:400;src:url('fonts/GowunDodum-Regular.ttf') format('truetype')}
 /* 색 대비 — 배경 #F6E4E2 기준 명도비를 맞춘 값이다. 라벨이 2.6:1로
    큰 글씨 최소 기준(3:1)에도 못 미쳐 전체를 올렸다.
    표제 12.9:1 · 본문 9.1:1 · 라벨 8.1:1(+획 보정) · 배지 6.0:1 · 출처 5.4:1
@@ -19,7 +19,7 @@ html,body{width:1080px;height:1350px}
 .c1{position:absolute;width:56px;height:56px;left:0;border-radius:50%;background:#C15A3C}
 .c2{position:absolute;width:56px;height:56px;left:32px;border-radius:50%;background:#35503F}
 .tita{font-size:52px;color:#26221F;letter-spacing:.06em}
-.badge{background:#EAD7D5;color:#4F4340;font-size:28px;border-radius:999px;-webkit-text-stroke:.3px #4F4340;padding:14px 30px;letter-spacing:.01em}
+.badge{background:#EAD7D5;color:#4F4340;font-size:28px;border-radius:999px;padding:14px 30px;letter-spacing:.01em;-webkit-text-stroke:.3px #4F4340}
 .mid{flex:1;display:flex;flex-direction:column;justify-content:center}
 /* 고운돋움은 400 하나뿐이라 굵기를 못 올린다. 합성 볼드는 획을 옆으로 밀어
    뭉개므로 쓰지 않고, text-stroke로 외곽선을 균일하게 덧그려 자소 모양을
@@ -37,11 +37,14 @@ h3 .line{display:block}
 .pair .up{color:#35503F;font-size:42px}
 .pair .dn{color:#C15A3C;font-size:42px}
 /* 마무리 카드 — 여기서 끝난다는 신호를 주고, 티타가 뭘 하는지 한 줄로 남긴다 */
-.close{margin-top:52px;background:rgba(255,255,255,.82);border-radius:26px;padding:34px 36px}
-.close .t{font-size:34px;color:#26221F;line-height:1.5;letter-spacing:-.015em}
+.close{margin-top:32px;background:rgba(255,255,255,.82);border-radius:24px;padding:26px 30px}
+.close .t{font-size:30px;color:#26221F;line-height:1.5;letter-spacing:-.015em}
 .close .t b{font-weight:400;color:#C15A3C}
-.close .tags{margin-top:22px;display:flex;flex-wrap:wrap;gap:12px}
-.close .tags span{background:#F6E4E2;color:#5F534F;font-size:26px;padding:12px 22px;border-radius:999px}
+.close .tags{margin-top:16px;display:flex;flex-wrap:wrap;gap:12px}
+.ex{margin-top:34px;display:flex;flex-direction:column;gap:13px}
+.ex div{background:rgba(255,255,255,.78);border-radius:20px;padding:20px 28px;font-size:30px;color:#3A302D;letter-spacing:-.015em;line-height:1.4}
+.ex div span{color:#4A3F3C;font-size:28px;-webkit-text-stroke:.35px #4A3F3C;display:block;margin-bottom:4px}
+.close .tags span{background:#F6E4E2;color:#4F4340;font-size:25px;-webkit-text-stroke:.3px #4F4340;padding:10px 20px;border-radius:999px}
 .bot{display:flex;justify-content:space-between;align-items:flex-end;margin-top:auto}
 .src{font-size:28px;color:#574B48;letter-spacing:-.005em;-webkit-text-stroke:.3px #574B48}
 .src span{color:#4A3F3C;-webkit-text-stroke-color:#4A3F3C}
@@ -59,25 +62,25 @@ const SUB=(t,size=36)=>`<div class="sub" style="margin-top:46px;font-size:${size
 
 const cards=[
  { page:1, foot:'넘겨보세요 ›',
-   mid:H(66,'멋진 어른이 된다는 건','<span class="o">어떤 걸까요?</span>')
-      +SUB('중년쯤 되면 한 번씩 떠올리는 질문이죠.<br>연구는 조금 <em>다른 답</em>을 내놓습니다.',37) },
+   mid:H(58,'꾸미지 않아도 돼요.','<span class="o">어차피 티가 나거든요.</span>')
+      +SUB('오랜만에 새 사람을 만나는 자리.<br>나도 모르게 말을 다듬게 되죠.<br>그런데 그 다듬은 게 <em>거의 다 보입니다.</em>',34) },
 
- { page:2, src:'Roberts 외, 92개 종단연구 메타분석 (2006)', foot:'넘겨보세요 ›',
-   mid:H(58,'성숙은 <span class="o">노력이 아니라</span>','이미 일어나고 있어요.')
-      +SUB('92개 추적연구를 모아 보니 —<br><em>성실성과 정서적 안정</em>은 나이 들수록 올라갑니다.<br>중년·노년에도 계속 변합니다.',35) },
+ { page:2, src:'Sezer, Gino & Norton (JPSP) · 아홉 개 연구', foot:'넘겨보세요 ›',
+   mid:H(54,'돌려 말하면','<span class="o">오히려 눈에 띄어요.</span>')
+      +SUB('겸손이나 불평으로 한 겹 싼 말은<br>담백하게 말한 것보다 <em>호감을 덜 얻었어요.</em><br>감추려던 쑥스러움이 제일 잘 보인 셈이죠.',32) },
 
- { page:3, src:'Grossmann 외, PNAS (2010)', foot:'넘겨보세요 ›',
-   mid:H(60,'갈등 앞에서 가장 현명한 건','<span class="o">60~90세</span>였어요.')
-      +SUB('여러 입장을 헤아리고, 타협의 여지를 남기고,<br><em>내가 다 알지는 못한다</em>고 인정하는 것 —<br>젊은 층보다 노년층이 더 잘했습니다.',34) },
+ { page:3, src:'Scopelliti 외, Psychological Science (2015)', foot:'넘겨보세요 ›',
+   mid:H(52,'힘줘 말해도 그만큼','<span class="o">전해지진 않아요.</span>')
+      +SUB('말한 쪽은 <em>함께 기뻐해 줄 거라</em> 생각했지만<br>듣는 쪽 마음은 그만큼 따라가지 않았어요.<br>손주 사진도, 여행 이야기도 <em>한 문장이면</em> 충분합니다.',31) },
 
- { page:4, src:'Levy 외, JPSP (2002) · 660명 23년 추적', foot:'넘겨보세요 ›',
-   mid:H(60,'나이듦을 <span class="o">어떻게 보느냐</span>가','<span class="o">7.5년</span>을 갈랐어요.')
-      +SUB('나이 드는 자신을 긍정적으로 본 사람이<br><em>7.5년 더 오래</em> 살았습니다.<br>외로움과 건강 상태를 걷어내도 남은 차이였어요.',34) },
+ { page:4, src:'Skowronski 외, JPSP (1998) · 특성 전이', foot:'넘겨보세요 ›',
+   mid:H(50,'남 이야기는 그 사람이 아니라','<span class="o">나에게 남아요.</span>')
+      +SUB('누가 인색하더라 전하면, 나중에 남는 건<br><em>전한 사람의 인색한 인상</em>이었어요.<br>다행히 <em>좋은 이야기의 따뜻함</em>도 똑같이 남습니다.',31) },
 
- { page:5, foot:'티타 · @titakorea →',
-   mid:H(58,'네, <span class="o">멋질 필요는 없지요.</span>','다만 혼자는, 조금 아깝습니다.')
-      +SUB('지혜는 상대가 있어야 쓰이고,<br>나이 든 나를 보는 눈은<br><em>주변이 나를 대하는 방식</em>에서 만들어지니까요.',34)
-      +`<div class="close"><div class="t">은퇴하고 아이들이 독립하면 그 자리가 빕니다.<br><b>결이 맞는 또래 몇 사람</b>, 가까운 동네에서.</div><div class="tags"><span>만 45세 이상</span><span>NICE 본인인증</span><span>1:1 아닌 여럿이</span></div></div>` },
+ { page:5, src:'Bruk 외 (2018) · 아름다운 실수 효과', foot:'저장하기 ♡',
+   mid:H(54,'우리,','<span class="o">자연스럽게 만나요.</span>')
+      +SUB('모른다고 말하는 일, 먼저 사과하는 일 —<br>내가 하면 나약해 보이지만<br><em>남이 하면 용기로 보입니다.</em>',32)
+      +`<div class="close"><div class="t">차 한 잔 놓고, <b>오늘 무슨 일이 있었는지</b>부터.<br>그거면 충분합니다.</div><div class="tags"><span>관계 연구, 매주 한 편</span><span>@titakorea</span></div></div>` },
 ];
 
 (async()=>{
