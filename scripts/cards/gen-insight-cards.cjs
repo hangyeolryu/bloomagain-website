@@ -71,7 +71,7 @@ const cards=[
 
  { page:3, src:'Scopelliti 외, Psychological Science (2015)', foot:'넘겨보세요 ›',
    mid:H(50,'부러워해 주길 바라지만,','<span class="o">감탄은 잘 돌아오지 않아요.</span>')
-      +SUB('자랑한 쪽은 상대가 <em>자랑스러워할 거라</em> 크게 잡고<br>불편해할 거라고는 작게 잡았어요.<br>손주 사진도 여행 이야기도 <em>한 문장이면</em> 충분합니다.',31) },
+      +SUB('기대한 반응과 실제 반응이 달랐어요.<br>감탄은 <em>생각보다 적었고</em>, 불편함은 <em>생각보다 컸어요.</em><br>손주 사진도 여행 이야기도 한 문장이면 충분합니다.',31) },
 
  { page:4, src:'Skowronski 외, JPSP (1998) · 특성 전이', foot:'넘겨보세요 ›',
    mid:H(50,'남 이야기는 그 사람이 아니라','<span class="o">나에게 남아요.</span>')
