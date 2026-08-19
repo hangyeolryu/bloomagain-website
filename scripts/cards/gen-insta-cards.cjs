@@ -61,7 +61,7 @@ h3 .line{display:block}
 
 
 const ON='#D4B895', OFF='rgba(251,247,240,.30)';
-const TOTAL=7;
+const TOTAL=5;
 const dots=(i)=>Array.from({length:TOTAL},(_,k)=>`<div class="dot" style="background:${k===i?ON:OFF}"></div>`).join('');
 const card=(s)=>`<div class="card"><div class="top"><div class="logo"><div class="circles"><div class="c1"></div><div class="c2"></div></div><div class="tita">티타</div></div><div class="badge">티타 인사이트 · 관계수업</div></div><div class="mid">${s.mid}</div><div class="bot"><div>${s.src?`<div class="src"><span>출처</span> ${s.src}</div>`:''}<div class="foot">${s.foot}</div></div><div class="pg"><div class="num">${s.page}</div><div class="dots">${dots(s.page-1)}</div></div></div></div>`;
 const H=(f,...l)=>`<h3 style="font-size:${f}px">${l.map(x=>`<span class="line">${x}</span>`).join('')}</h3>`;
@@ -70,43 +70,31 @@ const EX=(...rows)=>`<div class="ex">${rows.map(r=>`<div>${r[0]?`<span>${r[0]}</
 
 const cards=[
  { page:1, foot:'넘겨보세요 ›',
-   mid:H(48,'요즘은 다들','<span class="o">알면서 모르는 척한다고요?</span>')
-      +SUB('도움이 필요해 보여도 못 본 듯 지나가고<br>어렵게 꺼낸 이야기엔 잠깐 조용해졌다 화제가 바뀝니다.<br>분명히 봤고 분명히 들었는데도요.',32)
-      +EX(['','그럴 때면 <b>사람들이 변했나 보다</b> 싶어집니다.'],
-          ['','그런데 <b>1968년에도 똑같았습니다.</b>']) },
+   mid:H(48,'읽고 마음이 움직였는데','<span class="o">그냥 창을 닫은 적, 있으시죠.</span>')
+      +SUB('좋은 글을 읽었습니다. 마음이 조금 움직였습니다.<br>뭐라고 한마디 남길까 하다가, 그냥 닫았어요.',32)
+      +EX(['','“내가 뭐라고 아는 척을 하나.”<br>“이미 누가 답했겠지.”<br>“올린 지 좀 됐는데 지금 달면 이상한가.”'],
+          ['','그런데 <b>나만 그런 게 아니었습니다.</b>']) },
 
  { page:2, src:'Darley & Latané (1968) · 방관자 효과', foot:'넘겨보세요 ›',
-   mid:H(48,'지켜보는 사람이 많을수록','<span class="o">아무도 나서지 않아요.</span>')
-      +SUB('각자 “누군가 하겠지” 하고 기다립니다.<br>이걸 밝혀낸 게 <em>1968년</em>이에요.<br>스마트폰도 인터넷도 없던 때입니다.',32)
-      +EX(['1970년, 또 다른 연구','도시에서 서로에게 덜 반응하는 건 냉정해서가 아니라<br>하루에 스치는 얼굴이 감당할 양을 넘어서기 때문입니다.']) },
+   mid:H(50,'여럿이 있으면','<span class="o">아무도 나서지 않아요.</span>')
+      +SUB('도움이 필요한 상황에서<br><em>지켜보는 사람이 많을수록</em> 아무도 나서지 않습니다.<br>각자 “누군가 하겠지” 하고 기다리다가요.',32)
+      +EX(['이걸 밝혀낸 게 1968년입니다','스마트폰도 인터넷도 없던 때예요.<br><b>여럿이 모이면 원래 이렇게 됩니다.</b>']) },
 
  { page:3, src:'Darley & Latané (1968)', foot:'넘겨보세요 ›',
-   mid:H(46,'그런데 안 나선 사람들은','<span class="o">떨고 있었습니다.</span>')
-      +SUB('태연한 게 아니었어요.<br><em>오히려 나서서 도운 사람들보다</em><br>더 불안해하고 손을 떨었습니다.',33)
-      +EX(['연구진의 풀이','나설까 말까 하는 <b>망설임이 끝나지 않은 상태.</b><br>도운 사람은 몸을 움직여 그 망설임을 끝낸 겁니다.'],
-          ['당시 언론은 “냉담해졌다”고 썼지만','저자들은 그 해석을 <b>정면으로 반박했습니다.</b>']) },
+   mid:H(48,'그런데 안 나선 사람들은','<span class="o">떨고 있었습니다.</span>')
+      +SUB('이 실험은 보통 “사람들은 무심하다”로 인용되는데<br>연구자들이 하고 싶었던 말은 <em>정반대</em>였어요.',32)
+      +EX(['관찰해 보니','태연하지 않았습니다.<br><b>오히려 나서서 도운 사람들보다</b> 더 불안해하고 손을 떨었어요.'],
+          ['연구진의 풀이','나설까 말까, <b>망설임이 끝나지 않은 상태.</b>']) },
 
- { page:4, src:'Latané & Darley (1968) · 다원적 무지', foot:'넘겨보세요 ›',
-   mid:H(48,'다들 서로의','<span class="o">눈치를 보고 있었어요.</span>')
-      +SUB('방에 연기를 흘려 넣는 실험이 있었습니다.<br>혼자면 <em>대부분 곧바로 알렸는데</em><br>여럿이면 훨씬 적게 알렸어요.',33)
-      +EX(['왜 그럴까요','애매할 때 사람은 남의 얼굴을 봅니다.<br>그런데 그 사람도 <b>태연한 척 나를 보고 있어요.</b>'],
-          ['','모두가 마음을 감춘 채 서로를 살피니<br>그 태연함을 서로 <b>‘무관심’으로 읽습니다.</b>']) },
-
- { page:5, src:'Vu 외, Psychological Bulletin (2023)', foot:'넘겨보세요 ›',
-   mid:H(46,'좋은 사람이 되는 것과','<span class="o">좋은 사람으로 보이는 것.</span>')
-      +SUB('3만 건이 넘는 선택을 모아 봤더니<br>내 선택이 남에게 어떤 영향을 주는지<br><em>열에 넷은 알아보지 않는 쪽을 골랐습니다.</em>',32)
-      +EX(['왜 굳이 안 볼까요','알면 도와야 하고, 알고도 안 도우면 나쁜 사람이 되니까<br><b>아예 안 보는 쪽</b>을 고르는 겁니다.'],
-          ['','마음이 있었는데 <b>못 한 것</b>과<br><b>안 보기로 한 것</b>은 다릅니다.']) },
-
- { page:6, src:'Muchnik, Aral & Taylor, Science (2013)', foot:'넘겨보세요 ›',
-   mid:H(48,'첫 한 줄이','<span class="o">다음을 부릅니다.</span>')
+ { page:4, src:'Muchnik, Aral & Taylor, Science (2013)', foot:'넘겨보세요 ›',
+   mid:H(50,'한 사람만','<span class="o">있으면 됩니다.</span>')
       +SUB('10만 건 넘는 글에 <em>무작위로</em> 첫 반응을 달았어요.<br>글 내용과는 아무 상관 없이요.',33)
       +EX(['첫 반응이 긍정이었던 글','최종 점수 <b>25% 상승</b> · 다음 사람이 반응할 확률 <b>32% 상승</b>'],
           ['첫 반응이 부정이었을 때','<b>그렇게 번지지 않았습니다.</b> 좋은 반응만 옮았어요.']) },
 
- { page:7, foot:'저장하기 ♡',
-   mid:H(48,'아마','<span class="o">그런 분은 아닐 거예요.</span>')
-      +SUB('여기까지 읽으셨다면<br><em>읽고 마음이 움직였는데 손이 안 나갔던 쪽</em>이겠지요.<br>그 망설임은 대개 배려에서 나옵니다.',32)
+ { page:5, foot:'저장하기 ♡',
+   mid:H(50,'우리 서로','<span class="o">아는 척하고 지냅시다.</span>')
+      +SUB('망설임은 대개 <em>배려에서</em> 나옵니다.<br>그런데 상대에게는 <em>무관심으로</em> 읽혀요.',33)
       +`<div class="close"><div class="t">누군가 먼저 <b>문을 열어 두었다면</b><br>한 번만 아는 척해 주시면 어떨까요.<br>잘 쓴 답글이 아니라 <b>읽었다는 기척</b> 하나면 됩니다.</div><div class="tags"><span>관계 연구, 매주 한 편</span><span>@titakorea</span></div></div>` },
 ];
 

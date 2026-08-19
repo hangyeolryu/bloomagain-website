@@ -62,24 +62,24 @@ const SUB=(t,size=36)=>`<div class="sub" style="margin-top:46px;font-size:${size
 
 const cards=[
  { page:1, foot:'넘겨보세요 ›',
-   mid:H(48,'요즘은 다들','<span class="o">알면서 모르는 척한다고요?</span>')
-      +SUB('분명히 봤고, 분명히 들었는데<br>아무 일도 없던 것처럼 지나갑니다.<br>그런데 <em>1968년에도 똑같았어요.</em>',34) },
+   mid:H(48,'읽고 마음이 움직였는데','<span class="o">그냥 창을 닫은 적,</span>','<span class="o">있으시죠.</span>')
+      +SUB('“내가 뭐라고 아는 척을 하나.”<br>“이미 누가 답했겠지.”<br>그렇게 <em>손이 멈춥니다.</em>',34) },
 
- { page:2, src:'Darley & Latané (1968)', foot:'넘겨보세요 ›',
-   mid:H(48,'나서지 않은 사람들은','<span class="o">무심하지 않았습니다.</span>')
+ { page:2, src:'Darley & Latané (1968) · 방관자 효과', foot:'넘겨보세요 ›',
+   mid:H(50,'여럿이 있으면','<span class="o">아무도 나서지 않아요.</span>')
+      +SUB('각자 “누군가 하겠지” 하고 기다립니다.<br>이걸 밝혀낸 게 <em>1968년</em>이에요.<br>스마트폰도 인터넷도 없던 때입니다.',33) },
+
+ { page:3, src:'Darley & Latané (1968)', foot:'넘겨보세요 ›',
+   mid:H(48,'그런데 안 나선 사람들은','<span class="o">떨고 있었습니다.</span>')
       +SUB('오히려 나서서 도운 사람들보다 더 불안해했어요.<br>연구진은 이렇게 풀이했습니다.<br><em>나설까 말까, 끝까지 망설인 겁니다.</em>',32) },
 
- { page:3, src:'Latané & Darley (1968) · 다원적 무지', foot:'넘겨보세요 ›',
-   mid:H(48,'다들 서로의','<span class="o">눈치를 보고 있었어요.</span>')
-      +SUB('애매할 때 사람은 남의 얼굴을 봅니다.<br>그런데 그 사람도 태연한 척 나를 보고 있어요.<br>그 태연함을 서로 <em>‘무관심’으로 읽습니다.</em>',31) },
-
  { page:4, src:'Muchnik, Aral & Taylor, Science (2013)', foot:'넘겨보세요 ›',
-   mid:H(50,'첫 한 줄이','<span class="o">다음을 부릅니다.</span>')
+   mid:H(50,'한 사람만','<span class="o">있으면 됩니다.</span>')
       +SUB('10만 건 넘는 글에 무작위로 첫 반응을 달았더니 —<br>다음 사람이 반응할 확률이 <em>32% 올랐어요.</em><br>나쁜 반응은 그렇게 번지지 않았고요.',32) },
 
  { page:5, foot:'저장하기 ♡',
-   mid:H(50,'누군가 먼저','<span class="o">문을 열어 두었다면</span>')
-      +SUB('한 번만 아는 척해 주시면 어떨까요.<br>잘 쓴 답글이 아니라 <em>읽었다는 기척</em> 하나면 됩니다.',34)
+   mid:H(50,'우리 서로','<span class="o">아는 척하고 지냅시다.</span>')
+      +SUB('잘 쓴 답글이 아니라<br><em>읽었다는 기척</em> 하나면 됩니다.',35)
       +`<div class="close"><div class="t">우리는 <b>조금 더 나은 날</b>을 보내려고 모였잖아요.<br>서로 스쳐 지나가기엔 아까운 사이입니다.</div><div class="tags"><span>관계 연구, 매주 한 편</span><span>@titakorea</span></div></div>` },
 ];
 
