@@ -174,87 +174,56 @@ export function StoreDownloadButton({
   return (
     <div>
       {iosInApp ? (
-        // 아이폰 + 인앱 브라우저(인스타·카톡)에서는 스토어 링크가 빈 화면이
-        // 되고 웹뷰를 프로그램으로 빠져나갈 방법도 없다.
+        // 아이폰 + 인앱 브라우저(인스타·카톡).
         //
-        // 예전엔 여기서 "App Store에서 티타 검색" 카드를 띄우고, 그 아래
-        // 별도 상자로 문자·복사·Safari까지 네 가지를 더 나열했다. 크림색
-        // 상자가 연달아 두 개 서고 방법이 넷이라, 고르지 못하고 나가는
-        // 화면이었다(2026-08-20). 방법 하나만 크게 둔다 — 문자는 링크를
-        // 눌러 바로 설치 화면으로 가고, 중간에 실패할 단계가 없다.
-        <div
-          style={{
-            ...btn,
-            display: "block",
-            background: TITA.surface,
-            color: TITA.ink,
-            border: `1.5px solid ${TITA.camel}`,
-            padding: "20px 20px 18px",
-            textAlign: "center",
-            cursor: "default",
-          }}
-        >
-          <p
-            style={{
-              margin: 0,
-              fontSize: 16.5,
-              fontWeight: 800,
-              lineHeight: 1.5,
-              color: TITA.forestDeep,
-            }}
-          >
-            아이폰은 여기서 바로 설치가 안 돼요
-          </p>
-          <p
-            style={{
-              margin: "10px 0 0",
-              fontSize: 15,
-              lineHeight: 1.7,
-              fontWeight: 500,
-              color: TITA.muted,
-            }}
-          >
-            인스타그램이 막아 둔 것이라 저희가 어쩔 수 없어요.
-            <br />
-            문자로 링크를 보내드릴게요. 그 링크를 누르시면 바로 설치돼요.
-          </p>
+        // 예전엔 여기서 버튼을 없애고 "아이폰은 여기서 설치가 안 돼요"라는
+        // 경고 카드부터 띄웠다. 그런데 실측해보니 **되는 사람이 더 많다** —
+        // 최근 3주 아이폰 인앱에서 다운로드 클릭 11건(2026-08-20). 막힌 건
+        // 특정 기기·설정이었다. 되는 사람에게까지 "안 됩니다"를 먼저 말하면
+        // 그 자리에서 접는다(아이폰 완료→다운로드 20%, 안드로이드는 30%).
+        //
+        // 그래서 순서를 뒤집는다: 평소처럼 버튼을 먼저 주고, 안 열렸을 때의
+        // 길만 아래에 작게 둔다.
+        <div>
           <a
-            href={smsHref}
-            onClick={() => safeTrack("ios", `${source}_sms`, onStoreClick)}
-            style={{
-              display: "block",
-              marginTop: 16,
-              padding: "15px 16px",
-              fontSize: 16.5,
-              fontWeight: 800,
-              borderRadius: 999,
-              background: TITA.forest,
-              color: TITA.cream,
-              textDecoration: "none",
-              fontFamily: KOREAN_FONT_STACK,
-            }}
+            href={APP_STORE_URL}
+            onClick={() => safeTrack("ios", source, onStoreClick)}
+            style={btn}
           >
-            문자로 링크 받기
+            {children ?? label}
           </a>
-          <button
-            type="button"
-            onClick={copyLink}
+          <p
             style={{
-              marginTop: 10,
-              width: "100%",
-              padding: "12px 16px",
-              fontSize: 14.5,
-              fontWeight: 700,
-              borderRadius: 999,
-              border: `1.5px solid ${TITA.forest}`,
-              background: copied ? TITA.forest : "transparent",
-              color: copied ? TITA.cream : TITA.forest,
+              margin: "12px 0 0",
+              fontSize: 13.5,
+              lineHeight: 1.65,
+              color: TITA.muted,
+              textAlign: "center",
               fontFamily: KOREAN_FONT_STACK,
-              cursor: "pointer",
             }}
           >
-            {copied ? "복사됐어요 — 주소창에 붙여넣으세요" : "주소 복사하기"}
-          </button>
+            안 열리면 <b style={{ color: TITA.ink }}>App Store</b>에서{" "}
+            <b style={{ color: TITA.forest }}>티타</b>를 검색해 주세요.
+            <br />
+            <button
+              type="button"
+              onClick={copyLink}
+              style={{
+                marginTop: 8,
+                padding: "8px 14px",
+                fontSize: 13.5,
+                fontWeight: 700,
+                borderRadius: 999,
+                border: `1px solid ${TITA.sage}`,
+                background: copied ? TITA.forest : "transparent",
+                color: copied ? TITA.cream : TITA.muted,
+                fontFamily: KOREAN_FONT_STACK,
+                cursor: "pointer",
+              }}
+            >
+              {copied ? "복사됐어요 — Safari에 붙여넣으세요" : "주소 복사하기"}
+            </button>
+          </p>
         </div>
       ) : (
         <a
