@@ -174,12 +174,14 @@ export function StoreDownloadButton({
   return (
     <div>
       {iosInApp ? (
-        // 아이폰 + 인앱 브라우저에서는 누를 수 있는 길이 없다. 스토어 링크는
-        // 빈 화면이 되고, 웹뷰를 프로그램으로 탈출할 방법도 없다. 그래서
-        // 버튼 대신 "App Store에서 티타 검색"을 안내한다 — 45+ 사용자에게
-        // 가장 익숙한 경로이고(TV 광고가 늘 쓰는 문장), 중간에 실패할 단계가
-        // 없다. 어느 앱을 눌러야 하는지 헷갈리지 않게 아이콘과 개발사도 같이
-        // 보여준다.
+        // 아이폰 + 인앱 브라우저(인스타·카톡)에서는 스토어 링크가 빈 화면이
+        // 되고 웹뷰를 프로그램으로 빠져나갈 방법도 없다.
+        //
+        // 예전엔 여기서 "App Store에서 티타 검색" 카드를 띄우고, 그 아래
+        // 별도 상자로 문자·복사·Safari까지 네 가지를 더 나열했다. 크림색
+        // 상자가 연달아 두 개 서고 방법이 넷이라, 고르지 못하고 나가는
+        // 화면이었다(2026-08-20). 방법 하나만 크게 둔다 — 문자는 링크를
+        // 눌러 바로 설치 화면으로 가고, 중간에 실패할 단계가 없다.
         <div
           style={{
             ...btn,
@@ -201,52 +203,58 @@ export function StoreDownloadButton({
               color: TITA.forestDeep,
             }}
           >
-            아이폰은 여기서 설치가 안 돼요
+            아이폰은 여기서 바로 설치가 안 돼요
           </p>
           <p
             style={{
               margin: "10px 0 0",
-              fontSize: 15.5,
+              fontSize: 15,
               lineHeight: 1.7,
               fontWeight: 500,
+              color: TITA.muted,
             }}
           >
             인스타그램이 막아 둔 것이라 저희가 어쩔 수 없어요.
             <br />
-            <b style={{ fontSize: 17 }}>App Store</b>를 열고{" "}
-            <b style={{ fontSize: 17, color: TITA.forest }}>티타</b>를 검색해
-            주세요.
+            문자로 링크를 보내드릴게요. 그 링크를 누르시면 바로 설치돼요.
           </p>
-
-          {/* 검색 결과에서 어느 앱인지 알아볼 수 있게 */}
-          <div
+          <a
+            href={smsHref}
+            onClick={() => safeTrack("ios", `${source}_sms`, onStoreClick)}
             style={{
+              display: "block",
               marginTop: 16,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 12,
-              padding: "12px 14px",
-              borderRadius: 14,
-              background: TITA.white,
-              border: `1px solid ${TITA.sage}`,
+              padding: "15px 16px",
+              fontSize: 16.5,
+              fontWeight: 800,
+              borderRadius: 999,
+              background: TITA.forest,
+              color: TITA.cream,
+              textDecoration: "none",
+              fontFamily: KOREAN_FONT_STACK,
             }}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/logo.png"
-              alt="티타 앱 아이콘"
-              width={44}
-              height={44}
-              style={{ borderRadius: 10, flex: "0 0 auto" }}
-            />
-            <div style={{ textAlign: "left", lineHeight: 1.4 }}>
-              <div style={{ fontSize: 16, fontWeight: 800 }}>티타</div>
-              <div style={{ fontSize: 13, color: TITA.muted }}>
-                만든 곳 · EFFEFF
-              </div>
-            </div>
-          </div>
+            문자로 링크 받기
+          </a>
+          <button
+            type="button"
+            onClick={copyLink}
+            style={{
+              marginTop: 10,
+              width: "100%",
+              padding: "12px 16px",
+              fontSize: 14.5,
+              fontWeight: 700,
+              borderRadius: 999,
+              border: `1.5px solid ${TITA.forest}`,
+              background: copied ? TITA.forest : "transparent",
+              color: copied ? TITA.cream : TITA.forest,
+              fontFamily: KOREAN_FONT_STACK,
+              cursor: "pointer",
+            }}
+          >
+            {copied ? "복사됐어요 — 주소창에 붙여넣으세요" : "주소 복사하기"}
+          </button>
         </div>
       ) : (
         <a
@@ -270,7 +278,7 @@ export function StoreDownloadButton({
           iOS에서는 위 버튼이 이미 문자 보내기이므로, 여기서는 왜 그런지만
           설명하고 대안(주소 복사 / Safari로 열기)을 준다. 안드로이드는 위
           버튼이 정상 동작하므로 이 안내는 실패했을 때의 보조 수단이다. */}
-      {inApp && (
+      {inApp && !iosInApp && (
         <div
           style={{
             margin: "14px 0 0",
