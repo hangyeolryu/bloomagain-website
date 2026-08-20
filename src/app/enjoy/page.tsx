@@ -144,8 +144,39 @@ function detectPlatform(): "ios" | "android" | "other" {
 }
 
 export default function EnjoyPage() {
+  // 지금 열려 있는 자리. 완료 화면이 "모이면 알려드릴게요"(약속)가 아니라
+  // "이 자리가 열려 있어요"(사실)를 말하게 하려고 불러온다. 실패하면 조용히
+  // 예전 문구로 돌아간다 — 랜딩이 API 때문에 막히면 안 된다.
+  const [openSeats, setOpenSeats] = useState<{ dateLabel: string; district: string }[]>([]);
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    let alive = true;
+    fetch(
+      "https://bloomagain-backend-api-469607573966.asia-northeast3.run.app/api/v1/titatime/sessions",
+    )
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (!alive || !d) return;
+        const items = Array.isArray(d) ? d : (d.sessions ?? d.items ?? []);
+        const open = items
+          .filter(
+            (x: Record<string, unknown>) =>
+              x.status === "open" && typeof x.dateLabel === "string" && x.dateLabel,
+          )
+          .slice(0, 2)
+          .map((x: Record<string, unknown>) => ({
+            dateLabel: String(x.dateLabel),
+            district: String(x.district ?? ""),
+          }));
+        setOpenSeats(open);
+      })
+      .catch(() => {});
+    return () => {
+      alive = false;
+    };
+  }, []);
   const [done, setDone] = useState(false);
   const [platform, setPlatform] = useState<"ios" | "android" | "other">("other");
   // "티타가 뭔가요?"를 펼쳤나. 첫 화면에서 46%가 나가는데 안드로이드 이탈자가
@@ -401,13 +432,51 @@ export default function EnjoyPage() {
           <h1 style={{ fontSize: 26, fontWeight: 800, lineHeight: 1.45, color: C.ink, margin: "0 0 14px", letterSpacing: "-0.6px" }}>
             {chosen?.label ?? "함께할 거리"},
             <br />
-            같이 하실 분들을 찾아드릴게요
+            {openSeats.length > 0
+              ? "같이 하실 분들이 기다리고 있어요"
+              : "같이 하실 분들을 찾아드릴게요"}
           </h1>
-          <p style={{ fontSize: 15, lineHeight: 1.75, color: C.muted, margin: "0 0 28px" }}>
-            결이 통하는 서넛이 모이면 티타가 알려드려요.
-            <br />
-            첫마디도 티타가 꺼내드리니 편하게 오시면 돼요.
-          </p>
+          {openSeats.length > 0 ? (
+            <>
+              {/* 열려 있는 자리를 이름으로 보여준다. "모이면 알려드릴게요"는
+                  약속이라 기다려야 하지만, 날짜와 동네가 적힌 자리는 사실이라
+                  지금 받을 이유가 된다(다운로드 전환 39%에서 멈춘 자리). */}
+              <p style={{ fontSize: 15, lineHeight: 1.75, color: C.muted, margin: "0 0 14px" }}>
+                지금 신청할 수 있는 자리가 있어요.
+              </p>
+              <ul style={{ listStyle: "none", padding: 0, margin: "0 0 18px" }}>
+                {openSeats.map((s2) => (
+                  <li
+                    key={s2.dateLabel}
+                    style={{
+                      background: "#fff",
+                      borderRadius: 12,
+                      padding: "12px 14px",
+                      marginBottom: 8,
+                      fontSize: 15,
+                      fontWeight: 700,
+                      color: C.ink,
+                      lineHeight: 1.5,
+                    }}
+                  >
+                    {s2.dateLabel}
+                    {s2.district ? (
+                      <span style={{ fontWeight: 500, color: C.muted }}> · {s2.district}</span>
+                    ) : null}
+                  </li>
+                ))}
+              </ul>
+              <p style={{ fontSize: 15, lineHeight: 1.75, color: C.muted, margin: "0 0 28px" }}>
+                첫마디도 티타가 꺼내드리니 편하게 오시면 돼요.
+              </p>
+            </>
+          ) : (
+            <p style={{ fontSize: 15, lineHeight: 1.75, color: C.muted, margin: "0 0 28px" }}>
+              결이 통하는 서넛이 모이면 티타가 알려드려요.
+              <br />
+              첫마디도 티타가 꺼내드리니 편하게 오시면 돼요.
+            </p>
+          )}
 
           {/* 기기 판별·인앱 안내는 StoreDownloadButton이 전부 맡는다.
               여기서 다시 짜지 않는다 — 페이지마다 새로 짜다가 아이폰에서
