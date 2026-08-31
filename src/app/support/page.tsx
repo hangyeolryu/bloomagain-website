@@ -216,7 +216,7 @@ export default function SupportPage() {
                           )}
                           {item.question.includes("개인정보") && (
                             <Link
-                              href="/privacy"
+                              href="/privacy/"
                               className="inline-flex items-center gap-1 mt-2 text-[11px] font-medium hover:underline"
                               style={{ color: TITA.forest }}
                             >

@@ -16,10 +16,10 @@ export default function DeleteAccountPage() {
                 <Link href="/" className="text-gray-500 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">
                   홈
                 </Link>
-                <Link href="/privacy" className="text-gray-500 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">
+                <Link href="/privacy/" className="text-gray-500 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">
                   개인정보처리방침
                 </Link>
-                <Link href="/terms" className="text-gray-500 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">
+                <Link href="/terms/" className="text-gray-500 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">
                   이용약관
                 </Link>
                 <Link href="/security-processing" className="text-gray-500 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">

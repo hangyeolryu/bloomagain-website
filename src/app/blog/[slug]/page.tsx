@@ -233,7 +233,7 @@ export default async function BlogPostPage({ params }: Params) {
               <ArrowLeft className="w-4 h-4" /> 블로그
             </Link>
             <Link
-              href="/download"
+              href="/download/"
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold"
               style={{ backgroundColor: TITA.forest, color: "white" }}
             >
@@ -433,7 +433,7 @@ export default async function BlogPostPage({ params }: Params) {
               결이 맞는 사람과 가까운 동네에서. 티타가 관계를 연결해요.
             </p>
             <Link
-              href="/download"
+              href="/download/"
               className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full text-sm font-semibold"
               style={{ backgroundColor: "white", color: TITA.forest }}
             >

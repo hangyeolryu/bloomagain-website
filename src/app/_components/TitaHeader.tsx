@@ -50,7 +50,7 @@ export function TitaHeader() {
               </span>
             </Link>
             <Link
-              href="/download"
+              href="/download/"
               onClick={() =>
                 logAnalyticsEvent("download_cta_click", {
                   source: "header",

@@ -245,7 +245,7 @@ export function ResultActions({
             href는 /download(기기 감지 리다이렉트)로 → 안드로이드가 App Store로
             새지 않게 (SSR href 하드코딩 레이스 방지). */}
         <a
-          href="/download"
+          href="/download/"
           onClick={() => download(primaryStore)}
           style={{
             ...linkBase,

@@ -79,7 +79,7 @@ export default function Home() {
           </p>
           <div className="flex flex-col items-center gap-4">
             <a
-              href="/download"
+              href="/download/"
               onClick={() =>
                 logAnalyticsEvent("app_download_click", {
                   store: "auto",
@@ -438,7 +438,7 @@ export default function Home() {
             창립 멤버 한정 · 플러스 6개월 무료
           </p>
           <Link
-            href="/download"
+            href="/download/"
             onClick={() =>
               logAnalyticsEvent("download_cta_click", {
                 source: "home_footer",

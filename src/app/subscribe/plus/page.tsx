@@ -270,11 +270,11 @@ export default function SubscribePlusPage() {
               className="mt-1"
             />
             <span>
-              <Link href="/terms" className="underline">
+              <Link href="/terms/" className="underline">
                 이용약관
               </Link>
               ,{" "}
-              <Link href="/privacy" className="underline">
+              <Link href="/privacy/" className="underline">
                 개인정보처리방침
               </Link>
               , 정기결제 진행에 동의합니다. 결제는 토스페이먼츠를 통해 안전하게 처리되며,

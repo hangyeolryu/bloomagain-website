@@ -24,10 +24,10 @@ interface LegalLayoutProps {
 
 const NAV_LINKS = [
   { key: "home", label: "홈", href: "/" },
-  { key: "terms", label: "이용약관", href: "/terms" },
-  { key: "privacy", label: "개인정보처리방침", href: "/privacy" },
-  { key: "security", label: "보안·행동 데이터", href: "/security-processing" },
-  { key: "delete", label: "계정삭제", href: "/delete-account" },
+  { key: "terms", label: "이용약관", href: "/terms/" },
+  { key: "privacy", label: "개인정보처리방침", href: "/privacy/" },
+  { key: "security", label: "보안·행동 데이터", href: "/security-processing/" },
+  { key: "delete", label: "계정삭제", href: "/delete-account/" },
 ];
 
 export default function LegalLayout({

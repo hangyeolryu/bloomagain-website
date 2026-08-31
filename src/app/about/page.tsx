@@ -69,7 +69,7 @@ export default function AboutPage() {
               </span>
             </Link>
             <Link
-              href="/download"
+              href="/download/"
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold"
               style={{ backgroundColor: BRAND.forest, color: "white" }}
             >
@@ -246,7 +246,7 @@ export default function AboutPage() {
             창립 멤버 500명 한정 · 6개월 무료
           </p>
           <Link
-            href="/download"
+            href="/download/"
             className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full text-sm font-semibold transition-transform hover:scale-105"
             style={{ backgroundColor: BRAND.forest, color: "white" }}
           >
@@ -262,7 +262,7 @@ export default function AboutPage() {
           <p>㈜이프이프 (EFFEFF Co., Ltd.) · 사업자등록 466-81-04205</p>
           <p className="mt-1.5">
             <Link
-              href="/privacy"
+              href="/privacy/"
               className="hover:underline"
               style={{ color: BRAND.forest }}
             >
@@ -270,7 +270,7 @@ export default function AboutPage() {
             </Link>
             {" · "}
             <Link
-              href="/terms"
+              href="/terms/"
               className="hover:underline"
               style={{ color: BRAND.forest }}
             >

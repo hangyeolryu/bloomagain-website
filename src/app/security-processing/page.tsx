@@ -24,7 +24,7 @@ export default function SecurityProcessingPage() {
         <p>
           회사는 서비스 이용의 안전을 위해 인지·행동 관련 지표와 이용 패턴을 분석합니다. 이
           페이지는 해당 처리에 대한 동의를 구하기 위한 안내이며,{" "}
-          <a href="/terms">이용약관</a> 및 <a href="/privacy">개인정보처리방침</a>과 함께
+          <a href="/terms/">이용약관</a> 및 <a href="/privacy/">개인정보처리방침</a>과 함께
           적용됩니다.
         </p>
       </section>

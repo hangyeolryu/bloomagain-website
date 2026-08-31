@@ -79,7 +79,7 @@ export default function ForChildrenPage() {
           </p>
           <div className="flex flex-col items-center gap-4">
             <a
-              href="/download"
+              href="/download/"
               onClick={() =>
                 logAnalyticsEvent("app_download_click", {
                   store: "auto",
@@ -288,7 +288,7 @@ export default function ForChildrenPage() {
           </ol>
           <div className="mt-5">
             <a
-              href="/download"
+              href="/download/"
               onClick={() =>
                 logAnalyticsEvent("app_download_click", {
                   store: "auto",
@@ -356,7 +356,7 @@ export default function ForChildrenPage() {
           </p>
           <div className="flex flex-col items-center gap-4">
             <a
-              href="/download"
+              href="/download/"
               onClick={() =>
                 logAnalyticsEvent("app_download_click", {
                   store: "auto",

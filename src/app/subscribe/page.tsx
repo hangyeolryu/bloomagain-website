@@ -304,7 +304,7 @@ export default function SubscribePage() {
               </dt>
               <dd style={{ color: TITA.ink }}>
                 결제 후 7일 이내 미사용 시 전액 환불, 정기결제 이용 중 해지 시 잔여기간 일할 계산 환불.{" "}
-                <Link href="/terms" className="underline" style={{ color: TITA.forest }}>
+                <Link href="/terms/" className="underline" style={{ color: TITA.forest }}>
                   환불 규정 전문 보기
                 </Link>
               </dd>
