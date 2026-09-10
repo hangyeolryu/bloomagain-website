@@ -18,6 +18,7 @@ const TOC = [
   { id: "section-5", label: "제5조 (제3자 제공)" },
   { id: "section-5-2", label: "제5조의2 (광고·분석 쿠키·픽셀)" },
   { id: "section-5-3", label: "제5조의3 (앱의 설치·광고 성과 측정)" },
+  { id: "section-5-4", label: "제5조의4 (여권 본인인증과 국외 이전)" },
   { id: "section-6", label: "제6조 (연구 목적 활용 동의)" },
   { id: "section-7", label: "제7조 (정신건강 위기 대응)" },
   { id: "section-8", label: "제8조 (이용자의 권리)" },
@@ -34,9 +35,9 @@ export default function PrivacyPage() {
       activeKey="privacy"
       title="개인정보 처리방침"
       subtitle="다시 봄 (Tita Korea)"
-      versionTag="v2.3"
-      effectiveDate="2026년 8월 7일"
-      lastUpdated="2026년 8월 7일"
+      versionTag="v2.4"
+      effectiveDate="2026년 8월 27일"
+      lastUpdated="2026년 8월 27일"
       toc={TOC}
     >
       <section id="summary" className="bg-slate-50 border border-slate-200 rounded-lg p-6 -mt-2 mb-10">
@@ -319,6 +320,70 @@ export default function PrivacyPage() {
         </ol>
       </section>
 
+      <section id="section-5-4">
+        <h2>제5조의4 (여권 본인인증과 국외 이전)</h2>
+        <p>
+          한국 휴대폰 번호가 없어 NICE 본인인증을 이용할 수 없는 회원(재외국민·
+          외국인)을 위해 <strong>여권과 얼굴 촬영으로 본인을 확인하는 방법</strong>을
+          함께 제공합니다. 이 방법을 <strong>선택하신 경우에만</strong> 아래가
+          적용됩니다. 선택하지 않으시면 이 조의 어떤 정보도 수집·이전되지 않습니다.
+        </p>
+        <ol>
+          <li>
+            <strong>이전받는 자</strong>: Didit Identity, Inc.
+            (1111B S Governors Ave STE 34855, Dover, Delaware 19904, United States)
+          </li>
+          <li>
+            <strong>이전되는 국가</strong>: 미국. 위 회사가 아시아·태평양 지역
+            고객의 계약 주체이며, 심사 과정에서 다른 국가의 서버를 거칠 수 있습니다.
+          </li>
+          <li>
+            <strong>이전 항목</strong>: 여권 이미지 및 여권에 기재된 정보(성명,
+            생년월일, 성별, 국적, 여권번호), 얼굴 촬영 영상·이미지와 실제 사람인지
+            확인하기 위한 판별 정보(라이브니스).
+            <br />
+            얼굴 촬영 정보는 <strong>생체정보</strong>, 여권번호는
+            <strong>고유식별정보</strong>에 해당합니다.
+          </li>
+          <li>
+            <strong>이전 시점과 방법</strong>: 회원이 앱에서 여권 인증을 시작하면
+            Didit의 인증 화면이 열리고, 촬영한 자료가 <strong>회원의 기기에서 Didit으로
+            직접</strong> 전송됩니다. 회사의 서버를 거치지 않습니다.
+          </li>
+          <li>
+            <strong>이용 목적</strong>: 본인 확인(동일인 여부)과 만 45세 이상 여부
+            확인, 그리고 같은 사람이 여러 계정을 만드는 것을 막기 위한 중복 확인.
+          </li>
+          <li>
+            <strong>보유·이용 기간</strong>: 회사는 심사 결과를 받는 <strong>즉시
+            Didit에 해당 심사 건의 삭제를 요청</strong>합니다. 여권 이미지와 얼굴
+            촬영 자료는 그 시점에 Didit에서 삭제되며, 회사는 이 자료를
+            <strong>보관하지 않습니다</strong>. 삭제 요청이 실패한 경우 운영자가
+            확인하여 처리합니다.
+          </li>
+          <li>
+            <strong>회사가 남기는 것</strong>: 확인된 성명·출생연도·성별, 그리고
+            여권번호를 되돌릴 수 없게 처리한 값(해시)만 남깁니다. 이 해시는 같은
+            여권으로 다른 계정이 만들어지는 것을 막는 데에만 쓰이며, 이 값으로
+            여권번호를 알아낼 수 없습니다. 보유 기간은 제4조를 따릅니다.
+          </li>
+          <li>
+            <strong>거부할 권리와 그 결과</strong>: 국외 이전을 원하지 않으시면 여권
+            인증을 이용하지 않으시면 됩니다. 한국 휴대폰 번호가 있으시면 NICE 본인인증
+            (국내 처리)을 이용하실 수 있습니다. 다만 어느 방법으로도 본인 확인을
+            하지 않으시면, 만나는 자리 신청과 같이 <strong>본인 확인을 전제로 하는
+            기능은 이용하실 수 없습니다</strong>. 그 밖의 기능 이용에는 제한이 없습니다.
+          </li>
+        </ol>
+        <p>
+          Didit의 개인정보 처리에 관한 내용은{" "}
+          <a href="https://didit.me/terms/privacy-policy/" target="_blank" rel="noopener noreferrer">
+            didit.me/terms/privacy-policy
+          </a>
+          에서 확인하실 수 있습니다.
+        </p>
+      </section>
+
       <section id="section-6" className="bg-blue-50 border-l-4 border-blue-400 rounded-r p-6 my-8">
         <h2 className="!mt-0">제6조 (연구 목적 활용 동의)</h2>
         <ol>
@@ -416,6 +481,7 @@ export default function PrivacyPage() {
           <li><strong>v2.0 공고·시행</strong>: 2026년 5월 19일</li>
           <li><strong>v2.1 공고·시행</strong>: 2026년 7월 27일 — 안전·품질 목적의 운영자 대화 열람 및 감사 로그 명시, 대화 본문 보유·처리 조항 명확화</li>
           <li><strong>v2.2 공고·시행</strong>: 2026년 7월 29일 — 문의 접수·응대 목적 및 문의 시 수집 항목·보유 기간 명시(웹 문의 폼 도입)</li>
+          <li><strong>v2.4 공고·시행</strong>: 2026년 8월 27일 — 여권 본인인증 조항 신설(제5조의4). 한국 휴대폰 번호가 없는 회원을 위한 여권·얼굴 확인 도입에 따라 이전받는 자·국가, 이전 항목(생체정보·고유식별정보 포함), 이전 시점·방법, 이용 목적, 보유 기간(심사 직후 삭제 요청), 회사가 남기는 값, 거부 방법과 그 결과를 명시</li>
           <li><strong>v2.3 공고·시행</strong>: 2026년 8월 7일 — 앱의 설치·광고 성과 측정 조항 신설(제5조의3). 앱 광고 이벤트 SDK 도입에 따라 수집 항목(광고 식별자, 설치·가입·결제 이벤트), 보내지 않는 항목, 동의·거부 방법, 국외 이전을 명시</li>
         </ul>
         <h3>v2.0 주요 변경사항</h3>
