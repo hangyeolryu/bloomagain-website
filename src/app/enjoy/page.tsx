@@ -28,6 +28,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { KOREAN_FONT_STACK } from "../_components/tita-brand";
+import CityProgress from "./CityProgress";
 import { logAnalyticsEvent } from "@/lib/firebase";
 import { trackPixel } from "@/lib/pixel";
 import { recordNeedsEvent } from "../needs/needs-events";
@@ -97,7 +98,11 @@ const QUESTIONS: Q[] = [
       { value: "gg_north", label: "고양·파주·의정부" },
       { value: "gg_south", label: "성남·용인·수원" },
       { value: "gg_west", label: "안양·광명·안산" },
-      { value: "etc", label: "그 외 지역" },
+      // 전국 광고를 태우기 전에는 이 칸이 "그 외 지역"이었다. 열 칸이 전부
+      // 수도권이고 나머지 전국이 한 칸이라, 부산·대구 응답이 전부 여기 쌓여
+      // 어느 도시를 열어야 할지 알 수가 없었다. 게다가 부산에서 이 화면을
+      // 보면 "여긴 서울 앱이네"로 읽힌다. 누르면 시·도를 한 번 더 고른다.
+      { value: "outside", label: "서울·경기·인천이 아니에요" },
     ],
   },
   {
@@ -135,6 +140,28 @@ const QUESTIONS: Q[] = [
   },
 ];
 
+/**
+ * 수도권 밖 시·도. 직접 입력이 아니라 고르게 한다 — 자유입력은 표기가 갈려
+ * (부산/부산시/해운대/Busan) 집계가 안 되고, 45+ 모바일에서 타이핑은 그
+ * 자리에서 이탈이 된다.
+ */
+const REGIONS: { value: string; label: string }[] = [
+  { value: "busan", label: "부산" },
+  { value: "daegu", label: "대구" },
+  { value: "daejeon", label: "대전" },
+  { value: "gwangju", label: "광주" },
+  { value: "ulsan", label: "울산" },
+  { value: "sejong", label: "세종" },
+  { value: "gangwon", label: "강원" },
+  { value: "chungbuk", label: "충북" },
+  { value: "chungnam", label: "충남" },
+  { value: "jeonbuk", label: "전북" },
+  { value: "jeonnam", label: "전남" },
+  { value: "gyeongbuk", label: "경북" },
+  { value: "gyeongnam", label: "경남" },
+  { value: "jeju", label: "제주" },
+];
+
 function detectPlatform(): "ios" | "android" | "other" {
   if (typeof navigator === "undefined") return "other";
   const ua = navigator.userAgent || "";
@@ -149,6 +176,10 @@ export default function EnjoyPage() {
   // 예전 문구로 돌아간다 — 랜딩이 API 때문에 막히면 안 된다.
   const [openSeats, setOpenSeats] = useState<{ dateLabel: string; district: string }[]>([]);
   const [step, setStep] = useState(0);
+  // 동네 문항 안에서만 열리는 두 번째 화면. 단계를 늘리지 않는다 —
+  // 수도권 분은 지금과 똑같이 네 번만 고르는데 진행 표시가 5로 바뀌면
+  // 없던 부담이 생긴다.
+  const [regionPick, setRegionPick] = useState(false);
   const [answers, setAnswers] = useState<Record<string, string>>({});
 
   useEffect(() => {
@@ -249,6 +280,10 @@ export default function EnjoyPage() {
       step,
       [q.key]: value,
     });
+    if (q.key === "district" && value === "outside") {
+      setRegionPick(true);
+      return;
+    }
     if (step < QUESTIONS.length - 1) {
       setStep(step + 1);
       return;
@@ -290,6 +325,10 @@ export default function EnjoyPage() {
   function back() {
     if (done) {
       setDone(false);
+      return;
+    }
+    if (regionPick) {
+      setRegionPick(false);
       return;
     }
     if (step > 0) setStep(step - 1);
@@ -492,6 +531,11 @@ export default function EnjoyPage() {
             <br />
             실명과 연락처는 다른 회원에게 보이지 않아요
           </p>
+
+          {/* 받기 버튼 아래에 둔다. 위에 두면 "우리 도시는 아직이네"를 먼저
+              읽고 버튼까지 안 내려온다 — 받을 이유를 먼저 주고, 사는 곳이
+              아직이어도 괜찮다는 말을 뒤에 붙인다. */}
+          <CityProgress />
         </div>
       </main>
     );
@@ -499,6 +543,20 @@ export default function EnjoyPage() {
 
   // ── 질문 ──────────────────────────────────────────────────────────────────
   const q = QUESTIONS[step];
+
+  /** 시·도를 고르면 그 값이 동네 답이 된다. "outside"는 거쳐 가는 값일 뿐이다. */
+  function chooseRegion(value: string) {
+    setAnswers({ ...answers, district: value });
+    recordNeedsEvent("answer", {
+      variant: VARIANT,
+      q: "district_region",
+      step,
+      district: value,
+    });
+    setRegionPick(false);
+    setStep(step + 1);
+  }
+
   return (
     <main style={page}>
       <div style={inner}>
@@ -545,21 +603,43 @@ export default function EnjoyPage() {
         </div>
 
         <h2 style={{ fontSize: 24, fontWeight: 800, lineHeight: 1.42, letterSpacing: "-0.6px", color: C.ink, margin: "0 0 6px", whiteSpace: "pre-line" }}>
-          {q.title}
+          {regionPick ? "어느 지역에\n계세요?" : q.title}
         </h2>
-        {q.sub && (
+        {(regionPick || q.sub) && (
           <p style={{ fontSize: 13.5, color: C.muted, fontWeight: 600, margin: "0 0 16px" }}>
-            {q.sub}
+            {regionPick ? "시·도만 고르시면 돼요" : q.sub}
           </p>
         )}
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
-          {q.options.map((o) => (
-            <button key={o.value} onClick={() => choose(o.value)} style={optionBtn}>
-              {o.label}
-            </button>
-          ))}
-        </div>
+        {regionPick ? (
+          // 이름이 두 글자라 세 칸이 들어간다. 두 칸으로 깔았더니 일곱 줄이
+          // 되어 벽처럼 보였다 — 앞 화면(익숙한 동네 이름 열한 개)에서 넘어온
+          // 참이라, 갑자기 목록이 길어지면 처음부터 다시 하는 기분이 든다.
+          <>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 7 }}>
+              {REGIONS.map((o) => (
+                <button key={o.value} onClick={() => chooseRegion(o.value)} style={optionBtn}>
+                  {o.label}
+                </button>
+              ))}
+            </div>
+            {/* 고르면 뭐가 좋은지를 목록 아래에 둔다. 위에 두면 안내문을 읽느라
+                버튼이 늦게 보인다. */}
+            <p style={{ fontSize: 12.5, lineHeight: 1.7, color: C.muted, margin: "14px 0 0", textAlign: "center" }}>
+              그 지역에 함께하실 분들이 모이면
+              <br />
+              그곳에서 자리를 엽니다
+            </p>
+          </>
+        ) : (
+          <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
+            {q.options.map((o) => (
+              <button key={o.value} onClick={() => choose(o.value)} style={optionBtn}>
+                {o.label}
+              </button>
+            ))}
+          </div>
+        )}
 
         {/* 첫 화면에만 탈출구를 둔다. 여기서 46%가 나가는데, 누를 게 보기밖에
             없어서 안 맞으면 나가는 것 말고 할 수 있는 게 없었다.
