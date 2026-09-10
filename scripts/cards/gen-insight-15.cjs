@@ -55,11 +55,12 @@ h3 .line{display:block}
    배경색으로 녹고 가운데만 은은히 드러나게 한다. 아래쪽은 다시 덮어 하단
    글씨(넘겨보세요·점)가 묻히지 않게 한다. 얼굴 없는 컷이라 특정인을 세우지 않는다. */
 .card{position:relative;overflow:hidden}
-.bleed{position:absolute;left:0;right:0;bottom:0;height:880px;z-index:0}
+.bleed{position:absolute;left:0;right:0;bottom:0;height:660px;z-index:0}
 .bleed img{width:100%;height:100%;object-fit:cover;object-position:center 44%;display:block}
 .bleed:after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,
-  #F6E4E2 0%, rgba(246,228,226,.88) 12%, rgba(246,228,226,.5) 38%,
-  rgba(246,228,226,.42) 70%, rgba(246,228,226,.86) 100%)}
+  #F6E4E2 0%, rgba(246,228,226,.72) 10%, rgba(246,228,226,.34) 34%,
+  rgba(246,228,226,.28) 66%, rgba(246,228,226,.64) 84%,
+  rgba(246,228,226,.9) 100%)}
 .top,.mid,.bot{position:relative;z-index:1}`;
 
 const ON='#C15A3C', OFF='#D9C7C5';
