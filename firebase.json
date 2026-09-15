@@ -10,6 +10,10 @@
       {
         "source": "/invite/**",
         "destination": "/invite/index.html"
+      },
+      {
+        "source": "/for-children/ask/**",
+        "destination": "/for-children/ask/index.html"
       }
     ],
     "headers": [
