@@ -185,7 +185,7 @@ export default function GyeolTestPage() {
               margin: "0 0 12px",
             }}
           >
-            만 45세 이상, 결이 통하는 친구 찾기
+            45세 이상, 결이 통하는 친구 찾기
           </p>
           <h1
             style={{

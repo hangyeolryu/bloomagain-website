@@ -3,7 +3,7 @@
 // fire-and-forget: 실패해도 UX를 막지 않는다. keepalive로 스토어 이동 중에도 전송.
 
 // intro_download = 인트로에서 테스트 건너뛰고 바로 앱 받기 클릭(강한 신호).
-// age_gate = 다운로드 직전 나이 자기선택(만 45+ 전용 게이트) — under45면 설치 전 차단.
+// age_gate = 다운로드 직전 나이 자기선택(45+ 전용 게이트) — under45면 설치 전 차단.
 type GyeolPhase =
   | "start"
   | "complete"

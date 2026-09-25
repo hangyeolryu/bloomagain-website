@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/enjoy/" },
   title: "506070, 이제 즐길 때 — 뭐가 제일 하고 싶으세요? | 티타",
   description:
-    "전시, 연극, 뮤지컬, 여행. 하고 싶은 걸 고르시면 결이 맞는 서넛을 모아드립니다. 만 45세 이상, 가입 없이 30초.",
+    "전시, 연극, 뮤지컬, 여행. 하고 싶은 걸 고르시면 결이 맞는 서넛을 모아드립니다. 45세 이상, 가입 없이 30초.",
   openGraph: {
     title: "506070, 이제 즐길 때 — 뭐가 제일 하고 싶으세요?",
     description:

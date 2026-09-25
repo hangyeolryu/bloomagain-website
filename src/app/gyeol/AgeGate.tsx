@@ -1,6 +1,6 @@
 "use client";
 
-// 다운로드 직전 '나이 자기선택' 게이트. 티타는 만 45세 이상 전용인데, 결 유형
+// 다운로드 직전 '나이 자기선택' 게이트. 티타는 45세 이상 전용인데, 결 유형
 // 테스트는 재밌어서 더 젊은 층이 몰린다 → 테스트 끝까지 풀고, 다운 누르고,
 // 설치하고, 그제서야 NICE 45+ 벽에 튕겨나간다(가입 시도의 ~43%가 나이 미달).
 // 여기서 한 번의 탭으로 자기선택하게 해서, 45 미만은 설치 전에 걸러내고(광고비
@@ -62,7 +62,7 @@ const BANDS: { band: AgeBand; label: string }[] = [
   { band: "45-54", label: "45–54세" },
   { band: "55-64", label: "55–64세" },
   { band: "65plus", label: "65세 이상" },
-  { band: "under45", label: "만 45세 미만" },
+  { band: "under45", label: "45세 미만" },
 ];
 
 /// 나이 자기선택 카드 — 한 번의 탭. 45+ 밴드 3개 + '미만' 1개. 코드(결 유형)는
@@ -128,7 +128,7 @@ export function AgeQuestion({ code }: { code?: string }) {
           margin: "0 0 4px",
         }}
       >
-        티타는 <span style={{ color: TITA.forest }}>만 45세 이상</span> 전용이에요
+        티타는 <span style={{ color: TITA.forest }}>45세 이상</span> 전용이에요
       </p>
       <p
         style={{
@@ -155,7 +155,7 @@ export function AgeQuestion({ code }: { code?: string }) {
           onClick={() => setAgeBand("under45", code)}
           style={underBtn}
         >
-          만 45세 미만이에요
+          45세 미만이에요
         </button>
       </div>
     </div>
@@ -195,7 +195,7 @@ export function AgeDisqualifiedNote({
           margin: "0 0 8px",
         }}
       >
-        티타는 <span style={{ color: TITA.forest }}>만 45세 이상</span> 전용이에요
+        티타는 <span style={{ color: TITA.forest }}>45세 이상</span> 전용이에요
       </p>
       <p
         style={{
@@ -208,7 +208,7 @@ export function AgeDisqualifiedNote({
       >
         대신, 이 결과가 딱 맞을 것 같은
         <br />
-        <b>만 45세 이상 가족·친구</b>가 떠오르지 않나요?
+        <b>45세 이상 가족·친구</b>가 떠오르지 않나요?
         <br />
         결이 맞을지 함께 해보자고 보내보세요.
       </p>

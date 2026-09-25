@@ -14,11 +14,11 @@ export const metadata: Metadata = {
   alternates: { canonical: "/titatime/" },
   title: "동네 티타임 — 결이 통하는 3~4명과 차 한 잔 | 티타",
   description:
-    "만 45세 이상, 본인인증 된 우리 동네 이웃 3~4명과 낮에 카페에서 90분. 데이팅 앱이 아니라 결이 통하는 친구를 만나는 소규모 티타임. 이번 주 모집 중.",
+    "45세 이상, 본인인증 된 우리 동네 이웃 3~4명과 낮에 카페에서 90분. 데이팅 앱이 아니라 결이 통하는 친구를 만나는 소규모 티타임. 이번 주 모집 중.",
   openGraph: {
     title: "이번 주, 우리 동네 티타임 🍵",
     description:
-      "결이 통하는 3~4명과 낮에 차 한 잔. 본인인증 된 만 45세 이상만.",
+      "결이 통하는 3~4명과 낮에 차 한 잔. 본인인증 된 45세 이상만.",
     siteName: "티타",
     locale: "ko_KR",
     type: "website",
@@ -68,7 +68,7 @@ export default function TitatimePage() {
               margin: "0 0 10px",
             }}
           >
-            만 45세 이상 · 본인인증 · 데이팅 앱 아님
+            45세 이상 · 본인인증 · 데이팅 앱 아님
           </p>
           <h1
             style={{

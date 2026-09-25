@@ -181,7 +181,7 @@ const QUESTIONS: Q[] = [
       { value: "55-59", label: "55–59세" },
       { value: "60-64", label: "60–64세" },
       { value: "65plus", label: "65세 이상" },
-      { value: "under45", label: "만 45세 미만" },
+      { value: "under45", label: "45세 미만" },
     ],
   },
 ];
@@ -193,15 +193,15 @@ const QUESTIONS: Q[] = [
 // 안전 과장 금지(본인인증은 누구인지만 확인한다), 이모지 금지, 1:1 암시 금지.
 const SKIP_NUDGE: Record<string, string> = {
   // 첫 화면은 "티타가 뭔지"부터 말해야 한다 — 여기까지 브랜드가 안 나온다.
-  situation: "만 45세 이상, 결이 맞는 또래를 만나는 앱",
+  situation: "45세 이상, 결이 맞는 또래를 만나는 앱",
   moment: "그런 순간을 아는 분들이 앱에 계세요",
   timeuse: "그 시간에 차 한 잔, 앱에서 자리를 맡으실 수 있어요",
   activity: "이런 걸 같이 하고 싶은 분들이 앱에 계세요",
   person: "동성만 보기, 앱에서 켜실 수 있어요",
   worry: "본인인증 하신 분들만, 셋넷이 함께 만나요",
   funnel: "대화부터든 만나서든, 앱에서 고르실 수 있어요",
-  gender: "만 45세 이상만 들어오는 곳이에요",
-  ageBand: "만 45세 이상, 결이 맞는 또래를 만나는 앱",
+  gender: "45세 이상만 들어오는 곳이에요",
+  ageBand: "45세 이상, 결이 맞는 또래를 만나는 앱",
 };
 
 // 결큐와 공유하는 나이 게이트 키는 굵은 밴드만 안다 — 세분 밴드를 접어서 저장.
@@ -450,7 +450,7 @@ export default function NeedsSurveyPage() {
 
   // 설문 없이 앱만 받는 우회로. 도착한 사람의 78%가 첫 질문에서 떠나는데,
   // 그때까지 다운로드는 결과 화면에만 있어 받을 방법 자체가 없었다.
-  // 다만 티타는 만 45세 이상 전용이라, 결큐와 같이 나이를 한 번 묻고 보낸다 —
+  // 다만 티타는 45세 이상 전용이라, 결큐와 같이 나이를 한 번 묻고 보낸다 —
   // 안 물으면 설치하고 본인인증에서 튕긴다(결큐 시도자의 43%가 나이 미달이었다).
   function openSkip() {
     setSkipOpen(true);
@@ -468,7 +468,7 @@ export default function NeedsSurveyPage() {
     // 지점이라, 광고 청중을 정확히 가를 수 있는 유일한 신호이기도 하다.
     //
     //  - 자격자: "45+인데 아직 앱을 안 받은 사람"만 다시 부를 수 있다.
-    //  - 미달자: 제외 청중으로 쓴다. 결큐 시도자의 43%가 만 45세 미만이었는데,
+    //  - 미달자: 제외 청중으로 쓴다. 결큐 시도자의 43%가 45세 미만이었는데,
     //    그분들을 다시 부르는 건 돈만 쓰고 본인인증에서 막히는 일이다.
     if (band === "under45") {
       trackPixel("NeedsUnderage", {}, true);
@@ -671,7 +671,7 @@ export default function NeedsSurveyPage() {
               }}
             >
               <p style={{ fontSize: 17, fontWeight: 800, color: TITA.forestDeep, margin: "0 0 8px" }}>
-                티타는 <span style={{ color: TITA.forest }}>만 45세 이상</span> 전용이에요
+                티타는 <span style={{ color: TITA.forest }}>45세 이상</span> 전용이에요
               </p>
               <p style={{ fontSize: 14.5, lineHeight: 1.7, color: TITA.ink, fontWeight: 600, margin: "0 0 16px" }}>
                 이 테스트가 딱 맞을 것 같은
@@ -785,7 +785,7 @@ export default function NeedsSurveyPage() {
                 </a>
               )}
               <p style={{ fontSize: 12.5, color: TITA.muted, fontWeight: 600, margin: "10px 0 0" }}>
-                만 45세 이상 · NICE 본인인증 — 검증된 또래만 있어 안전해요
+                45세 이상 · NICE 본인인증 — 검증된 또래만 있어 안전해요
               </p>
             </div>
           )}
@@ -809,7 +809,7 @@ export default function NeedsSurveyPage() {
                   이상한 사람이 걱정된다면 — 티타는 이렇게 지켜요
                 </p>
                 {[
-                  ["본인인증 없이는 입장 자체가 안 돼요", "NICE 실명 인증을 마친 만 45세 이상만 있어요. 익명 가입이 없어요."],
+                  ["본인인증 없이는 입장 자체가 안 돼요", "NICE 실명 인증을 마친 45세 이상만 있어요. 익명 가입이 없어요."],
                   ["수상한 접근은 AI가 먼저 봐요", "돈 이야기, 카톡·라인으로 데려가려는 시도를 자동 감지해 경고하고 차단해요."],
                   ["처음엔 둘이 아니라 여럿이 만나요", "서넛이 함께하는 티타임 구조라, 이상한 사람이 발 붙이기 어려워요."],
                   ["의심되면 바로 신고할 수 있어요", "확인 즉시 조치하고, 문제 계정은 다시 매칭되지 않아요."],
@@ -1034,7 +1034,7 @@ export default function NeedsSurveyPage() {
                 },
                 {
                   t: "누가 있나요?",
-                  b: "NICE 본인인증을 마친 만 45세 이상 또래만 있어요. 수상한 접근·사기는 AI가 지켜보다 걸러내요.",
+                  b: "NICE 본인인증을 마친 45세 이상 또래만 있어요. 수상한 접근·사기는 AI가 지켜보다 걸러내요.",
                 },
               ].map((x) => (
                 <div
@@ -1370,7 +1370,7 @@ export default function NeedsSurveyPage() {
                   사람은 설문만 보고 있어서, 버튼에 브랜드명만 쓰면 "티타가
                   뭔데?"가 된다. 그래서 무엇인지를 버튼 바로 밑에서 한 줄로
                   말한다. 뒤 질문에선 방금 답한 것과 앱을 잇는 문구로 바뀐다. */}
-              {SKIP_NUDGE[q.key] ?? "만 45세 이상, 결이 맞는 또래를 만나는 앱"}
+              {SKIP_NUDGE[q.key] ?? "45세 이상, 결이 맞는 또래를 만나는 앱"}
             </p>
           </div>
         )}
@@ -1390,7 +1390,7 @@ export default function NeedsSurveyPage() {
             {skipBand === "none" && (
               <>
                 <p style={{ textAlign: "center", fontSize: 17, fontWeight: 800, lineHeight: 1.5, letterSpacing: "-0.5px", color: TITA.forestDeep, margin: "0 0 4px" }}>
-                  티타는 <span style={{ color: TITA.forest }}>만 45세 이상</span> 전용이에요
+                  티타는 <span style={{ color: TITA.forest }}>45세 이상</span> 전용이에요
                 </p>
                 <p style={{ textAlign: "center", fontSize: 13.5, color: TITA.muted, fontWeight: 600, margin: "0 0 16px" }}>
                   연령대만 알려주시면 바로 보내드릴게요
@@ -1434,7 +1434,7 @@ export default function NeedsSurveyPage() {
                       marginTop: 2,
                     }}
                   >
-                    만 45세 미만이에요
+                    45세 미만이에요
                   </button>
                 </div>
               </>
@@ -1499,7 +1499,7 @@ export default function NeedsSurveyPage() {
                 <p style={{ textAlign: "center", fontSize: 14, lineHeight: 1.7, color: TITA.ink, fontWeight: 600, margin: "0 0 16px" }}>
                   대신, 요즘 부쩍 혼자인 시간이 많아지신
                   <br />
-                  <b>만 45세 이상 가족·친구</b>가 떠오르지 않나요?
+                  <b>45세 이상 가족·친구</b>가 떠오르지 않나요?
                 </p>
                 <button
                   onClick={share}

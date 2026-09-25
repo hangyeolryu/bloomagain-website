@@ -96,7 +96,7 @@ export default async function Image() {
         </div>
 
         <div style={{ display: "flex", gap: 14 }}>
-          {["만 45세 이상", "본인인증", "데이팅 앱 아님"].map((t) => (
+          {["45세 이상", "본인인증", "데이팅 앱 아님"].map((t) => (
             <div
               key={t}
               style={{
