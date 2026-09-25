@@ -21,6 +21,14 @@ export type NeedsAnswers = {
   /** 요즘 바깥 활동 (/enjoy 3번 문항). solo_out | want_out | home | has_group.
    *  timeuse와 낱말은 겹치지만 보기가 달라 일부러 다른 칸에 담는다. */
   outing?: string | null;
+  /** 자녀 블록(/enjoy, 2026-09-25) — 연령을 답한 45세 이상에게만 묻는다.
+   *  답에 따라 다음 질문이 갈리므로 step이 아니라 q로 읽는다. */
+  hasChild?: string | null; // yes | no
+  childAge?: string | null; // teen | 20s | 30s | 40plus (첫째 기준)
+  childMarital?: string | null; // all_single | some_married | all_married (teen이면 안 묻는다)
+  childContact?: string | null; // daily | weekly | monthly | rarely
+  childRelation?: string | null; // close | ok | distant | complicated | na
+  noChildStatus?: string | null; // single | couple | divorced | widowed | na
   // answer 이벤트 전용 — 어느 질문·몇 번째에 답했나 (질문별 이탈 파악)
   q?: string | null;
   step?: number | null;
@@ -155,6 +163,12 @@ export function recordNeedsEvent(phase: NeedsPhase, answers?: NeedsAnswers): voi
       variant: answers?.variant ?? null,
       district: answers?.district ?? null,
       outing: answers?.outing ?? null,
+      has_child: answers?.hasChild ?? null,
+      child_age: answers?.childAge ?? null,
+      child_marital: answers?.childMarital ?? null,
+      child_contact: answers?.childContact ?? null,
+      child_relation: answers?.childRelation ?? null,
+      no_child_status: answers?.noChildStatus ?? null,
       source: source ?? null,
       campaign: tag("utm_campaign"),
       content: tag("utm_content"),

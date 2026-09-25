@@ -54,8 +54,12 @@ const C = {
   line: "#E7CFCA",
 } as const;
 
+type CoreKey = "activity" | "district" | "outing" | "ageBand";
+type ChildKey =
+  | "hasChild" | "childAge" | "childMarital" | "childContact"
+  | "childRelation" | "noChildStatus";
 type Q = {
-  key: "activity" | "district" | "outing" | "ageBand";
+  key: CoreKey | ChildKey;
   title: string;
   sub?: string;
   options: { value: string; label: string }[];
@@ -126,19 +130,138 @@ const QUESTIONS: Q[] = [
   {
     key: "ageBand",
     title: "연령대가\n어떻게 되세요?",
-    // 만 45세 이상 전용임을 여기서 밝힌다. 설치 뒤 본인인증에서 튕기는 것보다
-    // 지금 아는 편이 서로 낫다 — 결큐 시도자의 43%가 만 45세 미만이었다.
-    sub: "티타는 만 45세 이상만 이용하실 수 있어요",
+    // 45세 이상 전용임을 여기서 밝힌다. 설치 뒤 본인인증에서 튕기는 것보다
+    // 지금 아는 편이 서로 낫다 — 결큐 시도자의 43%가 45세 미만이었다.
+    sub: "티타는 45세 이상만 이용하실 수 있어요",
     options: [
       { value: "45-49", label: "45–49세" },
       { value: "50-54", label: "50–54세" },
       { value: "55-59", label: "55–59세" },
       { value: "60-64", label: "60–64세" },
       { value: "65plus", label: "65세 이상" },
-      { value: "under45", label: "만 45세 미만이에요" },
+      { value: "under45", label: "45세 미만이에요" },
     ],
   },
 ];
+
+/**
+ * ── 자녀 블록 (2026-09-25) ──────────────────────────────────────────────────
+ * 연령을 답한 45세 이상에게만 이어서 묻는다. 광고로 온 분들이 실제로 어떤
+ * 가족 상황인지를 보려는 것 — 미혼 성인 자녀가 있는지(사돈 라운지 수요),
+ * 자녀와 얼마나 자주·어떤 사이로 지내는지(외로움의 다른 얼굴).
+ *
+ * 왜 네 문항 뒤인가: 가족사는 제일 사적인 질문이다. /needs가 사별·이혼을
+ * 첫 화면에 뒀다가 80%를 잃었다. 여기서는 활동·동네·나이까지 답해 온기가
+ * 생긴 뒤, 그리고 45세 미만은 아예 안 묻는다(그분들껜 쓸모도 없고 나이
+ * 들어 보이게만 한다).
+ *
+ * 왜 complete를 여기로 안 미루나: 완주(complete)와 EnjoyComplete 픽셀은
+ * 지금처럼 연령 답 시점에 그대로 쏜다. 광고 최적화 청중과 어드민의 완주율이
+ * 이 블록 때문에 끊기면 안 된다. 자녀 답은 answer 이벤트에 하나씩 실리고,
+ * 어드민이 세션 단위로 모은다.
+ *
+ * 답에 따라 다음 질문이 갈린다:
+ *   있어요 → 나이대 → (10대 이하면 건너뜀) 결혼 → 연락 빈도 → 어떤 사이
+ *   없어요 → 지금 상황
+ * 그래서 step 번호가 질문과 1:1이 아니다 — 이벤트의 q로 읽는다.
+ *
+ * 어느 화면에서든 "건너뛰고 결과 보기"가 열려 있다. 답하기 싫은 사람이 탭을
+ * 닫는 것과 결과 화면으로 가는 것은 다르다 — 후자만 앱을 받는다.
+ */
+const CHILD_QUESTIONS: Record<ChildKey, Q> = {
+  hasChild: {
+    key: "hasChild",
+    title: "자녀가 있으세요?",
+    sub: "자녀 얘기가 통하는 또래를 모아드리려고요",
+    options: [
+      { value: "yes", label: "네, 있어요" },
+      { value: "no", label: "없어요" },
+    ],
+  },
+  childAge: {
+    key: "childAge",
+    title: "자녀분은\n몇 살쯤이에요?",
+    sub: "여럿이면 첫째 기준으로요",
+    options: [
+      { value: "teen", label: "10대 이하" },
+      { value: "20s", label: "20대" },
+      { value: "30s", label: "30대" },
+      { value: "40plus", label: "40대 이상" },
+    ],
+  },
+  childMarital: {
+    key: "childMarital",
+    title: "자녀분 결혼은요?",
+    options: [
+      { value: "all_single", label: "아직 다 미혼이에요" },
+      { value: "some_married", label: "결혼한 자녀도, 미혼인 자녀도 있어요" },
+      { value: "all_married", label: "다 결혼했어요" },
+    ],
+  },
+  childContact: {
+    key: "childContact",
+    title: "자녀와는 얼마나\n자주 연락하세요?",
+    sub: "전화·문자·만나는 것 다 합쳐서요",
+    options: [
+      { value: "daily", label: "거의 매일" },
+      { value: "weekly", label: "일주일에 한두 번" },
+      { value: "monthly", label: "한 달에 한두 번" },
+      { value: "rarely", label: "명절이나 특별한 날 정도" },
+    ],
+  },
+  childRelation: {
+    key: "childRelation",
+    title: "자녀와는\n어떤 사이세요?",
+    sub: "편하게 고르시면 돼요",
+    options: [
+      { value: "close", label: "속 얘기도 하는 사이예요" },
+      { value: "ok", label: "무난해요, 필요한 얘기는 해요" },
+      { value: "distant", label: "좀 서먹해요" },
+      { value: "complicated", label: "좀 복잡해요" },
+      { value: "na", label: "말하지 않을래요" },
+    ],
+  },
+  noChildStatus: {
+    key: "noChildStatus",
+    title: "지금은\n어떤 상황이세요?",
+    sub: "비슷한 분들을 모아드리려고요",
+    options: [
+      { value: "single", label: "결혼은 안 했어요" },
+      { value: "couple", label: "배우자와 둘이 지내요" },
+      { value: "divorced", label: "이혼했어요" },
+      { value: "widowed", label: "사별했어요" },
+      { value: "na", label: "말하지 않을래요" },
+    ],
+  },
+};
+
+/**
+ * 지금까지의 답으로 자녀 블록의 질문 순서를 만든다. 아직 안 답한 갈림길은
+ * **긴 쪽**으로 가정한다 — 진행 표시가 도중에 늘어나는 건 없던 부담을 만들고,
+ * 줄어드는 건 괜찮다.
+ */
+function childFlow(a: Record<string, string>): Q[] {
+  const list: Q[] = [CHILD_QUESTIONS.hasChild];
+  if ((a.hasChild ?? "yes") === "yes") {
+    list.push(CHILD_QUESTIONS.childAge);
+    if (a.childAge !== "teen") list.push(CHILD_QUESTIONS.childMarital);
+    list.push(CHILD_QUESTIONS.childContact, CHILD_QUESTIONS.childRelation);
+  } else {
+    list.push(CHILD_QUESTIONS.noChildStatus);
+  }
+  return list;
+}
+
+/** 갈림길에서 되돌아와 다른 쪽을 고르면, 안 가는 길의 답은 지운다. */
+function pruneChild(a: Record<string, string>): Record<string, string> {
+  const keep = new Set<string>(childFlow(a).map((q) => q.key));
+  const out: Record<string, string> = {};
+  for (const [k, v] of Object.entries(a)) {
+    if (k in CHILD_QUESTIONS && !keep.has(k)) continue;
+    out[k] = v;
+  }
+  return out;
+}
 
 /**
  * 수도권 밖 시·도. 직접 입력이 아니라 고르게 한다 — 자유입력은 표기가 갈려
@@ -247,6 +370,10 @@ export default function EnjoyPage() {
   // 나갈 때 보고 있던 질문을 남긴다 — 어디서 관두는지 잡는 유일한 방법.
   const stepRef = useRef(step);
   stepRef.current = step;
+  // 자녀 블록은 답에 따라 갈리므로 "지금 보고 있는 질문"을 ref로 들고 있어야
+  // pagehide에서 맞는 q를 남긴다.
+  const answersRef = useRef(answers);
+  answersRef.current = answers;
   const doneRef = useRef(done);
   doneRef.current = done;
   const abandonRef = useRef(false);
@@ -258,10 +385,14 @@ export default function EnjoyPage() {
       // 트래픽이 '첫 질문 이탈'로 잡혔다).
       if (!firedRef.current) return;
       abandonRef.current = true;
+      const s = stepRef.current;
+      const cur = s < QUESTIONS.length
+        ? QUESTIONS[s]
+        : childFlow(answersRef.current)[s - QUESTIONS.length];
       recordNeedsEvent("abandon", {
         variant: VARIANT,
-        q: QUESTIONS[stepRef.current].key,
-        step: stepRef.current,
+        q: cur?.key ?? "hasChild",
+        step: s,
       });
     };
     window.addEventListener("pagehide", onHide);
@@ -269,10 +400,14 @@ export default function EnjoyPage() {
   }, []);
 
   const underage = answers.ageBand === "under45";
+  // 자녀 블록 안에 있나. step이 네 문항을 넘으면 그 뒤는 childFlow의 것.
+  const inChild = step >= QUESTIONS.length;
+  const child = childFlow(answers);
+  const childIdx = step - QUESTIONS.length;
 
   function choose(value: string) {
-    const q = QUESTIONS[step];
-    const next = { ...answers, [q.key]: value };
+    const q = inChild ? child[childIdx] : QUESTIONS[step];
+    const next = pruneChild({ ...answers, [q.key]: value });
     setAnswers(next);
     recordNeedsEvent("answer", {
       variant: VARIANT,
@@ -284,11 +419,23 @@ export default function EnjoyPage() {
       setRegionPick(true);
       return;
     }
+    if (inChild) {
+      // 갈림길을 방금 답했으니 새 답으로 다시 센다.
+      if (childIdx < childFlow(next).length - 1) {
+        setStep(step + 1);
+        return;
+      }
+      setDone(true);
+      return;
+    }
     if (step < QUESTIONS.length - 1) {
       setStep(step + 1);
       return;
     }
-    setDone(true);
+    // 연령까지 = 완주. 여기서 complete와 픽셀을 쏜다(자녀 블록 전). 45세
+    // 이상은 결과 대신 자녀 블록으로 이어지고, 미만은 바로 결과.
+    if (value === "under45") setDone(true);
+    else setStep(step + 1);
     recordNeedsEvent("complete", {
       variant: VARIANT,
       activity: next.activity,
@@ -322,6 +469,12 @@ export default function EnjoyPage() {
     setExplained(true);
   }
 
+  // 자녀 블록을 건너뛰고 결과로. 어느 질문에서 건너뛰었는지는 step에 남는다.
+  function skipChild() {
+    recordNeedsEvent("answer", { variant: VARIANT, q: "childSkip", step });
+    setDone(true);
+  }
+
   function back() {
     if (done) {
       setDone(false);
@@ -344,7 +497,7 @@ export default function EnjoyPage() {
     recordNeedsEvent("share", { variant: VARIANT });
     const data = {
       title: "506070, 이제 즐길 때",
-      text: "전시, 연극, 뮤지컬, 여행 — 같이 할 분을 찾는 곳이에요. 만 45세 이상.",
+      text: "전시, 연극, 뮤지컬, 여행 — 같이 할 분을 찾는 곳이에요. 45세 이상.",
       url: "https://tita-app.com/enjoy",
     };
     try {
@@ -446,10 +599,10 @@ export default function EnjoyPage() {
               쓰실 수 없어요
             </h1>
             <p style={{ fontSize: 15, lineHeight: 1.7, color: C.muted, margin: "0 0 26px" }}>
-              티타는 만 45세 이상만 이용하실 수 있어요.
+              티타는 45세 이상만 이용하실 수 있어요.
               <br />
               대신, 요즘 즐길 거리를 찾고 계신{" "}
-              <b style={{ color: C.ink }}>만 45세 이상 가족·친구</b>가
+              <b style={{ color: C.ink }}>45세 이상 가족·친구</b>가
               <br />
               떠오르지 않으세요?
             </p>
@@ -527,7 +680,7 @@ export default function EnjoyPage() {
           />
 
           <p style={{ fontSize: 12.5, lineHeight: 1.7, color: C.muted, textAlign: "center", margin: "18px 0 0" }}>
-            만 45세 이상 · 본인인증 · 셋넷이 함께
+            45세 이상 · 본인인증 · 셋넷이 함께
             <br />
             실명과 연락처는 다른 회원에게 보이지 않아요
           </p>
@@ -542,7 +695,11 @@ export default function EnjoyPage() {
   }
 
   // ── 질문 ──────────────────────────────────────────────────────────────────
-  const q = QUESTIONS[step];
+  const q = inChild ? child[childIdx] : QUESTIONS[step];
+  // 진행 표시. 자녀 블록은 자기 점을 따로 찍는다 — 네 문항짜리 표시가 갑자기
+  // 아홉으로 늘면 "30초"라던 말이 거짓이 된다. 이건 별도의 짧은 추가 질문이다.
+  const dots = inChild ? child.length : QUESTIONS.length;
+  const dotAt = inChild ? childIdx : step;
 
   /** 시·도를 고르면 그 값이 동네 답이 된다. "outside"는 거쳐 가는 값일 뿐이다. */
   function chooseRegion(value: string) {
@@ -584,24 +741,31 @@ export default function EnjoyPage() {
             ← 이전
           </button>
           <div style={{ display: "flex", gap: 6 }}>
-            {QUESTIONS.map((_, i) => (
+            {Array.from({ length: dots }, (_, i) => (
               <span
                 key={i}
                 style={{
-                  width: i === step ? 18 : 7,
+                  width: i === dotAt ? 18 : 7,
                   height: 7,
                   borderRadius: 4,
-                  background: i <= step ? C.terra : C.line,
+                  background: i <= dotAt ? C.terra : C.line,
                   transition: "all .2s",
                 }}
               />
             ))}
           </div>
           <span style={{ fontSize: 13, fontWeight: 700, color: C.muted }}>
-            {step + 1}/{QUESTIONS.length}
+            {inChild ? "추가 " : ""}{dotAt + 1}/{dots}
           </span>
         </div>
 
+        {inChild && childIdx === 0 && (
+          // 네 문항이 끝난 자리에서 갑자기 가족 얘기가 나오면 "이건 또 뭐지"가
+          // 된다. 왜 묻는지와 안 해도 된다는 걸 한 줄로 먼저 말한다.
+          <p style={{ fontSize: 13.5, lineHeight: 1.6, color: C.terra, fontWeight: 700, margin: "0 0 10px" }}>
+            다 됐어요. 몇 가지만 더 물어볼게요 — 건너뛰셔도 돼요.
+          </p>
+        )}
         <h2 style={{ fontSize: 24, fontWeight: 800, lineHeight: 1.42, letterSpacing: "-0.6px", color: C.ink, margin: "0 0 6px", whiteSpace: "pre-line" }}>
           {regionPick ? "어느 지역에\n계세요?" : q.title}
         </h2>
@@ -638,6 +802,16 @@ export default function EnjoyPage() {
                 {o.label}
               </button>
             ))}
+          </div>
+        )}
+
+        {inChild && (
+          // 보기(흰 카드)와 확실히 다르게 — 여섯 번째 보기로 읽히면 안 된다.
+          // 탭을 닫는 사람과 결과로 가는 사람은 다르다. 후자만 앱을 받는다.
+          <div style={{ marginTop: 14 }}>
+            <button onClick={skipChild} style={{ ...escapeBtn, width: "100%" }}>
+              건너뛰고 결과 보기
+            </button>
           </div>
         )}
 
@@ -693,7 +867,7 @@ export default function EnjoyPage() {
                   color: C.ink,
                 }}
               >
-                만 45세 이상만 들어오는 앱이에요. 결이 맞는 서넛이 모여
+                45세 이상만 들어오는 앱이에요. 결이 맞는 서넛이 모여
                 차 한잔하거나(티타임), 만나기 전에 대화부터 나눕니다.
                 둘 다 티타가 자리를 잡아드려요.
                 <span style={{ color: C.muted }}> 들어오시려면 본인인증을 하셔야 해요.</span>
@@ -703,7 +877,7 @@ export default function EnjoyPage() {
         )}
 
         <p style={{ fontSize: 12.5, color: C.muted, textAlign: "center", margin: "18px 0 0" }}>
-          가입 없이 30초 · 만 45세 이상
+          가입 없이 30초 · 45세 이상
         </p>
       </div>
     </main>
