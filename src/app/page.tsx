@@ -70,12 +70,23 @@ export default function Home() {
             천천히 만나요.
           </h1>
           <p
-            className="text-base sm:text-lg leading-relaxed mb-8"
+            className="text-base sm:text-lg leading-relaxed mb-2"
             style={{ color: TITA.sage }}
           >
             45세 이상, 검증된 또래끼리 친구가 되는 앱.
             <br />
             본인인증·AI 안전망으로 지켜드려요.
+          </p>
+          {/* 문 앞에 긋는 선. 앱의 온보딩 첫 장("소개팅 앱이 아니에요")과
+              같은 문장을 쓴다 — 앱 안에는 있는데 정작 방문자가 보는 홈에는
+              없었다(2026-09-26). 히어로 약속을 흐리지 않게 작고 조용히
+              두되, 읽고 지나칠 수는 없는 자리에 둔다. 거르는 문장이면서
+              동시에 안심시키는 문장이라 뒷부분을 긍정으로 맺는다. */}
+          <p
+            className="text-[13px] sm:text-sm mb-8 leading-relaxed"
+            style={{ color: TITA.camel }}
+          >
+            소개팅 앱이 아니에요. 또래 친구를 만나는 곳이에요.
           </p>
           <div className="flex flex-col items-center gap-4">
             <a
