@@ -28,6 +28,10 @@ export type NeedsAnswers = {
   childMarital?: string | null; // all_single | some_married | all_married (teen이면 안 묻는다)
   childContact?: string | null; // daily | weekly | monthly | rarely
   childRelation?: string | null; // close | ok | distant | complicated | na
+  // 결혼 얘기 갈림길(2026-09-26). 미혼 + 30대 이상 자녀를 둔 분께만 묻고,
+  // 관심을 보이신 분께만 childSex 를 묻는다.
+  childTalk?: string | null; // sometimes | want_no_place | no_thanks
+  childSex?: string | null; // son | daughter | both
   noChildStatus?: string | null; // single | couple | divorced | widowed | na
   // answer 이벤트 전용 — 어느 질문·몇 번째에 답했나 (질문별 이탈 파악)
   q?: string | null;
@@ -169,6 +173,9 @@ export function recordNeedsEvent(phase: NeedsPhase, answers?: NeedsAnswers): voi
       child_contact: answers?.childContact ?? null,
       child_relation: answers?.childRelation ?? null,
       no_child_status: answers?.noChildStatus ?? null,
+      // ⚠️ 여기 두 줄을 빠뜨리면 웹은 멀쩡히 묻고 답은 서버에서 사라진다.
+      child_talk: answers?.childTalk ?? null,
+      child_sex: answers?.childSex ?? null,
       source: source ?? null,
       campaign: tag("utm_campaign"),
       content: tag("utm_content"),

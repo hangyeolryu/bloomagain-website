@@ -57,7 +57,7 @@ const C = {
 type CoreKey = "activity" | "district" | "outing" | "ageBand" | "gender";
 type ChildKey =
   | "hasChild" | "childAge" | "childMarital" | "childContact"
-  | "childRelation" | "noChildStatus";
+  | "childRelation" | "noChildStatus" | "childTalk" | "childSex";
 type Q = {
   key: CoreKey | ChildKey;
   title: string;
@@ -230,6 +230,38 @@ const CHILD_QUESTIONS: Record<ChildKey, Q> = {
       { value: "rarely", label: "명절이나 특별한 날 정도" },
     ],
   },
+  // 또래와 자녀 결혼 얘기를 나눠본 적이 있나 (2026-09-26).
+  //
+  // **의도가 아니라 겪은 일을 묻는다.** "자녀 결혼에 관심 있으세요?"는
+  // 인정해야 하는 질문이라 안 눌린다 — 결정사가 싫어서 안 간 부모가
+  // "네, 사돈 찾으러 왔습니다"를 누르지 않는 것과 같다(00_INDEX 확정 결정).
+  //
+  // 가운데 보기가 이 문항의 전부다. 고르는 사람이 자기 처지를 고백하는 게
+  // 아니라 **세상에 빈 곳이 있다**고 말하는 것이라 훨씬 쉽게 눌린다.
+  childTalk: {
+    key: "childTalk",
+    title: "또래 부모님들과\n자녀 결혼 얘기,\n나눠보신 적 있으세요?",
+    options: [
+      { value: "sometimes", label: "가끔 해요" },
+      { value: "want_no_place", label: "하고 싶은데 마땅한 데가 없어요" },
+      { value: "no_thanks", label: "별로 하고 싶지 않아요" },
+    ],
+  },
+  // 자녀 성별 — 관심을 보이신 분께만 묻는다.
+  //
+  // 사돈 찻자리는 아드님 측 여섯 / 따님 측 여섯으로 성비를 맞춰야 하는데
+  // **자녀 성별은 부모 성별과 아무 상관이 없다.** 이 값이 없으면 딸 측
+  // 후보를 한 명도 못 고른다. 다만 관심 없다고 하신 분께 물으면 쓸 데도
+  // 없고 결혼 얘기로 읽히므로, 갈림길 뒤에 둔다.
+  childSex: {
+    key: "childSex",
+    title: "미혼인 자녀분은\n어느 쪽이세요?",
+    options: [
+      { value: "son", label: "아들이에요" },
+      { value: "daughter", label: "딸이에요" },
+      { value: "both", label: "아들딸 다 있어요" },
+    ],
+  },
   childRelation: {
     key: "childRelation",
     title: "자녀와는\n어떤 사이세요?",
@@ -266,6 +298,19 @@ function childFlow(a: Record<string, string>): Q[] {
   if ((a.hasChild ?? "yes") === "yes") {
     list.push(CHILD_QUESTIONS.childAge);
     if (a.childAge !== "teen") list.push(CHILD_QUESTIONS.childMarital);
+    // 결혼 얘기 갈림길 — **사실로 먼저 거른다.** 미혼 자녀가 있고 그
+    // 자녀가 30대 이상일 때만 묻는다. 스물다섯과 서른여덟은 다른
+    // 이야기라, 20대까지 물으면 후보 명단이 엉킨다.
+    const unmarried = a.childMarital === "all_single" ||
+      a.childMarital === "some_married";
+    const grown = a.childAge === "30s" || a.childAge === "40plus";
+    if (unmarried && grown) {
+      list.push(CHILD_QUESTIONS.childTalk);
+      // 성별은 관심을 보이신 분께만. '별로 하고 싶지 않아요'면 묻지 않는다.
+      if (a.childTalk === "sometimes" || a.childTalk === "want_no_place") {
+        list.push(CHILD_QUESTIONS.childSex);
+      }
+    }
     list.push(CHILD_QUESTIONS.childContact, CHILD_QUESTIONS.childRelation);
   } else {
     list.push(CHILD_QUESTIONS.noChildStatus);
