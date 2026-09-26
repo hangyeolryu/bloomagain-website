@@ -351,6 +351,51 @@ const REGIONS: { value: string; label: string }[] = [
   { value: "jeju", label: "제주" },
 ];
 
+/**
+ * 고르신 활동과 자리 제목을 잇는다.
+ *
+ * 자리 문서에 activity·topic 필드가 있지만 **전부 비어 있다**(2026-09-26 확인).
+ * 지금 활동이 적히는 곳은 cardTitle 뿐이다 — "낮에 전시 한 번", "느지막한
+ * 브런치", "차 한잔·수다". 그래서 글자로 맞춘다. 어드민이 activity 를 채우기
+ * 시작하면 그걸 먼저 보도록 고치면 된다.
+ */
+const ACTIVITY_WORDS: Record<string, string[]> = {
+  tea: ["차 한잔", "브런치", "밥", "점심", "저녁", "한 끼", "맛"],
+  culture: ["전시", "공연", "미술관", "박물관", "나들이"],
+  theater: ["연극", "뮤지컬", "공연"],
+  chat: ["수다", "차 한잔"],
+  walk: ["산책", "걷"],
+  exercise: ["등산", "운동", "걷"],
+  travel: ["여행", "나들이"],
+  hobby: ["공방", "클래스", "배움", "원데이"],
+};
+
+/**
+ * 보여줄 자리 두 개를 고른다. **거르지 않고 순서만 바꾼다** —
+ * 거르면 여행을 고른 분께 자리가 0개가 되어 화면이 비고, 그건 어긋난 자리를
+ * 보여주는 것보다 나쁘다. 맞는 게 있으면 앞에, 없으면 그냥 가까운 것부터.
+ */
+function pickSeats(
+  seats: { dateLabel: string; district: string; cardTitle: string }[],
+  answers: Record<string, string>,
+  districtLabel: string,
+) {
+  const words = ACTIVITY_WORDS[answers.activity ?? ""] ?? [];
+  const scored = seats.map((s2) => {
+    const actHit = words.some((w) => s2.cardTitle.includes(w));
+    // 지역은 느슨하게 본다. 자리 쪽은 "시청역 · 중구"처럼 적히기도 해서
+    // 정확히 같지 않다. 낱말 하나라도 겹치면 같은 동네로 본다.
+    const near =
+      !!districtLabel &&
+      districtLabel
+        .split("·")
+        .some((t) => t.length > 1 && s2.district.includes(t));
+    return { ...s2, score: (actHit ? 2 : 0) + (near ? 1 : 0), actHit };
+  });
+  scored.sort((a, b) => b.score - a.score);
+  return { list: scored.slice(0, 2), matched: scored.some((x) => x.actHit) };
+}
+
 function detectPlatform(): "ios" | "android" | "other" {
   if (typeof navigator === "undefined") return "other";
   const ua = navigator.userAgent || "";
@@ -363,7 +408,9 @@ export default function EnjoyPage() {
   // 지금 열려 있는 자리. 완료 화면이 "모이면 알려드릴게요"(약속)가 아니라
   // "이 자리가 열려 있어요"(사실)를 말하게 하려고 불러온다. 실패하면 조용히
   // 예전 문구로 돌아간다 — 랜딩이 API 때문에 막히면 안 된다.
-  const [openSeats, setOpenSeats] = useState<{ dateLabel: string; district: string }[]>([]);
+  const [openSeats, setOpenSeats] = useState<
+    { dateLabel: string; district: string; cardTitle: string }[]
+  >([]);
   const [step, setStep] = useState(0);
   // 동네 문항 안에서만 열리는 두 번째 화면. 단계를 늘리지 않는다 —
   // 수도권 분은 지금과 똑같이 네 번만 고르는데 진행 표시가 5로 바뀌면
@@ -380,15 +427,18 @@ export default function EnjoyPage() {
       .then((d) => {
         if (!alive || !d) return;
         const items = Array.isArray(d) ? d : (d.sessions ?? d.items ?? []);
+        // 여기서 자르지 않는다. 어느 자리를 보여줄지는 **답을 보고** 고른다
+        // (pickSeats). 전에는 앞에서 두 개를 그냥 집어서, 여행을 고른 분께도
+        // 브런치 자리가 떴다 — 제목은 "여행"이라 불러놓고 밑이 어긋났다.
         const open = items
           .filter(
             (x: Record<string, unknown>) =>
               x.status === "open" && typeof x.dateLabel === "string" && x.dateLabel,
           )
-          .slice(0, 2)
           .map((x: Record<string, unknown>) => ({
             dateLabel: String(x.dateLabel),
             district: String(x.district ?? ""),
+            cardTitle: String(x.cardTitle ?? ""),
           }));
         setOpenSeats(open);
       })
@@ -680,6 +730,15 @@ export default function EnjoyPage() {
       );
     }
     const chosen = QUESTIONS[0].options.find((o) => o.value === answers.activity);
+    const districtLabel =
+      QUESTIONS.find((q) => q.key === "district")?.options.find(
+        (o) => o.value === answers.district,
+      )?.label ?? "";
+    const { list: shownSeats, matched: seatMatchesActivity } = pickSeats(
+      openSeats,
+      answers,
+      districtLabel,
+    );
     return (
       <main style={page}>
         <div style={inner}>
@@ -690,20 +749,26 @@ export default function EnjoyPage() {
           <h1 style={{ fontSize: 26, fontWeight: 800, lineHeight: 1.45, color: C.ink, margin: "0 0 14px", letterSpacing: "-0.6px" }}>
             {chosen?.label ?? "함께할 거리"},
             <br />
-            {openSeats.length > 0
+            {/* 맞는 자리가 있을 때만 "기다리고 있어요"라고 한다. 여행을
+                고르셨는데 브런치 자리를 보여주면서 기다린다고 하면 거짓말이
+                된다 — 실측에서 여행 16.8% · 산책 15.6% 대 차·맛집 28.5% ·
+                연극 36%로, 열리는 자리와 먼 답일수록 안 받으셨다. */}
+            {shownSeats.length > 0 && seatMatchesActivity
               ? "같이 하실 분들이 기다리고 있어요"
               : "같이 하실 분들을 찾아드릴게요"}
           </h1>
-          {openSeats.length > 0 ? (
+          {shownSeats.length > 0 ? (
             <>
               {/* 열려 있는 자리를 이름으로 보여준다. "모이면 알려드릴게요"는
                   약속이라 기다려야 하지만, 날짜와 동네가 적힌 자리는 사실이라
                   지금 받을 이유가 된다(다운로드 전환 39%에서 멈춘 자리). */}
               <p style={{ fontSize: 15, lineHeight: 1.75, color: C.muted, margin: "0 0 14px" }}>
-                지금 신청할 수 있는 자리가 있어요.
+                {seatMatchesActivity
+                  ? "지금 신청할 수 있는 자리가 있어요."
+                  : "그 자리는 열리는 대로 알려드릴게요. 먼저 이런 자리가 열려 있어요."}
               </p>
               <ul style={{ listStyle: "none", padding: 0, margin: "0 0 18px" }}>
-                {openSeats.map((s2) => (
+                {shownSeats.map((s2) => (
                   <li
                     key={s2.dateLabel}
                     style={{
@@ -717,10 +782,16 @@ export default function EnjoyPage() {
                       lineHeight: 1.5,
                     }}
                   >
-                    {s2.dateLabel}
-                    {s2.district ? (
-                      <span style={{ fontWeight: 500, color: C.muted }}> · {s2.district}</span>
-                    ) : null}
+                    {/* 무슨 자리인지 먼저 보이게 한다. 날짜·동네만 적혀
+                        있으면 고른 활동과 맞는지 알 수가 없었다. */}
+                    {s2.cardTitle
+                      ? s2.cardTitle.split(" · ")[0]
+                      : s2.dateLabel}
+                    <span style={{ fontWeight: 500, color: C.muted }}>
+                      {" · "}
+                      {s2.dateLabel}
+                      {s2.district ? ` · ${s2.district}` : ""}
+                    </span>
                   </li>
                 ))}
               </ul>
