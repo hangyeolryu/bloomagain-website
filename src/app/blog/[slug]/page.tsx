@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowLeft, Download } from "lucide-react";
+import { ArrowLeft, ArrowRight, Download } from "lucide-react";
 import { TITA, KOREAN_FONT_STACK } from "../../_components/tita-brand";
 import { TitaFooter } from "../../_components/TitaFooter";
 import { getAllPosts, getPost, getSeries, type Block } from "../posts";
@@ -416,6 +416,28 @@ export default async function BlogPostPage({ params }: Params) {
                   </details>
                 ))}
               </div>
+            </section>
+          )}
+
+          {/* 글마다 다른 다음 걸음 — 있는 글에만 붙고, 아래 공통 CTA보다 먼저 온다.
+              다 읽은 직후가 제일 움직이기 쉬운 자리라 여기를 내준다. */}
+          {post.cta && (
+            <section
+              className="rounded-2xl p-6 sm:p-7 mt-12 text-center border"
+              style={{ backgroundColor: TITA.surface, borderColor: TITA.sage }}
+            >
+              <Link
+                href={post.cta.href}
+                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full text-sm font-semibold"
+                style={{ backgroundColor: TITA.forest, color: "white" }}
+              >
+                {post.cta.label} <ArrowRight className="w-4 h-4" />
+              </Link>
+              {post.cta.note && (
+                <p className="text-xs mt-3" style={{ color: TITA.muted }}>
+                  {post.cta.note}
+                </p>
+              )}
             </section>
           )}
 
