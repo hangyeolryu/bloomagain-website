@@ -54,7 +54,7 @@ const C = {
   line: "#E7CFCA",
 } as const;
 
-type CoreKey = "activity" | "district" | "outing" | "ageBand";
+type CoreKey = "activity" | "district" | "outing" | "ageBand" | "gender";
 type ChildKey =
   | "hasChild" | "childAge" | "childMarital" | "childContact"
   | "childRelation" | "noChildStatus";
@@ -142,6 +142,27 @@ const QUESTIONS: Q[] = [
       { value: "under45", label: "45세 미만이에요" },
     ],
   },
+  {
+    // 성별 (2026-09-26 복원). /needs 에는 있었는데 /enjoy 로 옮기면서 빠졌다.
+    // 그 사이 앱 방향이 5060 여성 쪽으로 기울었는데, 정작 수요를 재는 설문이
+    // 그 축을 못 보고 있었다 — 자녀 블록 첫 이틀에 미혼 자녀를 둔 분이 열셋
+    // 나왔는데 그중 몇 분이 여성인지 알 길이 없었다.
+    //
+    // 연령대 **뒤**에 둔다. 실측상 연령까지 온 분은 세 구간 모두 100%
+    // 완주했다(153/153 · 113/113 · 23/23). 그 뒤는 사실상 공짜다.
+    // 45세 미만은 연령대에서 바로 끝나므로 이 질문을 보지 않는다.
+    //
+    // 값은 f / m / na 그대로 쓴다. 백엔드 Literal이 이 셋으로 고정돼 있고,
+    // /needs 시절 데이터와도 그대로 비교된다.
+    key: "gender",
+    title: "성별이\n어떻게 되세요?",
+    sub: "모임 구성에 참고해요 — 동성만 원하시면 앱에서 그렇게 둘 수 있어요",
+    options: [
+      { value: "f", label: "여성" },
+      { value: "m", label: "남성" },
+      { value: "na", label: "말하지 않을래요" },
+    ],
+  },
 ];
 
 /**
@@ -150,7 +171,7 @@ const QUESTIONS: Q[] = [
  * 가족 상황인지를 보려는 것 — 미혼 성인 자녀가 있는지(사돈 라운지 수요),
  * 자녀와 얼마나 자주·어떤 사이로 지내는지(외로움의 다른 얼굴).
  *
- * 왜 네 문항 뒤인가: 가족사는 제일 사적인 질문이다. /needs가 사별·이혼을
+ * 왜 다섯 문항 뒤인가: 가족사는 제일 사적인 질문이다. /needs가 사별·이혼을
  * 첫 화면에 뒀다가 80%를 잃었다. 여기서는 활동·동네·나이까지 답해 온기가
  * 생긴 뒤, 그리고 45세 미만은 아예 안 묻는다(그분들껜 쓸모도 없고 나이
  * 들어 보이게만 한다).
@@ -400,7 +421,7 @@ export default function EnjoyPage() {
   }, []);
 
   const underage = answers.ageBand === "under45";
-  // 자녀 블록 안에 있나. step이 네 문항을 넘으면 그 뒤는 childFlow의 것.
+  // 자녀 블록 안에 있나. step이 핵심 문항 수를 넘으면 그 뒤는 childFlow의 것.
   const inChild = step >= QUESTIONS.length;
   const child = childFlow(answers);
   const childIdx = step - QUESTIONS.length;
@@ -696,7 +717,7 @@ export default function EnjoyPage() {
 
   // ── 질문 ──────────────────────────────────────────────────────────────────
   const q = inChild ? child[childIdx] : QUESTIONS[step];
-  // 진행 표시. 자녀 블록은 자기 점을 따로 찍는다 — 네 문항짜리 표시가 갑자기
+  // 진행 표시. 자녀 블록은 자기 점을 따로 찍는다 — 핵심 문항 표시가 갑자기
   // 아홉으로 늘면 "30초"라던 말이 거짓이 된다. 이건 별도의 짧은 추가 질문이다.
   const dots = inChild ? child.length : QUESTIONS.length;
   const dotAt = inChild ? childIdx : step;
