@@ -33,6 +33,23 @@ export type NeedsAnswers = {
   childTalk?: string | null; // sometimes | want_no_place | no_thanks
   childSex?: string | null; // son | daughter | both
   noChildStatus?: string | null; // single | couple | divorced | widowed | na
+  /** ── 사돈 수요조사 (/sadon/survey, variant "sadon", 2026-09-26) ─────────
+   *  문항 원본은 docs/sadon/14_수요조사_문항.md (bloomagain-korea).
+   *  2번(아들/딸/둘 다)은 위 childSex를 그대로 쓴다 — 같은 걸 묻는데 칸을
+   *  새로 만들면 두 설문을 견줄 수가 없다.
+   *  ⚠️ 여기 넣고 아래 payload에 안 실으면, 웹은 멀쩡히 묻고 답만 사라진다. */
+  sdHasSingle?: string | null; // yes | no
+  sdChildAge?: string | null; // 20s | 30s_early | 30s_late | 40plus
+  sdIntent?: string | null; // want | curious | ask_child | reluctant
+  sdWhen?: string | null; // asap | months | if_child_agrees | unsure
+  sdConditionLine?: string | null; // none | similar | tell_me | most_important
+  // 복수 선택 — 서버가 리스트로 받아 보기 밖 값을 버린다
+  sdAssurance?: string[] | null;
+  sdPersuade?: string[] | null;
+  sdWantMine?: string[] | null;
+  sdWantChild?: string[] | null;
+  sdGapWorry?: string[] | null;
+  sdDealbreaker?: string[] | null;
   // answer 이벤트 전용 — 어느 질문·몇 번째에 답했나 (질문별 이탈 파악)
   q?: string | null;
   step?: number | null;
@@ -176,6 +193,18 @@ export function recordNeedsEvent(phase: NeedsPhase, answers?: NeedsAnswers): voi
       // ⚠️ 여기 두 줄을 빠뜨리면 웹은 멀쩡히 묻고 답은 서버에서 사라진다.
       child_talk: answers?.childTalk ?? null,
       child_sex: answers?.childSex ?? null,
+      // 사돈 수요조사. 위 타입에만 넣고 여기를 빠뜨리면 답이 사라진다.
+      sd_has_single: answers?.sdHasSingle ?? null,
+      sd_child_age: answers?.sdChildAge ?? null,
+      sd_intent: answers?.sdIntent ?? null,
+      sd_when: answers?.sdWhen ?? null,
+      sd_condition_line: answers?.sdConditionLine ?? null,
+      sd_assurance: answers?.sdAssurance ?? null,
+      sd_persuade: answers?.sdPersuade ?? null,
+      sd_want_mine: answers?.sdWantMine ?? null,
+      sd_want_child: answers?.sdWantChild ?? null,
+      sd_gap_worry: answers?.sdGapWorry ?? null,
+      sd_dealbreaker: answers?.sdDealbreaker ?? null,
       source: source ?? null,
       campaign: tag("utm_campaign"),
       content: tag("utm_content"),
@@ -195,5 +224,37 @@ export function recordNeedsEvent(phase: NeedsPhase, answers?: NeedsAnswers): voi
     });
   } catch {
     /* swallow */
+  }
+}
+
+
+/**
+ * 사돈 수요조사 연락처 — **설문 응답과 다른 곳으로 보낸다.**
+ *
+ * 설문은 익명 세션이라 그 자체로는 개인정보가 아닌데, 연락처를 같은 세션에
+ * 붙이면 식별 가능해진다. 그 세션에는 종교·정치 선호가 들어 있어서 그 순간
+ * 민감정보(개인정보 보호법 제23조)가 된다. 그래서 세션 아이디를 안 싣고
+ * 별도 엔드포인트로 보낸다 — 누가 무엇을 답했는지는 우리도 못 맞춘다.
+ *
+ * 보내는 데 성공했는지를 화면이 알아야 해서(설문 이벤트와 달리) 결과를
+ * 돌려준다. 실패하면 사용자가 다시 누를 수 있다.
+ */
+export async function sendSadonContact(contact: string): Promise<boolean> {
+  const backendUrl = process.env.NEXT_PUBLIC_BLOOMAGAIN_BACKEND_URL;
+  if (!backendUrl) return false;
+  try {
+    const res = await fetch(
+      `${backendUrl.replace(/\/$/, "")}/api/v1/gyeol/sadon-contact`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ contact: contact.trim() }),
+      },
+    );
+    if (!res.ok) return false;
+    const data = (await res.json()) as { ok?: boolean };
+    return data.ok === true;
+  } catch {
+    return false;
   }
 }
