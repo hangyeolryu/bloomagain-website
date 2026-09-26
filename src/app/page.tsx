@@ -23,6 +23,7 @@ import {
   TITA,
   KOREAN_FONT_STACK,
 } from "./_components/tita-brand";
+import { AppStructuredData } from "./_components/StructuredData";
 import { TitaHeader } from "./_components/TitaHeader";
 import { TitaFooter } from "./_components/TitaFooter";
 import { PersonaStories } from "./_components/PersonaStories";
@@ -39,6 +40,9 @@ export default function Home() {
         fontFamily: KOREAN_FONT_STACK,
       }}
     >
+      {/* 앱 자체의 구조화 데이터 — 연령 하한 45, "데이팅 앱 아님", 요금을
+          기계가 읽을 수 있게 둔다. 홈과 /download 두 곳에만 붙인다. */}
+      <AppStructuredData />
       <TitaHeader />
 
       {/* ── 1. Hero — 딥그린 풀블리드 밴드 ─────────────────────────

@@ -4,6 +4,7 @@ import localFont from "next/font/local";
 import { Suspense } from "react";
 import { AnalyticsTracker } from "./_components/AnalyticsTracker";
 import { MetaPixel } from "./_components/MetaPixel";
+import { SiteStructuredData } from "./_components/StructuredData";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -116,6 +117,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
+      <head>
+        {/* 운영사·사이트 정체를 기계가 읽는 형태로. 모든 페이지에 붙는다. */}
+        <SiteStructuredData />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${gowunDodum.variable} antialiased`}
       >

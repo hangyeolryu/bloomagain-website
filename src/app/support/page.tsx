@@ -1,10 +1,19 @@
 import type { Metadata } from "next";
 
-// 정규 URL만 선언한다. title/description은 루트 레이아웃 것을 그대로 상속.
-// 이게 없으면 Google이 "사용자가 선택한 표준 없음"으로 색인에서 제외한다.
+// 정규 URL이 없으면 Google이 "사용자가 선택한 표준 없음"으로 색인에서 제외한다.
 // trailingSlash: true 라 끝 슬래시까지 적어야 301을 가리키지 않는다.
+// title/description을 홈에서 상속받고 있었는데, 이 페이지는 사이트에서 유일하게
+// 질문-답 형태로 사실이 정리된 문서다. AI 답변 엔진이 제일 먼저 집어 가는
+// 형태라 제목·설명을 따로 주고 아래에 FAQPage 스키마도 붙였다.
 export const metadata: Metadata = {
   alternates: { canonical: "/support/" },
+  title: "자주 묻는 질문 · 고객 지원 — 티타",
+  description:
+    "티타는 누가 쓸 수 있나요? 친구는 어떻게 추천되나요? 계정·앱 사용·안전·기술 문의를 한곳에 모았습니다. 45세 이상 또래 친구 앱 티타 고객 지원.",
+  openGraph: {
+    title: "티타 고객 지원 — 자주 묻는 질문",
+    description: "계정·앱 사용·안전·기술 문의를 한곳에.",
+  },
 };
 
 // 티타 고객지원 페이지. FAQ + 문의 채널. App Store 리뷰가 자주 이 URL을
@@ -100,6 +109,21 @@ const faqs = [
   },
 ];
 
+// 화면에 이미 있는 질문-답을 그대로 FAQPage로 내보낸다. 별도 원고를 두지 않는
+// 게 중요하다 — 스키마와 본문이 어긋나면 구글이 스팸으로 본다.
+const faqLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  inLanguage: "ko-KR",
+  mainEntity: faqs.flatMap((section) =>
+    section.items.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: { "@type": "Answer", text: item.answer },
+    })),
+  ),
+};
+
 export default function SupportPage() {
   return (
     <div
@@ -109,6 +133,10 @@ export default function SupportPage() {
         fontFamily: KOREAN_FONT_STACK,
       }}
     >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }}
+      />
       <TitaHeader />
 
       {/* Hero */}

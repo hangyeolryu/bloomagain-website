@@ -6,7 +6,7 @@
 // reviewer + Korean PIPA compliance).
 
 import Link from "next/link";
-import { TITA, KOREAN_FONT_STACK } from "./tita-brand";
+import { TITA, KOREAN_FONT_STACK, APP_STORE_URL, PLAY_STORE_URL } from "./tita-brand";
 
 export function TitaFooter() {
   return (
@@ -68,6 +68,44 @@ export function TitaFooter() {
           style={{ color: TITA.forest }}
         >
           연락처
+        </a>
+      </p>
+      {/* 밖으로 나가는 링크 — 사람에게는 앱 받는 길이고, 검색·AI 엔진에게는
+          "tita-app.com과 이 스토어 앱과 이 계정이 같은 곳이다"라는 근거다.
+          2026-09 GEO 점검 때 홈에 외부 링크가 한 개도 없었다. */}
+      <p className="mt-2">
+        <a
+          href={APP_STORE_URL}
+          className="hover:underline"
+          style={{ color: TITA.forest }}
+        >
+          App Store
+        </a>
+        {" · "}
+        <a
+          href={PLAY_STORE_URL}
+          className="hover:underline"
+          style={{ color: TITA.forest }}
+        >
+          Google Play
+        </a>
+        {" · "}
+        <a
+          href="https://www.instagram.com/titakorea/"
+          rel="me"
+          className="hover:underline"
+          style={{ color: TITA.forest }}
+        >
+          인스타그램
+        </a>
+        {" · "}
+        <a
+          href="https://www.threads.com/@titakorea"
+          rel="me"
+          className="hover:underline"
+          style={{ color: TITA.forest }}
+        >
+          스레드
         </a>
       </p>
       <p className="mt-2 mb-4" style={{ color: TITA.mutedSoft }}>

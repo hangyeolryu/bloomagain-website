@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { TITA, KOREAN_FONT_STACK, APP_STORE_URL, PLAY_STORE_INTENT_URL } from "../_components/tita-brand";
 import { StoreDownloadButton } from "../_components/StoreDownloadButton";
+import { AppStructuredData } from "../_components/StructuredData";
 import {
   detectPlatform,
   detectInApp,
@@ -59,6 +60,8 @@ export default function DownloadPage() {
         fontFamily: KOREAN_FONT_STACK,
       }}
     >
+      {/* 앱 구조화 데이터 — 이 페이지가 곧 앱 배포 페이지다. */}
+      <AppStructuredData />
       <Image
         src="/logo.png"
         alt="티타 로고"
