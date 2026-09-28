@@ -46,3 +46,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 scripts/cardnews-out/
+
+# 인스타 카드 출력물 (스크립트로 다시 뽑는다)
+scripts/insta-out/
