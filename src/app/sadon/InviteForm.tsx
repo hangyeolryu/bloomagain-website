@@ -204,7 +204,10 @@ export function InviteForm() {
           {"  여러 개 고르셔도 돼요"}
         </span>
       </label>
-      <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+      {/* 아홉 줄을 격자로 깔면 빽빽해서 눈이 못 따라간다. 한 줄에 하나씩,
+          왼쪽으로 붙여 목록처럼 읽히게 한다. 고른 것에는 체크를 세워
+          "몇 개 골랐는지"가 훑어서 보이게 한다. */}
+      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
         {[...EVENT_MATCH_PREFS, EVENT_MATCH_NONE].map((o) => {
           const on = prefs.includes(o);
           return (
@@ -214,18 +217,34 @@ export function InviteForm() {
               aria-pressed={on}
               onClick={() => togglePref(o)}
               style={{
-                flex: "1 1 150px",
-                minHeight: 52,
+                display: "flex",
+                alignItems: "center",
+                gap: 12,
+                width: "100%",
+                minHeight: 54,
+                padding: "0 16px",
                 borderRadius: 12,
                 border: `1px solid ${on ? TITA.forest : TITA.sage}`,
                 background: on ? TITA.surface : "#fff",
-                color: on ? TITA.forestDeep : TITA.muted,
+                color: on ? TITA.forestDeep : TITA.ink,
                 fontWeight: on ? 700 : 400,
-                fontSize: 16,
+                fontSize: 16.5,
                 fontFamily: "inherit",
+                textAlign: "left",
                 cursor: "pointer",
               }}
             >
+              <span
+                aria-hidden
+                style={{
+                  flex: "none",
+                  width: 20,
+                  color: on ? TITA.forest : TITA.sage,
+                  fontWeight: 800,
+                }}
+              >
+                {on ? "✓" : "○"}
+              </span>
               {o}
             </button>
           );
