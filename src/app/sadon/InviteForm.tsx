@@ -13,19 +13,25 @@
 
 import { useState } from "react";
 import { TITA, KOREAN_FONT_STACK } from "../_components/tita-brand";
-import { EVENT_CHILD_AGES, EVENT_CHILD_JOBS, EVENT_MATCH_PREFS, CHILD_SIDE } from "./_sadon";
+import {
+  EVENT_CHILD_AGES,
+  EVENT_CHILD_JOBS,
+  EVENT_MATCH_PREFS,
+  EVENT_MATCH_NONE,
+  CHILD_SIDE,
+} from "./_sadon";
 
 const API =
   process.env.NEXT_PUBLIC_BLOOMAGAIN_BACKEND_URL ??
   "https://bloomagain-backend-api-469607573966.asia-northeast3.run.app";
 
-type Choice = { id: string; label: string; options: readonly string[] };
+type Choice = { id: string; label: string; options: readonly string[]; required?: boolean };
 
 const CHOICES: Choice[] = [
   { id: "childSide", label: "자녀분은", options: CHILD_SIDE },
-  { id: "childAge", label: "자녀분 연세", options: EVENT_CHILD_AGES },
-  { id: "childJob", label: "하시는 일", options: EVENT_CHILD_JOBS },
-  { id: "matchPref", label: "어떤 점이 비슷했으면 하세요", options: EVENT_MATCH_PREFS },
+  { id: "childAge", label: "자녀분 나이", options: EVENT_CHILD_AGES },
+  // 하시는 일은 반드시 받는다. 자리를 짜는 데 쓰고, 없으면 편성이 안 된다.
+  { id: "childJob", label: "하시는 일", options: EVENT_CHILD_JOBS, required: true },
 ];
 
 export function InviteForm() {
@@ -33,9 +39,29 @@ export function InviteForm() {
   const [contact, setContact] = useState("");
   const [referral, setReferral] = useState("");
   const [picked, setPicked] = useState<Record<string, string>>({});
+  // 「어떤 점이 비슷했으면」은 여러 개 고르실 수 있다. 하나만 고르게 하면
+  // 제일 중요한 것 하나로 눌러 담게 되는데, 실제로는 여럿이다.
+  const [prefs, setPrefs] = useState<string[]>([]);
+  const togglePref = (v: string) =>
+    setPrefs((cur) => {
+      if (v === EVENT_MATCH_NONE) return cur.includes(v) ? [] : [v];
+      const next = cur.filter((x) => x !== EVENT_MATCH_NONE);
+      return next.includes(v) ? next.filter((x) => x !== v) : [...next, v];
+    });
   const [state, setState] = useState<"idle" | "sending" | "done" | "error">("idle");
 
-  const ready = name.trim().length >= 2 && contact.trim().length >= 4;
+  // 받침이 있으면 을, 없으면 를. "성함을" · "연락처를" · "하시는 일을".
+  const particle = (w: string) => {
+    const c = w.charCodeAt(w.length - 1) - 0xac00;
+    return c >= 0 && c <= 11171 && c % 28 !== 0 ? "을" : "를";
+  };
+  const missing: { word: string; verb: string } | null =
+    name.trim().length < 2 ? {word: "성함", verb: "적어주세요"}
+      : contact.trim().length < 4 ? {word: "연락처", verb: "적어주세요"}
+        // 하시는 일은 고르는 것이지 적는 것이 아니다.
+        : !picked.childJob ? {word: "하시는 일", verb: "골라주세요"}
+          : null;
+  const ready = missing === null;
 
   const input: React.CSSProperties = {
     width: "100%",
@@ -63,7 +89,10 @@ export function InviteForm() {
       const r = await fetch(`${API}/api/v1/gyeol/sadon-event-signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, contact, referral, ...picked }),
+        body: JSON.stringify({
+          name, contact, referral, ...picked,
+          matchPref: prefs.join(", ") || null,
+        }),
       });
       setState(r.ok ? "done" : "error");
     } catch {
@@ -145,6 +174,40 @@ export function InviteForm() {
         </div>
       ))}
 
+      <label style={label}>
+        어떤 점이 비슷했으면 하세요
+        <span style={{ fontWeight: 400, color: TITA.mutedSoft, fontSize: 15 }}>
+          {"  여러 개 고르셔도 돼요"}
+        </span>
+      </label>
+      <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+        {[...EVENT_MATCH_PREFS, EVENT_MATCH_NONE].map((o) => {
+          const on = prefs.includes(o);
+          return (
+            <button
+              key={o}
+              type="button"
+              aria-pressed={on}
+              onClick={() => togglePref(o)}
+              style={{
+                flex: "1 1 150px",
+                minHeight: 52,
+                borderRadius: 12,
+                border: `1px solid ${on ? TITA.forest : TITA.sage}`,
+                background: on ? TITA.surface : "#fff",
+                color: on ? TITA.forestDeep : TITA.muted,
+                fontWeight: on ? 700 : 400,
+                fontSize: 16,
+                fontFamily: "inherit",
+                cursor: "pointer",
+              }}
+            >
+              {o}
+            </button>
+          );
+        })}
+      </div>
+
       <label htmlFor="iv-ref" style={label}>어느 분을 통해 들으셨어요</label>
       <input id="iv-ref" style={input} value={referral} placeholder="성함을 적어주시면 됩니다"
         onChange={(e) => setReferral(e.target.value)} />
@@ -167,7 +230,11 @@ export function InviteForm() {
           cursor: ready ? "pointer" : "default",
         }}
       >
-        {state === "sending" ? "보내는 중이에요" : ready ? "신청할게요" : "성함과 연락처를 적어주세요"}
+        {state === "sending"
+          ? "보내는 중이에요"
+          : ready
+            ? "신청할게요"
+            : `${missing.word}${particle(missing.word)} ${missing.verb}`}
       </button>
 
       {state === "error" && (
