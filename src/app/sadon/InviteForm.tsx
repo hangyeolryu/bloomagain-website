@@ -41,6 +41,8 @@ export function InviteForm() {
   // 보기에 없으면 적으신다. 「그 밖의 일」 같은 뭉뚱그린 보기를 두면
   // 고르시기는 쉬운데 우리는 아무것도 알지 못한다.
   const [jobEtc, setJobEtc] = useState("");
+  // 우리가 묻지 않은 것이 들어오는 유일한 칸. 비어 있어도 괜찮다.
+  const [note, setNote] = useState("");
   const [picked, setPicked] = useState<Record<string, string>>({});
   // 「어떤 점이 비슷했으면」은 여러 개 고르실 수 있다. 하나만 고르게 하면
   // 제일 중요한 것 하나로 눌러 담게 되는데, 실제로는 여럿이다.
@@ -98,6 +100,7 @@ export function InviteForm() {
           // 적으신 게 있으면 그걸 쓴다.
           childJob: jobEtc.trim() || picked.childJob || null,
           matchPref: prefs.join(", ") || null,
+          note: note.trim() || null,
         }),
       });
       setState(r.ok ? "done" : "error");
@@ -254,6 +257,27 @@ export function InviteForm() {
       <label htmlFor="iv-ref" style={label}>어느 분을 통해 들으셨어요</label>
       <input id="iv-ref" style={input} value={referral} placeholder="성함을 적어주시면 됩니다"
         onChange={(e) => setReferral(e.target.value)} />
+
+      <label htmlFor="iv-note" style={label}>
+        더 하고 싶은 말씀
+        <span style={{ fontWeight: 400, color: TITA.mutedSoft, fontSize: 15 }}>
+          {"  안 쓰셔도 돼요"}
+        </span>
+      </label>
+      <textarea
+        id="iv-note"
+        rows={4}
+        value={note}
+        onChange={(e) => setNote(e.target.value)}
+        placeholder="자녀분 이야기나, 이 자리에 바라시는 것이 있으면 편하게 적어주세요."
+        style={{
+          ...input,
+          minHeight: 120,
+          padding: "14px 16px",
+          lineHeight: 1.7,
+          resize: "vertical",
+        }}
+      />
 
       <button
         type="button"
