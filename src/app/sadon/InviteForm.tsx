@@ -38,6 +38,9 @@ export function InviteForm() {
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
   const [referral, setReferral] = useState("");
+  // 보기에 없으면 적으신다. 「그 밖의 일」 같은 뭉뚱그린 보기를 두면
+  // 고르시기는 쉬운데 우리는 아무것도 알지 못한다.
+  const [jobEtc, setJobEtc] = useState("");
   const [picked, setPicked] = useState<Record<string, string>>({});
   // 「어떤 점이 비슷했으면」은 여러 개 고르실 수 있다. 하나만 고르게 하면
   // 제일 중요한 것 하나로 눌러 담게 되는데, 실제로는 여럿이다.
@@ -59,7 +62,8 @@ export function InviteForm() {
     name.trim().length < 2 ? {word: "성함", verb: "적어주세요"}
       : contact.trim().length < 4 ? {word: "연락처", verb: "적어주세요"}
         // 하시는 일은 고르는 것이지 적는 것이 아니다.
-        : !picked.childJob ? {word: "하시는 일", verb: "골라주세요"}
+        : !(picked.childJob || jobEtc.trim())
+          ? {word: "하시는 일", verb: "골라주세요"}
           : null;
   const ready = missing === null;
 
@@ -91,6 +95,8 @@ export function InviteForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name, contact, referral, ...picked,
+          // 적으신 게 있으면 그걸 쓴다.
+          childJob: jobEtc.trim() || picked.childJob || null,
           matchPref: prefs.join(", ") || null,
         }),
       });
@@ -146,13 +152,16 @@ export function InviteForm() {
           <label style={label}>{c.label}</label>
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
             {c.options.map((o) => {
-              const on = picked[c.id] === o;
+              const on = picked[c.id] === o && !(c.id === "childJob" && jobEtc.trim());
               return (
                 <button
                   key={o}
                   type="button"
                   aria-pressed={on}
-                  onClick={() => setPicked((p) => ({ ...p, [c.id]: o }))}
+                  onClick={() => {
+                    if (c.id === "childJob") setJobEtc("");
+                    setPicked((p) => ({ ...p, [c.id]: o }));
+                  }}
                   style={{
                     flex: "1 1 140px",
                     minHeight: 52,
@@ -171,6 +180,21 @@ export function InviteForm() {
               );
             })}
           </div>
+          {c.id === "childJob" && (
+            <input
+              style={{ ...input, marginTop: 10, minHeight: 50, fontSize: 16 }}
+              value={jobEtc}
+              placeholder="보기에 없으면 여기에 적어주세요"
+              onChange={(e) => {
+                setJobEtc(e.target.value);
+                if (e.target.value.trim()) {
+                  setPicked((p) => {
+                    const n = { ...p }; delete n.childJob; return n;
+                  });
+                }
+              }}
+            />
+          )}
         </div>
       ))}
 
