@@ -47,6 +47,7 @@ import {
   EVENT_OPEN,
   EVENT_CHILD_AGES,
   EVENT_CHILD_JOBS,
+  EVENT_MATCH_PREFS,
   CHILD_NATIONALITY,
   CHILD_SIDE,
   TOLD_OPTIONS,
@@ -99,6 +100,13 @@ const FIELDS: Field[] = [
     id: "e-zone",
     label: "자녀분이 주로 생활하시는 곳",
     options: ["강남·서초·송파", "서울 그 밖의 지역", "경기·인천", "그 밖의 지역"],
+  },
+  {
+    // 본인이 선을 긋는 문항. 답은 편성에만 쓰고 상대에게 보여주지 않는다.
+    kind: "choice",
+    id: "e-match",
+    label: "어떤 점이 비슷했으면 하세요",
+    options: EVENT_MATCH_PREFS,
   },
   { kind: "choice", id: "e-told", label: "자녀분께 알리셨습니까", options: TOLD_OPTIONS },
   { kind: "text", id: "e-ref", label: "알게 되신 경로", placeholder: "예: 지인 소개" },
@@ -267,6 +275,31 @@ export default function SadonEventPage() {
           때문입니다. 그래서 <b style={{ color: TITA.ink }}>등수를 매기거나 점수를
           보여드리지 않습니다.</b>
         </Body>
+
+        <div
+          style={{
+            background: TITA.surface,
+            borderRadius: 14,
+            padding: "22px 22px",
+            marginTop: 22,
+          }}
+        >
+          <h3 style={{ fontSize: 18, fontWeight: 800, color: TITA.forestDeep, margin: "0 0 10px" }}>
+            그럼 비슷한 분들끼리 앉히긴 하나요
+          </h3>
+          <p style={{ fontSize: 17, lineHeight: 1.85, color: TITA.ink, margin: "0 0 12px", wordBreak: "keep-all" }}>
+            비슷한 집안이었으면 하는 마음, 당연하다고 생각합니다. 없는 척하지
+            않겠습니다.
+          </p>
+          <p style={{ fontSize: 17, lineHeight: 1.85, color: TITA.muted, margin: 0, wordBreak: "keep-all" }}>
+            다만 <b style={{ color: TITA.ink }}>저희가 재서 급을 나누지는
+            않습니다.</b> 신청하실 때 「어떤 점이 비슷했으면 하세요」를 여쭙고,{" "}
+            <b style={{ color: TITA.ink }}>그 답이 겹치는 분들끼리</b> 앉으시게
+            자리를 짭니다. 무엇을 중요하게 보시는지는 부모님마다 다르고, 그 선을
+            저희가 대신 정하지 않습니다. 이 답은 편성에만 쓰고 상대분께 보여드리지
+            않습니다.
+          </p>
+        </div>
       </Section>
 
       <Section>
