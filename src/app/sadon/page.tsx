@@ -14,6 +14,12 @@
  * 영업의 일부로 읽힌다(04 첫 줄). 의향은 그날 설문으로만 묻는다(docs 13).
  *
  * ⚠️ "사돈"을 쓰지 않는다. 무료여도 중개 광고로 읽힌다.
+ *
+ * ⚠️ 2026-09-29. 대표님이 주신 초대 글을 히어로와 여는 말에 그대로 넣었다.
+ * 단 두 줄만 뺐다.
+ *   · "참여 혜택 — 추후 정식 서비스 특별 할인" : 유료 예고를 넘어 **대가**다.
+ *     설문 참여에 금품적 이익을 걸면 이 자리가 유료 영업의 사전 모객이 된다.
+ *   · "선착순 소수 인원" : 성비를 맞춰 편성한다는 안내와 정면으로 어긋난다.
  */
 
 import type { Metadata } from "next";
@@ -57,20 +63,36 @@ export default function SadonInvitePage() {
           <p style={{ fontSize: 14, letterSpacing: "0.3em", color: TITA.camel, margin: "0 0 28px" }}>
             초 대 합 니 다
           </p>
+          {/* 대표님이 직접 쓰신 문장이다. 고쳐 쓰지 말 것. */}
           <h1
             style={{
-              fontSize: "clamp(28px, 6vw, 38px)",
+              fontSize: "clamp(25px, 5.4vw, 34px)",
               fontWeight: 800,
-              lineHeight: 1.5,
+              lineHeight: 1.55,
               letterSpacing: "-0.8px",
               color: TITA.cream,
-              margin: "0 0 26px",
+              margin: "0 0 20px",
             }}
           >
-            자식 이야기,
+            우리 아이 좋은 인연,
             <br />
-            부모끼리 나누는 자리
+            부모가 든든한 조력자가
+            <br />
+            되어주면 어떨까요?
           </h1>
+          <p
+            style={{
+              fontSize: 17,
+              lineHeight: 1.85,
+              color: TITA.sage,
+              margin: "0 0 28px",
+              wordBreak: "keep-all",
+            }}
+          >
+            바쁜 자녀를 위해 따뜻한 마음을 모아,
+            <br />
+            편하게 이야기를 나누는 자리를 마련했습니다.
+          </p>
           <div
             style={{
               display: "inline-block",
@@ -92,14 +114,41 @@ export default function SadonInvitePage() {
       {/* ── 여는 말 ──────────────────────────────────────────────────── */}
       <section style={{ padding: "60px 0 10px" }}>
         <div style={wrap}>
+          {/* 아래 다섯 문단은 대표님이 직접 쓰신 글이다. 고쳐 쓰지 말 것.
+              뺀 것은 "참여 혜택 — 추후 정식 서비스 특별 할인" 한 줄뿐이다.
+              유료 예고를 넘어 **대가**라, 신고 전에 쓰면 이 자리가 유료
+              영업의 사전 모객이 된다(04 첫 줄). 무료로 여는 의미가
+              통째로 없어진다. "선착순 소수 인원"도 뺐다 — 성비를 맞춰
+              편성한다는 아래 안내와 정반대다. */}
+          <p
+            style={{
+              fontSize: 19,
+              lineHeight: 1.9,
+              color: TITA.forestDeep,
+              fontWeight: 700,
+              margin: "0 0 24px",
+              wordBreak: "keep-all",
+            }}
+          >
+            “요즘 우리 아이들, 일하느라 하루가 어떻게 가는 줄도 모르게 바쁘죠.”
+          </p>
           <Line>
-            미혼 자녀를 두신 부모님들이 모여 두 시간 남짓 이야기 나누는
-            자리입니다. 아는 분을 통해 이 글을 받으셨을 거예요.
+            반듯하고 멋진 우리 자녀인데, 마땅히 좋은 인연을 만날 기회가 닿지
+            않을 때면 부모로서 조용히 든든한 울타리가 되어주고 싶은 마음이
+            큽니다.
           </Line>
           <Line>
-            <b style={{ color: TITA.ink }}>오늘 무엇을 성사시키는 자리가 아닙니다.</b>{" "}
-            같은 시기를 지나는 분들과 이야기 나누고 가시는 것만으로 충분한
-            자리로 열려고 합니다.
+            주변에 좋은 분이 없나 둘러보기도 하고 슬쩍 마음을 써보려 해도,
+            요즘 시대에 맞는 자연스럽고 믿을 만한 자리를 찾기란 쉽지 않습니다.
+          </Line>
+          <Line>
+            자녀를 가장 잘 아는 부모가 따뜻한 시선과 진심을 담아 좋은 인연의
+            단추를 함께 끼워줄 수 있다면 얼마나 좋을까요?
+          </Line>
+          <Line>
+            <b style={{ color: TITA.ink }}>본격적인 서비스 시작에 앞서</b>,
+            부모님들의 지혜로운 견해를 듣고 가장 편안하고 안전한 만남의 방식을
+            함께 의논하고자 작은 오프라인 소모임을 엽니다.
           </Line>
           <Line>
             <b style={{ color: TITA.ink }}>참가비는 없습니다.</b> 자리와 간단한
@@ -107,6 +156,47 @@ export default function SadonInvitePage() {
             <b style={{ color: TITA.ink }}>같이 나눌 와인이나 마실 것, 간식을 하나만
             들고 오시면</b> 더 좋겠습니다. 없이 오셔도 괜찮아요.
           </Line>
+        </div>
+      </section>
+
+      {/* ── 무엇을 나누나 + 성비 안내 ──────────────────────────────── */}
+      <section style={{ padding: "30px 0 10px" }}>
+        <div style={wrap}>
+          <h2 style={{ fontSize: 22, fontWeight: 800, color: TITA.forestDeep, margin: "0 0 20px" }}>
+            이런 이야기를 나눕니다
+          </h2>
+          {[
+            "자녀의 든든한 인연 맺기를 위한 부모님의 생각",
+            "더 안전하고 믿을 수 있는 자리를 어떻게 만들면 좋을지",
+          ].map((t) => (
+            <div key={t} style={{ display: "flex", gap: 12, marginBottom: 12 }}>
+              <span style={{ color: TITA.camel, fontWeight: 800, flex: "none" }}>·</span>
+              <span style={{ fontSize: 17.5, lineHeight: 1.8, color: TITA.ink, wordBreak: "keep-all" }}>
+                {t}
+              </span>
+            </div>
+          ))}
+
+          {/* 성비 안내. 선착순이 아니라는 말을 여기서 한 번만 분명히 한다 —
+              일본 실측이 남성 측 42팀 대 여성 측 22팀이었다. 미리 말씀드리지
+              않으면 "신청했는데 왜 안 불러주나"가 된다. */}
+          <div
+            style={{
+              background: TITA.surface,
+              borderRadius: 16,
+              padding: "22px 22px",
+              marginTop: 26,
+              fontSize: 16.5,
+              lineHeight: 1.85,
+              color: TITA.ink,
+              wordBreak: "keep-all",
+            }}
+          >
+            <b>미리 양해를 구합니다.</b> 아드님 두신 분과 따님 두신 분이 고르게
+            모여야 이야기가 됩니다. 신청은 모두 받지만{" "}
+            <b>한쪽으로 쏠리면 이번에는 다 모시지 못하고 다음 자리로
+            모실 수 있습니다.</b> 그때는 미리 말씀드리겠습니다.
+          </div>
         </div>
       </section>
 
