@@ -1,248 +1,235 @@
 /**
- * /sadon — 10월 31일 자리 초대장
+ * /sadon — [티타 아너스] 제1회 부모 사교 살롱 (2026-10-31)
  *
- * 공개 모집 공고가 아니다. **아는 분을 통해 전해지는 초대장**이고, 링크를
- * 받은 분만 여신다. 그래서 이 페이지는 자격을 늘어놓지 않는다.
+ * ⚠️ 2026-09-30에 통째로 다시 썼다. 10/31은 무료 초대장이었다가 **참가비
+ * 30만 원 유료 살롱**으로 바뀌었다 — 대표님 결정. 신고 없이, 부모 세대의
+ * 사교·취향 교류 모임으로 연다.
  *
- * ⚠️ 2026-09-29에 통째로 다시 썼다. 전에는 「이런 분들을 모십니다」·「조건을
- * 어디까지 보나」로 우리가 무엇을 확인하는지 설명했는데, 초대를 받고 오시는
- * 분께 자격 심사를 먼저 읽히는 건 실례다. 조건은 **폼이 조용히 받고**,
- * 자리를 짜는 데만 쓴다.
+ * 그래서 이 페이지는 "중개"로 읽힐 말을 스스로 쓰지 않는다.
+ *   · "사돈"·"매칭"·"성사"·"연결"을 쓰지 않는다.
+ *   · 자녀 조건(직군·희망 조건)을 받지 않는다. 자녀분은 성별·나이대까지만.
+ *     편성에 조건을 쓰는 순간 알선의 모양이 된다.
+ *   · 자녀 사진·이름·직장을 받지 않고, 당일에도 요구하지 않는다고 적는다.
+ *   · 면책 문구는 대표님이 주신 원문 그대로다. 바꾸지 말 것 — 하단과
+ *     신청서 제출 직전 두 곳에 **똑같이** 들어가야 한다(DISCLAIMER 한 곳에서 읽는다).
  *
- * ⚠️ 돈 이야기는 한 줄도 없다. 참가비·회비·다과 실비 전부 안 받고,
- * **다음에 유료로 한다는 예고도 하지 않는다** — 그걸 쓰면 이 자리가 유료
- * 영업의 일부로 읽힌다(04 첫 줄). 의향은 그날 설문으로만 묻는다(docs 13).
- *
- * ⚠️ "사돈"을 쓰지 않는다. 무료여도 중개 광고로 읽힌다.
- *
- * ⚠️ 2026-09-29. 대표님이 주신 초대 글을 히어로와 여는 말에 그대로 넣었다.
- * 단 두 줄만 뺐다.
- *   · "참여 혜택 — 추후 정식 서비스 특별 할인" : 유료 예고를 넘어 **대가**다.
- *     설문 참여에 금품적 이익을 걸면 이 자리가 유료 영업의 사전 모객이 된다.
- *   · "선착순 소수 인원" : 성비를 맞춰 편성한다는 안내와 정면으로 어긋난다.
+ * 성비: 이번엔 아드님 측 모시기가 더 어렵다(2026-09-30). 그래서 성비 안내를
+ * "한쪽이 넘치면 대기"로 쓰되 어느 쪽인지 특정하지 않는다.
  */
 
 import type { Metadata } from "next";
 import { TitaFooter } from "../_components/TitaFooter";
 import { TITA, KOREAN_FONT_STACK } from "../_components/tita-brand";
 import { InviteForm } from "./InviteForm";
-import { EVENT } from "./_sadon";
+import { DISCLAIMER, EVENT } from "./_sadon";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/sadon/" },
   robots: { index: false, follow: false },
-  title: "10월 31일, 부모님들 모이는 자리 | 티타",
-  description: "미혼 자녀를 두신 부모님들이 모여 이야기 나누는 자리입니다.",
-  // 카톡으로 이 초대장을 보내면 사이트 기본 OG("45세 이상, 결이 통하는
-  // 친구들 · 데이팅 앱이 아닙니다")가 떴다. 초대받은 분이 받는 첫 인상이
-  // 엉뚱한 광고였다. 이 자리만의 제목·설명으로 덮는다. 이미지는 같은
-  // 폴더의 opengraph-image.tsx 가 만든다.
+  title: "티타 아너스 · 인연과 취향을 나누는 토요일 오후",
+  description:
+    "자녀의 인연과 삶을 고민하는 부모 세대의 프라이빗 사교 살롱. 2026년 10월 31일 토요일 오후.",
   openGraph: {
-    title: "우리 아이 좋은 인연, 부모가 든든한 조력자가 되어주면 어떨까요?",
+    title: "[티타 아너스] 인연과 취향을 나누는 토요일 오후",
     description:
-      "10월 31일 토요일 오후, 서울 청담. 미혼 자녀를 두신 부모님들이 모여 이야기 나누는 자리입니다. 참가비는 없습니다.",
+      "10월 31일 토요일 오후 3시, 강남권 프라이빗 공간. 열 분 남짓의 부모님이 모여 차와 이야기를 나누는 살롱입니다.",
     type: "website",
     locale: "ko_KR",
     siteName: "티타",
   },
 };
 
-/** 그날 흐름. 3시 30분부터 오시고, 4시에 시작해 한 시간 반. */
 const FLOW: [string, string, string][] = [
-  ["3:30", "오시는 대로", "다과와 음료를 내어드릴게요. 편하신 자리에 앉으시면 됩니다."],
-  ["4:00", "다 같이", "가볍게 인사 나누고, 오늘 어떻게 흘러가는지 말씀드릴게요."],
-  ["4:20", "네 분씩, 세 번", "스무 분씩 자리를 옮겨 앉습니다. 세 번이면 오신 분들을 두루 만나뵙게 돼요."],
-  ["5:20", "자유롭게", "더 이야기 나누고 싶은 분과 편하게. 짧은 설문 한 장 부탁드립니다."],
-  ["5:30", "마칩니다", "먼저 일어나셔도 되고, 더 계셔도 됩니다."],
+  ["3:00", "웰컴 티", "도착하시는 대로 차 한 잔을 내어드려요. 서두르지 않으셔도 됩니다."],
+  [
+    "3:10",
+    "여는 이야기",
+    "진행자가 이 모임이 어떤 자리인지 먼저 분명히 밝히고, 요즘 자녀 세대의 연애·결혼 흐름과 부모로서의 고민을 가볍게 나눕니다.",
+  ],
+  [
+    "3:40",
+    "자유 대화와 다과",
+    "모임의 중심이 되는 시간이에요. 와인과 차, 다과를 곁들여 마음 가는 분과 편하게 이야기 나누세요.",
+  ],
+  ["5:10", "마무리", "오늘 자리의 소감을 적는 짧은 설문지를 드려요."],
+  ["5:25", "여유 있게 퇴장", "이야기가 길어지면 자연스럽게 조금 더 머무셔도 됩니다."],
 ];
 
-function Line({ children }: { children: React.ReactNode }) {
+const VALUES: [string, string][] = [
+  [
+    "요즘 세대를 이해하는 시간",
+    "자녀 세대는 연애와 결혼을 어떻게 생각할까요. 부모가 한마디 거들어도 되는 선은 어디일까요. 집에서는 꺼내기 어려운 이야기를 같은 자리에 선 분들과 나눕니다.",
+  ],
+  [
+    "자녀를 키워낸 부모들의 교류",
+    "살아온 이야기와 가치관, 요즘의 취향까지. 자녀 이야기로 시작해 자연스럽게 서로를 알아가는 대화가 됩니다.",
+  ],
+  [
+    "주말 오후의 품격 있는 외출",
+    "조용한 공간, 정성껏 고른 차와 다과. 두 시간 반 동안 온전히 나를 위한 오후를 보내세요.",
+  ],
+];
+
+const NOT_THIS = [
+  "자녀분을 소개하거나 만남을 성사시키는 자리가 아닙니다.",
+  "자녀분의 사진·이름·직장 같은 프로필을 요구하지 않습니다. 말씀하지 않으셔도 괜찮아요.",
+  "그날 무엇을 권하거나 판매하는 일은 없습니다.",
+];
+
+const H2: React.CSSProperties = {
+  fontSize: 22,
+  fontWeight: 800,
+  color: TITA.forestDeep,
+  margin: "0 0 22px",
+  letterSpacing: "-0.4px",
+};
+
+const BOX: React.CSSProperties = {
+  background: TITA.surface,
+  borderRadius: 16,
+  padding: "24px 24px",
+  fontSize: 16.5,
+  lineHeight: 1.85,
+  color: TITA.ink,
+  wordBreak: "keep-all",
+};
+
+function Row({ k, v }: { k: string; v: React.ReactNode }) {
   return (
-    <p style={{ fontSize: 18, lineHeight: 1.9, color: TITA.muted, margin: "0 0 18px", wordBreak: "keep-all" }}>
-      {children}
-    </p>
+    <div style={{ display: "flex", gap: 16, padding: "14px 0", borderTop: `1px solid ${TITA.sage}` }}>
+      <div style={{ flex: "0 0 76px", fontSize: 16, fontWeight: 700, color: TITA.camel }}>{k}</div>
+      <div style={{ fontSize: 16.5, lineHeight: 1.75, color: TITA.ink, wordBreak: "keep-all" }}>{v}</div>
+    </div>
   );
 }
 
-export default function SadonInvitePage() {
-  const wrap: React.CSSProperties = { maxWidth: 640, margin: "0 auto", padding: "0 26px", width: "100%" };
+export default function SadonSalonPage() {
+  const wrap: React.CSSProperties = { maxWidth: 640, margin: "0 auto", padding: "0 24px", width: "100%" };
 
   return (
     <div style={{ background: TITA.cream, color: TITA.ink, fontFamily: KOREAN_FONT_STACK, minHeight: "100vh" }}>
-      {/* ── 초대장 머리 ──────────────────────────────────────────────── */}
+      {/* ── 머리 ─────────────────────────────────────────────────────── */}
       <header style={{ background: TITA.forest, padding: "78px 0 64px" }}>
         <div style={{ ...wrap, textAlign: "center" }}>
-          <p style={{ fontSize: 14, letterSpacing: "0.3em", color: TITA.camel, margin: "0 0 28px" }}>
-            초 대 합 니 다
+          <p style={{ fontSize: 13.5, letterSpacing: "0.32em", color: TITA.camel, margin: "0 0 26px" }}>
+            TITA HONORS · 제1회 살롱
           </p>
-          {/* 대표님이 직접 쓰신 문장이다. 고쳐 쓰지 말 것. */}
           <h1
             style={{
-              fontSize: "clamp(25px, 5.4vw, 34px)",
+              fontSize: "clamp(26px, 5.6vw, 36px)",
               fontWeight: 800,
-              lineHeight: 1.55,
+              lineHeight: 1.5,
               letterSpacing: "-0.8px",
               color: TITA.cream,
               margin: "0 0 20px",
             }}
           >
-            우리 아이 좋은 인연,
+            인연과 취향을 나누는
             <br />
-            부모가 든든한 조력자가
-            <br />
-            되어주면 어떨까요?
+            토요일 오후
           </h1>
-          <p
-            style={{
-              fontSize: 17,
-              lineHeight: 1.85,
-              color: TITA.sage,
-              margin: "0 0 28px",
-              wordBreak: "keep-all",
-            }}
-          >
-            바쁜 자녀를 위해 따뜻한 마음을 모아,
+          <p style={{ fontSize: 17, lineHeight: 1.85, color: TITA.sage, margin: "0 0 30px", wordBreak: "keep-all" }}>
+            자녀의 인연과 삶을 고민하는 부모 세대가
             <br />
-            편하게 이야기를 나누는 자리를 마련했습니다.
+            차 한 잔을 두고 마주 앉는 프라이빗 살롱
           </p>
           <div
             style={{
               display: "inline-block",
               borderTop: `1px solid ${TITA.sage}`,
               borderBottom: `1px solid ${TITA.sage}`,
-              padding: "20px 8px",
-              fontSize: 18,
+              padding: "18px 8px",
+              fontSize: 17.5,
               lineHeight: 2,
               color: TITA.cream,
             }}
           >
             {EVENT.date}
             <br />
-            오후 3시 30분부터 · 서울 청담
+            {EVENT.time}
           </div>
         </div>
       </header>
 
       {/* ── 여는 말 ──────────────────────────────────────────────────── */}
-      <section style={{ padding: "60px 0 10px" }}>
+      <section style={{ padding: "60px 0 20px" }}>
         <div style={wrap}>
-          {/* 아래 다섯 문단은 대표님이 직접 쓰신 글이다. 고쳐 쓰지 말 것.
-              뺀 것은 "참여 혜택 — 추후 정식 서비스 특별 할인" 한 줄뿐이다.
-              유료 예고를 넘어 **대가**라, 신고 전에 쓰면 이 자리가 유료
-              영업의 사전 모객이 된다(04 첫 줄). 무료로 여는 의미가
-              통째로 없어진다. "선착순 소수 인원"도 뺐다 — 성비를 맞춰
-              편성한다는 아래 안내와 정반대다. */}
           <p
             style={{
               fontSize: 19,
               lineHeight: 1.9,
               color: TITA.forestDeep,
               fontWeight: 700,
-              margin: "0 0 24px",
+              margin: "0 0 22px",
               wordBreak: "keep-all",
             }}
           >
-            “요즘 우리 아이들, 일하느라 하루가 어떻게 가는 줄도 모르게 바쁘죠.”
+            조건표로는 알 수 없는 것들이 있습니다.
           </p>
-          <Line>
-            반듯하고 멋진 우리 자녀인데, 마땅히 좋은 인연을 만날 기회가 닿지
-            않을 때면 부모로서 조용히 든든한 울타리가 되어주고 싶은 마음이
-            큽니다.
-          </Line>
-          <Line>
-            주변에 좋은 분이 없나 둘러보기도 하고 슬쩍 마음을 써보려 해도,
-            요즘 시대에 맞는 자연스럽고 믿을 만한 자리를 찾기란 쉽지 않습니다.
-          </Line>
-          <Line>
-            자녀를 가장 잘 아는 부모가 따뜻한 시선과 진심을 담아 좋은 인연의
-            단추를 함께 끼워줄 수 있다면 얼마나 좋을까요?
-          </Line>
-          <Line>
-            <b style={{ color: TITA.ink }}>본격적인 서비스 시작에 앞서</b>,
-            부모님들의 지혜로운 견해를 듣고 가장 편안하고 안전한 만남의 방식을
-            함께 의논하고자 작은 오프라인 소모임을 엽니다.
-          </Line>
-          <Line>
-            <b style={{ color: TITA.ink }}>참가비는 없습니다.</b> 자리와 간단한
-            다과는 저희가 준비할게요. 오시는 길에{" "}
-            <b style={{ color: TITA.ink }}>같이 나눌 와인이나 마실 것, 간식을 하나만
-            들고 오시면</b> 더 좋겠습니다. 없이 오셔도 괜찮아요.
-          </Line>
+          {[
+            "자녀를 반듯하게 키워낸 부모라면 한 번쯤 생각하게 됩니다. 요즘 아이들은 인연을 어떻게 만나는지, 부모는 어디까지 곁을 지켜야 하는지.",
+            "티타 아너스는 그 고민을 같은 자리에 선 분들과 나누는 사교 모임입니다. 누군가를 소개받는 자리가 아니라, 서로의 교양과 가치관, 취향을 나누는 토요일 오후입니다.",
+          ].map((t) => (
+            <p
+              key={t}
+              style={{ fontSize: 17.5, lineHeight: 1.9, color: TITA.muted, margin: "0 0 18px", wordBreak: "keep-all" }}
+            >
+              {t}
+            </p>
+          ))}
         </div>
       </section>
 
-      {/* ── 무엇을 나누나 + 성비 안내 ──────────────────────────────── */}
+      {/* ── 이 자리에서 얻으시는 것 ──────────────────────────────────── */}
       <section style={{ padding: "30px 0 10px" }}>
         <div style={wrap}>
-          <h2 style={{ fontSize: 22, fontWeight: 800, color: TITA.forestDeep, margin: "0 0 20px" }}>
-            이런 이야기를 나눕니다
-          </h2>
-          {[
-            "자녀의 든든한 인연 맺기를 위한 부모님의 생각",
-            "더 안전하고 믿을 수 있는 자리를 어떻게 만들면 좋을지",
-          ].map((t) => (
-            <div key={t} style={{ display: "flex", gap: 12, marginBottom: 12 }}>
-              <span style={{ color: TITA.camel, fontWeight: 800, flex: "none" }}>·</span>
-              <span style={{ fontSize: 17.5, lineHeight: 1.8, color: TITA.ink, wordBreak: "keep-all" }}>
-                {t}
-              </span>
+          <h2 style={H2}>이 자리에서 나누는 것</h2>
+          {VALUES.map(([title, desc], i) => (
+            <div key={title} style={{ padding: "18px 0", borderTop: i === 0 ? "none" : `1px solid ${TITA.sage}` }}>
+              <div style={{ fontSize: 18, fontWeight: 700, color: TITA.ink, marginBottom: 6 }}>{title}</div>
+              <div style={{ fontSize: 16.5, lineHeight: 1.8, color: TITA.muted, wordBreak: "keep-all" }}>{desc}</div>
             </div>
           ))}
+        </div>
+      </section>
 
-          {/* 성비 안내. 선착순이 아니라는 말을 여기서 한 번만 분명히 한다 —
-              일본 실측이 남성 측 42팀 대 여성 측 22팀이었다. 미리 말씀드리지
-              않으면 "신청했는데 왜 안 불러주나"가 된다. */}
-          <div
-            style={{
-              background: TITA.surface,
-              borderRadius: 16,
-              padding: "22px 22px",
-              marginTop: 26,
-              fontSize: 16.5,
-              lineHeight: 1.85,
-              color: TITA.ink,
-              wordBreak: "keep-all",
-            }}
-          >
-            <b>미리 양해를 구합니다.</b> 아드님 두신 분과 따님 두신 분이 고르게
-            모여야 이야기가 됩니다. 신청은 모두 받지만{" "}
-            <b>한쪽으로 쏠리면 이번에는 다 모시지 못하고 다음 자리로
-            모실 수 있습니다.</b> 그때는 미리 말씀드리겠습니다.
+      {/* ── 이런 자리는 아닙니다 ─────────────────────────────────────── */}
+      <section style={{ padding: "30px 0 10px" }}>
+        <div style={wrap}>
+          <div style={BOX}>
+            <b style={{ display: "block", marginBottom: 10, fontSize: 17.5 }}>이런 자리는 아닙니다</b>
+            {NOT_THIS.map((t) => (
+              <div key={t} style={{ display: "flex", gap: 10, marginBottom: 6 }}>
+                <span style={{ color: TITA.camel, fontWeight: 800, flex: "none" }}>·</span>
+                <span>{t}</span>
+              </div>
+            ))}
+            <p style={{ margin: "12px 0 0", color: TITA.muted }}>
+              진행자가 여는 이야기에서 이 세 가지를 먼저 분명히 밝히고 시작합니다.
+            </p>
           </div>
         </div>
       </section>
 
       {/* ── 그날 흐름 ────────────────────────────────────────────────── */}
-      <section style={{ padding: "40px 0" }}>
+      <section style={{ padding: "44px 0 20px" }}>
         <div style={wrap}>
-          <h2 style={{ fontSize: 22, fontWeight: 800, color: TITA.forestDeep, margin: "0 0 26px" }}>
-            그날은 이렇게 흘러갑니다
-          </h2>
+          <h2 style={H2}>그날 오후의 흐름</h2>
           {FLOW.map(([time, title, desc], i) => (
             <div
               key={time}
               style={{
                 display: "flex",
                 gap: 18,
-                padding: i === 0 ? "0 0 22px" : "22px 0",
+                padding: i === 0 ? "0 0 20px" : "20px 0",
                 borderTop: i === 0 ? "none" : `1px solid ${TITA.sage}`,
               }}
             >
-              <div
-                style={{
-                  flex: "0 0 62px",
-                  fontSize: 17,
-                  fontWeight: 800,
-                  color: TITA.camel,
-                  paddingTop: 2,
-                }}
-              >
+              <div style={{ flex: "0 0 56px", fontSize: 17, fontWeight: 800, color: TITA.camel, paddingTop: 2 }}>
                 {time}
               </div>
               <div>
-                <div style={{ fontSize: 18, fontWeight: 700, color: TITA.ink, marginBottom: 5 }}>
-                  {title}
-                </div>
+                <div style={{ fontSize: 18, fontWeight: 700, color: TITA.ink, marginBottom: 5 }}>{title}</div>
                 <div style={{ fontSize: 16.5, lineHeight: 1.8, color: TITA.muted, wordBreak: "keep-all" }}>
                   {desc}
                 </div>
@@ -252,37 +239,114 @@ export default function SadonInvitePage() {
         </div>
       </section>
 
-      {/* ── 미리 말씀드립니다 ────────────────────────────────────────── */}
-      <section style={{ padding: "16px 0 40px" }}>
+      {/* ── 모임 안내 ────────────────────────────────────────────────── */}
+      <section style={{ padding: "30px 0 10px" }}>
         <div style={wrap}>
-          <div
-            style={{
-              background: TITA.surface,
-              borderRadius: 16,
-              padding: "24px 24px",
-              fontSize: 16.5,
-              lineHeight: 1.85,
-              color: TITA.ink,
-              wordBreak: "keep-all",
-            }}
-          >
-            <b>미리 말씀드립니다.</b> 이 자리는 사진과 영상으로 남기려 합니다.
-            원하지 않으시면 말씀만 해주세요 — 자리를 옮겨 앉으시면 됩니다.
-            동의는 당일에 따로 받고, 얼굴이 나오지 않게 해달라는 선택도 있습니다.
+          <h2 style={H2}>모임 안내</h2>
+          <div style={{ borderBottom: `1px solid ${TITA.sage}` }}>
+            <Row k="일시" v={`${EVENT.date} ${EVENT.time}`} />
+            <Row k="장소" v={EVENT.place} />
+            <Row k="인원" v={EVENT.seats} />
+            <Row
+              k="참가비"
+              v={
+                <>
+                  <b>{EVENT.fee}</b>
+                  <br />
+                  <span style={{ color: TITA.muted }}>
+                    공간 대관, 블렌디드 티, 디저트와 케이터링, 모임 진행이 포함됩니다.
+                  </span>
+                </>
+              }
+            />
+            <Row k="대상" v="자녀를 두신 45세 이상 부모님" />
+          </div>
+          <p style={{ fontSize: 15.5, lineHeight: 1.8, color: TITA.muted, margin: "16px 0 0", wordBreak: "keep-all" }}>
+            아드님을 두신 분과 따님을 두신 분이 고르게 모일 수 있도록 자리를 꾸립니다. 한쪽 신청이 많으면 이번에는
+            모시지 못하고 다음 모임에 먼저 안내해 드릴 수 있습니다.
+          </p>
+        </div>
+      </section>
+
+      {/* ── 참가비와 신청 절차 ───────────────────────────────────────── */}
+      <section style={{ padding: "44px 0 10px" }}>
+        <div style={wrap}>
+          <h2 style={H2}>신청과 참가비 안내</h2>
+          {[
+            ["신청서 작성", "아래 신청서를 작성해 주세요. 3분이면 충분합니다."],
+            ["확인 전화", "이틀 안에 티타에서 짧게 전화를 드립니다. 모임 성격을 한 번 더 안내하고 인사를 나누는 통화입니다."],
+            ["참가 확정과 입금", "확정 안내 문자로 입금 계좌를 보내드립니다. 문자를 받으신 날로부터 3일 안에 입금해 주시면 자리가 확정됩니다."],
+            ["장소 안내", "모임 3일 전, 확정되신 분께만 장소와 오시는 길을 개별로 보내드립니다."],
+          ].map(([t, d], i) => (
+            <div key={t} style={{ display: "flex", gap: 16, marginBottom: 18 }}>
+              <div
+                style={{
+                  flex: "none",
+                  width: 30,
+                  height: 30,
+                  borderRadius: 999,
+                  background: TITA.forest,
+                  color: TITA.cream,
+                  fontSize: 15,
+                  fontWeight: 800,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                {i + 1}
+              </div>
+              <div>
+                <div style={{ fontSize: 17.5, fontWeight: 700, color: TITA.ink, marginBottom: 4 }}>{t}</div>
+                <div style={{ fontSize: 16.5, lineHeight: 1.8, color: TITA.muted, wordBreak: "keep-all" }}>{d}</div>
+              </div>
+            </div>
+          ))}
+
+          <div style={{ ...BOX, marginTop: 10 }}>
+            <b style={{ display: "block", marginBottom: 8 }}>취소와 환불</b>
+            {EVENT.refund.map((t) => (
+              <div key={t} style={{ display: "flex", gap: 10, marginBottom: 4 }}>
+                <span style={{ color: TITA.camel, fontWeight: 800, flex: "none" }}>·</span>
+                <span>{t}</span>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ ...BOX, marginTop: 14 }}>
+            <b>사진 촬영 안내.</b> 모임 분위기를 기록으로 남기려 합니다. 원하지 않으시면 현장에서 말씀해 주세요. 얼굴이
+            나오지 않도록 하겠습니다. 동의는 당일 따로 받습니다.
           </div>
         </div>
       </section>
 
       {/* ── 신청 ─────────────────────────────────────────────────────── */}
-      <section style={{ padding: "10px 0 70px" }}>
+      <section style={{ padding: "50px 0 30px" }}>
         <div style={wrap}>
-          <h2 style={{ fontSize: 22, fontWeight: 800, color: TITA.forestDeep, margin: "0 0 10px" }}>
-            오시겠어요?
-          </h2>
+          <h2 style={{ ...H2, marginBottom: 10 }}>참가 신청</h2>
           <p style={{ fontSize: 16.5, lineHeight: 1.8, color: TITA.muted, margin: "0 0 22px" }}>
-            아래를 적어주시면 이틀 안에 전화드릴게요.
+            작성해 주시면 이틀 안에 전화를 드립니다.
           </p>
           <InviteForm />
+        </div>
+      </section>
+
+      {/* ── 하단 고지 ────────────────────────────────────────────────── */}
+      <section style={{ padding: "10px 0 20px" }}>
+        <div style={wrap}>
+          <p
+            style={{
+              fontSize: 14,
+              lineHeight: 1.85,
+              color: TITA.mutedSoft,
+              margin: 0,
+              wordBreak: "keep-all",
+              borderTop: `1px solid ${TITA.sage}`,
+              paddingTop: 22,
+            }}
+          >
+            {DISCLAIMER}
+          </p>
         </div>
       </section>
 

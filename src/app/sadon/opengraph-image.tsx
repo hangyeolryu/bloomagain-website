@@ -17,7 +17,7 @@ import { join } from "path";
  * 긁어줘야 새 이미지가 뜬다.
  */
 export const dynamic = "force-static";
-export const alt = "10월 31일, 부모님들 모이는 자리 — 티타";
+export const alt = "티타 아너스 · 인연과 취향을 나누는 토요일 오후";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -68,7 +68,7 @@ export default async function Image() {
               marginBottom: 26,
             }}
           >
-            초 대 합 니 다
+            T I T A   H O N O R S
           </div>
           <div
             style={{
@@ -83,7 +83,7 @@ export default async function Image() {
               whiteSpace: "pre-line",
             }}
           >
-            {"우리 아이 좋은 인연,\n부모가 든든한 조력자가\n되어주면 어떨까요?"}
+            {"인연과 취향을 나누는\n토요일 오후"}
           </div>
           <div
             style={{
@@ -94,7 +94,7 @@ export default async function Image() {
               whiteSpace: "pre-line",
             }}
           >
-            {"10월 31일 토요일 오후 · 서울 청담\n미혼 자녀를 두신 부모님들의 자리"}
+            {"10월 31일 토요일 오후 3시 · 강남권\n부모 세대의 프라이빗 사교 살롱"}
           </div>
         </div>
 
