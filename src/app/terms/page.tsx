@@ -130,7 +130,7 @@ export default function TermsPage() {
           <li><strong>대표자</strong>: 유한결</li>
           <li><strong>사업자등록번호</strong>: 466-81-04205</li>
           <li><strong>통신판매업 신고번호</strong>: 신고 준비 중 (영등포구청 신고 예정)</li>
-          <li><strong>주소</strong>: (07271) 서울특별시 영등포구 국회대로50길 20, 101동 803호</li>
+          <li><strong>주소</strong>: (07271) 서울특별시 영등포구 국회대로50길 20</li>
           <li><strong>고객센터 전화</strong>: 010-5647-1196</li>
           <li><strong>이메일</strong>: <a href="mailto:ceo@effeffcorp.com">ceo@effeffcorp.com</a></li>
         </ul>

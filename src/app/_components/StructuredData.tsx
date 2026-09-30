@@ -40,7 +40,7 @@ const organization = {
   telephone: "+82-10-5647-1196",
   address: {
     "@type": "PostalAddress",
-    streetAddress: "국회대로50길 20, 101동 803호",
+    streetAddress: "국회대로50길 20",
     addressLocality: "영등포구",
     addressRegion: "서울특별시",
     postalCode: "07271",
