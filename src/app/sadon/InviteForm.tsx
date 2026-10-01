@@ -252,7 +252,7 @@ export function InviteForm() {
           marginTop: 24,
           borderRadius: 999,
           border: "none",
-          background: ready ? TITA.forest : TITA.mutedSoft,
+          background: ready ? "#12211B" : TITA.mutedSoft,
           color: "#fff",
           fontSize: 18,
           fontWeight: 700,
