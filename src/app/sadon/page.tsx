@@ -1,5 +1,8 @@
 /**
- * /sadon — [티타 아너스] 제1회 부모 사교 살롱 (2026-10-31)
+ * /sadon — [티타 아너스] 제1회 프라이빗 티타임 (2026-10-31)
+ *
+ * 2026-10-01 대외 명칭을 '사교 살롱'→'프라이빗 티타임'으로 바꿨다(사교가 예스럽고
+ * 만남 목적이 앞서 들린다). Quiet Luxury 결에서는 '초대석'. 면책 문구는 원문 유지.
  *
  * ⚠️ 2026-09-30에 통째로 다시 썼다. 10/31은 무료 초대장이었다가 **참가비
  * 30만 원 유료 살롱**으로 바뀌었다 — 대표님 결정. 신고 없이, 부모 세대의
@@ -28,11 +31,11 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
   title: "티타 아너스 · 인연과 취향을 나누는 토요일 오후",
   description:
-    "자녀의 인연과 삶을 고민하는 부모 세대의 프라이빗 사교 살롱. 2026년 10월 31일 토요일 오후.",
+    "자녀의 인연과 삶을 고민하는 부모 세대의 프라이빗 티타임. 2026년 10월 31일 토요일 오후.",
   openGraph: {
     title: "[티타 아너스] 인연과 취향을 나누는 토요일 오후",
     description:
-      "10월 31일 토요일 오후 3시, 강남권 프라이빗 공간. 열 분 남짓의 부모님이 모여 차와 이야기를 나누는 살롱입니다.",
+      "10월 31일 토요일 오후 3시, 강남권 프라이빗 공간. 열 분 남짓의 부모님이 모여 차와 이야기를 나누는 프라이빗 티타임입니다.",
     type: "website",
     locale: "ko_KR",
     siteName: "티타",
@@ -112,7 +115,7 @@ export default function SadonSalonPage() {
       <header style={{ background: TITA.forest, padding: "78px 0 64px" }}>
         <div style={{ ...wrap, textAlign: "center" }}>
           <p style={{ fontSize: 13.5, letterSpacing: "0.32em", color: TITA.camel, margin: "0 0 26px" }}>
-            TITA HONORS · 제1회 살롱
+            TITA HONORS · 제1회 티타임
           </p>
           <h1
             style={{
@@ -131,7 +134,7 @@ export default function SadonSalonPage() {
           <p style={{ fontSize: 17, lineHeight: 1.85, color: TITA.sage, margin: "0 0 30px", wordBreak: "keep-all" }}>
             자녀의 인연과 삶을 고민하는 부모 세대가
             <br />
-            차 한 잔을 두고 마주 앉는 프라이빗 살롱
+            차 한 잔을 두고 마주 앉는 프라이빗 티타임
           </p>
           <div
             style={{
@@ -168,7 +171,7 @@ export default function SadonSalonPage() {
           </p>
           {[
             "자녀를 반듯하게 키워낸 부모라면 한 번쯤 생각하게 됩니다. 요즘 아이들은 인연을 어떻게 만나는지, 부모는 어디까지 곁을 지켜야 하는지.",
-            "티타 아너스는 그 고민을 같은 자리에 선 분들과 나누는 사교 모임입니다. 누군가를 소개받는 자리가 아니라, 서로의 교양과 가치관, 취향을 나누는 토요일 오후입니다.",
+            "티타 아너스는 그 고민을 같은 자리에 선 분들과 나누는 프라이빗 티타임입니다. 누군가를 소개받는 자리가 아니라, 서로의 교양과 가치관, 취향을 나누는 토요일 오후입니다.",
           ].map((t) => (
             <p
               key={t}
