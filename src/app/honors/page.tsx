@@ -1,10 +1,10 @@
 /**
- * /sadon — 이미 카톡으로 돌린 링크를 살려 두는 주소. 본문은 SalonPage.
- * 대표 주소는 /honors (2026-10-01, "링크가 너무 사돈이다").
+ * /honors — 티타 아너스 대표 주소. 본문은 ../sadon/SalonPage 와 같다.
+ * 인스타 프로필 링크·새로 보내는 초대는 이 주소로.
  */
 
 import type { Metadata } from "next";
-import { SalonPage } from "./SalonPage";
+import { SalonPage } from "../sadon/SalonPage";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/honors/" },
