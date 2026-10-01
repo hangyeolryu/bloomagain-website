@@ -7,6 +7,7 @@
 // content can show through during scroll.
 
 import Link from "next/link";
+import { RingMark } from "./TitaMarks";
 import { Download } from "lucide-react";
 import { TITA, KOREAN_FONT_STACK } from "./tita-brand";
 import { logAnalyticsEvent } from "@/lib/firebase";
@@ -24,7 +25,8 @@ export function TitaHeader() {
     >
       <nav className="max-w-5xl mx-auto px-4 sm:px-6">
         <div className="flex justify-between items-center h-14">
-          <Link href="/" className="flex items-baseline gap-2">
+          <Link href="/" className="flex items-center gap-2">
+            <RingMark size={32} filled />
             <span
               className="text-xl font-bold tracking-tight"
               style={{ color: TITA.ink }}

@@ -236,7 +236,7 @@ export function InviteForm() {
         <span aria-hidden style={{ flex: "none", width: 20, fontWeight: 800, color: agreed ? TITA.forest : TITA.sage }}>
           {agreed ? "✓" : "○"}
         </span>
-        <span>
+        <span style={{ wordBreak: "keep-all" }}>
           위 내용을 확인했습니다. 적어주신 성함·연락처·출생연도와 자녀분 성별·나이대는 이 모임 안내와 자리 구성에만 쓰고,
           모임이 끝나면 3개월 안에 파기합니다.
         </span>

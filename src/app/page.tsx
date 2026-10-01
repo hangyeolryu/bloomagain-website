@@ -25,6 +25,7 @@ import {
 } from "./_components/tita-brand";
 import { AppStructuredData } from "./_components/StructuredData";
 import { TitaHeader } from "./_components/TitaHeader";
+import { TTMark } from "./_components/TitaMarks";
 import { TitaFooter } from "./_components/TitaFooter";
 import { PersonaStories } from "./_components/PersonaStories";
 import { AppPreview } from "./_components/AppPreview";
@@ -56,8 +57,11 @@ export default function Home() {
         style={{ backgroundColor: "#12211B" }}
       >
         <div className="max-w-5xl mx-auto px-5 sm:px-6 py-3 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-center">
-          <span className="text-[11px] font-semibold" style={{ color: TITA.camel, letterSpacing: "0.28em" }}>
-            TITA HONORS
+          <span className="inline-flex items-center gap-2">
+            <TTMark size={24} />
+            <span className="text-[11px] font-semibold" style={{ color: TITA.camel, letterSpacing: "0.28em" }}>
+              TITA HONORS
+            </span>
           </span>
           <span className="text-[13px] sm:text-sm" style={{ color: TITA.cream }}>
             10월 31일, 열 분을 위한 프라이빗 티타임

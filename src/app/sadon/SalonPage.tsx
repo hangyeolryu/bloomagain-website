@@ -21,6 +21,7 @@ import { TitaFooter } from "../_components/TitaFooter";
 import { KOREAN_FONT_STACK } from "../_components/tita-brand";
 import { InviteForm } from "./InviteForm";
 import { DISCLAIMER, EVENT } from "./_sadon";
+import { RingMark, TTMark } from "../_components/TitaMarks";
 
 // 한글 서브셋은 타입에 없어서 preload 를 끄고 유니코드 구간별로 받게 한다.
 const serif = Nanum_Myeongjo({ weight: ["400", "700", "800"], preload: false, display: "swap" });
@@ -84,23 +85,6 @@ const STEPS: [string, string][] = [
   ["장소 안내", "입금이 확인되면 장소 상세 주소와 당일 안내를 개별로 보내드립니다."],
 ];
 
-/**
- * TT 모노그램 (시안 B, 2026-10-01). 크림 T 위에 카멜 T를 오른쪽 아래로 엇갈려 겹친다.
- * ⚠️ 좌우 대칭으로 맞물리게 바꾸지 말 것 — Tory Burch 더블 T 상표와 닮아진다.
- * 글꼴에 기대지 않게 T를 패스로 그렸다(기기마다 세리프가 달라지지 않게).
- */
-const T_PATH =
-  "M8 8H92V30H88Q86 18 74 18H58V104Q58 110 68 111V116H32V111Q42 110 42 104V18H26Q14 18 12 30H8Z";
-
-function HonorsMark() {
-  return (
-    <svg width="92" height="92" viewBox="0 0 150 150" role="img" aria-label="티타 아너스" style={{ margin: "0 0 22px" }}>
-      <path d={T_PATH} fill={C.cream} transform="translate(1 2)" />
-      <path d={T_PATH} fill={C.camel} transform="translate(49 24)" />
-    </svg>
-  );
-}
-
 const WRAP: React.CSSProperties = { maxWidth: 640, margin: "0 auto", padding: "0 24px", width: "100%" };
 
 function Label({ children }: { children: React.ReactNode }) {
@@ -158,7 +142,9 @@ export function SalonPage() {
             padding: "72px 22px",
           }}
         >
-          <HonorsMark />
+          <div style={{ marginBottom: 22 }}>
+            <TTMark size={92} />
+          </div>
           <p style={{ fontSize: 12.5, letterSpacing: "0.42em", color: C.camel, margin: "0 0 44px" }}>TITA HONORS</p>
           <h1
             className={serif.className}
@@ -396,7 +382,11 @@ export function SalonPage() {
           >
             {DISCLAIMER}
           </p>
-          <p style={{ fontSize: 11.5, letterSpacing: "0.42em", color: C.camel, textAlign: "center", margin: "44px 0 0" }}>
+          {/* 맺음 서명 — 첫 화면은 TT, 끝은 티타 원형. 아너스가 티타 안의 자리라는 걸 보여준다. */}
+          <div style={{ display: "flex", justifyContent: "center", margin: "48px 0 14px" }}>
+            <RingMark size={58} />
+          </div>
+          <p style={{ fontSize: 11.5, letterSpacing: "0.42em", color: C.camel, textAlign: "center", margin: 0 }}>
             TITA HONORS
           </p>
         </div>
