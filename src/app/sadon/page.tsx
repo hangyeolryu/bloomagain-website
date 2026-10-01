@@ -163,11 +163,16 @@ export default function SadonSalonPage() {
               lineHeight: 1.9,
               color: TITA.forestDeep,
               fontWeight: 700,
-              margin: "0 0 22px",
+              margin: "0 0 6px",
               wordBreak: "keep-all",
             }}
           >
-            조건표로는 알 수 없는 것들이 있습니다.
+            조건만으로는 알 수 없는 것들을 나눕니다.
+          </p>
+          {/* "맞춘다"고 쓰지 않는다 — 우리가 짝지어 주는 자리로 읽힌다.
+              만나서 느끼는 것으로만 말한다 (2026-10-01). */}
+          <p style={{ fontSize: 17, lineHeight: 1.8, color: "#8A6C42", fontWeight: 700, margin: "0 0 24px" }}>
+            가치관, 집안의 분위기, 살아온 결.
           </p>
           {[
             "자녀를 반듯하게 키워낸 부모라면 한 번쯤 생각하게 됩니다. 요즘 아이들은 인연을 어떻게 만나는지, 부모는 어디까지 곁을 지켜야 하는지.",
