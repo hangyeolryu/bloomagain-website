@@ -45,6 +45,32 @@ export default function Home() {
       <AppStructuredData />
       <TitaHeader />
 
+      {/* ── 0. 티타 아너스 입구 (2026-10-01) ─────────────────────────
+          히어로("소개팅 앱이 아니에요") 안에 넣으면 그 약속이 흐려진다.
+          그래서 히어로 위 한 줄 띠로 따로 둔다. 인스타 카드와 같은
+          블랙 그린 + 카멜. */}
+      <Link
+        href="/honors/"
+        onClick={() => logAnalyticsEvent("honors_entry_click", { source: "home_band" })}
+        className="block transition-opacity hover:opacity-90"
+        style={{ backgroundColor: "#12211B" }}
+      >
+        <div className="max-w-5xl mx-auto px-5 sm:px-6 py-3 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-center">
+          <span className="text-[11px] font-semibold" style={{ color: TITA.camel, letterSpacing: "0.28em" }}>
+            TITA HONORS
+          </span>
+          <span className="text-[13px] sm:text-sm" style={{ color: TITA.cream }}>
+            10월 31일, 열 분을 위한 프라이빗 티타임
+          </span>
+          <span
+            className="inline-flex items-center gap-1 px-3.5 py-1 rounded-full text-[12px] font-semibold"
+            style={{ border: `1px solid ${TITA.camel}`, color: TITA.camel }}
+          >
+            입장하기 <span aria-hidden>→</span>
+          </span>
+        </div>
+      </Link>
+
       {/* ── 1. Hero — 딥그린 풀블리드 밴드 ─────────────────────────
           첫인상을 브랜드 컬러(딥그린)로. 상단은 가볍게: 스토어 버튼 2개 →
           /download 한 버튼(기기 감지). 가격은 페이지 하단으로. 무가입 결
