@@ -102,7 +102,7 @@ export function InviteForm() {
       `태어난 해: ${birthYear}`,
       intro.trim() && `본인 소개: ${intro.trim()}`,
       reason.trim() && `신청 이유: ${reason.trim()}`,
-      "구분: 티타 아너스 티타임(30만 원) · 고지 확인함",
+      "구분: 티타 아너스 티타임(제1회 15만 원) · 고지 확인함",
     ]
       .filter(Boolean)
       .join("\n");

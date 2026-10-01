@@ -69,7 +69,7 @@ const VALUES: [string, string][] = [
   ],
   [
     "주말 오후의 품격 있는 외출",
-    "조용한 공간, 정성껏 고른 차와 다과. 두 시간 반 동안 온전히 나를 위한 오후를 보내세요.",
+    "조용한 공간, 정성껏 고른 차·와인과 다과. 두 시간 반 동안 온전히 나를 위한 오후를 보내세요.",
   ],
 ];
 
@@ -259,10 +259,12 @@ export default function SadonSalonPage() {
               k="참가비"
               v={
                 <>
-                  <b>{EVENT.fee}</b>
+                  <s style={{ color: TITA.mutedSoft }}>{EVENT.fee}</s>
+                  <br />
+                  <b>{EVENT.feeFirst}</b>
                   <br />
                   <span style={{ color: TITA.muted }}>
-                    공간 대관, 블렌디드 티, 디저트와 케이터링, 모임 진행이 포함됩니다.
+                    공간 대관, 차·와인과 다과, 모임 진행이 포함됩니다.
                   </span>
                 </>
               }
