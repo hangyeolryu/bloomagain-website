@@ -15,6 +15,7 @@
 
 import { useState } from "react";
 import { TITA, KOREAN_FONT_STACK } from "../_components/tita-brand";
+import { trackPixel } from "@/lib/pixel";
 import { BIRTH_YEARS, CHILD_SIDE, DISCLAIMER, EVENT_CHILD_AGES } from "./_sadon";
 
 const API =
@@ -114,6 +115,10 @@ export function InviteForm() {
       });
       // 백엔드는 저장에 실패해도 200 + {ok:false} 를 준다. 본문까지 본다.
       const body = r.ok ? await r.json().catch(() => ({})) : {};
+      if (body?.ok) {
+        // Meta 광고가 '신청한 사람'을 학습하도록 표준 Lead 전환을 쏜다(2026-10-04).
+        trackPixel("Lead", { content_name: "honors_2026_10_31", value: 150000, currency: "KRW" });
+      }
       setState(body?.ok ? "done" : "error");
     } catch {
       setState("error");
