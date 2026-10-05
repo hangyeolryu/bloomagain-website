@@ -21,6 +21,7 @@ import { TitaFooter } from "../_components/TitaFooter";
 import { KOREAN_FONT_STACK } from "../_components/tita-brand";
 import { InviteForm } from "./InviteForm";
 import { DISCLAIMER, EVENT } from "./_sadon";
+import { HonorsTracker } from "./HonorsTracker";
 import { RingMark, TTMark } from "../_components/TitaMarks";
 
 // 한글 서브셋은 타입에 없어서 preload 를 끄고 유니코드 구간별로 받게 한다.
@@ -106,9 +107,9 @@ function H2({ children }: { children: React.ReactNode }) {
   );
 }
 
-function Section({ children, alt, pad = "84px 0" }: { children: React.ReactNode; alt?: boolean; pad?: string }) {
+function Section({ children, alt, pad = "84px 0", name }: { children: React.ReactNode; alt?: boolean; pad?: string; name: string }) {
   return (
-    <section style={{ background: alt ? C.bg2 : C.bg, padding: pad }}>
+    <section data-honors={name} style={{ background: alt ? C.bg2 : C.bg, padding: pad }}>
       <div style={WRAP}>{children}</div>
     </section>
   );
@@ -128,8 +129,9 @@ export function SalonPage() {
 
   return (
     <div style={{ background: C.bg, color: C.cream, fontFamily: KOREAN_FONT_STACK, minHeight: "100vh" }}>
+      <HonorsTracker />
       {/* ── 머리 — 카드처럼 얇은 카멜 테두리 안에 ─────────────────────── */}
-      <header style={{ background: C.bg, padding: "18px 14px" }}>
+      <header data-honors="hero" style={{ background: C.bg, padding: "18px 14px" }}>
         <div
           style={{
             border: `1px solid ${C.line}`,
@@ -182,6 +184,7 @@ export function SalonPage() {
           </div>
           <a
             href="#apply"
+            data-honors-cta="hero_apply"
             style={{
               marginTop: 48,
               display: "inline-block",
@@ -199,7 +202,7 @@ export function SalonPage() {
       </header>
 
       {/* ── 여는 말 ──────────────────────────────────────────────────── */}
-      <Section>
+      <Section name="prologue">
         <Label>Prologue</Label>
         <p
           className={serif.className}
@@ -222,7 +225,7 @@ export function SalonPage() {
       </Section>
 
       {/* ── 나누는 것 ────────────────────────────────────────────────── */}
-      <Section alt>
+      <Section alt name="afternoon">
         <Label>The Afternoon</Label>
         <H2>이 자리에서 나누는 것</H2>
         {VALUES.map(([n, title, desc]) => (
@@ -241,7 +244,7 @@ export function SalonPage() {
       </Section>
 
       {/* ── 이런 자리는 아닙니다 ─────────────────────────────────────── */}
-      <Section pad="72px 0">
+      <Section pad="72px 0" name="not_this">
         <div style={{ border: `1px solid ${C.line}`, padding: "34px 26px" }}>
           <p className={serif.className} style={{ fontSize: 19, fontWeight: 700, color: C.cream, margin: "0 0 18px" }}>
             이런 자리는 아닙니다
@@ -259,7 +262,7 @@ export function SalonPage() {
       </Section>
 
       {/* ── 그날 흐름 ────────────────────────────────────────────────── */}
-      <Section alt>
+      <Section alt name="programme">
         <Label>Programme</Label>
         <H2>그날 오후의 흐름</H2>
         {FLOW.map(([time, title, desc]) => (
@@ -276,7 +279,7 @@ export function SalonPage() {
       </Section>
 
       {/* ── 모임 안내 ────────────────────────────────────────────────── */}
-      <Section>
+      <Section name="info_fee">
         <Label>Information</Label>
         <H2>모임 안내</H2>
         <div style={{ borderBottom: `1px solid ${C.lineSoft}` }}>
@@ -306,7 +309,7 @@ export function SalonPage() {
       </Section>
 
       {/* ── 신청과 참가비 ────────────────────────────────────────────── */}
-      <Section alt>
+      <Section alt name="how_to_join">
         <Label>How to Join</Label>
         <H2>신청과 참가비 안내</H2>
         {STEPS.map(([t, d], i) => (
@@ -351,7 +354,7 @@ export function SalonPage() {
       </Section>
 
       {/* ── 신청 — 크림 카드로 띄운다 ────────────────────────────────── */}
-      <section id="apply" style={{ background: C.bg, padding: "90px 0 40px" }}>
+      <section id="apply" data-honors="apply" style={{ background: C.bg, padding: "90px 0 40px" }}>
         <div style={WRAP}>
           <div style={{ textAlign: "center", marginBottom: 34 }}>
             <Label>Invitation</Label>

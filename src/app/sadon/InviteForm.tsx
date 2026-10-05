@@ -13,9 +13,10 @@
  * 제출 직전에 면책 고지(DISCLAIMER)를 원문 그대로 보여주고 확인을 받는다.
  */
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { TITA, KOREAN_FONT_STACK } from "../_components/tita-brand";
 import { trackPixel } from "@/lib/pixel";
+import { logAnalyticsEvent } from "@/lib/firebase";
 import { BIRTH_YEARS, CHILD_SIDE, DISCLAIMER, EVENT_CHILD_AGES } from "./_sadon";
 
 const API =
@@ -48,6 +49,36 @@ export function InviteForm() {
               : !agreed ? { word: "안내 확인", verb: "해주세요" }
                 : null;
   const ready = missing === null;
+
+  // ── 이탈 지점 측정 (2026-10-05) — 값은 보내지 않고 "어디까지 왔나"만 ──
+  const track = (event: string, params: Record<string, string | number> = {}) => {
+    logAnalyticsEvent(event, params);
+    trackPixel("Honors" + event.replace(/^honors_/, "").replace(/(^|_)(\w)/g, (_m, _p, c: string) => c.toUpperCase()), params, true);
+  };
+  const started = useRef(false);
+  const onFirstTouch = () => {
+    if (started.current) return;
+    started.current = true;
+    track("honors_form_start");
+  };
+  const doneFields = useRef(new Set<string>());
+  useEffect(() => {
+    const checks: [string, boolean][] = [
+      ["name", name.trim().length >= 2],
+      ["contact", contact.trim().length >= 4],
+      ["birth_year", !!birthYear],
+      ["child_side", !!childSide],
+      ["child_age", !!childAge],
+      ["agreed", agreed],
+    ];
+    checks.forEach(([f, ok]) => {
+      if (ok && !doneFields.current.has(f)) {
+        doneFields.current.add(f);
+        track("honors_field_done", { field: f, step: doneFields.current.size });
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [name, contact, birthYear, childSide, childAge, agreed]);
 
   const input: React.CSSProperties = {
     width: "100%",
@@ -98,6 +129,7 @@ export function InviteForm() {
 
   async function send() {
     if (!ready || state === "sending") return;
+    track("honors_submit");
     setState("sending");
     const note = [
       `태어난 해: ${birthYear}`,
@@ -143,7 +175,11 @@ export function InviteForm() {
   }
 
   return (
-    <div style={{ background: TITA.white, border: `1px solid ${TITA.sage}`, borderRadius: 20, padding: "28px 24px", fontFamily: KOREAN_FONT_STACK }}>
+    <div
+      onFocusCapture={onFirstTouch}
+      onPointerDownCapture={onFirstTouch}
+      style={{ background: TITA.white, border: `1px solid ${TITA.sage}`, borderRadius: 20, padding: "28px 24px", fontFamily: KOREAN_FONT_STACK }}
+    >
       <label htmlFor="iv-name" style={{ ...label, marginTop: 4 }}>1. 성함</label>
       <input id="iv-name" style={input} value={name} placeholder="성함을 적어주세요" onChange={(e) => setName(e.target.value)} />
 
@@ -247,11 +283,18 @@ export function InviteForm() {
         </span>
       </button>
 
+      {/* 꺼진 버튼은 클릭을 삼켜서, 감싼 div가 "눌렀는데 막힌" 순간을 잡는다. */}
+      <div
+        onClick={() => {
+          if (!ready && missing) track("honors_submit_blocked", { missing: missing.word });
+        }}
+      >
       <button
         type="button"
         onClick={send}
         disabled={!ready || state === "sending"}
         style={{
+          pointerEvents: ready ? "auto" : "none",
           width: "100%",
           minHeight: 58,
           marginTop: 24,
@@ -271,6 +314,7 @@ export function InviteForm() {
             ? "참가 신청하기"
             : `${missing.word}${particle(missing.word)} ${missing.verb}`}
       </button>
+      </div>
 
       {state === "error" && (
         <p style={{ fontSize: 15, color: "#B4433A", textAlign: "center", marginTop: 14 }}>
