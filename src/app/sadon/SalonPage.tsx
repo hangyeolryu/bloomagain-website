@@ -131,73 +131,100 @@ export function SalonPage() {
     <div style={{ background: C.bg, color: C.cream, fontFamily: KOREAN_FONT_STACK, minHeight: "100vh" }}>
       <HonorsTracker />
       {/* ── 머리 — 카드처럼 얇은 카멜 테두리 안에 ─────────────────────── */}
-      <header data-honors="hero" style={{ background: C.bg, padding: "18px 14px" }}>
+      {/* 첫 화면 (2026-10-07 개정) — 10/5 측정에서 17명 중 9명이 한 번도 안
+          내리고 나갔다. 화면을 꽉 채우던 머리가 광고 카드의 말을 반복할 뿐,
+          언제·얼마·뭘 하는지가 내려가야 나왔다. 높이를 줄이고 "한눈에"를
+          스크롤 없이 보이게 올린다. */}
+      <header data-honors="hero" style={{ background: C.bg, padding: "14px 14px 18px" }}>
         <div
           style={{
             border: `1px solid ${C.line}`,
-            minHeight: "min(88vh, 760px)",
             display: "flex",
             flexDirection: "column",
-            justifyContent: "center",
             alignItems: "center",
             textAlign: "center",
-            padding: "72px 22px",
+            padding: "34px 20px 30px",
           }}
         >
-          <div style={{ marginBottom: 22 }}>
-            <TTMark size={92} />
+          <div style={{ marginBottom: 12 }}>
+            <TTMark size={58} />
           </div>
-          <p style={{ fontSize: 12.5, letterSpacing: "0.42em", color: C.camel, margin: "0 0 44px" }}>TITA HONORS</p>
+          <p style={{ fontSize: 11.5, letterSpacing: "0.42em", color: C.camel, margin: "0 0 22px" }}>TITA HONORS</p>
           <h1
             className={serif.className}
             style={{
-              fontSize: "clamp(30px, 7vw, 46px)",
+              fontSize: "clamp(27px, 6.6vw, 42px)",
               fontWeight: 800,
-              lineHeight: 1.45,
+              lineHeight: 1.4,
               color: C.cream,
-              margin: "0 0 26px",
+              margin: "0 0 12px",
             }}
           >
             인연과 취향을 나누는
             <br />
             토요일 오후
           </h1>
-          <p style={{ fontSize: 16.5, lineHeight: 1.9, color: C.text, margin: "0 0 52px", wordBreak: "keep-all" }}>
+          <p style={{ fontSize: 15.5, lineHeight: 1.75, color: C.text, margin: "0 0 24px", wordBreak: "keep-all" }}>
             자녀의 인연과 삶을 고민하는
             <br />
             부모님들을 위한 제1회 프라이빗 티타임
           </p>
+
+          {/* 한눈에 — 광고 카드에 없던 정보를 스크롤 없이 */}
           <div
-            className={serif.className}
             style={{
+              width: "100%",
+              maxWidth: 420,
               borderTop: `1px solid ${C.line}`,
               borderBottom: `1px solid ${C.line}`,
-              padding: "18px 26px",
-              fontSize: 17,
-              lineHeight: 2,
-              color: C.camel,
+              padding: "6px 4px",
+              textAlign: "left",
             }}
           >
-            {EVENT.date}
-            <br />
-            {EVENT.time}
+            {(
+              [
+                ["언제", "10월 31일(토) 오후 3시 – 5시 30분"],
+                ["어디서", "강남·청담·한남 프라이빗 공간"],
+                ["누구와", "자녀를 둔 부모님 열 분 남짓"],
+                ["무엇을", "차·와인과 다과, 자녀 세대 이야기"],
+              ] as [string, string][]
+            ).map(([k, v]) => (
+              <div key={k} style={{ display: "flex", gap: 14, padding: "8px 0", fontSize: 15, lineHeight: 1.5 }}>
+                <span style={{ flex: "0 0 52px", color: C.camel }}>{k}</span>
+                <span style={{ color: C.cream, wordBreak: "keep-all" }}>{v}</span>
+              </div>
+            ))}
+            <div style={{ display: "flex", gap: 14, padding: "8px 0", fontSize: 15, lineHeight: 1.5, alignItems: "baseline" }}>
+              <span style={{ flex: "0 0 52px", color: C.camel }}>참가비</span>
+              <span style={{ color: C.cream }}>
+                <b className={serif.className} style={{ fontSize: 18, color: C.camel }}>
+                  15만 원
+                </b>
+                <span style={{ color: C.muted, fontSize: 13.5 }}>
+                  {"  "}제1회 한정 · 정가 <s>25만 원</s>
+                </span>
+              </span>
+            </div>
           </div>
+
           <a
             href="#apply"
             data-honors-cta="hero_apply"
             style={{
-              marginTop: 48,
+              marginTop: 24,
               display: "inline-block",
-              padding: "15px 38px",
-              border: `1px solid ${C.camel}`,
-              color: C.camel,
-              fontSize: 15.5,
-              letterSpacing: "0.12em",
+              padding: "14px 34px",
+              background: C.camel,
+              color: C.bg,
+              fontSize: 16,
+              fontWeight: 700,
+              letterSpacing: "0.06em",
               textDecoration: "none",
             }}
           >
-            참가 신청
+            참가 신청 · 3분
           </a>
+          <p style={{ fontSize: 13, color: C.muted, margin: "12px 0 0" }}>신청 후 이틀 안에 전화로 확인드려요</p>
         </div>
       </header>
 
