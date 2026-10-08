@@ -80,7 +80,7 @@ const NOT_THIS = [
 ];
 
 const STEPS: [string, string][] = [
-  ["신청서 작성", "아래 신청서를 작성해 주세요. 3분이면 충분합니다."],
+  ["성함·연락처 남기기", "아래 두 칸만 적어주세요. 30초면 돼요."],
   ["확인 전화", "이틀 안에 티타에서 짧게 전화를 드립니다. 모임 성격을 한 번 더 안내하고 인사를 나누는 통화입니다."],
   ["참가 확정과 입금", "확정 안내 문자로 입금 계좌를 보내드립니다. 문자를 받으신 날로부터 3일 안에 입금해 주시면 자리가 확정됩니다."],
   ["장소 안내", "입금이 확인되면 장소 상세 주소와 당일 안내를 개별로 보내드립니다."],
@@ -222,9 +222,9 @@ export function SalonPage() {
               textDecoration: "none",
             }}
           >
-            참가 신청 · 3분
+            자리 안내 받기 · 30초
           </a>
-          <p style={{ fontSize: 13, color: C.muted, margin: "12px 0 0" }}>신청 후 이틀 안에 전화로 확인드려요</p>
+          <p style={{ fontSize: 13, color: C.muted, margin: "12px 0 0" }}>성함·연락처만 남기시면 이틀 안에 전화로 안내드려요</p>
         </div>
       </header>
 
@@ -385,9 +385,9 @@ export function SalonPage() {
         <div style={WRAP}>
           <div style={{ textAlign: "center", marginBottom: 34 }}>
             <Label>Invitation</Label>
-            <H2>참가 신청</H2>
+            <H2>자리 안내 받기</H2>
             <p style={{ fontSize: 16, lineHeight: 1.8, color: C.text, margin: "-12px 0 0" }}>
-              작성해 주시면 이틀 안에 전화를 드립니다.
+              성함과 연락처만 남겨주세요. 이틀 안에 전화로 자세히 안내드리고, 오실지는 그때 정하셔도 돼요.
             </p>
           </div>
           <div style={{ border: `1px solid ${C.line}`, padding: 8 }}>
