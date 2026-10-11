@@ -10,7 +10,9 @@
  *   honors_section_view {section}  각 구간이 화면에 반쯤 들어오면 한 번
  *   honors_scroll {depth}          25·50·75·100%
  *   honors_engaged {seconds}       화면을 보고 있는 채로 30·60·120초
- *   honors_cta_click {cta}         첫 화면 '참가 신청' 버튼
+ *   honors_cta_click {cta}         첫 화면 '자리 안내 받기' 버튼
+ *   (신청서 쪽은 InviteForm: form_start=포커스·동의 클릭, field_typed=칸별 첫 글자,
+ *    field_done=칸 완료, submit_blocked, submit)
  *
  * GA(→ BigQuery, 다음 날)와 Meta 픽셀(커스텀 이벤트, 이벤트 관리자에서
  * 바로 보임) 두 곳으로 같이 쏜다.

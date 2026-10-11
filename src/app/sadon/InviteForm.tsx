@@ -48,6 +48,14 @@ export function InviteForm() {
     track("honors_form_start", { form: "short" });
   };
   const done = useRef(new Set<string>());
+  // 칸마다 첫 글자를 넣는 순간 한 번 — "입력을 시작했다"는 가장 확실한 신호.
+  const typed = useRef(new Set<string>());
+  const markTyped = (field: string) => {
+    onFirstTouch();
+    if (typed.current.has(field)) return;
+    typed.current.add(field);
+    track("honors_field_typed", { field });
+  };
   const markDone = (field: string, ok: boolean) => {
     if (ok && !done.current.has(field)) {
       done.current.add(field);
@@ -120,8 +128,10 @@ export function InviteForm() {
 
   return (
     <div
+      // 2026-10-11: onPointerDownCapture 를 뺐다. 휴대폰에서 신청서 위를 손가락으로
+      // 스크롤만 해도 "신청서 시작"으로 잡혀, 실제 입력 0인데 시작이 7번씩 찍혔다.
+      // 이제 칸에 커서가 들어가거나(포커스) 동의 칸을 누를 때만 센다.
       onFocusCapture={onFirstTouch}
-      onPointerDownCapture={onFirstTouch}
       style={{ background: TITA.white, border: `1px solid ${TITA.sage}`, borderRadius: 20, padding: "26px 22px", fontFamily: KOREAN_FONT_STACK }}
     >
       <label htmlFor="iv-name" style={{ ...label, marginTop: 0 }}>성함</label>
@@ -131,7 +141,7 @@ export function InviteForm() {
         value={name}
         autoComplete="name"
         placeholder="홍길동"
-        onChange={(e) => setName(e.target.value)}
+        onChange={(e) => { setName(e.target.value); markTyped("name"); }}
         onBlur={() => markDone("name", name.trim().length >= 2)}
       />
 
@@ -144,7 +154,7 @@ export function InviteForm() {
         style={input}
         value={contact}
         placeholder="010-0000-0000"
-        onChange={(e) => setContact(e.target.value)}
+        onChange={(e) => { setContact(e.target.value); markTyped("contact"); }}
         onBlur={() => markDone("contact", digits.length >= 9)}
       />
 
@@ -158,6 +168,7 @@ export function InviteForm() {
         role="checkbox"
         aria-checked={agreed}
         onClick={() => {
+          onFirstTouch();
           setAgreed((v) => !v);
           markDone("agreed", !agreed);
         }}
