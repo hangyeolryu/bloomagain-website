@@ -94,7 +94,7 @@ export default async function Image() {
               whiteSpace: "pre-line",
             }}
           >
-            {"10월 31일 토요일 오후 3시 · 강남권\n부모 세대의 프라이빗 티타임"}
+            {"강남권 · 열 분의 부모님\n부모 세대의 프라이빗 티타임"}
           </div>
         </div>
 

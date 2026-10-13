@@ -64,7 +64,7 @@ export default function Home() {
             </span>
           </span>
           <span className="text-[13px] sm:text-sm" style={{ color: TITA.cream }}>
-            10월 31일, 열 분을 위한 프라이빗 티타임
+            열 분을 위한 프라이빗 티타임 · 다음 모임 안내
           </span>
           <span
             className="inline-flex items-center gap-1 px-3.5 py-1 rounded-full text-[12px] font-semibold"

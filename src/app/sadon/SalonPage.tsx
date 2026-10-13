@@ -183,7 +183,7 @@ export function SalonPage() {
           >
             {(
               [
-                ["언제", "10월 31일(토) 오후 3시 – 5시 30분"],
+                ["언제", "다음 모임 날짜를 정하고 있어요 · 토요일 오후"],
                 ["어디서", "강남·청담·한남 프라이빗 공간"],
                 ["누구와", "자녀를 둔 부모님 열 분 남짓"],
                 ["무엇을", "차·와인과 다과, 자녀 세대 이야기"],
@@ -222,9 +222,9 @@ export function SalonPage() {
               textDecoration: "none",
             }}
           >
-            자리 안내 받기 · 30초
+            다음 모임 안내 받기 · 30초
           </a>
-          <p style={{ fontSize: 13, color: C.muted, margin: "12px 0 0" }}>성함·연락처만 남기시면 이틀 안에 전화로 안내드려요</p>
+          <p style={{ fontSize: 13, color: C.muted, margin: "12px 0 0" }}>성함·연락처를 남겨주시면 날짜가 정해지는 대로 가장 먼저 알려드려요</p>
         </div>
       </header>
 
@@ -310,7 +310,7 @@ export function SalonPage() {
         <Label>Information</Label>
         <H2>모임 안내</H2>
         <div style={{ borderBottom: `1px solid ${C.lineSoft}` }}>
-          <Row k="일시" v={`${EVENT.date} ${EVENT.time}`} />
+          <Row k="일시" v={`${EVENT.date} · ${EVENT.time}`} />
           <Row k="장소" v={EVENT.place} />
           <Row k="인원" v={EVENT.seats} />
           <Row
@@ -385,9 +385,9 @@ export function SalonPage() {
         <div style={WRAP}>
           <div style={{ textAlign: "center", marginBottom: 34 }}>
             <Label>Invitation</Label>
-            <H2>자리 안내 받기</H2>
+            <H2>다음 모임 안내 받기</H2>
             <p style={{ fontSize: 16, lineHeight: 1.8, color: C.text, margin: "-12px 0 0" }}>
-              성함과 연락처만 남겨주세요. 이틀 안에 전화로 자세히 안내드리고, 오실지는 그때 정하셔도 돼요.
+              성함과 연락처만 남겨주세요. 다음 모임 날짜가 정해지면 가장 먼저 전화로 안내드리고, 오실지는 그때 정하셔도 돼요.
             </p>
           </div>
           <div style={{ border: `1px solid ${C.line}`, padding: 8 }}>
