@@ -69,6 +69,40 @@ export interface BlogPost {
 
 export const POSTS: BlogPost[] = [
   {
+    // 2026-10-13 관심 묻기 글. 회원 알림(블로그 알림 type)으로 이 글을 열고,
+    // 글 아래 하트(공감)를 누른 분 수로 12월 자리를 열지 정한다(11/30, 8명 이상).
+    // 앱 동기화는 --only parents-teatime-december --no-push (전체 새 글 푸시 막기).
+    slug: "parents-teatime-december",
+    title: "12월, 자녀 이야기를 나누는 티타임을 열어볼까 해요",
+    description:
+      "비슷한 시기를 지나는 부모님들과 차 한 잔 하면서 자녀 이야기를 나눠 보려고 해요. 오고 싶으시면 하트 한 번만 눌러 주세요.",
+    date: "2026-10-13",
+    category: "티타 이야기",
+    tags: ["티타임", "자녀 이야기", "부모", "5060", "모임"],
+    cover: "/blog/insight-17/card-1.png",
+    readingMinutes: 1,
+    body: [
+      { type: "p", text: "티타입니다." },
+      {
+        type: "p",
+        text: "자녀가 다 컸는데도 이야기는 끝이 없잖아요. 요즘 아이들은 어떻게 연애하고, 결혼은 어떻게 생각하는지. 부모는 어디까지 거들어야 하는지.",
+      },
+      {
+        type: "p",
+        text: "집에서는 꺼내기 어려운 이 이야기를, 비슷한 시기를 지나는 분들과 **차 한 잔 하면서** 나눠 보려고 해요.",
+      },
+      {
+        type: "callout",
+        text: "12월 중 하루, 낮 시간 · 서울 시내 조용한 찻집 · 참가비는 없어요, 각자 찻값만 · 대여섯 분이 모이면 열어요",
+      },
+      {
+        type: "p",
+        text: "오고 싶으시면 아래 **하트** 한 번만 눌러 주세요. 날짜와 장소가 정해지면 하트 눌러 주신 분께 먼저 알려드릴게요.",
+      },
+    ],
+    sources: [],
+  },
+  {
     slug: "half-of-thirties-unmarried",
     title: "30대 절반이 아직 미혼입니다 — 우리 애만 늦은 게 아니에요",
     description:
