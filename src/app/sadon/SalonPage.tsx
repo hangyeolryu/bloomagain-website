@@ -81,7 +81,7 @@ const NOT_THIS = [
 
 const STEPS: [string, string][] = [
   ["성함·연락처 남기기", "아래 두 칸만 적어주세요. 30초면 돼요."],
-  ["확인 전화", "이틀 안에 티타에서 짧게 전화를 드립니다. 모임 성격을 한 번 더 안내하고 인사를 나누는 통화입니다."],
+  ["초대 연락", "소수만 모시는 자리라, 신청이 모이면 모실 분을 정해 날짜와 함께 전화로 연락드려요. 그 통화에서 오실지 정하시면 돼요."],
   ["참가 확정과 입금", "확정 안내 문자로 입금 계좌를 보내드립니다. 문자를 받으신 날로부터 3일 안에 입금해 주시면 자리가 확정됩니다."],
   ["장소 안내", "입금이 확인되면 장소 상세 주소와 당일 안내를 개별로 보내드립니다."],
 ];
@@ -183,7 +183,7 @@ export function SalonPage() {
           >
             {(
               [
-                ["언제", "다음 모임 날짜를 정하고 있어요 · 토요일 오후"],
+                ["언제", "열 분이 모이면 날짜를 정해요"],
                 ["어디서", "강남·청담·한남 프라이빗 공간"],
                 ["누구와", "자녀를 둔 부모님 열 분 남짓"],
                 ["무엇을", "차·와인과 다과, 자녀 세대 이야기"],
@@ -222,9 +222,9 @@ export function SalonPage() {
               textDecoration: "none",
             }}
           >
-            다음 모임 안내 받기 · 30초
+            초대 대기 신청 · 30초
           </a>
-          <p style={{ fontSize: 13, color: C.muted, margin: "12px 0 0" }}>성함·연락처를 남겨주시면 날짜가 정해지는 대로 가장 먼저 알려드려요</p>
+          <p style={{ fontSize: 13, color: C.muted, margin: "12px 0 0", wordBreak: "keep-all" }}>소수만 모시는 자리라 신청을 받아 모실 분을 정해 연락드려요</p>
         </div>
       </header>
 
@@ -331,7 +331,7 @@ export function SalonPage() {
         </div>
         <p style={{ fontSize: 15, lineHeight: 1.85, color: C.muted, margin: "20px 0 0", wordBreak: "keep-all" }}>
           아드님을 두신 분과 따님을 두신 분이 고르게 모일 수 있도록 자리를 꾸립니다. 한쪽 신청이 많으면 이번에는
-          모시지 못하고 다음 모임에 먼저 안내해 드릴 수 있습니다.
+          모시지 못하고 다음 자리에 먼저 안내해 드릴 수 있습니다.
         </p>
       </Section>
 
@@ -385,9 +385,9 @@ export function SalonPage() {
         <div style={WRAP}>
           <div style={{ textAlign: "center", marginBottom: 34 }}>
             <Label>Invitation</Label>
-            <H2>다음 모임 안내 받기</H2>
+            <H2>초대 대기 신청</H2>
             <p style={{ fontSize: 16, lineHeight: 1.8, color: C.text, margin: "-12px 0 0" }}>
-              성함과 연락처만 남겨주세요. 다음 모임 날짜가 정해지면 가장 먼저 전화로 안내드리고, 오실지는 그때 정하셔도 돼요.
+              날짜는 아직 없어요. 신청을 받아 열 분이 모이면 모실 분을 정해 날짜와 함께 전화로 연락드려요. 성함과 연락처만 남겨주세요.
             </p>
           </div>
           <div style={{ border: `1px solid ${C.line}`, padding: 8 }}>

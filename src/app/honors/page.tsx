@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
   title: "티타 아너스 · 인연과 취향을 나누는 토요일 오후",
   description:
-    "자녀의 인연과 삶을 고민하는 부모 세대의 프라이빗 티타임. 다음 모임 안내를 받아보세요.",
+    "자녀의 인연과 삶을 고민하는 부모 세대의 프라이빗 티타임. 열 분이 모이면 날짜를 정해 모십니다.",
   openGraph: {
     title: "[티타 아너스] 인연과 취향을 나누는 토요일 오후",
     description:

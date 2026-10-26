@@ -84,7 +84,7 @@ export function InviteForm() {
           contact: contact.trim(),
           childSide: null,
           childAge: null,
-          note: "구분: 티타 아너스 다음 모임 안내 받기(두 칸, 10/31 연기 후) · 제1회 15만 원 · 고지 확인함 · 자녀 정보는 통화로",
+          note: "구분: 티타 아너스 초대 대기 신청(두 칸, 날짜 없음) · 제1회 15만 원 · 고지 확인함 · 자녀 정보는 통화로",
         }),
       });
       // 백엔드는 저장에 실패해도 200 + {ok:false} 를 준다. 본문까지 본다.
@@ -116,11 +116,11 @@ export function InviteForm() {
       <div style={{ background: TITA.surface, borderRadius: 20, padding: "40px 28px", textAlign: "center", fontFamily: KOREAN_FONT_STACK }}>
         <p style={{ fontSize: 22, fontWeight: 800, color: TITA.forestDeep, margin: "0 0 12px" }}>남겨주셔서 고맙습니다</p>
         <p style={{ fontSize: 17, lineHeight: 1.85, color: TITA.muted, margin: 0, wordBreak: "keep-all" }}>
-          다음 모임 날짜가 정해지면
+          대기 명단에 올려두었어요.
           <br />
-          티타에서 가장 먼저 전화로 알려드릴게요.
+          열 분이 모이면 날짜를 정해
           <br />
-          오실지는 그때 편하게 정하시면 돼요.
+          티타에서 전화로 연락드릴게요.
         </p>
       </div>
     );
@@ -219,7 +219,7 @@ export function InviteForm() {
             cursor: ready ? "pointer" : "default",
           }}
         >
-          {state === "sending" ? "보내는 중이에요" : ready ? "다음 모임 안내 받기" : missing}
+          {state === "sending" ? "보내는 중이에요" : ready ? "초대 대기 신청" : missing}
         </button>
       </div>
 
