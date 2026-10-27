@@ -21,7 +21,7 @@ const TOC = [
   { id: "section-5-4", label: "제5조의4 (여권 본인인증과 국외 이전)" },
   { id: "section-5-5", label: "제5조의5 (회원 간 공개 — 안부 나누기)" },
   { id: "section-6", label: "제6조 (연구 목적 활용 동의)" },
-  { id: "section-7", label: "제7조 (정신건강 위기 대응)" },
+  { id: "section-7", label: "제7조 (마음 건강 문항과 후속)" },
   { id: "section-8", label: "제8조 (이용자의 권리)" },
   { id: "section-9", label: "제9조 (안전성 확보 조치)" },
   { id: "section-10", label: "제10조 (개인정보 보호책임자)" },
@@ -36,9 +36,9 @@ export default function PrivacyPage() {
       activeKey="privacy"
       title="개인정보 처리방침"
       subtitle="다시 봄 (Tita Korea)"
-      versionTag="v2.6"
-      effectiveDate="2026년 9월 25일"
-      lastUpdated="2026년 9월 25일"
+      versionTag="v2.7"
+      effectiveDate="2026년 10월 27일"
+      lastUpdated="2026년 10월 27일"
       toc={TOC}
     >
       <section id="summary" className="bg-slate-50 border border-slate-200 rounded-lg p-6 -mt-2 mb-10">
@@ -111,7 +111,7 @@ export default function PrivacyPage() {
             </ul>
           </li>
           <li>
-            <strong>사용자 안녕감 측정 및 개선 (선택)</strong>: 우울·삶 만족도 등 정량 측정 도구를 통한 사용자 변화 추적 및 본인 대시보드 제공. 현재 사용 도구는 모두 public domain입니다.
+            <strong>사용자 안녕감 측정 및 개선 (선택)</strong>: 우울·삶 만족도 등 정량 측정 도구를 통한 사용자 변화 추적 및 본인 대시보드 제공. 현재 사용 도구는 모두 public domain입니다. 우울 선별 점수에 따라 달라지는 안내와 운영자 후속은 제7조에 따릅니다.
             <ul>
               <li><strong>PHQ-2</strong> (Patient Health Questionnaire 2-item, public domain)</li>
               <li><strong>Cantril Ladder</strong> (public domain, Mini Pulse 격주 측정)</li>
@@ -145,7 +145,7 @@ export default function PrivacyPage() {
               <li>시각적 접근성 설정값(시력 수준, 글자 크기, 대비 레벨, 버튼 간격)</li>
               <li>음성 안내 설정, 간소화 모드 설정, 자동 재생 설정</li>
               <li>동거 형태, 최종 학력, 직업 상태, 자가 보고 건강 상태 (Baseline survey)</li>
-              <li><strong>민감 정보</strong>(만성질환 유무 등)는 별도 동의 후에만 수집</li>
+              <li><strong>민감 정보</strong>(만성질환 유무 등, 그리고 제7조의 우울 선별 문항 답과 점수)는 별도 동의 후에만 수집</li>
             </ul>
           </li>
           <li>
@@ -162,7 +162,7 @@ export default function PrivacyPage() {
             </ul>
           </li>
           <li>
-            <strong>설문 응답 (선택 동의 시에만)</strong>:
+            <strong>설문 응답 (선택 동의 시에만; 우울 선별 문항은 제7조의 민감정보 별도 동의 시에만)</strong>:
             <ul>
               <li>PHQ-2 등 public domain 표준 척도 응답</li>
               <li>티타 자체 일일 질문 응답 + 누적 태그</li>
@@ -191,7 +191,7 @@ export default function PrivacyPage() {
           <li>사용자 임베딩 벡터: 30일 캐시 후 자동 갱신</li>
           <li>대화 메시지: 메타데이터(빈도·길이·시각)는 90일 보유 후 자동 삭제됩니다. 본문은 채팅 기능 제공 및 안전·품질 점검을 위해 대화방이 유지되는 동안 보관되며, 대화방 삭제 또는 관련 내부 방침에 따라 파기됩니다.</li>
           <li>안전 이벤트 이력 및 위험 점수: 서비스 안전을 위해 내부 방침에 따라 보관</li>
-          <li><strong>설문 응답 데이터</strong>: 사용자 동의에 따라 보유. 동의 철회 시 즉시 삭제.</li>
+          <li><strong>설문 응답 데이터</strong>: 사용자 동의에 따라 보유. 동의 철회 시 즉시 삭제. 우울 선별 문항(PHQ-2)의 답과 서버 계산 점수는 제7조의 별도 동의를 철회하면 함께 삭제.</li>
           <li><strong>문의 내역(연락처·문의 내용)</strong>: 응대 완료 후 지체 없이 파기합니다. 다만 분쟁 대응 등 정당한 사유가 있는 경우 최대 3년(전자상거래법상 소비자 불만·분쟁 처리 기록 보존 기간) 보관 후 파기합니다.</li>
           <li><strong>결제·세금계산서 정보</strong>: 「국세기본법」 및 「전자상거래법」에 따라 5년간 보관</li>
         </ol>
@@ -457,25 +457,83 @@ export default function PrivacyPage() {
       </section>
 
       <section id="section-7" className="bg-rose-50 border-l-4 border-rose-400 rounded-r p-6 my-8">
-        <h2 className="!mt-0">제7조 (정신건강 위기 대응)</h2>
+        <h2 className="!mt-0">제7조 (마음 건강 문항과 그에 따른 후속)</h2>
+        <p className="text-base text-gray-600 mt-0">v2.7, 2026-10-27 전면 개정</p>
         <ol>
           <li>
-            <strong>자동 안내</strong>: 설문 응답이 다음 임계치를 초과할 경우, 사용자에게 자동으로 정신건강 지원 정보를 제공합니다:
-            <ul>
-              <li>PHQ-2 합계 ≥ 2</li>
-            </ul>
-            <p className="mt-2 text-base text-gray-600">
-              PHQ-9(전체 9문항, 자해 문항 포함) 도입 시 추가 임계치(합계 ≥ 10, 자해 문항 양성)도 본 처리방침 개정 후 적용 예정입니다.
+            <strong>무엇을 묻나</strong>: 회사는 2주마다 한 번 &lsquo;안부&rsquo; 설문으로 다음을 묻습니다.
+            삶의 만족도(Cantril Ladder, 0&ndash;10), 사람들과 보낸 시간, 그리고 우울 선별 문항
+            2개(PHQ-2, public domain). 모든 문항은 건너뛸 수 있고, 답하지 않아도 서비스 이용에
+            어떤 불이익도 없습니다.
+          </li>
+          <li>
+            <strong>민감정보 별도 동의</strong>: PHQ-2 문항의 답과 그 점수는 「개인정보 보호법」
+            제23조의 민감정보(건강 정보)에 해당합니다. 회사는 첫 안부를 시작하기 전에 본 조의
+            내용을 보여드리고 <strong>별도 동의</strong>를 받으며, 동의하지 않으면 PHQ-2 두 문항은
+            묻지 않습니다. 동의는 마이페이지에서 언제든 철회할 수 있고, 철회하면 그 뒤의 안부에서는
+            PHQ-2 문항이 빠집니다. 별도 동의 화면은 앱 업데이트(2026년 11월 예정)부터 보여드리며,
+            그때까지는 안부 시작 화면에서 본 조를 안내합니다.
+          </li>
+          <li>
+            <strong>점수는 서버가 계산합니다</strong>: PHQ-2 두 문항의 합계가 <strong>3점 이상</strong>이면
+            &lsquo;양성&rsquo;으로 봅니다(Kroenke 2003). 이는 <strong>선별이지 진단이 아니며</strong>,
+            임상적 진단·치료를 대체하지 않습니다.
+          </li>
+          <li>
+            <strong>점수에 따라 달라지는 것</strong>: 회사는 양성 여부와 정도에 따라 다음과 같이 다르게
+            응대합니다. 점수 자체는 회원 본인에게도, 다른 회원에게도 어떤 형태로도 보이지 않습니다.
+            <div className="overflow-x-auto mt-3">
+              <table className="min-w-full border-collapse text-base">
+                <thead>
+                  <tr className="bg-rose-100">
+                    <th className="border border-slate-300 px-3 py-2 text-left">구분</th>
+                    <th className="border border-slate-300 px-3 py-2 text-left">기준</th>
+                    <th className="border border-slate-300 px-3 py-2 text-left">회원이 받는 것</th>
+                    <th className="border border-slate-300 px-3 py-2 text-left">운영자가 하는 것</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td className="border border-slate-300 px-3 py-2">해당 없음</td>
+                    <td className="border border-slate-300 px-3 py-2">합계 0&ndash;2</td>
+                    <td className="border border-slate-300 px-3 py-2">완료 안내</td>
+                    <td className="border border-slate-300 px-3 py-2">없음</td>
+                  </tr>
+                  <tr>
+                    <td className="border border-slate-300 px-3 py-2">가벼운 양성</td>
+                    <td className="border border-slate-300 px-3 py-2">합계 3&ndash;4, 처음</td>
+                    <td className="border border-slate-300 px-3 py-2">따뜻한 한 줄과 함께 사람 곁에 있을 수 있는 자리·활동 안내, 그리고 5항의 도움받을 곳</td>
+                    <td className="border border-slate-300 px-3 py-2">운영자 알림(단계만)</td>
+                  </tr>
+                  <tr>
+                    <td className="border border-slate-300 px-3 py-2">분명한 양성</td>
+                    <td className="border border-slate-300 px-3 py-2">합계 5 이상, 또는 &lsquo;가라앉거나 우울하거나 희망이 없다&rsquo; 문항이 &lsquo;거의 매일&rsquo;, 또는 직전 안부에 이어 두 번 연속 양성</td>
+                    <td className="border border-slate-300 px-3 py-2">같은 안내에 도움받을 곳이 펼쳐진 채로, 그리고 <strong>운영자가 직접 쓴 안부 메시지 한 통</strong></td>
+                    <td className="border border-slate-300 px-3 py-2">운영자가 응답을 읽고 메시지를 작성·발송하며, 열람 사실이 감사 기록에 남습니다</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p className="mt-2">
+              운영자의 메시지는 회원을 평가하거나 추궁하기 위한 것이 아니며, 답장하지 않아도 됩니다.
+              운영자는 위 목적 밖으로 응답과 점수를 이용하지 않습니다.
             </p>
           </li>
           <li>
-            <strong>안내 내용</strong>: 정신건강상담전화(1577-0199), 자살예방상담전화(1393), 보건복지부 정신건강 정보 페이지(<a href="https://www.mentalhealth.go.kr" target="_blank" rel="noopener noreferrer">www.mentalhealth.go.kr</a>).
+            <strong>도움받을 곳</strong>: 정신건강 상담전화 1577-0199(24시간, 지역 정신건강복지센터 연결),
+            자살예방 상담전화 <strong>109</strong>(24시간), 보건복지부 전국민 마음투자 지원사업(1:1 심리상담
+            최대 8회, 소득에 따라 본인부담 0&ndash;50%; 회원이 원하면 신청 경로를 함께 찾아드립니다),
+            국가정신건강정보포털(<a href="https://www.mentalhealth.go.kr" target="_blank" rel="noopener noreferrer">www.mentalhealth.go.kr</a>).
           </li>
           <li>
-            <strong>임상 진단 아님</strong>: 본 서비스의 자동 안내는 <strong>임상적 진단·치료를 대체하지 않으며</strong>, 사용자가 전문 의료기관에 방문할 것을 권장하는 정보 제공입니다.
+            <strong>보는 사람과 보관</strong>: 응답과 점수는 회원 본인과, 4항의 목적에 한해 회사의 운영자만
+            봅니다. 다른 회원에게는 제5조의5(안부 나누기)에서 회원이 직접 고른 한 문항만 보이고, PHQ-2
+            답과 점수는 그 대상이 아닙니다. 보관 기간과 파기는 제4조를 따르며, 2항의 동의를 철회하면
+            이미 적힌 PHQ-2 답과 점수도 함께 삭제합니다.
           </li>
           <li>
-            <strong>응급 상황 대응 (PHQ-9 도입 후 예정)</strong>: PHQ-9(자해 문항 포함) 도입 시, 자해 문항 양성 응답에 대해 사용자가 사전에 지정한 비상연락처(가족·친구)에 알림 전송을 선택할 수 있도록 할 예정입니다(별도 동의 필수, 본 처리방침 개정 후 활성화).
+            <strong>앞으로의 변경</strong>: PHQ-9(9문항, 자해 문항 포함)를 도입하거나 비상연락처 알림을
+            추가할 경우, 본 처리방침을 먼저 개정·공고하고 별도 동의를 받은 뒤에만 적용합니다.
           </li>
         </ol>
       </section>
@@ -529,6 +587,7 @@ export default function PrivacyPage() {
           <li><strong>v2.0 공고·시행</strong>: 2026년 5월 19일</li>
           <li><strong>v2.1 공고·시행</strong>: 2026년 7월 27일 — 안전·품질 목적의 운영자 대화 열람 및 감사 로그 명시, 대화 본문 보유·처리 조항 명확화</li>
           <li><strong>v2.2 공고·시행</strong>: 2026년 7월 29일 — 문의 접수·응대 목적 및 문의 시 수집 항목·보유 기간 명시(웹 문의 폼 도입)</li>
+          <li><strong>v2.7 공고&middot;시행</strong>: 2026년 10월 27일 — 제7조 전면 개정. 우울 선별 절단점을 2에서 3(Kroenke 2003)으로, 자살예방 번호를 1393에서 109로, 전국민 마음투자 지원사업 안내 추가. 점수에 따른 두 단계 후속(가벼운 양성·분명한 양성)과 운영자 열람 범위·감사 기록을 명시. PHQ-2 답·점수에 대한 민감정보 별도 동의 신설(제3조·제4조·동의 매트릭스 6-1 연동, 동의 화면은 2026년 11월 앱 업데이트부터). 기술 부칙의 안부 저장 경로 정정</li>
           <li><strong>v2.6 공고&middot;시행</strong>: 2026년 9월 25일 — 회원 간 공개 조항 신설(제5조의5). 안부 체크 답변 중 한 문항만, 회원이 직접 선택한 경우에만, 결친구에게 보이는 &lsquo;안부 나누기&rsquo;의 공개 항목&middot;비공개 항목&middot;보는 사람&middot;동의 방식&middot;철회 방법&middot;목적을 명시. PHQ-2·Cantril 점수는 제공하지 않음</li>
           <li><strong>v2.5 공고</strong>: 2026년 9월 17일 · <strong>시행</strong>: 2026년 10월 17일 — 고유식별정보 이용 목적의 연령 표기를 이용약관 제16조(연령 산정 기준 명시)와 통일. 수집 항목·이용 목적·보유 기간 변경 없음</li>
           <li><strong>v2.4 공고·시행</strong>: 2026년 8월 27일 — 여권 본인인증 조항 신설(제5조의4). 한국 휴대폰 번호가 없는 회원을 위한 여권·얼굴 확인 도입에 따라 이전받는 자·국가, 이전 항목(생체정보·고유식별정보 포함), 이전 시점·방법, 이용 목적, 보유 기간(심사 직후 삭제 요청), 회사가 남기는 값, 거부 방법과 그 결과를 명시</li>
@@ -608,6 +667,12 @@ export default function PrivacyPage() {
                 <td className="border border-slate-300 px-3 py-2"><strong>선택</strong></td>
                 <td className="border border-slate-300 px-3 py-2">해당 기관 사용 시 PoC 보고서 비활성, 일반 사용 가능</td>
               </tr>
+              <tr className="bg-rose-50">
+                <td className="border border-slate-300 px-3 py-2">6-1</td>
+                <td className="border border-slate-300 px-3 py-2"><strong>우울 선별 문항(PHQ-2) 답·점수</strong> — 민감정보 (제7조)</td>
+                <td className="border border-slate-300 px-3 py-2"><strong>선택 · 별도 동의</strong></td>
+                <td className="border border-slate-300 px-3 py-2">안부에서 두 문항만 빠짐, 나머지 안부·일반 사용 가능</td>
+              </tr>
               <tr>
                 <td className="border border-slate-300 px-3 py-2">9</td>
                 <td className="border border-slate-300 px-3 py-2">PHQ-9 자해 양성 시 비상연락 알림 (PHQ-9 도입 후 예정)</td>
@@ -653,7 +718,7 @@ export default function PrivacyPage() {
 
         <h3>신규 측정 도구 인프라 — v2</h3>
         <ul>
-          <li><strong>설문 응답 저장</strong>: Firestore <code className="bg-slate-100 px-1 rounded text-sm">users/{`{uid}`}/survey_responses</code> + Backend Postgres <code className="bg-slate-100 px-1 rounded text-sm">survey_responses</code> 테이블</li>
+          <li><strong>설문 응답 저장</strong>: Firestore <code className="bg-slate-100 px-1 rounded text-sm">users/{`{uid}`}/survey_responses</code>(일일 질문), <code className="bg-slate-100 px-1 rounded text-sm">users/{`{uid}`}/mini_pulses</code>(격주 안부, 서버 재채점 점수 포함) + Backend Postgres <code className="bg-slate-100 px-1 rounded text-sm">survey_responses</code> 테이블</li>
           <li><strong>점수 계산</strong>: 서버 사이드만 수행 (클라이언트 신뢰 X)</li>
           <li><strong>태그 propagation</strong>: 설문 응답 → <code className="bg-slate-100 px-1 rounded text-sm">dailyQuestionTags</code> → embedding 파이프라인</li>
           <li><strong>B2G tenant 격리</strong>: <code className="bg-slate-100 px-1 rounded text-sm">tenant_id</code> 필드로 캠퍼스·복지관별 데이터 격리. 기관 간 데이터 섞이지 않음.</li>
