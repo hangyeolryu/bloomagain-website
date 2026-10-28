@@ -11,10 +11,38 @@ const os = require('os');
 const path = require('path');
 
 const slug = process.argv[2];
-if (!slug) { console.error('쓰는 법: node gen-event-cards.cjs <slug>'); process.exit(1); }
+if (!slug) { console.error('쓰는 법: node gen-event-cards.cjs <slug> [--theme forest|cream|terracotta|plum|teal]'); process.exit(1); }
+
+// ── 커버 테마 — 세트마다 색이 돌아간다. 일정·마무리 장은 늘 딥그린(forest)이라
+//    세트 안에선 통일되고, 프로필 격자에선 표지 색이 섞여 보인다.
+//    바탕은 따뜻한 쪽(크림·테라코타·플럼)을 섞고, 남색(teal)은 한 톤만 — 전면 남색 금지 원칙.
+const THEMES = {
+  forest:     {bg: '#143329', g1: 'rgba(212,184,149,.14)', g2: 'rgba(193,90,60,.16)',  title: '#FBF7F0', accent: '#D4B895', sub: '#E6EFE8', badgeBg: 'rgba(251,247,240,.12)', badgeFg: '#EDE3D6', foot: '#D4B895', ul: 'rgba(212,184,149,.8)'},
+  cream:      {bg: '#F3EBDD', g1: 'rgba(193,90,60,.14)',   g2: 'rgba(20,51,41,.12)',   title: '#143329', accent: '#C15A3C', sub: '#3E4F45', badgeBg: 'rgba(20,51,41,.08)',     badgeFg: '#143329', foot: '#C15A3C', ul: 'rgba(193,90,60,.38)'},
+  terracotta: {bg: '#6B3A2A', g1: 'rgba(251,247,240,.12)', g2: 'rgba(212,184,149,.20)', title: '#FBF7F0', accent: '#F0D9B5', sub: '#F4E6DA', badgeBg: 'rgba(251,247,240,.14)', badgeFg: '#F7EBDF', foot: '#F0D9B5', ul: 'rgba(240,217,181,.7)'},
+  plum:       {bg: '#3F2A3C', g1: 'rgba(212,184,149,.16)', g2: 'rgba(193,90,60,.16)',  title: '#FBF7F0', accent: '#E1B98C', sub: '#EADFE5', badgeBg: 'rgba(251,247,240,.12)', badgeFg: '#EDE3D6', foot: '#E1B98C', ul: 'rgba(225,185,140,.8)'},
+  teal:       {bg: '#1F4556', g1: 'rgba(212,184,149,.14)', g2: 'rgba(193,90,60,.14)',  title: '#FBF7F0', accent: '#D4B895', sub: '#DCE8EC', badgeBg: 'rgba(251,247,240,.12)', badgeFg: '#EDE3D6', foot: '#D4B895', ul: 'rgba(212,184,149,.8)'},
+};
+const ORDER = ['forest', 'cream', 'terracotta', 'plum', 'teal'];
+const argTheme = (() => { const i = process.argv.indexOf('--theme'); return i > 0 ? process.argv[i + 1] : null; })();
 const ROOT = path.resolve(__dirname, '../..');
 const DIR = path.join(ROOT, 'assets/instagram', slug);
 const set = JSON.parse(fs.readFileSync(path.join(DIR, 'set.json'), 'utf8'));
+// 테마는 처음 구울 때 정해 set.json에 적는다 → 다시 구워도 같은 색. 순서는 앞서 만든 세트
+// 수로 돌린다(forest → cream → terracotta → plum → teal → …). --theme으로 바꾸면 그것도 적는다.
+function nextTheme() {
+  const root = path.join(ROOT, 'assets/instagram');
+  const used = fs.readdirSync(root).filter((d) => d !== slug && !d.startsWith('_') && fs.existsSync(path.join(root, d, 'set.json')))
+    .map((d) => { try { return JSON.parse(fs.readFileSync(path.join(root, d, 'set.json'), 'utf8')).theme; } catch { return null; } })
+    .filter(Boolean);
+  return ORDER[used.length % ORDER.length];
+}
+const coverTheme = THEMES[argTheme] ? argTheme : (THEMES[set.theme] ? set.theme : nextTheme());
+if (set.theme !== coverTheme && !slug.startsWith('_')) {
+  set.theme = coverTheme;
+  fs.writeFileSync(path.join(DIR, 'set.json'), JSON.stringify(set, null, 2) + '\n');
+}
+const T = THEMES[coverTheme], F = THEMES.forest;
 const FONT = 'file://' + path.join(__dirname, 'fonts/GowunDodum-Regular.woff2');
 
 const SHELL = path.join(os.homedir(),
@@ -26,26 +54,26 @@ const CSS = (W, H) => `
 *{margin:0;padding:0;box-sizing:border-box;font-weight:400}
 html,body{width:${W}px;height:${H}px;overflow:hidden}
 .card{position:relative;width:${W}px;height:${H}px;font-family:Gowun,sans-serif;
-  -webkit-font-smoothing:antialiased;overflow:hidden;background:#143329}
+  -webkit-font-smoothing:antialiased;overflow:hidden;background:var(--bg)}
 .glow{position:absolute;width:1200px;height:1200px;left:-220px;top:-380px;border-radius:50%;
-  background:radial-gradient(circle,rgba(212,184,149,.14) 0%,rgba(212,184,149,0) 62%)}
+  background:radial-gradient(circle,var(--g1) 0%,transparent 62%)}
 .glow2{position:absolute;width:900px;height:900px;right:-300px;bottom:-320px;border-radius:50%;
-  background:radial-gradient(circle,rgba(193,90,60,.16) 0%,rgba(193,90,60,0) 64%)}
+  background:radial-gradient(circle,var(--g2) 0%,transparent 64%)}
 .top{position:absolute;top:70px;left:84px;right:84px;display:flex;justify-content:space-between;align-items:center}
 .logo{display:flex;align-items:center;gap:18px}
 .circles{position:relative;width:76px;height:48px}
 .c1{position:absolute;width:48px;height:48px;left:0;border-radius:50%;background:#C15A3C}
 .c2{position:absolute;width:48px;height:48px;left:28px;border-radius:50%;background:#D4B895}
-.tita{font-size:44px;color:#FBF7F0;letter-spacing:.06em}
-.badge{background:rgba(251,247,240,.12);color:#EDE3D6;font-size:26px;border-radius:999px;padding:12px 26px}
+.tita{font-size:44px;color:var(--title);letter-spacing:.06em}
+.badge{background:var(--badgeBg);color:var(--badgeFg);font-size:26px;border-radius:999px;padding:12px 26px}
 .wrap{position:absolute;left:0;right:0;padding:0 84px}
 .wrap.at-top{top:200px}
 .wrap.at-mid{top:50%;transform:translateY(-50%)}
-h3{line-height:1.3;color:#FBF7F0;letter-spacing:-.02em;-webkit-text-stroke:1.1px #FBF7F0}
-h3 .o{color:#D4B895;-webkit-text-stroke-color:#D4B895}
+h3{line-height:1.3;color:var(--title);letter-spacing:-.02em;-webkit-text-stroke:1.1px var(--title)}
+h3 .o{color:var(--accent);-webkit-text-stroke-color:var(--accent)}
 h3 .line{display:block}
-.sub{margin-top:30px;color:#E6EFE8;line-height:1.62;letter-spacing:-.01em}
-.sub em{font-style:normal;color:#FBF7F0;box-shadow:inset 0 -.12em rgba(212,184,149,.8);padding:0 .04em}
+.sub{margin-top:30px;color:var(--sub);line-height:1.62;letter-spacing:-.01em}
+.sub em{font-style:normal;color:var(--title);box-shadow:inset 0 -.12em var(--ul);padding:0 .04em}
 .sched{margin-top:58px;display:flex;flex-direction:column;gap:40px}
 .row{display:flex;gap:30px;align-items:flex-start;border-top:1px solid rgba(251,247,240,.16);padding-top:36px}
 .row:first-child{border-top:none;padding-top:0}
@@ -63,7 +91,7 @@ h3 .line{display:block}
 .tags span{background:rgba(251,247,240,.14);color:#DCE7DE;font-size:25px;padding:10px 20px;border-radius:999px}
 .foot{position:absolute;bottom:52px;left:84px;right:84px;display:flex;justify-content:space-between;align-items:flex-end}
 .foot .cap{font-size:24px;color:#8FA797}
-.foot .next{font-size:28px;color:#D4B895}
+.foot .next{font-size:28px;color:var(--foot)}
 `;
 
 const H = (size, ...lines) =>
@@ -72,7 +100,7 @@ const SUB = (t, size = 33) => `<div class="sub" style="font-size:${size}px">${t}
 const chunk = (a, n) => Array.from({length: Math.ceil(a.length / n)}, (_, i) => a.slice(i * n, i * n + n));
 
 const pages = [];
-pages.push({at: 'mid', badge: set.cover.badge, foot: '넘겨보세요 ›',
+pages.push({at: 'mid', badge: set.cover.badge, foot: '넘겨보세요 ›', theme: T,
   mid: H(78, ...set.cover.title) + SUB(set.cover.sub, 37)});
 const groups = chunk(set.rows, 4);
 groups.forEach((rows, gi) => pages.push({at: 'top', foot: '넘겨보세요 ›', cap: gi === groups.length - 1 ? `출처 ${set.source}` : '',
@@ -87,8 +115,9 @@ pages.push({at: 'mid', badge: set.cover.badge, foot: '저장하기 ♡',
     `<div class="box"><div class="t">${set.closing.box}</div>` +
     '<div class="tags"><span>@titakorea</span><span>tita-app.com</span></div></div>'});
 
+const vars = (t) => `--bg:${t.bg};--g1:${t.g1};--g2:${t.g2};--title:${t.title};--accent:${t.accent};--sub:${t.sub};--badgeBg:${t.badgeBg};--badgeFg:${t.badgeFg};--foot:${t.foot};--ul:${t.ul}`;
 const card = (s, W, H_) => `
-<div class="card">
+<div class="card" style="${vars(s.theme || F)}">
   <div class="glow"></div><div class="glow2"></div>
   <div class="top">
     <div class="logo"><div class="circles"><div class="c1"></div><div class="c2"></div></div><div class="tita">티타</div></div>
@@ -115,4 +144,4 @@ for (const f of fs.readdirSync(DIR)) if (/^(card-\d+|story)\.(jpe?g|png)$/.test(
 pages.forEach((p, i) => { render(card(p, 1080, 1350), 1080, 1350, path.join(DIR, `card-${i + 1}.png`)); console.log('rendered card', i + 1); });
 // 스토리: 표지를 9:16으로. 중앙 정렬이라 같은 마크업이 그대로 선다.
 render(card({...pages[0], foot: '자세한 건 피드에서 ›'}, 1080, 1920), 1080, 1920, path.join(DIR, 'story.png'));
-console.log(`rendered story\n끝. assets/instagram/${slug}/card-1..${pages.length}.jpg + story.jpg`);
+console.log(`rendered story (표지 테마 ${coverTheme})\n끝. assets/instagram/${slug}/card-1..${pages.length}.jpg + story.jpg`);

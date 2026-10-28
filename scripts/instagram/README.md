@@ -74,6 +74,8 @@ node scripts/instagram/seoul-events.mjs --make free-11-w2 --pick 1,3,4,7   # 번
 
 생성물: `set.json`(카드 데이터) · `caption.txt` · `card-1..N.jpg` · `story.jpg`(9:16).
 카드만 다시 구우려면 `node scripts/cards/gen-event-cards.cjs free-11-w2`.
+표지·스토리 색은 세트마다 돌아간다(forest → cream → terracotta → plum → teal). 처음 구울 때 `set.json`의 `theme`에
+적히므로 다시 구워도 같고, 바꾸려면 `--theme cream`처럼 준다. 일정·마무리 장은 늘 딥그린.
 운영 리듬과 주제 뱅크는 `docs/social/instagram-plan-2026-11.md`.
 
 ## 스토리
