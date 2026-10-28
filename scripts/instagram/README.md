@@ -12,53 +12,55 @@ assets/instagram/
   published.json              ← 올라간 기록 (스크립트가 쓴다. 손대지 말 것)
 ```
 
-## 한 번만 하는 설정 — Meta 개발자 콘솔
+## 한 번만 하는 설정 — 토큰 받기
 
-앱 대시보드 → Use cases → Instagram API → **API setup with Instagram login**.
-(Unified login은 비즈니스 포트폴리오와 시스템 유저가 있어야 해서 더 길다.
-대신 토큰 만료가 없어 크론에 좋다 — 아래 "토큰 수명" 참고.)
+⚠️ **콘솔의 "Generate token" 단추는 쓰지 말 것.** 2026-10-28 실측: Unified login·Instagram login
+어느 메뉴에서 눌러도 "tita 인스타 System User"의 **자산 없는 빈 토큰**(EAA…)만 나왔다.
+권한 목록은 멀쩡한데 어떤 계정도 못 연다. 정식 Facebook 로그인 창(`--login-url`)으로 받아도
+같았다. 비즈니스 설정의 "Instagram 계정" 자산 배정도 소용없었다(그건 광고·Suite용).
 
-1. 인스타 계정이 **프로페셔널**(비즈니스/크리에이터)인지 확인. 아니면 인스타 앱
-   설정에서 전환.
-2. 콘솔 **2. Generate access tokens** → *Add account* → @titakorea로 로그인 → 권한
-   허용 → *Generate token*. 나오는 긴 문자열이 `IG_ACCESS_TOKEN`.
-   (Roles 탭에 그 계정을 Instagram Tester로 넣어 두라고 하면 넣는다. 개발 모드에서도
-   테스터 계정에는 올릴 수 있다 — 앱 리뷰 없이 우리 계정 하나면 충분.)
-3. `.env.local`에 넣는다 (public 레포라 **절대 커밋하지 말 것** — `.env*`는 gitignore).
+되는 길은 **Business Login for Instagram** — titakorea 계정에서 직접 허용하는 방식이다.
+토큰은 60일짜리라 연장이 필요하다(아래).
 
-   ```
-   IG_ACCESS_TOKEN=...
-   IG_GRAPH_HOST=graph.instagram.com
-   ```
-
-4. 계정 ID 찾기 → 나오는 `IG_USER_ID=`를 `.env.local`에 추가.
+1. 콘솔 → Use cases → Instagram API → **API setup with Instagram login**.
+   - 1단계 **Business login settings → OAuth redirect URIs**에 `https://tita-app.com/auth/callback` 등록.
+   - 같은 화면의 **Instagram app ID / Instagram app secret**을 `.env.local`에
+     `IG_APP_ID=` / `IG_APP_SECRET=` 으로. (Meta 앱 시크릿과 다른 값이다.)
+   - **App roles → Roles → Instagram Testers**에 titakorea가 있고 인스타 앱에서 초대를
+     수락한 상태여야 한다. 아니면 로그인 창이 "Insufficient developer role"로 막힌다.
+2. 로그인 창 주소를 뽑아 브라우저에서 연다. titakorea로 로그인 → 허용 →
+   tita-app.com의 "페이지 없음" 화면으로 튕긴다(정상). 그 주소창 전체를 복사.
 
    ```bash
-   node scripts/instagram/publish.mjs --whoami
+   node scripts/instagram/publish.mjs --ig-login-url
    ```
 
-5. 크론으로 돌리려면 GitHub Secrets에 `IG_ACCESS_TOKEN`, `IG_USER_ID`를 넣는다.
-   (Variables에 `IG_GRAPH_HOST`도. 안 넣으면 graph.instagram.com.)
+3. 그 주소를 넘기면 60일 토큰으로 바꿔 `.env.local`에 쓴다(토큰·호스트·계정 ID 세 줄).
 
    ```bash
-   gh secret set IG_ACCESS_TOKEN -R hangyeolryu/bloomagain-website
-   gh secret set IG_USER_ID -R hangyeolryu/bloomagain-website
+   node scripts/instagram/publish.mjs --ig-exchange-code '<돌아온 주소>' --write
+   node scripts/instagram/publish.mjs --whoami     # @titakorea, 게시물 N개 가 나와야 한다
    ```
 
-### 토큰 수명
+4. 크론까지 쓰려면 GitHub에 같은 값을 넣는다(secret 쓰기는 사람이 직접).
 
-| 로그인 방식 | 토큰 | 만료 | 크론 적합 |
-|---|---|---|---|
-| Instagram login | 장기 사용자 토큰 | **60일** (연장 가능) | 두 달마다 갱신해야 함 |
-| Unified / Facebook login | 시스템 유저 토큰 | 없음 | ◎ |
+   ```bash
+   grep '^IG_ACCESS_TOKEN=' .env.local | cut -d= -f2- | tr -d '\n' | gh secret set IG_ACCESS_TOKEN -R hangyeolryu/bloomagain-website
+   grep '^IG_USER_ID=' .env.local | cut -d= -f2- | tr -d '\n' | gh secret set IG_USER_ID -R hangyeolryu/bloomagain-website
+   gh variable set IG_GRAPH_HOST -b graph.instagram.com -R hangyeolryu/bloomagain-website
+   ```
 
-Instagram 로그인 토큰은 만료 **전에** 연장한다(만료 뒤엔 콘솔에서 다시 발급).
-연장하면 `.env.local`을 갱신하고, CI면 secret도 갈아끼운다.
+### 토큰 수명 — 60일, 만료 전에 연장
+
+발급일 기준 60일(2026-10-28 발급 → **2026-12-27 만료**). 만료 **전에** 연장해야 하고,
+지나면 위 2~3번을 다시 한다. 연장은 발급 24시간 뒤부터 된다. 달력에 **12월 15일쯤** 적어 둘 것.
 
 ```bash
 node scripts/instagram/publish.mjs --refresh-token --write
-gh secret set IG_ACCESS_TOKEN -R hangyeolryu/bloomagain-website < <(grep ^IG_ACCESS_TOKEN= .env.local | cut -d= -f2-)
+grep '^IG_ACCESS_TOKEN=' .env.local | cut -d= -f2- | tr -d '\n' | gh secret set IG_ACCESS_TOKEN -R hangyeolryu/bloomagain-website
 ```
+
+토큰이 어느 앱·누구 것인지 볼 때: `--debug-token`(META_APP_ID·META_APP_SECRET 필요, EAA 토큰만).
 
 ## 올리기
 
@@ -85,6 +87,8 @@ git add assets/instagram/published.json && git commit -m "chore(인스타): insi
 * **The image format is not supported** — PNG다. `sips -s format jpeg card-1.png --out card-1.jpg`.
 * **(#10) Application does not have permission** — 토큰에 `instagram_business_content_publish`가
   없거나 계정이 프로페셔널이 아니다. 콘솔에서 토큰 다시 발급.
-* **Invalid OAuth access token / Session has expired** — 토큰 만료. 콘솔에서 재발급.
+* **Invalid OAuth access token / Session has expired** — 토큰 만료. 위 2~3번으로 재발급.
+* **Object with ID '1784…' does not exist / missing permissions** — 자산 없는 빈 토큰(콘솔 Generate token 산물). `--debug-token`으로 확인, 위 절차로 다시.
+* **Insufficient developer role** — 로그인한 인스타 계정이 앱 테스터가 아님. 다른 계정으로 로그인돼 있거나 초대 미수락.
 * 캐러셀은 **2~10장**, 캡션 **2,200자**, 해시태그 **30개**가 상한. 스크립트가 먼저 막는다.
 * 하루 게시 상한은 계정당 **100건**(24시간). 우리 쓰임엔 안 닿는다.

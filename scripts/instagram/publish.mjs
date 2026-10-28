@@ -6,6 +6,11 @@
 //   node scripts/instagram/publish.mjs --next                        # queue.txt의 첫 미게시 세트 (크론용)
 //   node scripts/instagram/publish.mjs --whoami                      # 토큰이 누구 건지
 //   node scripts/instagram/publish.mjs --refresh-token [--write]     # 60일 토큰 연장 (Instagram 로그인형만)
+//   node scripts/instagram/publish.mjs --debug-token                 # 토큰에 붙은 인스타 자산 확인 (META_APP_ID/SECRET 필요)
+//   node scripts/instagram/publish.mjs --login-url                   # Unified login 창 주소 (콘솔 Generate token이 빈 토큰을 줄 때)
+//   node scripts/instagram/publish.mjs --exchange-code <주소> --write # 로그인 뒤 돌아온 주소의 code → 토큰 → .env.local
+//   node scripts/instagram/publish.mjs --ig-login-url                # Business Login for Instagram 창 주소 (IG_APP_ID 필요)
+//   node scripts/instagram/publish.mjs --ig-exchange-code <주소> --write # 그 code → 60일 토큰 → .env.local (IG_APP_SECRET 필요)
 //
 // 세트 하나 = assets/instagram/<slug>/ 폴더:
 //   card-1.jpg … card-N.jpg   순서대로 캐러셀 (2~10장, 1장이면 단일 게시물). JPEG만.
@@ -82,17 +87,134 @@ async function whoami() {
     console.log(me);
     console.log(`\nIG_USER_ID=${me.user_id || me.id}`);
   } else {
-    // Facebook/Unified 로그인형: 페이지에 연결된 인스타 계정을 찾는다.
-    const pages = await api("GET", "me/accounts", { fields: "name,instagram_business_account{id,username}" });
-    console.log(JSON.stringify(pages, null, 2));
+    // Facebook/Unified 로그인형. 시스템 유저 토큰이면 배정된 인스타 자산에서,
+    // 일반 사용자 토큰이면 페이지에 연결된 인스타 계정에서 찾는다.
+    const me = await api("GET", "me", { fields: "id,name" });
+    console.log(`토큰 주인: ${me.name} (${me.id})`);
+    let found = 0;
+    const assigned = await api("GET", "me/assigned_instagram_accounts", { fields: "id,username" }).catch(() => ({ data: [] }));
+    for (const a of assigned.data || []) { found++; console.log(`\nIG_USER_ID=${a.id}  (@${a.username}, 시스템 유저에 배정된 자산)`); }
+    const pages = await api("GET", "me/accounts", { fields: "name,instagram_business_account{id,username}" }).catch(() => ({ data: [] }));
     for (const p of pages.data || []) {
-      if (p.instagram_business_account) console.log(`\nIG_USER_ID=${p.instagram_business_account.id}  (@${p.instagram_business_account.username}, 페이지 "${p.name}")`);
+      if (p.instagram_business_account) { found++; console.log(`\nIG_USER_ID=${p.instagram_business_account.id}  (@${p.instagram_business_account.username}, 페이지 "${p.name}")`); }
     }
+    // business_management 권한이 있으면 포트폴리오의 인스타 계정에서도 찾는다.
+    const biz = await api("GET", "me/businesses", { fields: "id,name" }).catch(() => ({ data: [] }));
+    for (const b of biz.data || []) {
+      for (const edge of ["owned_instagram_accounts", "instagram_accounts"]) {
+        const r = await api("GET", `${b.id}/${edge}`, { fields: "id,username" }).catch(() => ({ data: [] }));
+        for (const a of r.data || []) { found++; console.log(`\nIG_USER_ID=${a.id}  (@${a.username}, 포트폴리오 "${b.name}")`); }
+      }
+    }
+    if (!found) console.log(`\n⚠️  이 토큰에 배정된 인스타 계정이 없다.
+→ business.facebook.com/settings → 사용자 → 시스템 사용자 → "${me.name}" → 자산 추가 → Instagram 계정 → @titakorea 선택(콘텐츠 관리 권한).
+  @titakorea가 목록에 없으면 먼저 계정 → Instagram 계정 에서 포트폴리오에 추가한 뒤 다시.`);
   }
   if (USER_ID) {
     const acct = await api("GET", USER_ID, { fields: "username,media_count" });
     console.log(`\nIG_USER_ID=${USER_ID} → @${acct.username}, 게시물 ${acct.media_count}개`);
   }
+}
+
+// ── --debug-token: 토큰에 어떤 인스타 자산이 붙었는지 (META_APP_ID·META_APP_SECRET 필요) ──
+async function debugToken() {
+  needToken();
+  const appId = process.env.META_APP_ID, secret = process.env.META_APP_SECRET;
+  if (!appId || !secret) throw new Error("META_APP_ID와 META_APP_SECRET이 .env.local에 있어야 한다 (콘솔 App settings → Basic).");
+  const u = new URL(`https://graph.facebook.com/${VERSION}/debug_token`);
+  u.searchParams.set("input_token", TOKEN);
+  u.searchParams.set("access_token", `${appId}|${secret}`);
+  const j = await (await fetch(u)).json();
+  if (j.error) throw new Error(j.error.message);
+  const d = j.data;
+  console.log(`종류 ${d.type} · 앱 "${d.application}" · 유효 ${d.is_valid} · 만료 ${d.expires_at ? new Date(d.expires_at * 1000).toISOString() : "없음"}`);
+  let bound = 0;
+  for (const g of d.granular_scopes || []) {
+    const ids = g.target_ids || [];
+    if (g.scope.startsWith("instagram")) bound += ids.length;
+    console.log(`  ${g.scope.padEnd(32)} ${ids.length ? ids.join(", ") : "(자산 없음)"}`);
+  }
+  if (!bound) console.log(`\n⚠️  인스타 자산이 하나도 안 붙은 토큰이다. 이 토큰으론 어떤 계정도 못 연다.
+→ 비즈니스 설정 → 시스템 사용자 중 인스타 계정이 배정된 유저로 토큰을 다시 뽑을 것 (README "토큰 수명" 참고).`);
+  else console.log(`\n이 토큰이 여는 인스타 계정 ID 위 목록 중 하나를 IG_USER_ID에.`);
+}
+
+// ── --login-url / --exchange-code: Unified login(Facebook Login for Business) 정식 경로 ──
+// 콘솔의 "Generate token" 단추가 자산 없는 빈 토큰을 주는 경우가 있다. 그땐 로그인 창에서
+// 비즈니스 관리자가 인스타 계정을 직접 고르게 하고, 돌아온 code를 토큰으로 바꾼다.
+const REDIRECT = process.env.IG_REDIRECT_URI || "https://tita-app.com/auth/callback";
+function loginUrl() {
+  const appId = process.env.META_APP_ID, cfg = process.env.META_LOGIN_CONFIG_ID;
+  if (!appId || !cfg) throw new Error("META_APP_ID와 META_LOGIN_CONFIG_ID(콘솔 1단계 Configuration ID)가 .env.local에 있어야 한다.");
+  const u = new URL("https://www.facebook.com/v24.0/dialog/oauth");
+  u.searchParams.set("client_id", appId);
+  u.searchParams.set("config_id", cfg);
+  u.searchParams.set("redirect_uri", REDIRECT);
+  u.searchParams.set("response_type", "code");
+  u.searchParams.set("override_default_response_type", "true");
+  console.log(`1) 콘솔 1단계 "Register a new redirect URL"에 아래를 등록(Save):\n   ${REDIRECT}\n2) 브라우저에서 열기 → 비즈니스 TITA · 인스타 titakorea 선택 → 허용:\n   ${u}\n3) 돌아온 주소 전체(…/auth/callback?code=…)를 --exchange-code 에 넘긴다.`);
+}
+async function exchangeCode(codeOrUrl) {
+  const appId = process.env.META_APP_ID, secret = process.env.META_APP_SECRET;
+  if (!appId || !secret) throw new Error("META_APP_ID·META_APP_SECRET이 필요하다.");
+  let code = codeOrUrl;
+  try { const u = new URL(codeOrUrl); code = u.searchParams.get("code") || u.hash.match(/code=([^&]+)/)?.[1] || codeOrUrl; } catch {}
+  code = code.replace(/#.*$/, "");
+  const u = new URL(`https://graph.facebook.com/${VERSION}/oauth/access_token`);
+  u.searchParams.set("client_id", appId); u.searchParams.set("client_secret", secret);
+  u.searchParams.set("redirect_uri", REDIRECT); u.searchParams.set("code", code);
+  const j = await (await fetch(u)).json();
+  if (j.error) throw new Error(`code 교환 실패: ${j.error.message}`);
+  console.log(`토큰 받음 (${j.token_type || "bearer"}, 만료 ${j.expires_in ? Math.round(j.expires_in / 86400) + "일" : "없음"})`);
+  if (flag("write") && existsSync(ENV_LOCAL)) {
+    const src = await readFile(ENV_LOCAL, "utf8");
+    const out = src.match(/^IG_ACCESS_TOKEN=/m)
+      ? src.replace(/^IG_ACCESS_TOKEN=.*$/m, `IG_ACCESS_TOKEN=${j.access_token}`)
+      : src + `\nIG_ACCESS_TOKEN=${j.access_token}\n`;
+    await writeFile(ENV_LOCAL, out);
+    console.log(".env.local의 IG_ACCESS_TOKEN 갱신됨");
+  } else console.log(`IG_ACCESS_TOKEN=${j.access_token}`);
+}
+
+// ── --ig-login-url / --ig-exchange-code: Business Login for Instagram (graph.instagram.com) ──
+// Unified login이 자산 없는 토큰만 줄 때의 우회로. 인스타 계정에서 직접 허용하므로 자산이 붙는다.
+// 필요: IG_APP_ID(콘솔 "API setup with Instagram login"의 Instagram app ID), IG_APP_SECRET(같은 화면).
+const IG_SCOPES = "instagram_business_basic,instagram_business_content_publish";
+function igLoginUrl() {
+  const appId = process.env.IG_APP_ID;
+  if (!appId) throw new Error("IG_APP_ID가 .env.local에 있어야 한다.");
+  const u = new URL("https://www.instagram.com/oauth/authorize");
+  u.searchParams.set("enable_fb_login", "0");
+  u.searchParams.set("force_authentication", "1");
+  u.searchParams.set("client_id", appId);
+  u.searchParams.set("redirect_uri", REDIRECT);
+  u.searchParams.set("response_type", "code");
+  u.searchParams.set("scope", IG_SCOPES);
+  console.log(`1) 콘솔 "API setup with Instagram login" → Business login settings → OAuth redirect URIs에 등록:\n   ${REDIRECT}\n2) 브라우저에서 열기 → titakorea로 로그인 → 허용:\n   ${u}\n3) 돌아온 주소 전체를 --ig-exchange-code 에 넘긴다.`);
+}
+async function igExchangeCode(codeOrUrl) {
+  const appId = process.env.IG_APP_ID, secret = process.env.IG_APP_SECRET;
+  if (!appId || !secret) throw new Error("IG_APP_ID·IG_APP_SECRET이 필요하다.");
+  let code = codeOrUrl;
+  try { code = new URL(codeOrUrl).searchParams.get("code") || codeOrUrl; } catch {}
+  code = code.replace(/#.*$/, "");
+  const body = new URLSearchParams({ client_id: appId, client_secret: secret, grant_type: "authorization_code", redirect_uri: REDIRECT, code });
+  const short = await (await fetch("https://api.instagram.com/oauth/access_token", { method: "POST", body })).json();
+  if (short.error_message || short.error) throw new Error(`code 교환 실패: ${short.error_message || JSON.stringify(short.error)}`);
+  const lu = new URL("https://graph.instagram.com/access_token");
+  lu.searchParams.set("grant_type", "ig_exchange_token"); lu.searchParams.set("client_secret", secret); lu.searchParams.set("access_token", short.access_token);
+  const long = await (await fetch(lu)).json();
+  if (long.error) throw new Error(`장기 토큰 교환 실패: ${long.error.message}`);
+  const mu = new URL("https://graph.instagram.com/me"); mu.searchParams.set("fields", "user_id,username"); mu.searchParams.set("access_token", long.access_token);
+  const me = await (await fetch(mu)).json();
+  console.log(`토큰 받음 — @${me.username} (user_id ${me.user_id}), ${Math.round(long.expires_in / 86400)}일 뒤 만료`);
+  if (flag("write") && existsSync(ENV_LOCAL)) {
+    let src = await readFile(ENV_LOCAL, "utf8");
+    const set = (k, v) => { src = src.match(new RegExp(`^${k}=`, "m")) ? src.replace(new RegExp(`^${k}=.*$`, "m"), `${k}=${v}`) : src + `\n${k}=${v}`; };
+    set("IG_ACCESS_TOKEN", long.access_token); set("IG_GRAPH_HOST", "graph.instagram.com"); set("IG_USER_ID", me.user_id);
+    await writeFile(ENV_LOCAL, src.replace(/\n*$/, "\n"));
+    console.log(".env.local 갱신됨 (IG_ACCESS_TOKEN · IG_GRAPH_HOST · IG_USER_ID)");
+  } else console.log(`IG_ACCESS_TOKEN=${long.access_token}\nIG_GRAPH_HOST=graph.instagram.com\nIG_USER_ID=${me.user_id}`);
 }
 
 // ── --refresh-token ───────────────────────────────────────────────────────
@@ -202,6 +324,11 @@ async function publishSet(set) {
 try {
   if (flag("whoami")) { await whoami(); process.exit(0); }
   if (flag("refresh-token")) { await refreshToken(); process.exit(0); }
+  if (flag("debug-token")) { await debugToken(); process.exit(0); }
+  if (flag("login-url")) { loginUrl(); process.exit(0); }
+  if (flag("ig-login-url")) { igLoginUrl(); process.exit(0); }
+  if (flag("ig-exchange-code")) { await igExchangeCode(opt("ig-exchange-code")); process.exit(0); }
+  if (flag("exchange-code")) { await exchangeCode(opt("exchange-code")); process.exit(0); }
 
   const ledger = await readLedger();
   let slug = opt("slug");
@@ -210,7 +337,7 @@ try {
     if (!slug) { console.log("큐에 남은 세트가 없다 (assets/instagram/queue.txt). 할 일 없음."); process.exit(0); }
   }
   if (!slug) {
-    console.log("쓰는 법: --slug <폴더> [--dry-run] | --next | --whoami | --refresh-token [--write]");
+    console.log("쓰는 법: --slug <폴더> [--dry-run] | --next | --whoami | --debug-token | --refresh-token [--write]");
     process.exit(1);
   }
   if (ledger[slug] && !flag("force")) {
