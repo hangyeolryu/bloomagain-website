@@ -11,6 +11,8 @@
 족하다. 인스타 카드는 혼자 서야 하고, 캡션은 카드에 글이 있으면 잘 안 읽힌다.
 그래서 인스타 쪽에만 근거와 숫자를 `EX()` 박스로 카드 안에 넣고 장수를 늘렸다.
 인스타 카드는 사이트에 서빙할 필요가 없어 `public/` 바깥에 둔다.
+(게시 API가 가져가는 공개 URL은 raw.githubusercontent.com — 레포가 public이라 된다.
+올리는 법은 `scripts/instagram/README.md`.)
 
 ## 실행
 
@@ -19,7 +21,7 @@ cd scripts/cards
 npm i -g playwright   # 최초 1회 (헤드리스 크로미움 필요)
 
 node gen-insight-cards-green.cjs   # gd_cardN.png / i14_cardN.png
-node gen-insta-cards.cjs           # ig_cardN.png
+node gen-insta-cards.cjs           # ig_cardN.jpg (인스타 API가 JPEG만 받아 jpg)
 ```
 
 렌더한 뒤 옮기고 임시 파일을 지운다.
@@ -27,8 +29,8 @@ node gen-insta-cards.cjs           # ig_cardN.png
 ```bash
 mkdir -p ../../public/blog/insight-14 ../../assets/instagram/insight-14
 for i in 1 2 3 4 5;     do cp i14_card$i.png ../../public/blog/insight-14/card-$i.png; done
-for i in 1 2 3 4 5 6 7; do cp ig_card$i.png  ../../assets/instagram/insight-14/card-$i.png; done
-rm -f _*.html *_card*.png
+for i in 1 2 3 4 5 6 7; do cp ig_card$i.jpg  ../../assets/instagram/insight-14/card-$i.jpg; done
+rm -f _*.html *_card*.png *_card*.jpg
 ```
 
 ## 새 세트 만들 때

@@ -108,7 +108,7 @@ const cards=[
     await p.evaluate(()=>document.fonts.ready);
     if(!(await p.evaluate(()=>document.fonts.check('400 66px Gowun')))) throw new Error('font fail '+s.page);
     await p.waitForTimeout(160);
-    await p.screenshot({path:`ig_card${s.page}.png`});
+    await p.screenshot({path:`ig_card${s.page}.jpg`,type:'jpeg',quality:92}); // 인스타 게시 API는 JPEG만 받는다
     console.log('rendered',s.page);
   }
   await b.close();
