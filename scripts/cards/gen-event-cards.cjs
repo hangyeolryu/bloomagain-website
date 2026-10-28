@@ -1,0 +1,118 @@
+// 데이터 기반 "갈 곳" 카드 렌더러 — assets/instagram/<slug>/set.json → card-N.jpg (+ story.jpg)
+//
+//   node scripts/cards/gen-event-cards.cjs <slug>
+//
+// 스타일은 gen-insta-nov-schedule.cjs와 같다(고운돋움 400, 딥그린 #143329, 크림, 샌드, 카멜).
+// 구성: 표지 1장 → 일정 n장(한 장에 4줄까지) → 마무리 1장. 표지를 9:16으로 한 장 더 구워 스토리로 쓴다.
+// 인스타 게시 API는 JPEG만 받으므로 sips로 jpg 변환한다(macOS).
+const {execFileSync} = require('child_process');
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
+
+const slug = process.argv[2];
+if (!slug) { console.error('쓰는 법: node gen-event-cards.cjs <slug>'); process.exit(1); }
+const ROOT = path.resolve(__dirname, '../..');
+const DIR = path.join(ROOT, 'assets/instagram', slug);
+const set = JSON.parse(fs.readFileSync(path.join(DIR, 'set.json'), 'utf8'));
+const FONT = 'file://' + path.join(__dirname, 'fonts/GowunDodum-Regular.woff2');
+
+const SHELL = path.join(os.homedir(),
+    'Library/Caches/ms-playwright/chromium_headless_shell-1243',
+    'chrome-headless-shell-mac-arm64/chrome-headless-shell');
+
+const CSS = (W, H) => `
+@font-face{font-family:Gowun;font-weight:400;src:url('${FONT}') format('woff2')}
+*{margin:0;padding:0;box-sizing:border-box;font-weight:400}
+html,body{width:${W}px;height:${H}px;overflow:hidden}
+.card{position:relative;width:${W}px;height:${H}px;font-family:Gowun,sans-serif;
+  -webkit-font-smoothing:antialiased;overflow:hidden;background:#143329}
+.glow{position:absolute;width:1200px;height:1200px;left:-220px;top:-380px;border-radius:50%;
+  background:radial-gradient(circle,rgba(212,184,149,.14) 0%,rgba(212,184,149,0) 62%)}
+.glow2{position:absolute;width:900px;height:900px;right:-300px;bottom:-320px;border-radius:50%;
+  background:radial-gradient(circle,rgba(193,90,60,.16) 0%,rgba(193,90,60,0) 64%)}
+.top{position:absolute;top:70px;left:84px;right:84px;display:flex;justify-content:space-between;align-items:center}
+.logo{display:flex;align-items:center;gap:18px}
+.circles{position:relative;width:76px;height:48px}
+.c1{position:absolute;width:48px;height:48px;left:0;border-radius:50%;background:#C15A3C}
+.c2{position:absolute;width:48px;height:48px;left:28px;border-radius:50%;background:#D4B895}
+.tita{font-size:44px;color:#FBF7F0;letter-spacing:.06em}
+.badge{background:rgba(251,247,240,.12);color:#EDE3D6;font-size:26px;border-radius:999px;padding:12px 26px}
+.wrap{position:absolute;left:0;right:0;padding:0 84px}
+.wrap.at-top{top:200px}
+.wrap.at-mid{top:50%;transform:translateY(-50%)}
+h3{line-height:1.3;color:#FBF7F0;letter-spacing:-.02em;-webkit-text-stroke:1.1px #FBF7F0}
+h3 .o{color:#D4B895;-webkit-text-stroke-color:#D4B895}
+h3 .line{display:block}
+.sub{margin-top:30px;color:#E6EFE8;line-height:1.62;letter-spacing:-.01em}
+.sub em{font-style:normal;color:#FBF7F0;box-shadow:inset 0 -.12em rgba(212,184,149,.8);padding:0 .04em}
+.sched{margin-top:58px;display:flex;flex-direction:column;gap:40px}
+.row{display:flex;gap:30px;align-items:flex-start;border-top:1px solid rgba(251,247,240,.16);padding-top:36px}
+.row:first-child{border-top:none;padding-top:0}
+.when{flex:0 0 232px}
+.when .d{font-size:42px;color:#D4B895;letter-spacing:-.02em;line-height:1.15}
+.when .t{margin-top:8px;font-size:26px;color:#9FB6A6}
+.what{min-width:0}
+.what .p{font-size:35px;color:#FBF7F0;letter-spacing:-.015em;line-height:1.26;word-break:keep-all}
+.what .m{margin-top:11px;font-size:26px;color:#BFD0C4;line-height:1.5}
+.what .m b{color:#D4B895}
+.box{margin-top:36px;background:rgba(251,247,240,.08);border-radius:24px;padding:30px 34px}
+.box .t{font-size:31px;color:#EDE3D6;line-height:1.58;letter-spacing:-.015em}
+.box .t b{color:#D4B895}
+.tags{margin-top:20px;display:flex;flex-wrap:wrap;gap:12px}
+.tags span{background:rgba(251,247,240,.14);color:#DCE7DE;font-size:25px;padding:10px 20px;border-radius:999px}
+.foot{position:absolute;bottom:52px;left:84px;right:84px;display:flex;justify-content:space-between;align-items:flex-end}
+.foot .cap{font-size:24px;color:#8FA797}
+.foot .next{font-size:28px;color:#D4B895}
+`;
+
+const H = (size, ...lines) =>
+  `<h3 style="font-size:${size}px">${lines.map((l, i) => `<span class="line${i === lines.length - 1 && lines.length > 1 ? ' o' : ''}">${l}</span>`).join('')}</h3>`;
+const SUB = (t, size = 33) => `<div class="sub" style="font-size:${size}px">${t}</div>`;
+const chunk = (a, n) => Array.from({length: Math.ceil(a.length / n)}, (_, i) => a.slice(i * n, i * n + n));
+
+const pages = [];
+pages.push({at: 'mid', badge: set.cover.badge, foot: '넘겨보세요 ›',
+  mid: H(78, ...set.cover.title) + SUB(set.cover.sub, 37)});
+const groups = chunk(set.rows, 4);
+groups.forEach((rows, gi) => pages.push({at: 'top', foot: '넘겨보세요 ›', cap: gi === groups.length - 1 ? `출처 ${set.source}` : '',
+  mid: H(50, groups.length > 1 ? `${set.cover.badge} 갈 곳 ${gi + 1}/${groups.length}` : `${set.cover.badge} 갈 곳`) +
+    `<div class="sched">${rows.map((r) => `
+      <div class="row">
+        <div class="when"><div class="d">${r.d}</div><div class="t">${r.t}</div></div>
+        <div class="what"><div class="p">${r.p}</div><div class="m">${r.m}</div></div>
+      </div>`).join('')}</div>`}));
+pages.push({at: 'mid', badge: set.cover.badge, foot: '저장하기 ♡',
+  mid: H(56, ...set.closing.title) + SUB(set.closing.sub, 34) +
+    `<div class="box"><div class="t">${set.closing.box}</div>` +
+    '<div class="tags"><span>@titakorea</span><span>tita-app.com</span></div></div>'});
+
+const card = (s, W, H_) => `
+<div class="card">
+  <div class="glow"></div><div class="glow2"></div>
+  <div class="top">
+    <div class="logo"><div class="circles"><div class="c1"></div><div class="c2"></div></div><div class="tita">티타</div></div>
+    ${s.badge ? `<div class="badge">${s.badge}</div>` : ''}
+  </div>
+  <div class="wrap at-${s.at}">${s.mid}</div>
+  <div class="foot"><div class="cap">${s.cap || ''}</div><div class="next">${s.foot || ''}</div></div>
+</div>`;
+
+function render(html, W, H_, outPng) {
+  const f = path.join(os.tmpdir(), `_ev_${slug}_${path.basename(outPng, '.png')}.html`);
+  fs.writeFileSync(f, `<!doctype html><html><head><meta charset="utf-8"><style>${CSS(W, H_)}</style></head><body>${html}</body></html>`);
+  execFileSync(SHELL, ['--headless', '--disable-gpu', '--hide-scrollbars', '--force-device-scale-factor=1',
+    `--window-size=${W},${H_}`, '--default-background-color=00000000', '--virtual-time-budget=2500',
+    `--screenshot=${outPng}`, 'file://' + f], {stdio: 'ignore'});
+  const jpg = outPng.replace(/\.png$/, '.jpg');
+  execFileSync('sips', ['-s', 'format', 'jpeg', '-s', 'formatOptions', '92', outPng, '--out', jpg], {stdio: 'ignore'});
+  fs.unlinkSync(outPng); fs.unlinkSync(f);
+  return jpg;
+}
+
+// 오래된 카드가 남지 않게 지운다
+for (const f of fs.readdirSync(DIR)) if (/^(card-\d+|story)\.(jpe?g|png)$/.test(f)) fs.unlinkSync(path.join(DIR, f));
+pages.forEach((p, i) => { render(card(p, 1080, 1350), 1080, 1350, path.join(DIR, `card-${i + 1}.png`)); console.log('rendered card', i + 1); });
+// 스토리: 표지를 9:16으로. 중앙 정렬이라 같은 마크업이 그대로 선다.
+render(card({...pages[0], foot: '자세한 건 피드에서 ›'}, 1080, 1920), 1080, 1920, path.join(DIR, 'story.png'));
+console.log(`rendered story\n끝. assets/instagram/${slug}/card-1..${pages.length}.jpg + story.jpg`);

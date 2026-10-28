@@ -31,6 +31,11 @@ on:
         required: false
         type: boolean
         default: false
+      story:
+        description: "같은 폴더의 story.jpg도 스토리로 올림"
+        required: false
+        type: boolean
+        default: false
 
 concurrency:
   group: instagram-publish
@@ -60,6 +65,9 @@ jobs:
           if [ -n "${{ inputs.slug }}" ]; then ARGS="--slug ${{ inputs.slug }}"; else ARGS="--next"; fi
           if [ "${{ inputs.dry_run }}" = "true" ]; then ARGS="$ARGS --dry-run"; fi
           node scripts/instagram/publish.mjs $ARGS
+          if [ "${{ inputs.story }}" = "true" ] && [ -n "${{ inputs.slug }}" ]; then
+            node scripts/instagram/publish.mjs --story ${{ inputs.slug }} $( [ "${{ inputs.dry_run }}" = "true" ] && echo --dry-run )
+          fi
 
       - name: Commit ledger
         run: |

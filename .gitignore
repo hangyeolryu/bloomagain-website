@@ -49,3 +49,6 @@ scripts/cardnews-out/
 
 # 인스타 카드 출력물 (스크립트로 다시 뽑는다)
 scripts/insta-out/
+
+# 인스타 세트 시험용 폴더
+assets/instagram/_*/

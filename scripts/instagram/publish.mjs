@@ -4,6 +4,7 @@
 //   node scripts/instagram/publish.mjs --slug insight-15 --dry-run   # 올라갈 내용만 보여줌
 //   node scripts/instagram/publish.mjs --slug insight-15             # 실제 게시
 //   node scripts/instagram/publish.mjs --next                        # queue.txt의 첫 미게시 세트 (크론용)
+//   node scripts/instagram/publish.mjs --story insight-16 [--dry-run]  # 폴더의 story.jpg(1080×1920)를 스토리로
 //   node scripts/instagram/publish.mjs --whoami                      # 토큰이 누구 건지
 //   node scripts/instagram/publish.mjs --refresh-token [--write]     # 60일 토큰 연장 (Instagram 로그인형만)
 //   node scripts/instagram/publish.mjs --debug-token                 # 토큰에 붙은 인스타 자산 확인 (META_APP_ID/SECRET 필요)
@@ -320,6 +321,25 @@ async function publishSet(set) {
   return { media_id: pub.id, permalink: media.permalink, published_at: media.timestamp };
 }
 
+// ── --story <slug>: assets/instagram/<slug>/story.jpg 를 스토리로 ─────────────
+async function publishStory(slug) {
+  needToken();
+  if (!USER_ID) throw new Error("IG_USER_ID가 없다.");
+  const file = join(ASSETS, slug, "story.jpg");
+  if (!existsSync(file)) throw new Error(`story.jpg가 없다: assets/instagram/${slug}/story.jpg (1080×1920 JPEG)`);
+  const url = `${IMAGE_BASE}/${slug}/story.jpg`;
+  const r0 = await fetch(url, { method: "HEAD" });
+  if (!r0.ok) throw new Error(`공개 URL이 안 열린다 (${r0.status}): ${url}\n→ main에 푸시했는지 확인.`);
+  if (DRY) { console.log(`(dry-run) 스토리 이미지: ${url}`); return; }
+  const r = await api("POST", `${USER_ID}/media`, { media_type: "STORIES", image_url: url });
+  await waitReady(r.id, "스토리");
+  const pub = await api("POST", `${USER_ID}/media_publish`, { creation_id: r.id });
+  const ledger = await readLedger();
+  ledger[`${slug}#story`] = { media_id: pub.id, published_at: new Date().toISOString(), story: true };
+  await writeFile(LEDGER, JSON.stringify(ledger, null, 2) + "\n");
+  console.log(`스토리 게시 완료 (media ${pub.id}). 24시간 뒤 사라진다. 장부 갱신됨.`);
+}
+
 // ── main ──────────────────────────────────────────────────────────────────
 try {
   if (flag("whoami")) { await whoami(); process.exit(0); }
@@ -330,6 +350,8 @@ try {
   if (flag("ig-exchange-code")) { await igExchangeCode(opt("ig-exchange-code")); process.exit(0); }
   if (flag("exchange-code")) { await exchangeCode(opt("exchange-code")); process.exit(0); }
 
+  if (flag("story")) { await publishStory(opt("story")); process.exit(0); }
+
   const ledger = await readLedger();
   let slug = opt("slug");
   if (!slug && flag("next")) {
@@ -337,7 +359,7 @@ try {
     if (!slug) { console.log("큐에 남은 세트가 없다 (assets/instagram/queue.txt). 할 일 없음."); process.exit(0); }
   }
   if (!slug) {
-    console.log("쓰는 법: --slug <폴더> [--dry-run] | --next | --whoami | --debug-token | --refresh-token [--write]");
+    console.log("쓰는 법: --slug <폴더> [--dry-run] | --story <폴더> | --next | --whoami | --debug-token | --refresh-token [--write]");
     process.exit(1);
   }
   if (ledger[slug] && !flag("force")) {

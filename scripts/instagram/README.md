@@ -62,6 +62,29 @@ grep '^IG_ACCESS_TOKEN=' .env.local | cut -d= -f2- | tr -d '\n' | gh secret set 
 
 토큰이 어느 앱·누구 것인지 볼 때: `--debug-token`(META_APP_ID·META_APP_SECRET 필요, EAA 토큰만).
 
+## 갈 곳 세트 — 서울 문화행사에서 자동으로
+
+`SEOUL_API_KEY`(data.seoul.go.kr 인증키, `.env.local`)가 있어야 전체가 온다. 없으면 샘플 5건.
+
+```bash
+node scripts/instagram/seoul-events.mjs --list                 # 앞으로 3주, 무료, 5060 취향 분류, 점수순
+node scripts/instagram/seoul-events.mjs --list --days 30 --paid
+node scripts/instagram/seoul-events.mjs --make free-11-w2 --pick 1,3,4,7   # 번호로 골라 세트 생성(카드·스토리·캡션)
+```
+
+생성물: `set.json`(카드 데이터) · `caption.txt` · `card-1..N.jpg` · `story.jpg`(9:16).
+카드만 다시 구우려면 `node scripts/cards/gen-event-cards.cjs free-11-w2`.
+운영 리듬과 주제 뱅크는 `docs/social/instagram-plan-2026-11.md`.
+
+## 스토리
+
+세트 폴더의 `story.jpg`(1080×1920)를 올린다. 24시간 뒤 사라지므로 시각을 골라 손으로.
+
+```bash
+node scripts/instagram/publish.mjs --story free-11-w2 --dry-run
+node scripts/instagram/publish.mjs --story free-11-w2
+```
+
 ## 올리기
 
 ```bash
