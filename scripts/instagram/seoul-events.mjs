@@ -155,7 +155,25 @@ async function makeSet(slug, picked) {
   await mkdir(dir, { recursive: true });
   const month = setMonth(picked);
   const free = picked.filter((e) => e.IS_FREE === "무료").length;
-  const rows = picked.map((e) => ({
+  // 포스터 썸네일 — 서울시 문화행사 데이터는 공공누리 1유형(출처표시). 카드 하단에 출처를 적는다.
+  // 작게(줄 옆 썸네일)만 쓴다. 포스터 안 작품 사진은 작가 저작물일 수 있어 전면엔 안 깐다.
+  const thumbs = [];
+  if (!flag("no-thumbs")) {
+    for (const [i, e] of picked.entries()) {
+      const out = join(dir, `thumb-${i + 1}.jpg`);
+      try {
+        const r = await fetch(e.MAIN_IMG, { headers: { "User-Agent": "Mozilla/5.0" } });
+        if (!r.ok || !/image/.test(r.headers.get("content-type") || "")) throw new Error(r.status);
+        const raw = join(dir, `_thumb-${i + 1}.bin`);
+        await writeFile(raw, Buffer.from(await r.arrayBuffer()));
+        execFileSync("sips", ["-s", "format", "jpeg", "-s", "formatOptions", "88", "-Z", "640", raw, "--out", out], { stdio: "ignore" });
+        await import("node:fs/promises").then((fs) => fs.unlink(raw));
+        thumbs[i] = `thumb-${i + 1}.jpg`;
+      } catch (err) { console.warn(`  포스터 못 받음 (${e.title.slice(0, 20)}): ${err.message}`); }
+    }
+  }
+  const rows = picked.map((e, i) => ({
+    img: thumbs[i] || null,
     d: cardDate(e),
     t: e.GUNAME,
     p: e.title.length > 44 ? e.title.slice(0, 43) + "…" : e.title,

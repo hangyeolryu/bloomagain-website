@@ -72,7 +72,11 @@ node scripts/instagram/seoul-events.mjs --list --days 30 --paid
 node scripts/instagram/seoul-events.mjs --make free-11-w2 --pick 1,3,4,7   # 번호로 골라 세트 생성(카드·스토리·캡션)
 ```
 
-생성물: `set.json`(카드 데이터) · `caption.txt` · `card-1..N.jpg` · `story.jpg`(9:16).
+생성물: `set.json`(카드 데이터) · `caption.txt` · `card-1..N.jpg` · `story.jpg`(9:16) · `thumb-N.jpg`(행사 포스터).
+포스터는 일정 줄 옆에 작게 붙는다(한 장 3줄). 데이터셋이 공공누리 1유형이라 카드 하단 출처 표기로 충분하다.
+포스터 안 작품 사진은 작가 저작물일 수 있어 전면에 크게 깔지 않는다. 빼려면 `--no-thumbs`.
+표지에 그림을 깔고 싶으면 `set.json`의 `cover.image`에 폴더 안 파일 이름(예: `cover.jpg`)을 적고 다시 굽는다 —
+생성 이미지는 장당 수십 원이 들고 행사 정보가 아니라서 특별한 세트에만.
 카드만 다시 구우려면 `node scripts/cards/gen-event-cards.cjs free-11-w2`.
 표지·스토리 색은 세트마다 돌아간다(forest → cream → terracotta → plum → teal). 처음 구울 때 `set.json`의 `theme`에
 적히므로 다시 구워도 같고, 바꾸려면 `--theme cream`처럼 준다. 일정·마무리 장은 늘 딥그린.

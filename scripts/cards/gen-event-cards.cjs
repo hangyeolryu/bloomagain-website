@@ -59,6 +59,10 @@ html,body{width:${W}px;height:${H}px;overflow:hidden}
   background:radial-gradient(circle,var(--g1) 0%,transparent 62%)}
 .glow2{position:absolute;width:900px;height:900px;right:-300px;bottom:-320px;border-radius:50%;
   background:radial-gradient(circle,var(--g2) 0%,transparent 64%)}
+.photo{position:absolute;left:0;top:0;width:100%;height:62%;overflow:hidden}
+.photo img{width:100%;height:100%;object-fit:cover;display:block;opacity:.92}
+.photo::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 0%,rgba(0,0,0,0) 45%,var(--bg) 100%)}
+.wrap.at-low{top:60%}
 .top{position:absolute;top:70px;left:84px;right:84px;display:flex;justify-content:space-between;align-items:center}
 .logo{display:flex;align-items:center;gap:18px}
 .circles{position:relative;width:76px;height:48px}
@@ -80,7 +84,11 @@ h3 .line{display:block}
 .when{flex:0 0 232px}
 .when .d{font-size:42px;color:#D4B895;letter-spacing:-.02em;line-height:1.15}
 .when .t{margin-top:8px;font-size:26px;color:#9FB6A6}
-.what{min-width:0}
+.what{min-width:0;flex:1}
+.thumb{flex:0 0 150px;width:150px;height:200px;border-radius:18px;overflow:hidden;background:rgba(251,247,240,.08);
+  box-shadow:0 6px 24px rgba(0,0,0,.25)}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.row.has-thumb{align-items:center}
 .what .p{font-size:35px;color:#FBF7F0;letter-spacing:-.015em;line-height:1.26;word-break:keep-all}
 .what .m{margin-top:11px;font-size:26px;color:#BFD0C4;line-height:1.5}
 .what .m b{color:#D4B895}
@@ -100,15 +108,17 @@ const SUB = (t, size = 33) => `<div class="sub" style="font-size:${size}px">${t}
 const chunk = (a, n) => Array.from({length: Math.ceil(a.length / n)}, (_, i) => a.slice(i * n, i * n + n));
 
 const pages = [];
-pages.push({at: 'mid', badge: set.cover.badge, foot: '넘겨보세요 ›', theme: T,
-  mid: H(78, ...set.cover.title) + SUB(set.cover.sub, 37)});
-const groups = chunk(set.rows, 4);
-groups.forEach((rows, gi) => pages.push({at: 'top', foot: '넘겨보세요 ›', cap: gi === groups.length - 1 ? `출처 ${set.source}` : '',
+pages.push({at: set.cover.image ? 'low' : 'mid', badge: set.cover.badge, foot: '넘겨보세요 ›', theme: T, image: set.cover.image || null,
+  mid: H(set.cover.image ? 70 : 78, ...set.cover.title) + SUB(set.cover.sub, set.cover.image ? 34 : 37)});
+const hasThumbs = set.rows.some((r) => r.img);
+const groups = chunk(set.rows, hasThumbs ? 3 : 4);
+groups.forEach((rows, gi) => pages.push({at: 'top', foot: '넘겨보세요 ›', cap: (gi === groups.length - 1 || hasThumbs) ? `출처 ${set.source}` : '',
   mid: H(50, groups.length > 1 ? `${set.cover.badge} 갈 곳 ${gi + 1}/${groups.length}` : `${set.cover.badge} 갈 곳`) +
     `<div class="sched">${rows.map((r) => `
-      <div class="row">
+      <div class="row${r.img ? ' has-thumb' : ''}">
         <div class="when"><div class="d">${r.d}</div><div class="t">${r.t}</div></div>
         <div class="what"><div class="p">${r.p}</div><div class="m">${r.m}</div></div>
+        ${r.img ? `<div class="thumb"><img src="file://${path.join(DIR, r.img)}"></div>` : ''}
       </div>`).join('')}</div>`}));
 pages.push({at: 'mid', badge: set.cover.badge, foot: '저장하기 ♡',
   mid: H(56, ...set.closing.title) + SUB(set.closing.sub, 34) +
@@ -119,6 +129,7 @@ const vars = (t) => `--bg:${t.bg};--g1:${t.g1};--g2:${t.g2};--title:${t.title};-
 const card = (s, W, H_) => `
 <div class="card" style="${vars(s.theme || F)}">
   <div class="glow"></div><div class="glow2"></div>
+  ${s.image ? `<div class="photo"><img src="file://${path.join(DIR, s.image)}"></div>` : ''}
   <div class="top">
     <div class="logo"><div class="circles"><div class="c1"></div><div class="c2"></div></div><div class="tita">티타</div></div>
     ${s.badge ? `<div class="badge">${s.badge}</div>` : ''}
