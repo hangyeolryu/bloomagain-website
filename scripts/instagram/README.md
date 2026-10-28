@@ -1,6 +1,6 @@
 # 인스타그램 자동 게시
 
-카드 세트를 `assets/instagram/<slug>/`에 넣고 큐에 적어 두면 화·금 11:00에
+카드 세트를 `assets/instagram/<slug>/`에 넣고 큐에 적어 두면 화·목 11:00에
 @titakorea에 캐러셀로 올라간다. 손으로 올릴 땐 스크립트 한 줄.
 
 ```
@@ -101,7 +101,7 @@ node scripts/instagram/publish.mjs --slug insight-16
 git add assets/instagram/published.json && git commit -m "chore(인스타): insight-16 게시" && git push
 ```
 
-자동으로 두려면 2)까지 하고 `queue.txt`에 `insight-16` 한 줄. 다음 화·금에 올라가고
+자동으로 두려면 2)까지 하고 `queue.txt`에 `insight-16` 한 줄. 다음 화·목에 올라가고(story.jpg가 있으면 스토리도 같이)
 장부는 워크플로가 커밋한다.
 
 ## 막힐 때

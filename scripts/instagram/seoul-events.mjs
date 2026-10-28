@@ -36,7 +36,8 @@ const CATS = (opt("cat", "전시/미술,클래식,국악,전통/역사,교육/�
 const DAYS = parseInt(opt("days", "21"));
 const FREE_ONLY = !flag("paid");
 const CENTRAL = ["종로구", "중구", "용산구", "서대문구", "마포구", "성북구", "서초구", "강남구", "송파구", "영등포구"];
-const KID_WORDS = /어린이|유아|초등|키즈|가족극|아동/;
+// 앱 functions/seoul_events.js와 같은 제외어 — 손으로 고른 것과 앱 목록이 어긋나지 않게
+const KID_WORDS = /어린이|유아|키즈|아동|초등|중등|고등|청소년|가족극|인형극|아이돌|팬미팅|팬사인|보이그룹|걸그룹|아카데미|수강생|강좌 수강/;
 
 // ── 수집 ──────────────────────────────────────────────────────────────────
 async function fetchAll() {
@@ -67,10 +68,10 @@ const d0 = (s) => new Date(s.replace(" ", "T").replace(/\.0$/, "") + "+09:00");
 const today = new Date(); today.setHours(0, 0, 0, 0);
 const horizon = new Date(today.getTime() + DAYS * 86400000);
 const WD = "일월화수목금토";
-const fmt = (d) => `${d.getMonth() + 1}월 ${d.getDate()}일(${WD[d.getDay()]})`;
+const fmt = (d) => `${d.getFullYear() !== today.getFullYear() ? "내년 " : ""}${d.getMonth() + 1}월 ${d.getDate()}일(${WD[d.getDay()]})`;
 
 function cleanTitle(t) {
-  return t.replace(/\[[^\]]*\]|【[^】]*】|<[^>]*>/g, " ").replace(/\s+/g, " ").replace(/\s+([,.·])/g, "$1").trim();
+  return t.replace(/\[[^\]]*\]|【[^】]*】|<[^>]*>/g, " ").replace(/^\s*20\d\d년?\s*/, "").replace(/^(제\s*)?\d+회\s+/, "").replace(/\s+/g, " ").replace(/\s+([,.·])/g, "$1").trim();
 }
 function dateLabel(e) {
   const s = d0(e.STRTDATE), en = d0(e.END_DATE);
@@ -81,29 +82,49 @@ function dateLabel(e) {
 // 카드의 왼쪽 날짜 칸(두 줄). 요일은 단일 날짜에만.
 function cardDate(e) {
   const s = d0(e.STRTDATE), en = d0(e.END_DATE);
-  const md = (d) => `${d.getMonth() + 1}월 ${d.getDate()}일`;
+  const md = (d) => `${d.getFullYear() !== today.getFullYear() ? "내년 " : ""}${d.getMonth() + 1}월 ${d.getDate()}일`;
   if (s.getTime() === en.getTime()) return `${md(s)}<br>(${WD[s.getDay()]})`;
   if (s <= today) return `${md(en)}<br>까지`;
   return `${md(s)}<br>~${s.getMonth() === en.getMonth() ? `${en.getDate()}일` : md(en)}`;
 }
 // 세트가 가리키는 달: 고른 행사들이 가장 많이 시작하는 달(이미 시작한 건 이번 달로)
 function setMonth(picked) {
+  if (today.getDate() >= 25) return `${(today.getMonth() + 1) % 12 + 1}월`;   // 월말에 만드는 세트는 다음 달 것
   const c = {};
   for (const e of picked) { const s = d0(e.STRTDATE); const m = (s <= today ? today : s).getMonth() + 1; c[m] = (c[m] || 0) + 1; }
   return Object.entries(c).sort((a, b) => b[1] - a[1] || a[0] - b[0])[0][0] + "월";
 }
+const VENUE = /박물관|미술관|궁|기념관|문화역|도서관|아트센터|갤러리|시립|국립|문화회관|아트홀|공예/;
+const VAGUE = /^(\d{4}\s*)?(기획전|기획전시|개인전|특별전|전시|상설전|소장품전|릴레이 개인전|XR 전시|온라인 전시)\s*$/;
 function score(e) {
   let n = 0;
   if (e.IS_FREE === "무료") n += 3;
   if (CENTRAL.includes(e.GUNAME)) n += 1;
   if (/전시|미술/.test(e.CODENAME)) n += 2;           // 낮에 혼자도 가는 종류
-  if (/클래식|국악|전통/.test(e.CODENAME)) n += 1;
+  if (/클래식|국악|전통/.test(e.CODENAME)) n += 2;     // 전시 일색이 되지 않게
   if (/누구나|전체|성인|제한없음|전 연령|모든/.test(e.USE_TRGT || "")) n += 1;
-  const span = (d0(e.END_DATE) - d0(e.STRTDATE)) / 86400000;
+  if (VENUE.test(e.PLACE || "")) n += 2;               // 이름 들으면 아는 곳
+  const s = d0(e.STRTDATE), en = d0(e.END_DATE);
+  const left = (en - today) / 86400000, span = (en - s) / 86400000;
   if (span >= 7) n += 1;                               // 기간이 길면 날짜 맞추기 쉽다
+  if (left <= 3) n -= 3;                               // 사흘 안에 끝나면 글 보고 못 간다
+  if (left > 120) n -= 2;                              // 넉 달 넘게 하면 "이번 달 갈 곳"이 아니다
+  if (VAGUE.test(cleanTitle(e.TITLE))) n -= 3;          // 제목만으론 뭔지 모른다
+  if (/온라인|비대면|유튜브|라이브 스트리밍/.test(e.TITLE + " " + (e.PLACE || ""))) n -= 9;
   if (KID_WORDS.test(e.TITLE + " " + (e.USE_TRGT || ""))) n -= 4;
   if (/오디션|공모|접수|모집/.test(e.TITLE)) n -= 3;
   return n;
+}
+// 자동으로 고를 때 한 분류가 넘치지 않게 (전시 4 · 나머지 2 정도)
+function diversify(sel, n) {
+  const cap = { "전시/미술": Math.ceil(n * 0.6) }, cnt = {}, out = [];
+  for (const e of sel) {
+    const c = e.CODENAME, lim = cap[c] ?? Math.ceil(n * 0.4);
+    if ((cnt[c] || 0) >= lim) continue;
+    cnt[c] = (cnt[c] || 0) + 1; out.push(e);
+    if (out.length >= n) break;
+  }
+  return out;
 }
 function select(rows) {
   const seen = new Set();
@@ -114,12 +135,15 @@ function select(rows) {
     .filter((e) => !FREE_ONLY || e.IS_FREE === "무료")
     .map((e) => ({ ...e, title: cleanTitle(e.TITLE), when: dateLabel(e), score: score(e) }))
     .filter((e) => { const k = e.title.slice(0, 20); if (seen.has(k)) return false; seen.add(k); return true; })
-    .sort((a, b) => b.score - a.score || d0(a.STRTDATE) - d0(b.STRTDATE));
+    .sort((a, b) => b.score - a.score || d0(a.END_DATE) - d0(b.END_DATE));
 }
 
 // ── 세트 만들기 ───────────────────────────────────────────────────────────
+// 장소는 건물 이름까지만 — 층·호수·전시실은 카드에서 소음이다
 function shortPlace(p) {
-  return (p || "").replace(/\s*\(.*?\)\s*/g, " ").replace(/\s+/g, " ").trim().slice(0, 18);
+  return (p || "").replace(/\s*\(.*?\)\s*/g, " ")
+    .replace(/\s*(B\d|지하\s*\d*층?|\d+층|\d+F|로비|앞|야외|(기획)?전시실\S*|제?\d+전시실).*$/, "")
+    .replace(/[,·]\s*.*$/, "").replace(/\s+/g, " ").trim().slice(0, 20);
 }
 function feeLabel(e) {
   if (e.IS_FREE === "무료") return "무료";
@@ -158,7 +182,7 @@ async function makeSet(slug, picked) {
   lines.push(`${month}에 서울에서 ${free === picked.length ? "무료로 볼 수 있는 것" : "가볼 만한 것"}, ${picked.length}군데 골랐어요.`);
   lines.push("");
   for (const e of picked) {
-    lines.push(`${e.when} · ${e.title}`);
+    lines.push(`${e.when.startsWith("~") ? e.when.slice(1) + "까지" : e.when} · ${e.title}`);
     lines.push(`${shortPlace(e.PLACE)}${e.GUNAME ? ` (${e.GUNAME})` : ""}, ${feeLabel(e)}${e.USE_TRGT && !/누구나|전체|제한없음/.test(e.USE_TRGT) ? `. ${e.USE_TRGT.slice(0, 30)}` : ""}`);
     lines.push("");
   }
@@ -191,7 +215,7 @@ try {
   }
   const slug = opt("make");
   const pick = opt("pick");
-  const picked = pick ? pick.split(",").map((n) => sel[parseInt(n) - 1]).filter(Boolean) : sel.slice(0, parseInt(opt("n", "6")));
+  const picked = pick ? pick.split(",").map((n) => sel[parseInt(n) - 1]).filter(Boolean) : diversify(sel, parseInt(opt("n", "6")));
   if (!picked.length) throw new Error("고른 행사가 없다. --list로 번호를 보고 --pick 으로 지정할 것.");
   await makeSet(slug, picked);
 } catch (e) {

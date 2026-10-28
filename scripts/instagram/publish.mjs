@@ -3,7 +3,7 @@
 //
 //   node scripts/instagram/publish.mjs --slug insight-15 --dry-run   # 올라갈 내용만 보여줌
 //   node scripts/instagram/publish.mjs --slug insight-15             # 실제 게시
-//   node scripts/instagram/publish.mjs --next                        # queue.txt의 첫 미게시 세트 (크론용)
+//   node scripts/instagram/publish.mjs --next [--with-story]         # queue.txt의 첫 미게시 세트 (크론용). story.jpg 있으면 스토리도
 //   node scripts/instagram/publish.mjs --story insight-16 [--dry-run]  # 폴더의 story.jpg(1080×1920)를 스토리로
 //   node scripts/instagram/publish.mjs --whoami                      # 토큰이 누구 건지
 //   node scripts/instagram/publish.mjs --refresh-token [--write]     # 60일 토큰 연장 (Instagram 로그인형만)
@@ -383,6 +383,10 @@ try {
   ledger[slug] = { ...result, cards: set.files.length };
   await writeFile(LEDGER, JSON.stringify(ledger, null, 2) + "\n");
   console.log(`\n게시 완료: ${result.permalink}\n장부 갱신: assets/instagram/published.json (커밋할 것)`);
+  if (flag("with-story") && existsSync(join(set.dir, "story.jpg"))) {
+    console.log("스토리도 올리는 중…");
+    await publishStory(slug);
+  }
 } catch (e) {
   console.error("\n❌ " + e.message);
   process.exit(1);
