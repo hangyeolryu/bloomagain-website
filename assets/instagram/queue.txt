@@ -1,5 +1,5 @@
 # 자동 게시 큐 — 위에서부터 한 줄에 폴더 이름 하나.
-# 크론(.github/workflows/instagram-publish.yml, 화·목 11:00)이 돌 때마다 여기서
+# 크론(.github/workflows/instagram-publish.yml, 화·목 오전 10:23 예약, 늦어질 수 있음)이 돌 때마다 여기서
 # published.json에 없는 첫 줄 하나를 올린다. 폴더에 caption.txt가 있어야 한다.
 # 올라간 세트는 published.json에 남으니 여기서 지우지 않아도 두 번 안 올라간다.
 #

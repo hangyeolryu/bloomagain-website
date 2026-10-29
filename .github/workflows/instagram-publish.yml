@@ -1,7 +1,7 @@
 # ─────────────────────────────────────────────────────────────────────────────
 # 인스타그램 자동 게시 (@titakorea)
 #
-# 화·목 11:00 KST에 assets/instagram/queue.txt의 첫 미게시 세트를 올린다(화=궁금해할 것, 목=갈 곳 — 주말 계획용).
+# 화·목 오전(10:23 KST 예약)에 assets/instagram/queue.txt의 첫 미게시 세트를 올린다(화=궁금해할 것, 목=갈 곳 — 주말 계획용).
 # 세트에 story.jpg가 있으면 스토리도 같이 올린다.
 # 수동으로는 Actions 탭 → Run workflow → slug 입력.
 #
@@ -20,7 +20,9 @@ name: Instagram publish
 
 on:
   schedule:
-    - cron: "0 2 * * 2,4"   # 화·목 11:00 KST
+    # 화·목 10:23 KST. 정시(분 00)는 GitHub 예약이 몰려 몇 시간씩 밀린다 —
+    # 2026-10-29 첫 자동 발송이 02:00 UTC 예약인데 08:14 UTC에 돌았다. 분을 비켜 둔다.
+    - cron: "23 1 * * 2,4"
   workflow_dispatch:
     inputs:
       slug:
