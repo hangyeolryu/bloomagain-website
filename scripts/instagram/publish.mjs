@@ -6,6 +6,7 @@
 //   node scripts/instagram/publish.mjs --next [--with-story]         # queue.txt의 첫 미게시 세트 (크론용). story.jpg 있으면 스토리도
 //   node scripts/instagram/publish.mjs --story insight-16 [--dry-run]  # 폴더의 story.jpg(1080×1920)를 스토리로
 //   node scripts/instagram/publish.mjs --story insight-16 --file story-list.jpg   # 다른 파일을 스토리로
+//   node scripts/instagram/publish.mjs --reel insight-16 [--to-feed] [--dry-run]  # reel.mp4를 릴스로 (기본 릴스 탭만)
 //   node scripts/instagram/publish.mjs --whoami                      # 토큰이 누구 건지
 //   node scripts/instagram/publish.mjs --refresh-token [--write]     # 60일 토큰 연장 (Instagram 로그인형만)
 //   node scripts/instagram/publish.mjs --debug-token                 # 토큰에 붙은 인스타 자산 확인 (META_APP_ID/SECRET 필요)
@@ -341,6 +342,39 @@ async function publishStory(slug, name = opt("file") || "story.jpg") {
   console.log(`스토리 게시 완료 (media ${pub.id}). 24시간 뒤 사라진다. 장부 갱신됨.`);
 }
 
+// ── --reel <slug>: assets/instagram/<slug>/reel.mp4 를 릴스로 ──────────────────
+// 기본은 릴스 탭에만(share_to_feed=false) — 같은 세트의 캐러셀이 피드에 있으니 겹치지 않게.
+// 피드에도 보이게 하려면 --to-feed. 캡션은 caption.txt, 커버는 reel-cover.jpg(있으면).
+async function publishReel(slug) {
+  needToken();
+  if (!USER_ID) throw new Error("IG_USER_ID가 없다.");
+  const dir = join(ASSETS, slug);
+  if (!existsSync(join(dir, "reel.mp4"))) throw new Error(`reel.mp4가 없다: node scripts/cards/gen-reel.cjs ${slug}`);
+  const videoUrl = `${IMAGE_BASE}/${slug}/reel.mp4`;
+  const coverUrl = existsSync(join(dir, "reel-cover.jpg")) ? `${IMAGE_BASE}/${slug}/reel-cover.jpg` : null;
+  const caption = existsSync(join(dir, "caption.txt")) ? (await readFile(join(dir, "caption.txt"), "utf8")).trim() : "";
+  const r0 = await fetch(videoUrl, { method: "HEAD" });
+  if (!r0.ok) throw new Error(`공개 URL이 안 열린다 (${r0.status}): ${videoUrl}\n→ main에 푸시했는지 확인.`);
+  console.log(`릴스 영상: ${videoUrl} (${Math.round((+r0.headers.get("content-length") || 0) / 1048576 * 10) / 10}MB)`);
+  if (DRY) { console.log(`(dry-run) 캡션 ${caption.length}자, 피드 노출 ${flag("to-feed")}`); return; }
+  const params = { media_type: "REELS", video_url: videoUrl, caption, share_to_feed: flag("to-feed") ? "true" : "false" };
+  if (coverUrl) params.cover_url = coverUrl;
+  const r = await api("POST", `${USER_ID}/media`, params);
+  // 영상은 처리에 몇 분 걸린다 — 최대 10분 기다린다
+  for (let i = 0; i < 120; i++) {
+    const st = await api("GET", r.id, { fields: "status_code,status" });
+    if (st.status_code === "FINISHED") break;
+    if (st.status_code === "ERROR" || st.status_code === "EXPIRED") throw new Error(`릴스 컨테이너 실패: ${st.status}`);
+    await new Promise((res) => setTimeout(res, 5000));
+  }
+  const pub = await api("POST", `${USER_ID}/media_publish`, { creation_id: r.id });
+  const media = await api("GET", pub.id, { fields: "permalink" });
+  const ledger = await readLedger();
+  ledger[`${slug}#reel`] = { media_id: pub.id, permalink: media.permalink, published_at: new Date().toISOString(), reel: true, to_feed: flag("to-feed") };
+  await writeFile(LEDGER, JSON.stringify(ledger, null, 2) + "\n");
+  console.log(`릴스 게시 완료: ${media.permalink}\n장부 갱신됨.`);
+}
+
 // ── main ──────────────────────────────────────────────────────────────────
 try {
   if (flag("whoami")) { await whoami(); process.exit(0); }
@@ -352,6 +386,7 @@ try {
   if (flag("exchange-code")) { await exchangeCode(opt("exchange-code")); process.exit(0); }
 
   if (flag("story")) { await publishStory(opt("story")); process.exit(0); }
+  if (flag("reel")) { await publishReel(opt("reel")); process.exit(0); }
 
   const ledger = await readLedger();
   let slug = opt("slug");
