@@ -71,7 +71,7 @@ html,body{width:${W}px;height:${H}px;overflow:hidden}
 .tita{font-size:44px;color:var(--title);letter-spacing:.06em}
 .badge{background:var(--badgeBg);color:var(--badgeFg);font-size:26px;border-radius:999px;padding:12px 26px}
 .wrap{position:absolute;left:0;right:0;padding:0 84px}
-.wrap.at-top{top:200px}
+.wrap.at-top{top:${H > 1500 ? 300 : 200}px}
 .wrap.at-mid{top:50%;transform:translateY(-50%)}
 h3{line-height:1.3;color:var(--title);letter-spacing:-.02em;-webkit-text-stroke:1.1px var(--title)}
 h3 .o{color:var(--accent);-webkit-text-stroke-color:var(--accent)}
@@ -89,6 +89,13 @@ h3 .line{display:block}
   box-shadow:0 6px 24px rgba(0,0,0,.25)}
 .thumb img{width:100%;height:100%;object-fit:cover;display:block}
 .row.has-thumb{align-items:center}
+.sched.compact{margin-top:40px;gap:22px}
+.sched.compact .row{padding-top:22px}
+.sched.compact .what .p{font-size:32px}
+.sched.compact .what .m{font-size:24px;margin-top:6px}
+.sched.compact .when .d{font-size:36px}
+.sched.compact .when .t{font-size:23px}
+.thumb.small{flex-basis:120px;width:120px;height:160px;border-radius:14px}
 .what .p{font-size:35px;color:#FBF7F0;letter-spacing:-.015em;line-height:1.26;word-break:keep-all}
 .what .m{margin-top:11px;font-size:26px;color:#BFD0C4;line-height:1.5}
 .what .m b{color:#D4B895}
@@ -155,4 +162,17 @@ for (const f of fs.readdirSync(DIR)) if (/^(card-\d+|story)\.(jpe?g|png)$/.test(
 pages.forEach((p, i) => { render(card(p, 1080, 1350), 1080, 1350, path.join(DIR, `card-${i + 1}.png`)); console.log('rendered card', i + 1); });
 // 스토리: 표지를 9:16으로. 중앙 정렬이라 같은 마크업이 그대로 선다.
 render(card({...pages[0], foot: '자세한 건 피드에서 ›'}, 1080, 1920), 1080, 1920, path.join(DIR, 'story.png'));
+// 스토리 둘째 장: 일정 전체를 9:16 한 장에 — 캡처해 두기 좋은 "한 장짜리" (8줄까지)
+if (set.rows.length) {
+  const rows = set.rows.slice(0, 8);
+  render(card({at: 'top', foot: '저장해 두세요 ♡', cap: `출처 ${set.source}`,
+    mid: H(50, `${set.cover.badge} 갈 곳`) +
+      `<div class="sched compact">${rows.map((r) => `
+      <div class="row${r.img ? ' has-thumb' : ''}">
+        <div class="when"><div class="d">${r.d}</div><div class="t">${r.t}</div></div>
+        <div class="what"><div class="p">${r.p}</div><div class="m">${r.m}</div></div>
+        ${r.img ? `<div class="thumb small"><img src="file://${path.join(DIR, r.img)}"></div>` : ''}
+      </div>`).join('')}</div>`}, 1080, 1920), 1080, 1920, path.join(DIR, 'story-list.png'));
+  console.log('rendered story-list');
+}
 console.log(`rendered story (표지 테마 ${coverTheme})\n끝. assets/instagram/${slug}/card-1..${pages.length}.jpg + story.jpg`);

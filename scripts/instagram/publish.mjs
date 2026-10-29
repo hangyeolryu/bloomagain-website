@@ -5,6 +5,7 @@
 //   node scripts/instagram/publish.mjs --slug insight-15             # 실제 게시
 //   node scripts/instagram/publish.mjs --next [--with-story]         # queue.txt의 첫 미게시 세트 (크론용). story.jpg 있으면 스토리도
 //   node scripts/instagram/publish.mjs --story insight-16 [--dry-run]  # 폴더의 story.jpg(1080×1920)를 스토리로
+//   node scripts/instagram/publish.mjs --story insight-16 --file story-list.jpg   # 다른 파일을 스토리로
 //   node scripts/instagram/publish.mjs --whoami                      # 토큰이 누구 건지
 //   node scripts/instagram/publish.mjs --refresh-token [--write]     # 60일 토큰 연장 (Instagram 로그인형만)
 //   node scripts/instagram/publish.mjs --debug-token                 # 토큰에 붙은 인스타 자산 확인 (META_APP_ID/SECRET 필요)
@@ -322,12 +323,12 @@ async function publishSet(set) {
 }
 
 // ── --story <slug>: assets/instagram/<slug>/story.jpg 를 스토리로 ─────────────
-async function publishStory(slug) {
+async function publishStory(slug, name = opt("file") || "story.jpg") {
   needToken();
   if (!USER_ID) throw new Error("IG_USER_ID가 없다.");
-  const file = join(ASSETS, slug, "story.jpg");
-  if (!existsSync(file)) throw new Error(`story.jpg가 없다: assets/instagram/${slug}/story.jpg (1080×1920 JPEG)`);
-  const url = `${IMAGE_BASE}/${slug}/story.jpg`;
+  const file = join(ASSETS, slug, name);
+  if (!existsSync(file)) throw new Error(`${name}가 없다: assets/instagram/${slug}/${name} (1080×1920 JPEG)`);
+  const url = `${IMAGE_BASE}/${slug}/${name}`;
   const r0 = await fetch(url, { method: "HEAD" });
   if (!r0.ok) throw new Error(`공개 URL이 안 열린다 (${r0.status}): ${url}\n→ main에 푸시했는지 확인.`);
   if (DRY) { console.log(`(dry-run) 스토리 이미지: ${url}`); return; }
@@ -335,7 +336,7 @@ async function publishStory(slug) {
   await waitReady(r.id, "스토리");
   const pub = await api("POST", `${USER_ID}/media_publish`, { creation_id: r.id });
   const ledger = await readLedger();
-  ledger[`${slug}#story`] = { media_id: pub.id, published_at: new Date().toISOString(), story: true };
+  ledger[`${slug}#story${name === "story.jpg" ? "" : ":" + name.replace(/\.jpe?g$/, "")}`] = { media_id: pub.id, published_at: new Date().toISOString(), story: true, file: name };
   await writeFile(LEDGER, JSON.stringify(ledger, null, 2) + "\n");
   console.log(`스토리 게시 완료 (media ${pub.id}). 24시간 뒤 사라진다. 장부 갱신됨.`);
 }
