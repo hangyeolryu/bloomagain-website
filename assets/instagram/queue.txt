@@ -4,3 +4,4 @@
 # 올라간 세트는 published.json에 남으니 여기서 지우지 않아도 두 번 안 올라간다.
 #
 seoul-free-2026-11-w1
+seoul-free-2026-11-w2
