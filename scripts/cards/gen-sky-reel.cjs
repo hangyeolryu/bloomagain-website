@@ -16,7 +16,7 @@ const path = require('path');
 const arg = (k, d) => { const i = process.argv.indexOf(`--${k}`); return i > 0 ? process.argv[i + 1] : d; };
 const SEC = parseFloat(arg('sec', '10'));
 const FPS = parseInt(arg('fps', '30'), 10);
-const OUT = path.resolve(arg('out', '../../assets/instagram/update-2026-11/sky-reel.mp4'));
+const OUT = path.resolve(arg('out', '../../assets/instagram/update-2026-11/reel.mp4'));
 const SHELL = path.join(os.homedir(),
     'Library/Caches/ms-playwright/chromium_headless_shell-1243',
     'chrome-headless-shell-mac-arm64/chrome-headless-shell');
