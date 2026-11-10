@@ -73,6 +73,8 @@ jobs:
           fi
 
       - name: Commit ledger
+        # 게시 단계가 중간에 죽어도(스토리 실패 등) 이미 올라간 세트의 장부는 커밋한다 — 안 그러면 다음 크론이 또 올린다.
+        if: always()
         run: |
           if git diff --quiet -- assets/instagram/published.json; then exit 0; fi
           git config user.name "tita-bot"

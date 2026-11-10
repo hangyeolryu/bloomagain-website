@@ -421,7 +421,20 @@ try {
   console.log(`\n게시 완료: ${result.permalink}\n장부 갱신: assets/instagram/published.json (커밋할 것)`);
   if (flag("with-story") && existsSync(join(set.dir, "story.jpg"))) {
     console.log("스토리도 올리는 중…");
-    await publishStory(slug);
+    // 캐러셀은 이미 올라갔고 장부도 썼다 — 스토리가 실패해도 exit 1로 죽지 않는다.
+    // (2026-11-10: 스토리 media_publish가 2207006으로 실패해 잡이 죽고 장부 커밋이 안 돼
+    //  다음 크론이 같은 세트를 또 올릴 뻔했다.) 한 번은 10초 뒤 다시 시도한다.
+    try {
+      await publishStory(slug);
+    } catch (e1) {
+      console.warn("⚠️ 스토리 1차 실패: " + e1.message + " — 10초 뒤 다시");
+      await new Promise((r) => setTimeout(r, 10000));
+      try {
+        await publishStory(slug);
+      } catch (e2) {
+        console.warn("⚠️ 스토리 실패 (캐러셀은 올라감): " + e2.message + "\n→ 수동: node scripts/instagram/publish.mjs --story " + slug);
+      }
+    }
   }
 } catch (e) {
   console.error("\n❌ " + e.message);
