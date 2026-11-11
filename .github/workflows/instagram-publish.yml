@@ -13,6 +13,13 @@
 # Variables (선택)
 #   IG_GRAPH_HOST     graph.instagram.com(기본) / graph.facebook.com(시스템유저 토큰)
 #
+# 큐가 빈 목요일(KST)엔 갈 곳 세트를 자동으로 만든다 (autofill 잡):
+#   서울 문화행사 API에서 전시·축제 6건을 골라(seoul-events.mjs --auto) 세트를 굽고 큐에 넣은 뒤 그대로 올린다.
+#   사람이 큐에 세트를 넣어 둔 주엔 돌지 않는다 — 손으로 고른 게 늘 먼저다.
+#   Secrets에 SEOUL_API_KEY(data.seoul.go.kr 인증키)가 있어야 한다. 없으면 autofill만 실패하고 게시 잡은 그대로 돈다.
+#   카드 렌더가 sips·macOS 한글 글꼴에 기대서 autofill 잡만 macos 러너에서 돈다(공개 repo라 무료).
+#   시험: Run workflow → autofill=test → 세트를 굽기만 하고 Artifacts(autofill-test)에 올린다. 커밋·게시 없음.
+#
 # 이미지는 raw.githubusercontent.com(main)에서 가져가므로 세트가 main에 있어야 한다.
 # 게시 뒤 published.json을 [skip ci]로 커밋해 두 번 올라가지 않게 한다.
 # ─────────────────────────────────────────────────────────────────────────────
@@ -39,13 +46,111 @@ on:
         required: false
         type: boolean
         default: false
+      autofill:
+        description: "큐가 비면 갈 곳 세트 자동 생성 — auto(목요일에만) / test(굽기만, 게시 안 함) / off"
+        required: false
+        type: choice
+        options: [auto, test, "off"]
+        default: auto
 
 concurrency:
   group: instagram-publish
   cancel-in-progress: false
 
 jobs:
+  # 큐 상태만 본다(리눅스, 몇 초). 자동 채움이 필요할 때만 macOS 잡을 깨운다.
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      autofill: ${{ steps.q.outputs.autofill }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - id: q
+        shell: bash
+        run: |
+          MODE="${{ inputs.autofill || 'auto' }}"
+          NEXT=$(node scripts/instagram/publish.mjs --next-slug)
+          DOW=$(TZ=Asia/Seoul date +%u)   # 4 = 목요일
+          AUTOFILL=no
+          if [ "$MODE" = "test" ]; then
+            AUTOFILL=test
+          elif [ "$MODE" = "auto" ] && [ -z "${{ inputs.slug }}" ] && [ -z "$NEXT" ] && [ "$DOW" = "4" ]; then
+            AUTOFILL=yes
+          fi
+          echo "autofill=$AUTOFILL" >> "$GITHUB_OUTPUT"
+          echo "큐 다음: ${NEXT:-없음} · 요일(KST) $DOW · 자동 채움: $AUTOFILL" | tee -a "$GITHUB_STEP_SUMMARY"
+
+  autofill:
+    needs: plan
+    if: needs.plan.outputs.autofill != 'no'
+    runs-on: macos-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Headless shell
+        run: npx -y playwright install chromium-headless-shell
+      # 시험 모드: 러너에서 카드가 제대로 구워지는지부터 본다(키 없이도 됨). 이미 있는 세트를 _ci-render-check로 복사해 다시 굽는다.
+      - name: Render check (test only)
+        if: needs.plan.outputs.autofill == 'test'
+        shell: bash
+        run: |
+          SRC=$(ls -d assets/instagram/seoul-free-* | sort | tail -1)
+          rm -rf assets/instagram/_ci-render-check && cp -R "$SRC" assets/instagram/_ci-render-check
+          node scripts/cards/gen-event-cards.cjs _ci-render-check
+      - name: Upload render check (test only)
+        if: needs.plan.outputs.autofill == 'test'
+        uses: actions/upload-artifact@v4
+        with:
+          name: render-check
+          path: assets/instagram/_ci-render-check/*.jpg
+      - name: Pick and render
+        id: make
+        shell: bash
+        env:
+          SEOUL_API_KEY: ${{ secrets.SEOUL_API_KEY }}
+        run: |
+          node scripts/instagram/seoul-events.mjs --auto --fresh ${{ needs.plan.outputs.autofill == 'test' && '--no-queue' || '' }} | tee auto.log
+          SLUG=$(grep -o 'AUTO_SLUG=.*' auto.log | cut -d= -f2)
+          echo "slug=$SLUG" >> "$GITHUB_OUTPUT"
+          { echo "### 갈 곳 자동 세트: $SLUG"; echo '```'; grep -E '^ *[0-9]+\. ' auto.log; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload (test only)
+        if: needs.plan.outputs.autofill == 'test'
+        uses: actions/upload-artifact@v4
+        with:
+          name: autofill-test
+          path: assets/instagram/${{ steps.make.outputs.slug }}
+      - name: Commit set
+        if: needs.plan.outputs.autofill == 'yes'
+        shell: bash
+        run: |
+          SLUG="${{ steps.make.outputs.slug }}"
+          git config user.name "tita-bot"
+          git config user.email "noreply@tita-app.com"
+          git add "assets/instagram/$SLUG" assets/instagram/queue.txt
+          git commit -m "chore(카드): 갈 곳 자동 세트 $SLUG — 큐가 비어 크론이 골랐다 [skip ci]"
+          git push
+          # raw.githubusercontent.com에 뜰 때까지 기다린다(게시 잡이 공개 URL을 확인한다)
+          for i in $(seq 1 30); do
+            code=$(curl -s -o /dev/null -w '%{http_code}' "https://raw.githubusercontent.com/${{ github.repository }}/main/assets/instagram/$SLUG/card-1.jpg")
+            [ "$code" = "200" ] && break
+            sleep 10
+          done
+
   publish:
+    needs: [plan, autofill]
+    # autofill이 건너뛰어졌거나 실패해도 게시는 돈다(큐에 있는 건 올린다). 시험 모드에선 안 돈다.
+    if: ${{ !cancelled() && needs.plan.outputs.autofill != 'test' }}
     runs-on: ubuntu-latest
     permissions:
       contents: write

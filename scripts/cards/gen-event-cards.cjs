@@ -45,9 +45,25 @@ if (set.theme !== coverTheme && !slug.startsWith('_')) {
 const T = THEMES[coverTheme], F = THEMES.forest;
 const FONT = 'file://' + path.join(__dirname, 'fonts/GowunDodum-Regular.woff2');
 
-const SHELL = path.join(os.homedir(),
-    'Library/Caches/ms-playwright/chromium_headless_shell-1243',
-    'chrome-headless-shell-mac-arm64/chrome-headless-shell');
+// 헤드리스 셸 찾기 — CI(macOS 러너)에선 playwright 버전이 달라 폴더 이름이 바뀐다.
+// 순서: CHROME_HEADLESS_SHELL 환경변수 → playwright 캐시의 가장 새 headless shell → 설치된 크롬.
+const SHELL = (() => {
+  if (process.env.CHROME_HEADLESS_SHELL && fs.existsSync(process.env.CHROME_HEADLESS_SHELL)) return process.env.CHROME_HEADLESS_SHELL;
+  const cache = path.join(os.homedir(), 'Library/Caches/ms-playwright');
+  if (fs.existsSync(cache)) {
+    const dirs = fs.readdirSync(cache).filter((d) => /^chromium_headless_shell-\d+$/.test(d))
+      .sort((a, b) => parseInt(b.split('-')[1]) - parseInt(a.split('-')[1]));
+    for (const d of dirs) for (const sub of fs.readdirSync(path.join(cache, d))) {
+      for (const bin of ['chrome-headless-shell', 'headless_shell']) {
+        const f = path.join(cache, d, sub, bin);
+        if (fs.existsSync(f)) return f;
+      }
+    }
+  }
+  const chrome = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+  if (fs.existsSync(chrome)) return chrome;
+  console.error('헤드리스 크롬이 없다. `npx playwright install chromium-headless-shell` 을 먼저.'); process.exit(1);
+})();
 
 const CSS = (W, H) => `
 @font-face{font-family:Gowun;font-weight:400;src:url('${FONT}') format('woff2')}

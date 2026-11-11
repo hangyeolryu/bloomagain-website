@@ -389,6 +389,8 @@ try {
   if (flag("reel")) { await publishReel(opt("reel")); process.exit(0); }
 
   const ledger = await readLedger();
+  // 워크플로가 "큐가 비었나"만 볼 때 — 토큰 없이 다음 세트 이름(없으면 빈 줄)만 찍는다.
+  if (flag("next-slug")) { console.log((await nextFromQueue(ledger)) || ""); process.exit(0); }
   let slug = opt("slug");
   if (!slug && flag("next")) {
     slug = await nextFromQueue(ledger);

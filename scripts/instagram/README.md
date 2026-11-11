@@ -72,6 +72,17 @@ node scripts/instagram/seoul-events.mjs --list --days 30 --paid
 node scripts/instagram/seoul-events.mjs --make free-11-w2 --pick 1,3,4,7   # 번호로 골라 세트 생성(카드·스토리·캡션)
 ```
 
+**큐가 빈 목요일엔 크론이 알아서 만든다** (`--auto`, 워크플로의 autofill 잡). 사람이 고를 때보다 보수적이다:
+전시·축제만(하루짜리 공연·강좌는 예약제인지 알 수 없다), 일주일 넘게 하고 닷새 넘게 남은 것, 앞 세트에 실은 건 제외,
+한 건물 한 건·한 구 세 건, 공공 기관 먼저(작은 화랑 개인전·제목만으론 모르는 전시·무거운 주제는 뺀다). 4건이 안 나오면 만들지 않는다.
+손으로 고른 세트가 큐에 있으면 자동은 돌지 않으니, 좋은 주엔 직접 골라 넣는 게 낫다.
+
+```bash
+node scripts/instagram/seoul-events.mjs --auto --dry-run   # 지금 돌리면 뭘 고를지 보기만
+```
+
+GitHub Secrets에 `SEOUL_API_KEY`가 있어야 한다. 시험은 Actions → Run workflow → autofill=test (굽기만 하고 Artifacts에 올림).
+
 생성물: `set.json`(카드 데이터) · `caption.txt` · `card-1..N.jpg` · `story.jpg`(9:16) · `thumb-N.jpg`(행사 포스터).
 포스터는 일정 줄 옆에 작게 붙는다(한 장 3줄). 데이터셋이 공공누리 1유형이라 카드 하단 출처 표기로 충분하다.
 포스터 안 작품 사진은 작가 저작물일 수 있어 전면에 크게 깔지 않는다. 빼려면 `--no-thumbs`.
