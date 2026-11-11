@@ -81,7 +81,10 @@ node scripts/instagram/seoul-events.mjs --make free-11-w2 --pick 1,3,4,7   # 번
 node scripts/instagram/seoul-events.mjs --auto --dry-run   # 지금 돌리면 뭘 고를지 보기만
 ```
 
-GitHub Secrets에 `SEOUL_API_KEY`가 있어야 한다. 시험은 Actions → Run workflow → autofill=test (굽기만 하고 Artifacts에 올림).
+자동 세트는 **포스터 썸네일 없이 글만** 나간다 — 포스터 서버(culture.seoul.go.kr)가 해외 IP를 막아 GitHub 러너에선 못 받는다.
+썸네일까지 넣고 싶은 주엔 국내에서 손으로 `--make` 해서 큐에 넣을 것.
+
+GitHub Secrets에 `SEOUL_API_KEY`가 있어야 한다(2026-11-11 등록). 시험은 Actions → Run workflow → autofill=test (굽기만 하고 Artifacts에 올림).
 
 생성물: `set.json`(카드 데이터) · `caption.txt` · `card-1..N.jpg` · `story.jpg`(9:16) · `thumb-N.jpg`(행사 포스터).
 포스터는 일정 줄 옆에 작게 붙는다(한 장 3줄). 데이터셋이 공공누리 1유형이라 카드 하단 출처 표기로 충분하다.

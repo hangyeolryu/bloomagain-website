@@ -248,19 +248,23 @@ async function makeSet(slug, picked, { nth = 1 } = {}) {
   // 작게(줄 옆 썸네일)만 쓴다. 포스터 안 작품 사진은 작가 저작물일 수 있어 전면엔 안 깐다.
   const thumbs = [];
   if (!flag("no-thumbs")) {
+    // culture.seoul.go.kr은 해외 IP에서 연결이 안 된다(GitHub 러너: fetch·curl 모두 connect timeout,
+    // 2026-11-11 확인). 첫 장이 시간 초과면 나머지는 시도하지 않고 글만 있는 카드로 간다.
+    let blocked = false;
     for (const [i, e] of picked.entries()) {
+      if (blocked) break;
       const out = join(dir, `thumb-${i + 1}.jpg`);
       try {
         const raw = join(dir, `_thumb-${i + 1}.bin`);
         try {
-          const r = await fetch(e.MAIN_IMG, { headers: { "User-Agent": "Mozilla/5.0" }, signal: AbortSignal.timeout(20000) });
+          const r = await fetch(e.MAIN_IMG, { headers: { "User-Agent": "Mozilla/5.0" }, signal: AbortSignal.timeout(10000) });
           if (!r.ok || !/image/.test(r.headers.get("content-type") || "")) throw new Error(`HTTP ${r.status}`);
           await writeFile(raw, Buffer.from(await r.arrayBuffer()));
         } catch (fe) {
           // Node fetch가 막히는 환경(CI)이 있다 — curl로 한 번 더. 둘 다 안 되면 썸네일 없이 간다.
           const why = fe.cause?.code || fe.cause?.message || fe.message;
           try {
-            execFileSync("curl", ["-sSLf", "--max-time", "25", "-A", "Mozilla/5.0", "-o", raw, e.MAIN_IMG], { stdio: ["ignore", "ignore", "pipe"] });
+            execFileSync("curl", ["-sSLf", "--max-time", "12", "-A", "Mozilla/5.0", "-o", raw, e.MAIN_IMG], { stdio: ["ignore", "ignore", "pipe"] });
           } catch (ce) {
             throw new Error(`fetch: ${why} / curl: ${String(ce.stderr || ce.message).trim().slice(0, 120)}`);
           }
@@ -268,7 +272,10 @@ async function makeSet(slug, picked, { nth = 1 } = {}) {
         execFileSync("sips", ["-s", "format", "jpeg", "-s", "formatOptions", "88", "-Z", "640", raw, "--out", out], { stdio: "ignore" });
         await import("node:fs/promises").then((fs) => fs.unlink(raw));
         thumbs[i] = `thumb-${i + 1}.jpg`;
-      } catch (err) { console.warn(`  포스터 못 받음 (${e.title.slice(0, 20)}): ${err.message}`); }
+      } catch (err) {
+        console.warn(`  포스터 못 받음 (${e.title.slice(0, 20)}): ${err.message}`);
+        if (/TIMEOUT|timed out/i.test(err.message)) { blocked = true; console.warn("  → 포스터 서버에 연결이 안 된다. 썸네일 없이 굽는다."); }
+      }
     }
   }
   const rows = picked.map((e, i) => ({
