@@ -119,6 +119,7 @@ jobs:
         shell: bash
         env:
           SEOUL_API_KEY: ${{ secrets.SEOUL_API_KEY }}
+          TZ: Asia/Seoul
         run: |
           node scripts/instagram/seoul-events.mjs --auto --fresh ${{ needs.plan.outputs.autofill == 'test' && '--no-queue' || '' }} | tee auto.log
           SLUG=$(grep -o 'AUTO_SLUG=.*' auto.log | cut -d= -f2)

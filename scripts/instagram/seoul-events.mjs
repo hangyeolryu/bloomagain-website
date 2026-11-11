@@ -18,6 +18,10 @@ import { join, resolve } from "node:path";
 import { tmpdir } from "node:os";
 import { execFileSync } from "node:child_process";
 
+// 날짜 계산·표기는 늘 한국 시각. GitHub 러너는 UTC라 이 줄이 없으면 "+09:00 자정"이 전날 15시가 되어
+// 카드의 모든 날짜가 하루씩 당겨진다(2026-11-11 autofill 시험에서 발견).
+process.env.TZ = "Asia/Seoul";
+
 const ROOT = resolve(process.cwd());
 const ENV_LOCAL = join(ROOT, ".env.local");
 if (existsSync(ENV_LOCAL)) {
@@ -247,10 +251,20 @@ async function makeSet(slug, picked, { nth = 1 } = {}) {
     for (const [i, e] of picked.entries()) {
       const out = join(dir, `thumb-${i + 1}.jpg`);
       try {
-        const r = await fetch(e.MAIN_IMG, { headers: { "User-Agent": "Mozilla/5.0" } });
-        if (!r.ok || !/image/.test(r.headers.get("content-type") || "")) throw new Error(r.status);
         const raw = join(dir, `_thumb-${i + 1}.bin`);
-        await writeFile(raw, Buffer.from(await r.arrayBuffer()));
+        try {
+          const r = await fetch(e.MAIN_IMG, { headers: { "User-Agent": "Mozilla/5.0" }, signal: AbortSignal.timeout(20000) });
+          if (!r.ok || !/image/.test(r.headers.get("content-type") || "")) throw new Error(`HTTP ${r.status}`);
+          await writeFile(raw, Buffer.from(await r.arrayBuffer()));
+        } catch (fe) {
+          // Node fetch가 막히는 환경(CI)이 있다 — curl로 한 번 더. 둘 다 안 되면 썸네일 없이 간다.
+          const why = fe.cause?.code || fe.cause?.message || fe.message;
+          try {
+            execFileSync("curl", ["-sSLf", "--max-time", "25", "-A", "Mozilla/5.0", "-o", raw, e.MAIN_IMG], { stdio: ["ignore", "ignore", "pipe"] });
+          } catch (ce) {
+            throw new Error(`fetch: ${why} / curl: ${String(ce.stderr || ce.message).trim().slice(0, 120)}`);
+          }
+        }
         execFileSync("sips", ["-s", "format", "jpeg", "-s", "formatOptions", "88", "-Z", "640", raw, "--out", out], { stdio: "ignore" });
         await import("node:fs/promises").then((fs) => fs.unlink(raw));
         thumbs[i] = `thumb-${i + 1}.jpg`;
