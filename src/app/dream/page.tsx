@@ -12,7 +12,7 @@
 //  · 글자 수 표시를 두지 않는다. "얼마나 써야 하나"를 고민하게 만들지 않으려고.
 //  · 에러는 탓하지 않는 말로, 같은 글을 다시 보낼 수 있게.
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { TITA, KOREAN_FONT_STACK } from "../_components/tita-brand";
 
@@ -73,6 +73,11 @@ export default function DreamPage() {
   const [failure, setFailure] = useState<Failure | null>(null);
   const [status, setStatus] = useState<DreamStatus>("active");
   const [done, setDone] = useState(false);
+  // 대화 중 앱 받기 카드 — 이 메시지(log 인덱스) 바로 아래에 붙는다. null이면 안 보임.
+  // 두 번째 답을 한 뒤 저절로 한 번 뜨고, 머리의 "앱 받기"를 누르면 그 자리에 뜬다.
+  const [appCardAt, setAppCardAt] = useState<number | null>(null);
+  const appCardDismissed = useRef(false);
+  const appCardRef = useRef<HTMLDivElement>(null);
 
   const sidRef = useRef<string>("");
   const utmRef = useRef<Record<string, string>>({});
@@ -122,6 +127,13 @@ export default function DreamPage() {
           next.push({ role: "assistant", text: res.reply });
         }
         saveLog(next);
+        // 두 번째 답에 대한 티타AI 말 아래에 앱 카드를 한 번 띄운다. 한두 번은 이야기를
+        // 나눈 뒤라 "왜 앱인지"가 보이고, 그보다 늦으면 중간에 떠난 분은 못 본다.
+        // 대화는 그대로 이어 갈 수 있다(입력칸은 그대로).
+        const answers = next.filter((m) => m.role === "user").length;
+        if (message !== null && answers === 2 && !res.done && !appCardDismissed.current) {
+          setAppCardAt(next.length - 1);
+        }
         return next;
       });
       if (message !== null) {
@@ -210,9 +222,24 @@ export default function DreamPage() {
     void turnOnce(text);
   }
 
-  function onStoreClick(store: StoreKind) {
-    logAnalyticsEvent("dream_download", { store });
-    trackPixel("DreamDownload", { store }, true);
+  function onStoreClick(store: StoreKind, source: string) {
+    // where: 대화 중(dream_mid)인지 끝(dream_result)인지 — 어디서 받는지 봐야 자리를 고친다.
+    logAnalyticsEvent("dream_download", { store, where: source });
+    trackPixel("DreamDownload", { store, where: source }, true);
+  }
+
+  function openAppCard() {
+    appCardDismissed.current = false;
+    setAppCardAt(log.length - 1);
+    logAnalyticsEvent("dream_app_card_open", { turn: log.filter((m) => m.role === "user").length });
+    requestAnimationFrame(() =>
+      appCardRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }),
+    );
+  }
+
+  function closeAppCard() {
+    appCardDismissed.current = true;
+    setAppCardAt(null);
   }
 
   // ── 스타일 ────────────────────────────────────────────────────────────
@@ -275,6 +302,7 @@ export default function DreamPage() {
       <div style={{ width: "100%", maxWidth: 560, padding: "24px 18px 0", flex: 1 }}>
         {/* 머리 — 광고 문구 */}
         <header style={{ marginBottom: 22 }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
           <Link
             href="/"
             style={{
@@ -300,6 +328,29 @@ export default function DreamPage() {
             </span>
             다시 꾸는 꿈
           </Link>
+          {/* 대화 중에도 언제든 앱으로. 끝난 뒤엔 아래 큰 카드가 있으니 숨긴다. */}
+          {!done && (
+            <button
+              type="button"
+              onClick={openAppCard}
+              style={{
+                fontFamily: DREAM_FONT,
+                fontSize: 16,
+                fontWeight: 700,
+                color: TITA.forest,
+                background: TITA.white,
+                border: `1.5px solid ${TITA.forest}`,
+                borderRadius: 999,
+                padding: "9px 16px",
+                minHeight: 44,
+                cursor: "pointer",
+                whiteSpace: "nowrap",
+              }}
+            >
+              앱 받기
+            </button>
+          )}
+          </div>
           {/* 문구가 정해지기 전(마운트 전)엔 자리만 잡는다 — A가 B로 바뀌며 깜빡이지 않게. */}
           <h1
             style={{
@@ -327,9 +378,57 @@ export default function DreamPage() {
           style={{ display: "flex", flexDirection: "column", gap: 12 }}
         >
           {log.map((m, i) => (
-            <p key={i} style={m.role === "assistant" ? aiBubble : userBubble}>
-              {m.text}
-            </p>
+            <Fragment key={i}>
+              <p style={m.role === "assistant" ? aiBubble : userBubble}>{m.text}</p>
+              {i === appCardAt && !done && (
+                <div
+                  ref={appCardRef}
+                  style={{
+                    background: TITA.surface,
+                    border: `1.5px solid ${TITA.forest}`,
+                    borderRadius: 20,
+                    padding: "18px 18px 16px",
+                    textAlign: "center",
+                  }}
+                >
+                  <p style={{ margin: "0 0 6px", fontSize: 19, fontWeight: 700, lineHeight: 1.5, color: TITA.forestDeep, wordBreak: "keep-all" }}>
+                    같은 꿈을 가진 또래가 티타에 있어요
+                  </p>
+                  <p style={{ margin: "0 0 14px", fontSize: 16.5, lineHeight: 1.65, color: TITA.ink, wordBreak: "keep-all" }}>
+                    앱에서 또래를 만나 같이 시작해 보세요.
+                    <br />
+                    여기 이야기는 그대로 이어 가셔도 돼요.
+                  </p>
+                  <div style={{ display: "flex", justifyContent: "center" }}>
+                    <StoreDownloadButton
+                      source="dream_mid"
+                      label="티타 앱 받기 (무료)"
+                      onStoreClick={onStoreClick}
+                      style={{ fontSize: 17, padding: "15px 26px", minWidth: 220 }}
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={closeAppCard}
+                    style={{
+                      display: "block",
+                      margin: "10px auto 0",
+                      fontFamily: DREAM_FONT,
+                      fontSize: 16,
+                      color: TITA.forestMid,
+                      background: "none",
+                      border: "none",
+                      textDecoration: "underline",
+                      textUnderlineOffset: 3,
+                      padding: "10px 12px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    이야기 계속할게요
+                  </button>
+                </div>
+              )}
+            </Fragment>
           ))}
 
           {waiting && (
