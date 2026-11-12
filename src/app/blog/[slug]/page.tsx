@@ -112,7 +112,7 @@ function BlockView({ block, priority }: { block: Block; priority?: boolean }) {
           }}
         >
           <p
-            className="text-[15px] sm:text-base leading-relaxed font-semibold"
+            className="text-[15px] sm:text-base leading-relaxed font-semibold whitespace-pre-line"
             style={{ color: TITA.ink }}
           >
             {renderInline(block.text)}
