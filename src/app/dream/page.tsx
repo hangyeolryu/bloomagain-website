@@ -512,7 +512,14 @@ export default function DreamPage() {
           color: TITA.forestMid,
         }}
       >
-        티타의 AI가 답해요. 나눈 이야기는 이름 없이 서비스를 고치는 데만 쓰고, 90일 뒤 지워요.
+        티타의 AI가 답해요. 나눈 이야기는 이름 없이 서비스를 고치는 데만 쓰고, 90일 뒤 지워요.{" "}
+        {/* 비회원에게서 글을 받는 페이지라 처리방침으로 가는 길을 바로 옆에 둔다. */}
+        <Link
+          href="/privacy/"
+          style={{ color: TITA.forest, textDecoration: "underline", textUnderlineOffset: 3 }}
+        >
+          개인정보 처리방침
+        </Link>
       </p>
     </main>
   );
