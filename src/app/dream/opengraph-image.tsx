@@ -6,7 +6,7 @@ import { join } from "path";
 // 여성 컷아웃)을 쓴다 — 광고와 공유 미리보기가 같은 브랜드로 보이게.
 // 훅은 광고 A안 문구. 공유 카드는 하나뿐이라 기본(A)안을 쓴다.
 export const dynamic = "force-static";
-export const alt = "요즘 해 보고 싶은데 미뤄둔 거, 있으세요? — 티타의 AI와 이야기 · 티타";
+export const alt = "요즘 해 보고 싶은데 미뤄둔 거, 있으세요? — 티타AI와 이야기 · 티타";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
