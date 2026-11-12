@@ -132,21 +132,25 @@ console.log(`예산 단위: ${currency} offset ${offset} (스펙의 ${S.adset.da
 if (DRY) { console.log("\n--dry-run: API를 부르지 않았다. 위 페이로드가 그대로 나간다 (status 전부 PAUSED)."); process.exit(0); }
 
 // ── 실제 생성. 하나 만들 때마다 장부에 적어서 중간에 실패해도 어디까지 됐는지 남긴다. ──
+// --resume: 같은 스펙으로 중간에 실패한 마지막 장부 항목을 이어서 만든다 (이미 있는 캠페인·세트·크리에이티브는 다시 안 만든다).
 const ledger = await readLedger();
-const entry = { created_at: new Date().toISOString(), spec: basename(specPath), account: ACCOUNT_ID, currency, name: S.campaign.name, status: "PAUSED" };
-ledger.push(entry);
+const RESUME = flag("resume");
+let entry = RESUME ? [...ledger].reverse().find((e) => e.spec === basename(specPath) && e.error && !e.ad_id) : undefined;
+if (RESUME && !entry) { console.error("--resume: 이어서 만들 실패 항목이 장부에 없다."); process.exit(1); }
+if (entry) { delete entry.error; entry.resumed_at = new Date().toISOString(); console.log(`이어서 만든다 (캠페인 ${entry.campaign_id || "-"} · 세트 ${entry.adset_id || "-"} · 크리에이티브 ${entry.creative_id || "-"})\n`); }
+else { entry = { created_at: new Date().toISOString(), spec: basename(specPath), account: ACCOUNT_ID, currency, name: S.campaign.name, status: "PAUSED" }; ledger.push(entry); }
 const save = () => writeLedger(ledger);
 
 try {
-  const c = await api("POST", `${ACCOUNT_ID}/campaigns`, campaignPayload);
+  const c = entry.campaign_id ? { id: entry.campaign_id } : await api("POST", `${ACCOUNT_ID}/campaigns`, campaignPayload);
   entry.campaign_id = c.id; await save();
   console.log(`캠페인      ${c.id}`);
 
-  const s = await api("POST", `${ACCOUNT_ID}/adsets`, { ...adsetPayload, campaign_id: c.id });
+  const s = entry.adset_id ? { id: entry.adset_id } : await api("POST", `${ACCOUNT_ID}/adsets`, { ...adsetPayload, campaign_id: c.id });
   entry.adset_id = s.id; await save();
   console.log(`광고 세트   ${s.id}`);
 
-  if (imageMode === "file") {
+  if (imageMode === "file" && !entry.creative_id) {
     const bytes = (await readFile(resolve(img))).toString("base64");
     const up = await api("POST", `${ACCOUNT_ID}/adimages`, { bytes });
     const first = Object.values(up.images || {})[0];
@@ -156,7 +160,7 @@ try {
     console.log(`이미지      ${first.hash}`);
   }
 
-  const cr = await api("POST", `${ACCOUNT_ID}/adcreatives`, creativePayload);
+  const cr = entry.creative_id ? { id: entry.creative_id } : await api("POST", `${ACCOUNT_ID}/adcreatives`, creativePayload);
   entry.creative_id = cr.id; await save();
   console.log(`크리에이티브 ${cr.id}`);
 
@@ -170,6 +174,6 @@ https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=${ACCOUNT_ID.rep
   entry.error = String(err.message); await save();
   console.error(`\n실패: ${err.message}`);
   if (err.body) console.error(JSON.stringify(err.body, null, 2));
-  console.error(`여기까지 만들어진 ID는 scripts/meta-ads/ledger.json 에 있다 (Ads Manager에서 지우거나 이어서 손보면 된다).`);
+  console.error(`여기까지 만들어진 ID는 scripts/meta-ads/ledger.json 에 있다. 원인 고친 뒤 같은 명령에 --resume 을 붙이면 거기서부터 이어서 만든다.`);
   process.exit(1);
 }

@@ -6,7 +6,8 @@
     "name": "티타 앱설치 · 안드로이드 · 여성 45+ · 2026-11",
     "objective": "OUTCOME_APP_PROMOTION",
     "buying_type": "AUCTION",
-    "special_ad_categories": []
+    "special_ad_categories": [],
+    "is_adset_budget_sharing_enabled": false
   },
 
   "adset": {
