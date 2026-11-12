@@ -4,6 +4,8 @@
 //
 //   node scripts/meta-ads/create.mjs --dry-run scripts/meta-ads/specs/example.json   # 보낼 페이로드만 출력 (토큰 불필요)
 //   node scripts/meta-ads/create.mjs scripts/meta-ads/specs/example.json             # 실제 생성 → ledger.json 기록
+//   node scripts/meta-ads/create.mjs --campaign 1234567890 specs/b.json              # 이미 있는 캠페인에 세트·크리에이티브·광고만 추가 (A/B 테스트용)
+//   node scripts/meta-ads/create.mjs --resume specs/x.json                           # 중간에 실패한 걸 이어서
 //
 // 스펙 파일 모양 (specs/example.json 참고):
 //   {
@@ -17,10 +19,13 @@
 import { readFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { basename, resolve } from "node:path";
-import { ACCOUNT_ID, api, currencyOffset, flag, needAuth, positional, readLedger, writeLedger } from "./lib.mjs";
+import { ACCOUNT_ID, api, currencyOffset, flag, needAuth, opt, positional, readLedger, writeLedger } from "./lib.mjs";
 
 const DRY = flag("dry-run");
-const specPath = positional()[0];
+// --campaign <id>: 캠페인은 안 만들고 그 캠페인 아래에 세트부터 만든다 (A/B 테스트: 같은 캠페인에 세트 둘).
+const CAMPAIGN = opt("campaign", "");
+if (CAMPAIGN && !/^\d+$/.test(CAMPAIGN)) { console.error("--campaign 은 숫자 캠페인 ID"); process.exit(1); }
+const specPath = positional(["--campaign"])[0];
 if (!specPath) {
   console.error("사용법: node scripts/meta-ads/create.mjs [--dry-run] <스펙.json>");
   process.exit(1);
@@ -139,6 +144,12 @@ let entry = RESUME ? [...ledger].reverse().find((e) => e.spec === basename(specP
 if (RESUME && !entry) { console.error("--resume: 이어서 만들 실패 항목이 장부에 없다."); process.exit(1); }
 if (entry) { delete entry.error; entry.resumed_at = new Date().toISOString(); console.log(`이어서 만든다 (캠페인 ${entry.campaign_id || "-"} · 세트 ${entry.adset_id || "-"} · 크리에이티브 ${entry.creative_id || "-"})\n`); }
 else { entry = { created_at: new Date().toISOString(), spec: basename(specPath), account: ACCOUNT_ID, currency, name: S.campaign.name, status: "PAUSED" }; ledger.push(entry); }
+if (CAMPAIGN) {
+  const c = await api("GET", CAMPAIGN, { fields: "name,objective,status" });
+  if (S.campaign.objective && c.objective !== S.campaign.objective) { console.error(`--campaign ${CAMPAIGN}의 목표(${c.objective})가 스펙(${S.campaign.objective})과 다르다.`); process.exit(1); }
+  entry.campaign_id = CAMPAIGN; entry.attached_to = c.name;
+  console.log(`기존 캠페인에 붙인다: ${c.name} (${CAMPAIGN}, ${c.status})\n`);
+}
 const save = () => writeLedger(ledger);
 
 try {

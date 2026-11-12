@@ -1,0 +1,95 @@
+{
+  "_comment": "A/B 테스트 B안 — 11/12 인스타 '꿈 코치' 세트(dream-2026-11) 카드 1장으로 tita-app.com/dream 트래픽. A안(dream-goal-2026-11.json)과 같은 캠페인에 --campaign 으로 붙인다. 계정 통화 USD, 일 $3. 전부 PAUSED로 만들어진다.",
+  "currency": "USD",
+  "campaign": {
+    "name": "티타AI 작은 목표 · /dream · 여성 45+ · 2026-11",
+    "objective": "OUTCOME_TRAFFIC",
+    "buying_type": "AUCTION",
+    "special_ad_categories": [],
+    "is_adset_budget_sharing_enabled": false
+  },
+  "adset": {
+    "name": "B · 꿈 코치 · KR 여성 45-65+ · /dream · 일 $3",
+    "daily_budget": 3,
+    "billing_event": "IMPRESSIONS",
+    "optimization_goal": "LANDING_PAGE_VIEWS",
+    "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
+    "destination_type": "WEBSITE",
+    "targeting": {
+      "geo_locations": {
+        "countries": [
+          "KR"
+        ]
+      },
+      "genders": [
+        2
+      ],
+      "age_min": 45,
+      "age_max": 65,
+      "publisher_platforms": [
+        "facebook",
+        "instagram"
+      ],
+      "targeting_automation": {
+        "advantage_audience": 0
+      },
+      "targeting_relaxation_types": {
+        "lookalike": 0,
+        "custom_audience": 0
+      }
+    }
+  },
+  "creative": {
+    "name": "B · 꿈 코치 · 카드 1 · 2026-11",
+    "image": "https://raw.githubusercontent.com/hangyeolryu/bloomagain-website/main/assets/instagram/dream-2026-11/card-1.jpg",
+    "degrees_of_freedom_spec": {
+      "creative_features_spec": {
+        "image_templates": {
+          "enroll_status": "OPT_OUT"
+        },
+        "image_touchups": {
+          "enroll_status": "OPT_OUT"
+        },
+        "image_brightness_and_contrast": {
+          "enroll_status": "OPT_OUT"
+        },
+        "image_uncrop": {
+          "enroll_status": "OPT_OUT"
+        },
+        "text_optimizations": {
+          "enroll_status": "OPT_OUT"
+        },
+        "enhance_cta": {
+          "enroll_status": "OPT_OUT"
+        },
+        "add_text_overlay": {
+          "enroll_status": "OPT_OUT"
+        },
+        "adapt_to_placement": {
+          "enroll_status": "OPT_OUT"
+        },
+        "media_type_automation": {
+          "enroll_status": "OPT_OUT"
+        }
+      }
+    },
+    "object_story_spec": {
+      "page_id": "$env:META_PAGE_ID",
+      "link_data": {
+        "link": "https://tita-app.com/dream",
+        "message": "요즘 해 보고 싶은데 미뤄둔 거, 있으세요?\n\n그림, 지리산 종주, 영어, 악기…\n\"이 나이에 뭘\" 하면서 접어 둔 그것.\n\n꿈이 끝난 나이는 없어요.\n티타AI에게 편하게 이야기해 보세요. 가입하지 않아도 돼요.\n그리고 같은 꿈을 가진 또래가 티타에 있어요.",
+        "name": "꿈이 끝난 나이는 없어요",
+        "description": "가입 없이 티타AI와 이야기",
+        "call_to_action": {
+          "type": "LEARN_MORE",
+          "value": {
+            "link": "https://tita-app.com/dream"
+          }
+        }
+      }
+    }
+  },
+  "ad": {
+    "name": "B · 꿈 코치 · 카드 1"
+  }
+}

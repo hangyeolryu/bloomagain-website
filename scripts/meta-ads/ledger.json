@@ -26,5 +26,30 @@
       "at": "2026-11-12T14:31:36.913Z",
       "reason": "creative_features OPT_OUT 적용 버전으로 교체"
     }
+  },
+  {
+    "created_at": "2026-11-12T15:15:16.596Z",
+    "spec": "dream-goal-2026-11.json",
+    "account": "act_410621907654920",
+    "currency": "USD",
+    "name": "티타AI /dream A/B · 여성 45+ · 2026-11",
+    "status": "PAUSED",
+    "campaign_id": "120250090305150724",
+    "adset_id": "120250090305710724",
+    "creative_id": "1692035265772187",
+    "ad_id": "120250090306960724"
+  },
+  {
+    "created_at": "2026-11-12T15:15:27.204Z",
+    "spec": "dream-dream-2026-11.json",
+    "account": "act_410621907654920",
+    "currency": "USD",
+    "name": "티타AI 작은 목표 · /dream · 여성 45+ · 2026-11",
+    "status": "PAUSED",
+    "campaign_id": "120250090305150724",
+    "attached_to": "티타AI /dream A/B · 여성 45+ · 2026-11",
+    "adset_id": "120250090310400724",
+    "creative_id": "1611028540185121",
+    "ad_id": "120250090312640724"
   }
 ]

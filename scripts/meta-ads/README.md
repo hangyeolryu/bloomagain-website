@@ -170,4 +170,7 @@ $0.03이나 $300으로 보이면 `lib.mjs`의 `currencyOffset`을 고친다. PAU
   developers.facebook.com → 그 앱 → 상단 "App Mode"를 **Live**로. 기본 설정에 개인정보처리방침 URL·데이터 삭제 URL이
   있어야 켜진다. 캠페인·세트까지는 만들어졌을 테니 켠 뒤 `--resume`으로 이어서.
 - 중간에 실패했으면 원인 고친 뒤 **같은 명령에 `--resume`**: 장부의 마지막 실패 항목에서 이미 만든 캠페인·세트·크리에이티브는 건너뛴다.
+- A/B 테스트: A 스펙으로 먼저 만들고, B 스펙은 `--campaign <A의 캠페인 ID>`로 같은 캠페인에 세트만 추가한다.
+  목표(objective)가 다르면 중단. 예: `specs/dream-goal-2026-11.json`(A) + `specs/dream-dream-2026-11.json`(B, 2026-11-13).
+- 트래픽 캠페인(`OUTCOME_TRAFFIC` + `LANDING_PAGE_VIEWS`)엔 `promoted_object: {pixel_id}`를 넣으면 거절된다(1885014). `destination_type: "WEBSITE"`만.
 - 실패한 뒤 다시 돌리면 캠페인이 하나 더 생긴다. `ledger.json`에서 먼저 만든 ID를 보고 Ads Manager에서 정리할 것.
