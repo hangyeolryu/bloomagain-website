@@ -18,8 +18,11 @@ export const DREAM_OPENING =
 
 export type DreamStatus = "active" | "completed" | "stopped" | "crisis";
 
+/** 끝난 대화의 결과 카드 — 오늘 찾은 마음과 이번 주 첫걸음(백엔드 요약에서). */
+export type DreamResult = { core_want: string | null; first_step: string | null };
+
 export type DreamTurnResult =
-  | { ok: true; reply: string; done: boolean; turn: number; status: DreamStatus }
+  | { ok: true; reply: string; done: boolean; turn: number; status: DreamStatus; result?: DreamResult }
   // limited = 잠깐 많이 보냈다(429). 다시 보내기 전에 쉬라고 말해야 해서 따로 둔다.
   | { ok: false; reason: "network" | "limited" | "server" };
 
@@ -85,6 +88,7 @@ export async function sendDreamTurn(body: {
       done?: boolean;
       turn?: number;
       status?: DreamStatus;
+      result?: DreamResult;
     };
     if (typeof data.reply !== "string") return { ok: false, reason: "server" };
     return {
@@ -93,6 +97,7 @@ export async function sendDreamTurn(body: {
       done: data.done === true || res.status === 409,
       turn: typeof data.turn === "number" ? data.turn : 0,
       status: data.status ?? (data.done ? "completed" : "active"),
+      result: data.result && (data.result.core_want || data.result.first_step) ? data.result : undefined,
     };
   } catch {
     return { ok: false, reason: "network" };
@@ -119,4 +124,28 @@ export function readUtm(): { variant: "a" | "b"; utm: Record<string, string> } {
   }
   utm.v = variant;
   return { variant, utm };
+}
+
+/** "오늘 대화 어떠셨어요?" — 실패해도 화면은 고맙다고 한다(재시도로 귀찮게 하지 않는다). */
+export async function sendDreamFeedback(body: {
+  sessionId: string;
+  rating: "good" | "ok" | "bad";
+  comment?: string;
+}): Promise<boolean> {
+  const backendUrl = process.env.NEXT_PUBLIC_BLOOMAGAIN_BACKEND_URL;
+  if (!backendUrl) return false;
+  try {
+    const res = await fetch(`${backendUrl.replace(/\/$/, "")}/api/v1/dream/web-feedback`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        session_id: body.sessionId,
+        rating: body.rating,
+        comment: body.comment?.trim().slice(0, 500) || null,
+      }),
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
 }
