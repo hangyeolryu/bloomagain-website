@@ -55,8 +55,9 @@ META_AD_ACCOUNT_ID=123456789
 
 앱설치 캠페인(`OUTCOME_APP_PROMOTION`)은 "어느 앱을 설치시키는지"를 Meta 앱 ID와 스토어 URL로 적는다.
 
-- **`META_APP_ID`** — [developers.facebook.com/apps](https://developers.facebook.com/apps) → TITA 앱 → 앱 설정 → 기본 설정의 앱 ID.
-  `.env.local`에 인스타 토큰 디버그용으로 이미 들어 있으면 그대로 쓴다.
+- **`META_PROMOTED_APP_ID`** — [developers.facebook.com/apps](https://developers.facebook.com/apps) → **티타** 앱(초록 아이콘) → 앱 설정 → 기본 설정의 앱 ID.
+  ⚠️ `.env.local`에 이미 있는 `META_APP_ID`는 인스타 게시용 "tita 인스타" 앱이라 **다른 앱**이다. 스토어가 등록된 쪽은
+  "티타" 앱이고, 8월 앱설치 캠페인도 그 앱으로 돌았다. 어느 건지 헷갈리면 비즈니스 설정 → 계정 → 앱에서 아이콘으로 구분.
   같은 화면 아래 **플랫폼 추가 → Android**에 패키지명 `com.bloomagain.bloomagain`과 Play 스토어 URL이
   등록돼 있어야 한다. 없으면 광고 세트 생성이 "앱이 안드로이드 플랫폼을 지원하지 않음"류 에러로 막힌다.
   설치 수를 세려면 앱에 Meta SDK(또는 MMP) 이벤트가 붙어 있어야 하고, 이건 2026-08 광고 때 이미 해 둔 상태.
@@ -107,12 +108,13 @@ Ads Manager에서 지우거나 이어서 손보면 된다. 끝나면 Ads Manager
 | 키 | 가는 곳 | 메모 |
 |---|---|---|
 | `campaign` | `act_X/campaigns` | `objective`는 `OUTCOME_APP_PROMOTION`. `special_ad_categories: []` 필수 |
-| `adset` | `act_X/adsets` | `daily_budget`은 **원 단위 그대로**(10000 = 1만원). 스크립트가 통화 단위로 바꾼다 |
+| `adset` | `act_X/adsets` | `daily_budget`은 **계정 통화 단위 그대로**(USD 계정이면 3 = $3/일). 스크립트가 API 단위(센트)로 바꾼다 |
 | `creative` | `act_X/adcreatives` | `image`에 https URL이면 그대로, 로컬 파일이면 업로드해서 `image_hash`로 |
 | `ad` | `act_X/ads` | 이름만 있으면 된다. 세트·크리에이티브 연결은 스크립트가 |
 
-- 문자열 값이 `"$env:META_APP_ID"` 꼴이면 `.env.local` 값으로 바뀐다. 드라이런 때 값이 없으면
-  `<META_APP_ID 미설정>`으로 찍히고 경고만, 실제 실행이면 중단.
+- 문자열 값이 `"$env:META_PAGE_ID"` 꼴이면 `.env.local` 값으로 바뀐다. 드라이런 때 값이 없으면
+  `<META_PAGE_ID 미설정>`으로 찍히고 경고만, 실제 실행이면 중단.
+- `currency`는 **필수**. 계정 통화와 다르면 중단한다. 티타 광고 계정은 **USD**다(2026-11 확인).
 - `status`는 스펙에 적어도 무시된다. 항상 PAUSED.
 - 타깃: 한국(`KR`), 여성(`genders: [2]`), 45세 이상(`age_min: 45, age_max: 65` — 65가 Meta 최대, 65+ 의미),
   안드로이드만(`user_os`). `targeting_automation.advantage_audience: 0`은 "Meta가 알아서 타깃을 넓히지 말라"는
@@ -123,14 +125,14 @@ Ads Manager에서 지우거나 이어서 손보면 된다. 끝나면 Ads Manager
 
 ### 예산 단위 주의
 
-Meta는 통화마다 예산 단위가 다르다(대부분 센트 = 100배, KRW·JPY 등은 1배). 스크립트는 KRW를 1배로 보고
-`10000`을 그대로 보낸다. **처음 만들었을 때 Ads Manager에서 일 예산이 10,000원으로 보이는지 꼭 확인**하고,
-100원이나 1,000,000원으로 보이면 `lib.mjs`의 `currencyOffset`을 고친다. PAUSED라 돈은 안 나간다.
+Meta는 통화마다 예산 단위가 다르다(대부분 센트 = 100배, KRW·JPY 등은 1배). 티타 계정은 USD라 스펙의 `3`을
+`300`(센트)으로 보낸다. **처음 만들었을 때 Ads Manager에서 일 예산이 $3로 보이는지 꼭 확인**하고,
+$0.03이나 $300으로 보이면 `lib.mjs`의 `currencyOffset`을 고친다. PAUSED라 돈은 안 나간다.
 
 ## 자주 막히는 데
 
 - `(#100) ... permission` 또는 `(#200)` — 시스템 사용자에 광고 계정·앱·페이지 자산이 안 붙었거나 토큰 권한이 모자란다. 1번 2~3단계 다시.
 - `(#10) Application does not have permission for this action` — 앱이 개발 모드거나 Marketing API 접근 단계가 낮다. 개발자 콘솔 → 앱 → Marketing API → 도구에서 표준 액세스 확인.
-- `Invalid parameter ... promoted_object` — 앱에 Android 플랫폼이 등록 안 됐거나 `META_APP_ID`가 다른 앱이다.
+- `Invalid parameter ... promoted_object` — 앱에 Android 플랫폼이 등록 안 됐거나 `META_PROMOTED_APP_ID`가 인스타 앱 등 다른 앱이다.
 - `targeting_automation` 관련 에러 — 새 광고 세트는 `advantage_audience`를 0 또는 1로 꼭 적어야 한다. 예시에 들어 있다.
 - 실패한 뒤 다시 돌리면 캠페인이 하나 더 생긴다. `ledger.json`에서 먼저 만든 ID를 보고 Ads Manager에서 정리할 것.

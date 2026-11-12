@@ -51,13 +51,18 @@ if (missingEnv.size) {
 }
 
 // ── 예산 단위: 스펙은 원(통화 단위) 그대로 적고, 통화 offset을 곱해 API 단위로. ──
-// dry-run이면 계정 통화를 못 물어보니 spec.currency(기본 KRW)로 계산한다. 실제 실행은 계정에서 읽는다.
-let currency = S.currency || "KRW";
+// 스펙에 currency를 꼭 적는다. 계정 통화와 다르면 중단 — 예산이 100배 틀어지는 걸 막는 안전장치.
+// (티타 광고 계정은 USD. 10000을 KRW로 알고 보내면 $10,000/일이 된다.)
+if (!S.currency) {
+  const msg = "스펙에 currency가 없다. 광고 계정 통화(USD)를 적을 것 — 예산 단위가 통화마다 달라서 생략 못 한다.";
+  if (DRY) console.error(`주의: ${msg}\n`); else { console.error(msg); process.exit(1); }
+}
+let currency = S.currency || "USD";
 if (!DRY) {
   needAuth();
   const acct = await api("GET", ACCOUNT_ID, { fields: "name,currency,account_status" });
   currency = acct.currency;
-  if (S.currency && S.currency !== currency) {
+  if (S.currency !== currency) {
     console.error(`스펙의 currency(${S.currency})와 광고 계정 통화(${currency})가 다르다. 스펙을 고칠 것.`);
     process.exit(1);
   }
