@@ -23,8 +23,9 @@ const BREAKDOWN = opt("breakdown", "");
 if (BREAKDOWN && !BREAKDOWNS[BREAKDOWN]) { console.error("--breakdown 은 age | gender | age,gender | placement"); process.exit(1); }
 const breakdownFields = BREAKDOWN ? BREAKDOWNS[BREAKDOWN] : [];
 
-const ymd = (d) => d.toISOString().slice(0, 10);
-const until = new Date(); // 오늘
+// 날짜는 서울 기준. UTC로 자르면 아침엔 '오늘'이 어제로 잡혀 오늘치가 빠진다 (광고 계정 시간대도 Asia/Seoul).
+const ymd = (d) => d.toLocaleDateString("sv-SE", { timeZone: "Asia/Seoul" });
+const until = new Date(); // 오늘(서울)
 const since = new Date(until.getTime() - (DAYS - 1) * 86400_000);
 
 // ── 1. 광고 계정 ──────────────────────────────────────────────────────────
