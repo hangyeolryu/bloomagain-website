@@ -14,7 +14,7 @@
     "account": "act_410621907654920",
     "currency": "USD",
     "name": "티타 앱설치 · 안드로이드 · 여성 45+ · 2026-11",
-    "status": "PAUSED",
+    "status": "ARCHIVED",
     "campaign_id": "120250089378940724",
     "adset_id": "120250089379260724",
     "resumed_at": "2026-11-12T14:19:16.632Z",
@@ -25,7 +25,9 @@
       "old_creative_id": "1127201353617724",
       "at": "2026-11-12T14:31:36.913Z",
       "reason": "creative_features OPT_OUT 적용 버전으로 교체"
-    }
+    },
+    "archived_at": "2026-11-12T15:32:30.613Z",
+    "archived_reason": "스크립트 테스트용 예시(10월 카드). /dream A/B로 대체"
   },
   {
     "created_at": "2026-11-12T15:15:16.596Z",
