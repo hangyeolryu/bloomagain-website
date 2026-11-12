@@ -56,7 +56,7 @@ function saveLog(log: Msg[]) {
 }
 
 const FAIL_TEXT: Record<Failure["reason"], string> = {
-  network: "연결이 잠깐 끊겼어요. 써 주신 말은 그대로 있어요. 다시 보내 볼까요?",
+  network: "연결이 잠깐 끊겼어요. 써 주신 말은 아래 칸에 그대로 있어요. 다시 보내 볼까요?",
   limited: "잠깐 이야기가 몰렸어요. 조금 뒤에 다시 보내 주세요.",
   server: "잠깐 문제가 생겼어요. 조금 뒤에 다시 보내 주세요.",
 };
@@ -105,6 +105,8 @@ export default function DreamPage() {
       setWaiting(false);
       if (!res.ok) {
         setFailure({ reason: res.reason, pending: message });
+        // 보낸 글을 입력칸에 되돌려 둔다. 길게 쓴 이야기를 연결 문제로 잃게 하지 않으려고.
+        if (message !== null) setInput((prev) => prev || message);
         return;
       }
       setLog((prev) => {
@@ -169,7 +171,14 @@ export default function DreamPage() {
 
   function retry() {
     if (!failure) return;
-    void turnOnce(failure.pending);
+    // 첫 말을 못 받았으면 첫 말부터, 아니면 입력칸에 되돌려 둔 글을 보낸다(고쳐 썼으면 고친 글).
+    if (failure.pending === null) {
+      void turnOnce(null);
+      return;
+    }
+    const text = input.trim() || failure.pending;
+    setInput("");
+    void turnOnce(text);
   }
 
   function onStoreClick(store: StoreKind) {
