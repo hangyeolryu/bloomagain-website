@@ -159,7 +159,13 @@ export default function DreamPage() {
     const ta = taRef.current;
     if (!ta) return;
     ta.style.height = "auto";
-    ta.style.height = `${Math.min(ta.scrollHeight, 220)}px`;
+    // scrollHeight에는 테두리(위아래 2px씩)가 빠져 있다. 그대로 높이로 주면 글이
+    // 4px 넘쳐서 빈칸인데도 스크롤 막대가 생겼다(2026-11-12 휴대폰 확인).
+    // 테두리만큼 더하고, 최대 높이에 닿기 전까지는 스크롤 막대를 숨긴다.
+    const border = ta.offsetHeight - ta.clientHeight;
+    const want = ta.scrollHeight + border;
+    ta.style.height = `${Math.min(want, 220)}px`;
+    ta.style.overflowY = want > 220 ? "auto" : "hidden";
   }, [input]);
 
   function send() {
@@ -468,6 +474,8 @@ export default function DreamPage() {
                 padding: "13px 16px",
                 minHeight: 58,
                 maxHeight: 220,
+                overflowY: "hidden",
+                boxSizing: "border-box",
               }}
             />
             <button
