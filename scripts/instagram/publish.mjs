@@ -247,11 +247,24 @@ async function refreshToken() {
 async function readLedger() {
   return existsSync(LEDGER) ? JSON.parse(await readFile(LEDGER, "utf8")) : {};
 }
+// 큐 한 줄 = "폴더" 또는 "폴더 YYYY-MM-DD"(예약 — 그날(KST)부터 올릴 수 있다).
+// 날짜가 아직 안 된 줄은 건너뛰고 다음 줄을 본다. 블로그 예약 발행과 같은 날에 맞추려고.
+function todayKst(now = Date.now()) {
+  return new Date(now + 9 * 3600 * 1000).toISOString().slice(0, 10);
+}
+function parseQueue(text) {
+  return text.split("\n").map((l) => l.replace(/#.*/, "").trim()).filter(Boolean).map((l) => {
+    const [slug, date] = l.split(/\s+/);
+    return { slug, date: /^\d{4}-\d{2}-\d{2}$/.test(date || "") ? date : null };
+  });
+}
+function pickNext(entries, ledger, today = todayKst()) {
+  const e = entries.find((x) => !ledger[x.slug] && (!x.date || x.date <= today));
+  return e ? e.slug : undefined;
+}
 async function nextFromQueue(ledger) {
   if (!existsSync(QUEUE)) return undefined;
-  const slugs = (await readFile(QUEUE, "utf8")).split("\n")
-    .map((l) => l.replace(/#.*/, "").trim()).filter(Boolean);
-  return slugs.find((s) => !ledger[s]);
+  return pickNext(parseQueue(await readFile(QUEUE, "utf8")), ledger);
 }
 async function loadSet(slug) {
   const dir = join(ASSETS, slug);

@@ -67,17 +67,172 @@ export interface BlogPost {
   audience?: "founder";
 }
 
-export const POSTS: BlogPost[] = [
+const ALL_POSTS: BlogPost[] = [
+  {
+    // 2026-11-17(화) 예약 발행. 인스타 '내가 모르던 나'(real-want-2026-11)와 같은 날.
+    // 연구·철학 인용은 결론만 옮겼다. 숫자는 원 논문에 있는 것만 쓰고, 기억이 확실치
+    // 않은 수치는 쓰지 않았다(예: 선택맹 실험의 정확한 발견률은 '대부분'으로 적었다).
+    // 브로니 웨어의 다섯 가지 후회는 연구가 아니라 호스피스 간호사의 관찰기라고 밝혔다.
+    slug: "what-you-really-want",
+    title: "내가 원하는 게, 정말 내가 원하는 걸까요 — 심리학 실험과 철학이 말하는 '진짜 원하는 것' 찾기",
+    description:
+      "사람은 자기가 왜 그걸 골랐는지 잘 모르고, 무엇이 자기를 기쁘게 할지도 자주 틀려요. 실험과 연구, 철학자들의 말을 따라 '원해야 할 것'과 '진짜 원하는 것'을 가르는 법을 정리했어요.",
+    date: "2026-11-17",
+    category: "티타 이야기",
+    tags: ["진짜 원하는 것", "나를 찾기", "자기불일치", "선택맹", "후회 연구", "자기결정이론", "작은 목표", "티타AI", "45+"],
+    cover: "/blog/real-want/card-1.png",
+    readingMinutes: 8,
+    body: [
+      {
+        type: "p",
+        text: "\"요즘 뭐 하고 싶으세요?\" 이렇게 여쭤보면 많은 분이 잠깐 멈추세요. 그러고는 \"글쎄요, 건강 챙기는 거?\" 하고 웃으시죠. 틀린 답은 아니에요. 그런데 그게 정말 마음이 원하는 건지, 원해야 할 것 같은 건지는 한 번 더 들여다볼 만해요. 심리학 실험들은 우리가 생각보다 자기 마음을 잘 모른다는 걸 꽤 일관되게 보여 주거든요.",
+      },
+      {
+        type: "image",
+        src: "/blog/real-want/card-1.png",
+        alt: "내가 원하는 게, 정말 내가 원하는 걸까요? 원한다고 생각한 것과 진짜 원하는 것은 자주 달라요.",
+      },
+      { type: "h2", text: "실험 1 — 왜 골랐는지, 우리는 잘 모른다" },
+      {
+        type: "p",
+        text: "1977년 심리학자 리처드 니스벳과 티머시 윌슨은 매장에 스타킹 네 켤레를 나란히 걸어 두고 손님들에게 가장 좋은 걸 고르게 했어요. 사실 네 켤레는 **똑같은 제품**이었어요. 그런데 사람들은 오른쪽 끝에 놓인 것을 왼쪽 끝 것보다 네 배 가까이 더 골랐고, 이유를 물으면 \"감촉이 좋아서\", \"짜임이 촘촘해서\"라고 답했어요. 놓인 자리 때문이라고 말한 사람은 거의 없었죠. 우리는 고른 다음에 그럴듯한 이유를 붙인다는 거예요.",
+      },
+      {
+        type: "p",
+        text: "2005년 스웨덴 룬드대학의 페테르 요한손과 라르스 할 연구팀은 한 걸음 더 나갔어요. 두 사람의 얼굴 사진 중 더 끌리는 쪽을 고르게 한 뒤, 손재주로 몰래 **고르지 않은 사진**을 건네며 왜 골랐는지 물었어요. 대부분은 바뀐 걸 알아채지 못했고, 심지어 자기가 고르지 않은 얼굴의 귀걸이나 미소를 이유로 들었어요. 연구팀은 이걸 '선택맹(choice blindness)'이라고 불렀어요.",
+      },
+      {
+        type: "callout",
+        text: "내가 \"이걸 원한다\"고 말할 때, 그 이유가 진짜 이유라는 보장은 없어요. 그래서 진짜 원하는 걸 찾으려면 이유를 묻기보다 장면을 떠올려야 해요.",
+      },
+      { type: "h2", text: "실험 2 — 무엇이 나를 기쁘게 할지도 자주 틀린다" },
+      {
+        type: "p",
+        text: "윌슨과 하버드대 대니얼 길버트는 이걸 '정서 예측(affective forecasting)'이라는 이름으로 오래 연구했어요. 사람들은 어떤 일이 나를 **얼마나 오래, 얼마나 크게** 기쁘게 하거나 슬프게 할지 대체로 부풀려 짐작해요. 1998년 연구에서는 대학 교원들이 정년 보장 심사에서 떨어지면 몇 년은 불행할 거라고 예상했지만, 실제로 떨어진 사람들은 붙은 사람들과 행복도가 생각만큼 다르지 않았어요. 반대로 '갖고 싶던 것'을 가져도 기쁨은 예상보다 빨리 식고요.",
+      },
+      {
+        type: "p",
+        text: "윌슨은 2002년 책 제목을 아예 『나는 내가 낯설다(Strangers to Ourselves)』로 지었어요. 마음의 많은 부분은 의식 아래에서 돌아가서, 들여다본다고 바로 보이지 않는다는 거죠. 그러니 \"뭘 원하세요?\"라는 질문에 바로 답이 안 나오는 건 이상한 게 아니에요. 사람이 원래 그래요.",
+      },
+      { type: "h2", text: "마음속엔 세 겹이 있어요" },
+      {
+        type: "image",
+        src: "/blog/real-want/card-2.png",
+        alt: "마음속 세 겹 — 머리: 이쯤 되면 이래야지 / 남의 눈: 남들 보기에 괜찮은 것 / 마음: 생각만 해도 설레는 것",
+      },
+      {
+        type: "p",
+        text: "컬럼비아대 심리학자 토리 히긴스는 1987년 '자기 불일치 이론'에서 우리 안에 세 가지 자기가 있다고 했어요. 지금의 나(실제 자기), **되어야 한다고 여기는 나**(당위 자기), 그리고 **되고 싶은 나**(이상 자기). 당위 자기는 의무·책임·남의 기대에서, 이상 자기는 바람과 꿈에서 나와요. 둘은 겹치기도 하지만 자주 어긋나요.",
+      },
+      {
+        type: "p",
+        text: "그림의 세 겹이 바로 이거예요. **머리**(\"이쯤 되면 이래야지\")와 **남의 눈**(\"남들 보기에 괜찮은 것\")은 당위 쪽, **마음**(\"생각만 해도 설레는 것\")은 이상 쪽이에요. 셋 다 나의 일부지만, 오래 붙잡고 갈 힘은 대개 마지막 겹에서 나와요.",
+      },
+      { type: "h2", text: "연구 — 스스로 끌린 목표가 오래 간다" },
+      {
+        type: "p",
+        text: "에드워드 데시와 리처드 라이언의 '자기결정이론'은 수십 년간 여러 나라에서 검증된 동기 이론이에요. 핵심은 같은 일도 **'해야 해서'(통제된 동기)** 할 때와 **'하고 싶어서'(자율적 동기)** 할 때 끈기와 만족이 다르다는 거예요. 켄 셸던과 앤드루 엘리엇은 1999년 대학생들이 학기 초에 세운 목표를 학기 내내 따라가 봤어요. 자기 관심과 가치에서 나온 목표(자기 일치 목표)는 더 꾸준히 추구됐고, 더 많이 이뤄졌고, 이룬 뒤 행복도 더 크게 올랐어요. 압박이나 죄책감에서 나온 목표는 이뤄도 만족이 덜했구요.",
+      },
+      {
+        type: "p",
+        text: "같은 '운동하기'라도 의사 선생님 말씀 때문인지, 숲길 걷는 아침이 좋아서인지에 따라 석 달 뒤가 달라지는 거예요.",
+      },
+      { type: "h2", text: "조사 — 오래 남는 후회는 '되고 싶던 나'를 놓친 것" },
+      {
+        type: "p",
+        text: "코넬대 토머스 길로비치와 빅토리아 메드벡은 1995년 후회 연구에서, 짧게 보면 사람들은 **한 일**을 후회하지만 길게 보면 **하지 않은 일**을 더 오래 후회한다는 걸 보여 줬어요. 2018년 길로비치와 샤이 다비다이는 한 걸음 더 들어가, 사람들에게 인생에서 가장 큰 후회를 물었더니 '해야 할 의무를 못 한 것'보다 **'되고 싶던 나에 다가가지 못한 것'**을 훨씬 더 많이 꼽았다고 보고했어요.",
+      },
+      {
+        type: "quote",
+        text: "남들이 기대한 삶 말고, 나에게 진실한 삶을 살 용기가 있었더라면.",
+        cite: "브로니 웨어, 『죽을 때 가장 후회하는 다섯 가지』 — 호스피스 간호사로 일하며 가장 많이 들은 후회(연구가 아닌 관찰기)",
+      },
+      { type: "h2", text: "철학 — 이 질문은 아주 오래된 질문이에요" },
+      {
+        type: "p",
+        text: "델포이 신전 입구에는 \"너 자신을 알라\"는 말이 새겨져 있었고, 소크라테스는 재판정에서 \"성찰하지 않는 삶은 살 가치가 없다\"고 했어요(플라톤 『변론』). 니체는 핀다로스의 시구를 빌려 \"너 자신이 되어라\"라고 썼고, 키르케고르는 『죽음에 이르는 병』에서 절망의 한 모습을 '자기 자신이기를 원하지 않는 것'이라고 했어요.",
+      },
+      {
+        type: "p",
+        text: "심리학자 칼 로저스는 이걸 상담실에서 확인했어요. 사람이 남의 기대에 맞춰 사는 '조건부 자기'를 내려놓고 자기 경험에 솔직해질수록 덜 불안해지고 더 자기답게 바뀌더라는 거죠. 철학이 묻고, 실험이 확인하고, 상담실이 증언하는 게 결국 같은 이야기예요. **진짜 원하는 걸 아는 건 저절로 되지 않고, 물어봐야 나온다.**",
+      },
+      { type: "h2", text: "그래서, 어떻게 꺼낼까요 — 세 가지 질문" },
+      {
+        type: "p",
+        text: "이유를 묻는 질문(\"왜 그걸 원해요?\")은 앞의 스타킹 실험처럼 그럴듯한 설명만 끌어내기 쉬워요. 대신 **장면**을 묻는 질문이 좋아요. 몰입 연구로 유명한 미하이 칙센트미하이가 말한 '시간 가는 줄 모르는 순간'은 마음이 진짜 끌리는 쪽을 가리키는 좋은 표지예요.",
+      },
+      {
+        type: "image",
+        src: "/blog/real-want/card-3.png",
+        alt: "진짜 원하는 건 물어봐 줘야 나와요 — 시간 가는 줄 몰랐던 때 / 남 눈치 안 보면 해 보고 싶은 것 / 어릴 때 좋아했는데 그만둔 것",
+      },
+      {
+        type: "callout",
+        text: "① 시간 가는 줄 몰랐던 때가 언제였어요? — 몰입의 흔적\n② 남 눈치 안 보면, 뭘 해 보고 싶어요? — 당위를 걷어낸 자리\n③ 어릴 때 좋아했는데 그만둔 게 있어요? — 오래된 이상 자기",
+      },
+      {
+        type: "p",
+        text: "답이 떠오르면 한 겹 더 물어보세요. \"그게 이뤄지면 뭐가 제일 좋을 것 같아?\" 상담과 소비자 연구에서 '래더링(사다리 타기)'이라 부르는 방법이에요. \"그림을 다시 그리고 싶다\" 아래에 \"아무 생각 없이 몰입하는 시간\"이, \"여행 가고 싶다\" 아래에 \"누군가와 처음 보는 걸 같이 보는 기쁨\"이 있을 수 있어요. 그리고 \"그건 해야 해서야, 끌려서야?\" 하고 한 번 가려 보세요.",
+      },
+      { type: "h2", text: "찾았으면, 작게 한 걸음" },
+      {
+        type: "image",
+        src: "/blog/real-want/card-5.png",
+        alt: "찾은 마음: 다시 그림 그리고 싶어요 → 이번 달 목표: 색연필로 동네 풍경 4장 → 이번 주 첫걸음: 색연필 한 통 사기",
+      },
+      {
+        type: "p",
+        text: "진짜 원하는 걸 찾았다고 거창하게 시작할 필요는 없어요. 뉴욕대 피터 골비처의 '실행 의도' 연구는 \"언제, 어디서, 무엇을\" 정해 둔 작은 계획이 막연한 다짐보다 실제 행동으로 훨씬 잘 이어진다는 걸 수많은 실험으로 보여 줬어요. 이번 달 목표 하나, 이번 주 첫걸음 하나면 충분해요. 작아야 시작되고, 시작돼야 이어져요.",
+      },
+      { type: "h2", text: "티타AI와 같이 찾아봐요" },
+      {
+        type: "p",
+        text: "혼자 묻고 답하기가 어색하시면 **티타AI**가 대신 여쭤볼게요. 위의 방법 그대로예요. 한 번에 하나씩, 들려주신 말을 짚어 장면을 묻고, 한 겹 아래를 묻고, '해야 해서'인지 '끌려서'인지 가려 보고, 끝에는 들은 이야기 속 '진짜 바라는 것'을 조심스럽게 비춰 드린 뒤 이번 주 첫걸음 하나를 같이 정해요. 판단하거나 단정하지 않아요. 생각나는 대로 말씀하시면 돼요.",
+      },
+    ],
+    sources: [
+      { label: "Nisbett, R. E., & Wilson, T. D. (1977). Telling more than we can know: Verbal reports on mental processes. Psychological Review, 84(3), 231–259." },
+      { label: "Johansson, P., Hall, L., Sikström, S., & Olsson, A. (2005). Failure to detect mismatches between intention and outcome in a simple decision task. Science, 310(5745), 116–119." },
+      { label: "Wilson, T. D., & Gilbert, D. T. (2005). Affective forecasting: Knowing what to want. Current Directions in Psychological Science, 14(3), 131–134." },
+      { label: "Gilbert, D. T., Pinel, E. C., Wilson, T. D., Blumberg, S. J., & Wheatley, T. P. (1998). Immune neglect: A source of durability bias in affective forecasting. Journal of Personality and Social Psychology, 75(3), 617–638." },
+      { label: "Wilson, T. D. (2002). Strangers to Ourselves: Discovering the Adaptive Unconscious. Harvard University Press." },
+      { label: "Higgins, E. T. (1987). Self-discrepancy: A theory relating self and affect. Psychological Review, 94(3), 319–340." },
+      { label: "Ryan, R. M., & Deci, E. L. (2000). Self-determination theory and the facilitation of intrinsic motivation, social development, and well-being. American Psychologist, 55(1), 68–78." },
+      { label: "Sheldon, K. M., & Elliot, A. J. (1999). Goal striving, need satisfaction, and longitudinal well-being: The self-concordance model. Journal of Personality and Social Psychology, 76(3), 482–497." },
+      { label: "Gilovich, T., & Medvec, V. H. (1995). The experience of regret: What, when, and why. Psychological Review, 102(2), 379–395." },
+      { label: "Davidai, S., & Gilovich, T. (2018). The ideal road not taken: The self-discrepancies involved in people's most enduring regrets. Emotion, 18(3), 439–452." },
+      { label: "Gollwitzer, P. M. (1999). Implementation intentions: Strong effects of simple plans. American Psychologist, 54(7), 493–503." },
+      { label: "Csikszentmihalyi, M. (1990). Flow: The Psychology of Optimal Experience. Harper & Row." },
+      { label: "Rogers, C. R. (1961). On Becoming a Person. Houghton Mifflin." },
+      { label: "Ware, B. (2012). The Top Five Regrets of the Dying. Hay House." },
+      { label: "플라톤, 『소크라테스의 변론』 38a / 키르케고르, 『죽음에 이르는 병』(1849) / 니체, 『이 사람을 보라』(1888)" },
+    ],
+    faq: [
+      {
+        q: "하고 싶은 게 정말 아무것도 없으면요?",
+        a: "그럴 때가 있어요. 그땐 '하고 싶은 것' 대신 '시간 가는 줄 몰랐던 때'나 '어릴 때 좋아했던 것'부터 떠올려 보세요. 실마리는 대개 지나온 장면 속에 있어요.",
+      },
+      {
+        q: "'해야 하는 일'은 다 나쁜 건가요?",
+        a: "아니에요. 의무와 책임도 나를 지켜 준 소중한 겹이에요. 다만 그것만으로 목표를 세우면 오래 가기 어렵다는 게 연구들의 공통된 결론이에요. 해야 하는 일 안에서도 '내가 끌리는 부분'을 찾으면 달라져요.",
+      },
+      {
+        q: "티타AI와 나눈 이야기는 어디에 쓰이나요?",
+        a: "이름 없이 서비스를 고치는 데만 쓰고, 웹에서 나눈 대화는 90일 뒤 지워요. 언제든 '그만'이라고 하시면 바로 멈춰요.",
+      },
+    ],
+    cta: { label: "티타AI와 이야기해 보기", href: "/dream/?utm_source=blog&utm_campaign=what-you-really-want", note: "가입 없이 바로 시작해요" },
+  },
   {
     // 2026-11-12 앱 3.2.35 업데이트 안내 — 추억 매일 띠·물음 36개·언제쯤 칩·추억집 때별 보기.
     // 숫자(11건·2건)는 앱 커밋 a7f6037·54fb13d에 적힌 실측. 사람 이름은 없다.
     // 결친구 방 추억 카드는 서버 스위치가 꺼져 있어 쓰지 않았다(켜면 따로 알린다).
-    // ⚠️ 스토어 심사 통과(3.2.35 배포) 뒤에 머지할 것 — 먼저 나가면 "업데이트했는데 안 보여요"가 온다.
+    // 예약 발행 2026-11-24(화) — 3.2.35 심사 통과 뒤로 잡았다. 심사가 늦어지면 date를 뒤로 미룰 것.
     slug: "memory-daily-line",
     title: "하루 한 줄, 추억 한 조각 — 티타 추억 기록이 바뀌었어요",
     description:
       "홈에서 매일 추억 물음 하나를 여쭤봐요. 물음은 36개로 늘었고, '언제쯤이었나요?'는 눌러서 고르면 돼요. 모인 추억은 인생 순서대로 묶여 보여요.",
-    date: "2026-11-12",
+    date: "2026-11-24",
     category: "티타 이야기",
     tags: ["티타 업데이트", "추억 기록", "추억집", "회상", "하루 한 줄", "45+"],
     cover: "/blog/memory-daily-line/card-1.png",
@@ -3668,6 +3823,18 @@ export const POSTS: BlogPost[] = [
 ];
 
 /** 같은 묶음의 글을 순서대로. 시리즈 목차 렌더에 쓴다. */
+/**
+ * 예약 발행 — 발행일(date, KST)이 오늘보다 뒤인 글은 빌드에 넣지 않는다.
+ *
+ * 글을 미리 써서 머지해 두면, 그날 아침 예약 배포(deploy.yml schedule)가 다시
+ * 빌드할 때 목록·본문·sitemap·앱 피드(/blog/feed.json)에 한꺼번에 나타난다.
+ * 앱 동기화 스크립트(sync_blog_to_app.py)도 이 POSTS를 읽으므로 앞당겨 나가지 않는다.
+ */
+function todayKst(): string {
+  return new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
+}
+export const POSTS: BlogPost[] = ALL_POSTS.filter((p) => p.date <= todayKst());
+
 export function getSeries(name: string): BlogPost[] {
   return POSTS.filter((p) => p.series?.name === name).sort(
     (a, b) => (a.series!.order ?? 0) - (b.series!.order ?? 0)

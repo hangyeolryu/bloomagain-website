@@ -41,6 +41,11 @@ name: Deploy to Firebase Hosting
 on:
   push:
     branches: [main]
+  # 예약 발행 — 매일 06:41 KST에 다시 빌드한다. posts.ts는 발행일이 오늘(KST) 이하인
+  # 글만 빌드에 넣으므로, 미리 머지해 둔 글이 그날 아침 저절로 열린다(앱 피드도 같이).
+  # 정시를 비킨 건 GitHub 예약이 정시에 몰려 늦어지기 때문(instagram-publish.yml 참고).
+  schedule:
+    - cron: "41 21 * * *"
   workflow_dispatch: {}
 
 # 같은 브랜치 배포가 겹치지 않게 — 새 푸시가 오면 진행 중 배포는 취소.

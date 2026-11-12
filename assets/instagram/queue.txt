@@ -6,3 +6,6 @@
 seoul-free-2026-11-w1
 seoul-free-2026-11-w2
 seoul-free-2026-11-w3
+# 예약 줄: "폴더 YYYY-MM-DD" — 그날(KST)부터 올라간다. 블로그 예약 발행과 같은 날.
+real-want-2026-11 2026-11-17
+memory-daily-line 2026-11-24
