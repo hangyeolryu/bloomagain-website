@@ -1,0 +1,58 @@
+{
+  "_comment": "티타 앱설치 광고 예시 — 안드로이드, 한국, 여성, 45세 이상, 일 10,000원. 전부 PAUSED로 만들어진다. $env:이름 은 .env.local 값으로 바뀐다.",
+  "currency": "KRW",
+
+  "campaign": {
+    "name": "티타 앱설치 · 안드로이드 · 여성 45+ · 2026-11",
+    "objective": "OUTCOME_APP_PROMOTION",
+    "buying_type": "AUCTION",
+    "special_ad_categories": []
+  },
+
+  "adset": {
+    "name": "KR 여성 45-65+ 안드로이드 · 일 1만원",
+    "daily_budget": 10000,
+    "billing_event": "IMPRESSIONS",
+    "optimization_goal": "APP_INSTALLS",
+    "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
+    "promoted_object": {
+      "application_id": "$env:META_APP_ID",
+      "object_store_url": "https://play.google.com/store/apps/details?id=com.bloomagain.bloomagain"
+    },
+    "targeting": {
+      "geo_locations": { "countries": ["KR"] },
+      "genders": [2],
+      "age_min": 45,
+      "age_max": 65,
+      "user_os": ["Android"],
+      "device_platforms": ["mobile"],
+      "publisher_platforms": ["facebook", "instagram"],
+      "targeting_automation": { "advantage_audience": 0 }
+    }
+  },
+
+  "creative": {
+    "name": "또래 모임 · 카드 1 · 2026-11",
+    "image": "https://raw.githubusercontent.com/hangyeolryu/bloomagain-website/main/assets/instagram/insight-15/card-1.jpg",
+    "object_story_spec": {
+      "page_id": "$env:META_PAGE_ID",
+      "link_data": {
+        "link": "https://play.google.com/store/apps/details?id=com.bloomagain.bloomagain",
+        "message": "마흔다섯이 넘으면 새 친구 사귀기가 쉽지 않죠. 티타에서는 가까운 동네 또래들과 산책, 커피, 전시를 함께 다닙니다. 소개팅 앱이 아니라 또래 모임 앱입니다.",
+        "name": "45세 이상 또래 모임 앱, 티타",
+        "description": "동네 모임부터 가볍게 시작해 보세요",
+        "call_to_action": {
+          "type": "INSTALL_MOBILE_APP",
+          "value": {
+            "link": "https://play.google.com/store/apps/details?id=com.bloomagain.bloomagain",
+            "application": "$env:META_APP_ID"
+          }
+        }
+      }
+    }
+  },
+
+  "ad": {
+    "name": "또래 모임 · 카드 1"
+  }
+}
