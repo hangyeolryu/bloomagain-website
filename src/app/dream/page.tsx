@@ -22,6 +22,7 @@ import { StoreDownloadButton, type StoreKind } from "../_components/StoreDownloa
 import { logAnalyticsEvent } from "@/lib/firebase";
 import { trackPixel } from "@/lib/pixel";
 import {
+  DREAM_OPENING,
   getDreamSessionId,
   readUtm,
   sendDreamTurn,
@@ -147,10 +148,29 @@ export default function DreamPage() {
     // 마운트 뒤 한 번 정하는 값들이라 이펙트 안에서 상태를 맞춘다.
     /* eslint-disable react-hooks/set-state-in-effect */
     setVariant(v);
-    if (restored.length) setLog(restored);
+    if (restored.length) {
+      setLog(restored);
+    } else {
+      // 첫 말은 기다리지 않고 바로 띄운다(DREAM_OPENING 주석 참고).
+      const first: Msg[] = [{ role: "assistant", text: DREAM_OPENING }];
+      setLog(first);
+      saveLog(first);
+    }
     /* eslint-enable react-hooks/set-state-in-effect */
-    void turnOnce(null);
-  }, [turnOnce]);
+    // 뒤에서 조용히 서버를 깨운다(세션 생성 + 냉시동 흡수). 화면은 이걸 기다리지 않고,
+    // 실패해도 아무것도 안 띄운다 — 첫 답을 보낼 때 다시 시도된다.
+    void sendDreamTurn({
+      sessionId: sidRef.current,
+      message: null,
+      utm: utmRef.current,
+      hp: hpRef.current?.value ?? "",
+    }).then((res) => {
+      if (res.ok && res.turn === 0 && !res.done && !restored.length) {
+        logAnalyticsEvent("dream_start", { variant: utmRef.current.v ?? "a" });
+        trackPixel("DreamStart", { variant: utmRef.current.v ?? "a" }, true);
+      }
+    });
+  }, []);
 
   // 새 말이 오면 아래로. 큰 글씨라 화면 밖으로 밀리기 쉽다.
   useEffect(() => {
