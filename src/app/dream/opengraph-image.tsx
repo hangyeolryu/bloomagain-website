@@ -10,9 +10,9 @@ export const alt = "요즘 해 보고 싶은데 미뤄둔 거, 있으세요? —
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-// 미리보기 이미지도 페이지와 같은 나눔스퀘어라운드(satori는 woff2를 못 읽어 TTF).
+// 미리보기 이미지도 페이지와 같은 마루부리(satori는 woff2를 못 읽어 TTF).
 async function loadFont(weight: "Bold" | "SemiBold") {
-  const file = weight === "Bold" ? "NanumSquareRoundB.ttf" : "NanumSquareRoundR.ttf";
+  const file = weight === "Bold" ? "MaruBuri-Bold-subset.ttf" : "MaruBuri-Regular-subset.ttf";
   return readFile(join(process.cwd(), "src/app/dream/_fonts", file));
 }
 
@@ -37,7 +37,7 @@ export default async function Image() {
           height: "100%",
           display: "flex",
           background: `linear-gradient(150deg, ${forest} 0%, ${forestDeep} 100%)`,
-          fontFamily: "NanumSquareRound",
+          fontFamily: "MaruBuri",
           position: "relative",
         }}
       >
@@ -123,8 +123,8 @@ export default async function Image() {
     {
       ...size,
       fonts: [
-        { name: "NanumSquareRound", data: bold, weight: 700 },
-        { name: "NanumSquareRound", data: semibold, weight: 600 },
+        { name: "MaruBuri", data: bold, weight: 700 },
+        { name: "MaruBuri", data: semibold, weight: 600 },
       ],
     }
   );

@@ -1,16 +1,17 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 
-// 나눔스퀘어라운드 — /dream 전용(2026-11-12 대표 요청: "좀 더 부드러운 폰트").
-// 모서리가 둥근 고딕이라 사이트 기본 고운돋움보다 또렷하면서도 딱딱하지 않다.
-// OFL-1.1(@kfonts/nanum-square-round). 본문 400, 제목 700/800.
-const nanumSquareRound = localFont({
+// 마루부리 — /dream 전용(2026-11-12 대표 선택). 붓 기운이 살짝 있는 부드러운
+// 명조라 "다시 꾸는 꿈"의 따뜻한 결에 맞는다. 나눔스퀘어라운드를 먼저 써 봤는데
+// 가볍고 어려 보여 바꿨다. 네이버 마루부리(OFL-1.1, @kfonts/maruburi).
+// 원본 굵기당 약 850KB라, KS X 1001 완성형 2,350자 + 영문·기호만 남겨 굵기당
+// 약 210KB로 줄였다. 드문 글자는 사이트 기본 글꼴로 대신 그려진다.
+const maruBuri = localFont({
   src: [
-    { path: "./_fonts/NanumSquareRoundR.woff2", weight: "400" },
-    { path: "./_fonts/NanumSquareRoundB.woff2", weight: "700" },
-    { path: "./_fonts/NanumSquareRoundEB.woff2", weight: "800" },
+    { path: "./_fonts/MaruBuri-Regular-subset.woff2", weight: "400" },
+    { path: "./_fonts/MaruBuri-Bold-subset.woff2", weight: "700" },
   ],
-  variable: "--font-nsr",
+  variable: "--font-maruburi",
   display: "swap",
 });
 
@@ -29,5 +30,5 @@ export const metadata: Metadata = {
 };
 
 export default function DreamLayout({ children }: { children: React.ReactNode }) {
-  return <div className={nanumSquareRound.variable}>{children}</div>;
+  return <div className={maruBuri.variable}>{children}</div>;
 }
