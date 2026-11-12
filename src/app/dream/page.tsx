@@ -15,6 +15,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { TITA, KOREAN_FONT_STACK } from "../_components/tita-brand";
+
+// 이 페이지만 나눔스퀘어라운드(layout.tsx의 --font-nsr). 못 받으면 사이트 기본으로.
+const DREAM_FONT = `var(--font-nsr), ${KOREAN_FONT_STACK}`;
 import { StoreDownloadButton, type StoreKind } from "../_components/StoreDownloadButton";
 import { logAnalyticsEvent } from "@/lib/firebase";
 import { trackPixel } from "@/lib/pixel";
@@ -220,7 +223,7 @@ export default function DreamPage() {
     borderRadius: "20px 6px 20px 20px",
   };
   const bigBtn: React.CSSProperties = {
-    fontFamily: KOREAN_FONT_STACK,
+    fontFamily: DREAM_FONT,
     fontSize: 18,
     fontWeight: 800,
     borderRadius: 999,
@@ -233,7 +236,7 @@ export default function DreamPage() {
       style={{
         minHeight: "100dvh",
         background: TITA.cream,
-        fontFamily: KOREAN_FONT_STACK,
+        fontFamily: DREAM_FONT,
         color: TITA.ink,
         display: "flex",
         flexDirection: "column",
@@ -464,7 +467,7 @@ export default function DreamPage() {
               style={{
                 flex: 1,
                 resize: "none",
-                fontFamily: KOREAN_FONT_STACK,
+                fontFamily: DREAM_FONT,
                 fontSize: 18,
                 lineHeight: 1.6,
                 color: TITA.ink,
