@@ -26,6 +26,8 @@ import {
   getDreamSessionId,
   readUtm,
   sendDreamTurn,
+  sendDreamFeedback,
+  type DreamResult,
   type DreamStatus,
 } from "./dream-api";
 
@@ -73,6 +75,12 @@ export default function DreamPage() {
   const [failure, setFailure] = useState<Failure | null>(null);
   const [status, setStatus] = useState<DreamStatus>("active");
   const [done, setDone] = useState(false);
+  // 끝난 대화의 결과 카드(오늘 찾은 마음 · 이번 주 첫걸음). 요약이 실패하면 없다.
+  const [result, setResult] = useState<DreamResult | null>(null);
+  // "오늘 대화 어떠셨어요?" — 고르기 → (선택) 한마디 → 고맙습니다.
+  const [fbRating, setFbRating] = useState<"good" | "ok" | "bad" | null>(null);
+  const [fbComment, setFbComment] = useState("");
+  const [fbSent, setFbSent] = useState(false);
   // 대화 중 앱 받기 카드 — 이 메시지(log 인덱스) 바로 아래에 붙는다. null이면 안 보임.
   // 두 번째 답을 한 뒤 저절로 한 번 뜨고, 머리의 "앱 받기"를 누르면 그 자리에 뜬다.
   const [appCardAt, setAppCardAt] = useState<number | null>(null);
@@ -144,7 +152,10 @@ export default function DreamPage() {
         logAnalyticsEvent("dream_start", { variant: utmRef.current.v ?? "a" });
         trackPixel("DreamStart", { variant: utmRef.current.v ?? "a" }, true);
       }
-      if (res.done) finish(res.status, res.turn, message !== null);
+      if (res.done) {
+        if (res.result) setResult(res.result);
+        finish(res.status, res.turn, message !== null);
+      }
     },
     [finish],
   );
@@ -180,6 +191,11 @@ export default function DreamPage() {
       if (res.ok && res.turn === 0 && !res.done && !restored.length) {
         logAnalyticsEvent("dream_start", { variant: utmRef.current.v ?? "a" });
         trackPixel("DreamStart", { variant: utmRef.current.v ?? "a" }, true);
+      }
+      // 끝난 대화를 새로고침으로 다시 열었으면 끝 화면(결과·앱 받기)을 다시 보여 준다. 두 번 세지는 않는다.
+      if (res.ok && res.done && restored.length) {
+        if (res.result) setResult(res.result);
+        finish(res.status, res.turn, false);
       }
     });
   }, []);
@@ -220,6 +236,12 @@ export default function DreamPage() {
     const text = input.trim() || failure.pending;
     setInput("");
     void turnOnce(text);
+  }
+
+  function sendFeedback(rating: "good" | "ok" | "bad", comment?: string) {
+    // 고르는 순간 한 번 보내고(창을 닫아도 남게), 한마디를 쓰면 같은 세션 줄을 고친다.
+    void sendDreamFeedback({ sessionId: sidRef.current, rating, comment });
+    if (comment === undefined) logAnalyticsEvent("dream_feedback", { rating });
   }
 
   function onStoreClick(store: StoreKind, source: string) {
@@ -490,6 +512,39 @@ export default function DreamPage() {
           </div>
         )}
 
+        {/* 결과 카드 — 대화에서 찾은 '진짜 바라는 것'과 이번 주 첫걸음. 캡처해 두기 좋게 한 장으로. */}
+        {done && status === "completed" && result && (
+          <div
+            style={{
+              marginTop: 22,
+              background: TITA.forest,
+              color: TITA.cream,
+              borderRadius: 22,
+              padding: "22px 20px",
+            }}
+          >
+            <p style={{ margin: "0 0 14px", fontSize: 15, fontWeight: 700, color: TITA.sage }}>
+              오늘 티타AI와 찾은 것
+            </p>
+            {result.core_want && (
+              <>
+                <p style={{ margin: "0 0 4px", fontSize: 15, color: TITA.sage }}>진짜 바라는 것</p>
+                <p style={{ margin: "0 0 16px", fontSize: 21, lineHeight: 1.5, fontWeight: 700, wordBreak: "keep-all" }}>
+                  {result.core_want}
+                </p>
+              </>
+            )}
+            {result.first_step && (
+              <>
+                <p style={{ margin: "0 0 4px", fontSize: 15, color: TITA.sage }}>이번 주 첫걸음</p>
+                <p style={{ margin: 0, fontSize: 19, lineHeight: 1.55, fontWeight: 700, wordBreak: "keep-all" }}>
+                  {result.first_step}
+                </p>
+              </>
+            )}
+          </div>
+        )}
+
         {done && status !== "crisis" && (
           <div
             style={{
@@ -516,11 +571,30 @@ export default function DreamPage() {
               <br />
               티타에 있어요
             </p>
-            <p style={{ margin: "0 0 18px", fontSize: 17, lineHeight: 1.7, color: TITA.ink }}>
+            <p style={{ margin: "0 0 14px", fontSize: 17, lineHeight: 1.7, color: TITA.ink, wordBreak: "keep-all" }}>
               45세 이상, 본인인증을 마친 또래만 모여요.
               <br />
               같은 꿈을 가진 분과 천천히 시작해 보세요.
             </p>
+            {/* 가입까지 몇 걸음인지 미리 보여 준다 — "어려울까 봐"에서 많이 멈춘다. */}
+            <ol
+              style={{
+                listStyle: "none",
+                margin: "0 auto 18px",
+                padding: "12px 16px",
+                maxWidth: 320,
+                textAlign: "left",
+                background: TITA.surface,
+                borderRadius: 14,
+                fontSize: 16,
+                lineHeight: 1.9,
+                color: TITA.ink,
+              }}
+            >
+              <li>① 앱 받기 (무료)</li>
+              <li>② 휴대폰 본인인증으로 가입 — 1~2분</li>
+              <li>③ 같은 꿈 또래와 인사 나누기</li>
+            </ol>
             {/* /needs 등과 같은 다운로드 버튼 — 인앱 브라우저·기기 오감지 처리가 다 들어 있다. */}
             <StoreDownloadButton
               source="dream_result"
@@ -528,6 +602,98 @@ export default function DreamPage() {
               onStoreClick={onStoreClick}
               style={{ fontSize: 18, padding: "18px 28px", minWidth: 240, boxShadow: "0 10px 26px rgba(31,78,61,0.28)" }}
             />
+          </div>
+        )}
+
+        {/* 대화 뒤 피드백 — 앱 받기 아래에 작게. 고르면 바로 저장되고, 한마디는 선택. */}
+        {done && status !== "crisis" && (
+          <div
+            style={{
+              marginTop: 18,
+              background: TITA.white,
+              border: `1.5px solid ${TITA.sage}`,
+              borderRadius: 20,
+              padding: "18px 18px",
+              textAlign: "center",
+            }}
+          >
+            {fbSent ? (
+              <p style={{ margin: 0, fontSize: 17, color: TITA.forestDeep, fontWeight: 700 }}>
+                들려주셔서 고맙습니다. 더 좋은 대화로 고쳐 갈게요.
+              </p>
+            ) : (
+              <>
+                <p style={{ margin: "0 0 12px", fontSize: 17, fontWeight: 700, color: TITA.forestDeep }}>
+                  오늘 티타AI와의 대화, 어떠셨어요?
+                </p>
+                <div style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap" }}>
+                  {([
+                    ["good", "좋았어요"],
+                    ["ok", "그저 그래요"],
+                    ["bad", "별로였어요"],
+                  ] as const).map(([k, label]) => (
+                    <button
+                      key={k}
+                      type="button"
+                      aria-pressed={fbRating === k}
+                      onClick={() => {
+                        setFbRating(k);
+                        sendFeedback(k);
+                      }}
+                      style={{
+                        ...bigBtn,
+                        fontSize: 16,
+                        padding: "12px 18px",
+                        minHeight: 48,
+                        background: fbRating === k ? TITA.forest : TITA.white,
+                        color: fbRating === k ? TITA.cream : TITA.forest,
+                        border: `1.5px solid ${TITA.forest}`,
+                      }}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+                {fbRating && (
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      if (fbComment.trim()) sendFeedback(fbRating, fbComment);
+                      setFbSent(true);
+                    }}
+                    style={{ marginTop: 14 }}
+                  >
+                    <label htmlFor="dream-fb" style={{ display: "block", fontSize: 15, color: TITA.forestMid, marginBottom: 8 }}>
+                      {fbRating === "good" ? "어떤 점이 좋으셨어요? (선택)" : "무엇이 아쉬우셨어요? (선택)"}
+                    </label>
+                    <textarea
+                      id="dream-fb"
+                      rows={2}
+                      maxLength={500}
+                      value={fbComment}
+                      onChange={(e) => setFbComment(e.target.value)}
+                      style={{
+                        width: "100%",
+                        boxSizing: "border-box",
+                        fontFamily: DREAM_FONT,
+                        fontSize: 17,
+                        lineHeight: 1.6,
+                        border: `1.5px solid ${TITA.sage}`,
+                        borderRadius: 14,
+                        padding: "10px 14px",
+                        resize: "none",
+                      }}
+                    />
+                    <button
+                      type="submit"
+                      style={{ ...bigBtn, marginTop: 10, fontSize: 16, padding: "12px 24px", background: TITA.forest, color: TITA.cream }}
+                    >
+                      {fbComment.trim() ? "보내기" : "괜찮아요"}
+                    </button>
+                  </form>
+                )}
+              </>
+            )}
           </div>
         )}
 
