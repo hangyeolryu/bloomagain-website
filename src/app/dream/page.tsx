@@ -1,6 +1,6 @@
 "use client";
 
-// "다시 꾸는 꿈" — 티타의 AI가 미뤄둔 꿈을 묻는 채팅 (45+ 광고 전용 퍼널).
+// "다시 꾸는 꿈" — 티타AI가 미뤄둔 꿈을 묻는 채팅 (45+ 광고 전용 퍼널).
 //
 // 앱 회원용 꿈 인터뷰(bloomagain-korea functions/dream_interview.js)의 웹판이다.
 // 질문은 백엔드(POST /api/v1/dream/web-turn)가 정한다 — 여기서는 보여주고 보내기만.
@@ -316,13 +316,13 @@ export default function DreamPage() {
             {variant ? HEADLINE[variant] : ""}
           </h1>
           <p style={{ margin: 0, fontSize: 17, lineHeight: 1.7, color: TITA.ink }}>
-            티타의 AI와 편하게 이야기 나눠 보세요. 가입하지 않아도 돼요.
+            티타AI와 편하게 이야기 나눠 보세요. 가입하지 않아도 돼요.
           </p>
         </header>
 
         {/* 대화 */}
         <section
-          aria-label="티타의 AI와 나누는 대화"
+          aria-label="티타AI와 나누는 대화"
           aria-live="polite"
           style={{ display: "flex", flexDirection: "column", gap: 12 }}
         >
@@ -340,7 +340,7 @@ export default function DreamPage() {
               <span className="dream-dot" />
               <span className="dream-dot" style={{ animationDelay: ".15s" }} />
               <span className="dream-dot" style={{ animationDelay: ".3s" }} />
-              <span style={{ position: "absolute", left: -9999 }}>티타의 AI가 답을 쓰고 있어요</span>
+              <span style={{ position: "absolute", left: -9999 }}>티타AI가 답을 쓰고 있어요</span>
             </div>
           )}
 
@@ -466,7 +466,7 @@ export default function DreamPage() {
               style={{ position: "absolute", left: -9999, width: 1, height: 1, opacity: 0 }}
             />
             <label htmlFor="dream-input" style={{ position: "absolute", left: -9999 }}>
-              티타의 AI에게 보낼 말
+              티타AI에게 보낼 말
             </label>
             <textarea
               id="dream-input"
@@ -532,7 +532,7 @@ export default function DreamPage() {
           color: TITA.forestMid,
         }}
       >
-        티타의 AI가 답해요. 나눈 이야기는 이름 없이 서비스를 고치는 데만 쓰고, 90일 뒤 지워요.{" "}
+        티타AI가 답해요. 나눈 이야기는 이름 없이 서비스를 고치는 데만 쓰고, 90일 뒤 지워요.{" "}
         {/* 비회원에게서 글을 받는 페이지라 처리방침으로 가는 길을 바로 옆에 둔다. */}
         <Link
           href="/privacy/"
