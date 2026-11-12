@@ -10,17 +10,10 @@ export const alt = "요즘 해 보고 싶은데 미뤄둔 거, 있으세요? —
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
+// 미리보기 이미지도 페이지와 같은 나눔스퀘어라운드(satori는 woff2를 못 읽어 TTF).
 async function loadFont(weight: "Bold" | "SemiBold") {
-  try {
-    return await readFile(
-      join(process.cwd(), "src/app/fonts", `Pretendard-${weight}.otf`)
-    );
-  } catch {
-    const url = `https://cdn.jsdelivr.net/gh/orioncactus/pretendard/packages/pretendard/dist/public/static/Pretendard-${weight}.otf`;
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`font load failed: ${weight}`);
-    return Buffer.from(await res.arrayBuffer());
-  }
+  const file = weight === "Bold" ? "NanumSquareRoundB.ttf" : "NanumSquareRoundR.ttf";
+  return readFile(join(process.cwd(), "src/app/dream/_fonts", file));
 }
 
 export default async function Image() {
@@ -44,7 +37,7 @@ export default async function Image() {
           height: "100%",
           display: "flex",
           background: `linear-gradient(150deg, ${forest} 0%, ${forestDeep} 100%)`,
-          fontFamily: "Pretendard",
+          fontFamily: "NanumSquareRound",
           position: "relative",
         }}
       >
@@ -130,8 +123,8 @@ export default async function Image() {
     {
       ...size,
       fonts: [
-        { name: "Pretendard", data: bold, weight: 700 },
-        { name: "Pretendard", data: semibold, weight: 600 },
+        { name: "NanumSquareRound", data: bold, weight: 700 },
+        { name: "NanumSquareRound", data: semibold, weight: 600 },
       ],
     }
   );
