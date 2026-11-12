@@ -5,6 +5,16 @@
 // 다른 점 하나: needs 이벤트는 실패해도 그만(fire-and-forget)이지만, 여기는 답이
 // 곧 화면이라 결과를 돌려주고 실패를 화면이 다룬다(다시 보내기).
 
+// 첫 말 — 백엔드 app/services/dream_web_interview.py 의 OPENING과 같은 문장이어야 한다.
+// 서버를 기다리지 않고 바로 보여 준다. 예전엔 첫 말까지 서버 왕복(+ Cloud Run 냉시동)을
+// 기다려 몇 초씩 빈 화면이었다(2026-11-12 대표 확인). 세션은 첫 답을 보낼 때 서버가 만든다.
+export const DREAM_OPENING =
+  "안녕하세요, 저는 티타의 AI예요.\n\n" +
+  "다시 해 보고 싶은 일에 대해 몇 가지 여쭤보려고 해요. " +
+  "언제든 '그만'이라고 하시면 바로 멈출게요. " +
+  "이름이나 전화번호 같은 개인정보는 말씀하지 않으셔도 돼요.\n\n" +
+  "요즘 해 보고 싶은데 미뤄두신 게 있으세요? 생각나는 대로 편하게 이야기해 주세요.";
+
 export type DreamStatus = "active" | "completed" | "stopped" | "crisis";
 
 export type DreamTurnResult =
