@@ -16,8 +16,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { TITA, KOREAN_FONT_STACK } from "../_components/tita-brand";
 
-// 이 페이지만 나눔스퀘어라운드(layout.tsx의 --font-nsr). 못 받으면 사이트 기본으로.
-const DREAM_FONT = `var(--font-nsr), ${KOREAN_FONT_STACK}`;
+// 이 페이지만 마루부리(layout.tsx의 --font-maruburi). 못 받으면 사이트 기본으로.
+const DREAM_FONT = `var(--font-maruburi), ${KOREAN_FONT_STACK}`;
 import { StoreDownloadButton, type StoreKind } from "../_components/StoreDownloadButton";
 import { logAnalyticsEvent } from "@/lib/firebase";
 import { trackPixel } from "@/lib/pixel";
@@ -225,7 +225,7 @@ export default function DreamPage() {
   const bigBtn: React.CSSProperties = {
     fontFamily: DREAM_FONT,
     fontSize: 18,
-    fontWeight: 800,
+    fontWeight: 700,
     borderRadius: 999,
     border: "none",
     cursor: "pointer",
@@ -264,7 +264,7 @@ export default function DreamPage() {
               textDecoration: "none",
               color: TITA.forest,
               fontSize: 17,
-              fontWeight: 800,
+              fontWeight: 700,
             }}
           >
             <span
@@ -288,7 +288,7 @@ export default function DreamPage() {
               fontSize: 27,
               lineHeight: 1.4,
               letterSpacing: "-0.6px",
-              fontWeight: 800,
+              fontWeight: 700,
               color: TITA.forestDeep,
               wordBreak: "keep-all",
             }}
@@ -387,7 +387,7 @@ export default function DreamPage() {
                 margin: "0 0 10px",
                 fontSize: 23,
                 lineHeight: 1.45,
-                fontWeight: 800,
+                fontWeight: 700,
                 letterSpacing: "-0.5px",
                 color: TITA.forestDeep,
                 wordBreak: "keep-all",
