@@ -114,26 +114,28 @@ const rows = await getAll(`${ACCOUNT_ID}/insights`, {
 const bdLabel = (r) => breakdownFields.map((f) => r[f]).join(" · ");
 if (breakdownFields.length) rows.sort((a, b) => (Number(b.spend) || 0) - (Number(a.spend) || 0));
 console.log(`최근 ${DAYS}일 (${ymd(since)} ~ ${ymd(until)}) · ${LEVEL} 단위${BREAKDOWN ? ` · ${BREAKDOWN} 별` : ""} · 통화 ${acct.currency}`);
-const tot = { spend: 0, impressions: 0, clicks: 0, installs: 0 };
+const lpvOf = (row) => Number((row.actions || []).find((x) => x.action_type === "landing_page_view")?.value) || 0;
+const tot = { spend: 0, impressions: 0, clicks: 0, installs: 0, lpv: 0 };
 const table = rows.map((r) => {
-  const spend = Number(r.spend) || 0, imp = Number(r.impressions) || 0, clk = Number(r.clicks) || 0, inst = installsOf(r);
-  tot.spend += spend; tot.impressions += imp; tot.clicks += clk; tot.installs += inst;
+  const spend = Number(r.spend) || 0, imp = Number(r.impressions) || 0, clk = Number(r.clicks) || 0, inst = installsOf(r), lpv = lpvOf(r);
+  tot.spend += spend; tot.impressions += imp; tot.clicks += clk; tot.installs += inst; tot.lpv += lpv;
   return {
     name: r[nameKey] || r.campaign_name, bd: bdLabel(r), spend: fmtMoney(spend), impressions: fmtInt(imp), clicks: fmtInt(clk),
-    ctr: imp ? (clk / imp * 100).toFixed(2) + "%" : "-", installs: fmtInt(inst), cpi: inst ? fmtMoney(spend / inst) : "-",
+    ctr: imp ? (clk / imp * 100).toFixed(2) + "%" : "-", lpv: fmtInt(lpv), cplpv: lpv ? (spend / lpv).toFixed(2) : "-", installs: fmtInt(inst), cpi: inst ? fmtMoney(spend / inst) : "-",
   };
 });
 if (rows.length) {
   table.push({
     name: "합계", bd: "", spend: fmtMoney(tot.spend), impressions: fmtInt(tot.impressions), clicks: fmtInt(tot.clicks),
     ctr: tot.impressions ? (tot.clicks / tot.impressions * 100).toFixed(2) + "%" : "-",
-    installs: fmtInt(tot.installs), cpi: tot.installs ? fmtMoney(tot.spend / tot.installs) : "-",
+    lpv: fmtInt(tot.lpv), cplpv: tot.lpv ? (tot.spend / tot.lpv).toFixed(2) : "-", installs: fmtInt(tot.installs), cpi: tot.installs ? fmtMoney(tot.spend / tot.installs) : "-",
   });
 }
 printTable(table, [
   { key: "name", label: LEVEL === "campaign" ? "캠페인" : LEVEL === "adset" ? "세트" : "광고" },
   ...(breakdownFields.length ? [{ key: "bd", label: BREAKDOWN === "placement" ? "배치" : "연령·성별" }] : []),
   { key: "spend", label: "지출", right: true }, { key: "impressions", label: "노출", right: true }, { key: "clicks", label: "클릭", right: true },
-  { key: "ctr", label: "CTR", right: true }, { key: "installs", label: "앱설치", right: true }, { key: "cpi", label: "CPI", right: true },
+  { key: "ctr", label: "CTR", right: true }, { key: "lpv", label: "랜딩뷰", right: true }, { key: "cplpv", label: "뷰단가", right: true },
+  { key: "installs", label: "앱설치", right: true }, { key: "cpi", label: "CPI", right: true },
 ]);
 if (!rows.length) console.log("  (이 기간에 집행된 광고가 없다)");
