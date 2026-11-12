@@ -80,7 +80,19 @@ node scripts/meta-ads/status.mjs
 node scripts/meta-ads/status.mjs --days 30 --level ad
 ```
 
+```bash
+node scripts/meta-ads/status.mjs --days 30 --breakdown age,gender
+```
+
+```bash
+node scripts/meta-ads/status.mjs --days 30 --breakdown placement --level adset
+```
+
 계정 이름·통화·상태, 캠페인/세트/광고 목록(상태·예산·타깃), 최근 N일 지출·노출·클릭·앱설치·CPI가 표로 나온다.
+`--breakdown`은 `age` · `gender` · `age,gender` · `placement`(피드/릴스/스토리 등 배치) 중 하나. 지출 많은 순으로 정렬.
+
+A/B 비교는 세트를 둘 만들어 같은 예산으로 돌린 뒤 `--level adset`으로 본다(소재·타깃 하나씩만 다르게).
+Meta 공식 A/B 테스트(ad_studies)는 세트당 최소 예산이 있어 $3/일 규모에선 안 쓴다.
 `--all`을 주면 보관·삭제된 것도 목록에 나온다. 토큰이 없으면 무엇을 넣을지 한 줄 안내하고 끝난다.
 
 ### 캠페인 만들기
@@ -119,6 +131,24 @@ Ads Manager에서 지우거나 이어서 손보면 된다. 끝나면 Ads Manager
 - 타깃: 한국(`KR`), 여성(`genders: [2]`), 45세 이상(`age_min: 45, age_max: 65` — 65가 Meta 최대, 65+ 의미),
   안드로이드만(`user_os`). `targeting_automation.advantage_audience: 0`은 "Meta가 알아서 타깃을 넓히지 말라"는
   뜻이다. 1로 두면 45세 아래로도 퍼진다.
+
+### 돈 새는 자동 설정 끄기 (예시 스펙에 전부 들어 있음, 2026-11-12 API validate_only로 확인)
+
+| Meta 기본값 | 문제 | 스펙 |
+|---|---|---|
+| Advantage+ 타깃 확장 | 45세 아래로 퍼짐 | `targeting_automation.advantage_audience: 0` |
+| 유사·맞춤 타깃 확장 | 올린 명단 밖으로 퍼짐 | `targeting_relaxation_types: {lookalike: 0, custom_audience: 0}` |
+| 세트 간 예산 공유 | 못하는 세트에 돈 몰림 | 캠페인 `is_adset_budget_sharing_enabled: false` |
+| 캠페인 예산 최적화 | 위와 같음 | 안 씀. 세트에 `daily_budget` |
+| 자동 배치 | Audience Network·메신저 노출 | `publisher_platforms: ["facebook","instagram"]` 명시 |
+| 크리에이티브 자동 보정 | 이미지 자르기·문구 바꾸기·템플릿 입히기 | `degrees_of_freedom_spec.creative_features_spec` 각 항목 `OPT_OUT` |
+
+- `targeting_optimization: "none"`(상세 타깃 확장 끄기)은 **2026-11에 API에서 없어졌다**. 보내면 거절. 관심사 타깃을 안 쓰면 영향 없다.
+- `standard_enhancements`는 폐기됐다. 개별 항목(`image_templates`·`image_touchups`·`text_optimizations`·`enhance_cta` 등)으로 끈다.
+  `music`·`3d_animation` 같은 키는 없다. 새 키를 넣기 전엔 `execution_options: ["validate_only"]`로 한 번 쳐 볼 것.
+- 배치를 피드만으로 좁히는 건 **일부러 안 했다**. 10/14~11/12 실측에서 인스타 릴스가 노출 44%·CTR 7.5%로 피드(6.4%)보다
+  낫고 페이스북 릴스 CPI가 제일 낮았다. 좁히려면 `facebook_positions: ["feed"]`, `instagram_positions: ["stream"]`.
+- 못 끄는 것: 세트당 학습 단계(전환 약 50건). $3/일이면 "학습 제한"이 계속 뜨지만 광고는 돈다.
 - 카피는 이모지 없이, 또래 모임 톤. 소개팅 앱으로 읽히는 문구는 쓰지 않는다.
 - 이미지는 1080×1080 또는 1080×1350 JPEG. 인스타 카드 1장을 그대로 써도 된다(예시가 그렇다).
   영상 광고는 아직 이 스크립트가 다루지 않는다.

@@ -28,13 +28,27 @@
       "user_os": ["Android"],
       "device_platforms": ["mobile"],
       "publisher_platforms": ["facebook", "instagram"],
-      "targeting_automation": { "advantage_audience": 0 }
+      "targeting_automation": { "advantage_audience": 0 },
+      "targeting_relaxation_types": { "lookalike": 0, "custom_audience": 0 }
     }
   },
 
   "creative": {
     "name": "또래 모임 · 카드 1 · 2026-11",
     "image": "https://raw.githubusercontent.com/hangyeolryu/bloomagain-website/main/assets/instagram/insight-15/card-1.jpg",
+    "degrees_of_freedom_spec": {
+      "creative_features_spec": {
+        "image_templates": { "enroll_status": "OPT_OUT" },
+        "image_touchups": { "enroll_status": "OPT_OUT" },
+        "image_brightness_and_contrast": { "enroll_status": "OPT_OUT" },
+        "image_uncrop": { "enroll_status": "OPT_OUT" },
+        "text_optimizations": { "enroll_status": "OPT_OUT" },
+        "enhance_cta": { "enroll_status": "OPT_OUT" },
+        "add_text_overlay": { "enroll_status": "OPT_OUT" },
+        "adapt_to_placement": { "enroll_status": "OPT_OUT" },
+        "media_type_automation": { "enroll_status": "OPT_OUT" }
+      }
+    },
     "object_story_spec": {
       "page_id": "$env:META_PAGE_ID",
       "link_data": {

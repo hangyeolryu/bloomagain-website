@@ -4,6 +4,8 @@
 //   node scripts/meta-ads/status.mjs                 # 계정 · 캠페인/세트/광고 · 최근 7일 인사이트
 //   node scripts/meta-ads/status.mjs --days 30       # 최근 30일
 //   node scripts/meta-ads/status.mjs --level ad      # 인사이트를 광고 단위로 (기본 campaign. adset도 됨)
+//   node scripts/meta-ads/status.mjs --breakdown age,gender          # 연령·성별로 쪼개서 (age | gender | age,gender | placement)
+//   node scripts/meta-ads/status.mjs --breakdown placement --level adset  # 배치(피드/릴스/스토리)별
 //   node scripts/meta-ads/status.mjs --all           # 보관(ARCHIVED)·삭제된 것까지 목록에
 //
 // 필요: META_ADS_TOKEN(ads_read 이상), META_AD_ACCOUNT_ID — scripts/meta-ads/README.md
@@ -15,6 +17,11 @@ const DAYS = Math.max(1, parseInt(opt("days", "7"), 10) || 7);
 const LEVEL = opt("level", "campaign");
 if (!["campaign", "adset", "ad"].includes(LEVEL)) { console.error("--level 은 campaign | adset | ad"); process.exit(1); }
 const INCLUDE_ALL = flag("all");
+// --breakdown: 인사이트를 쪼개는 축. placement = publisher_platform + platform_position.
+const BREAKDOWNS = { age: ["age"], gender: ["gender"], "age,gender": ["age", "gender"], placement: ["publisher_platform", "platform_position"] };
+const BREAKDOWN = opt("breakdown", "");
+if (BREAKDOWN && !BREAKDOWNS[BREAKDOWN]) { console.error("--breakdown 은 age | gender | age,gender | placement"); process.exit(1); }
+const breakdownFields = BREAKDOWN ? BREAKDOWNS[BREAKDOWN] : [];
 
 const ymd = (d) => d.toISOString().slice(0, 10);
 const until = new Date(); // 오늘
@@ -100,27 +107,31 @@ const rows = await getAll(`${ACCOUNT_ID}/insights`, {
   level: LEVEL,
   fields: `campaign_name,adset_name,ad_name,spend,impressions,clicks,actions`,
   time_range: { since: ymd(since), until: ymd(until) },
+  ...(breakdownFields.length ? { breakdowns: breakdownFields.join(",") } : {}),
   limit: 500,
 });
-console.log(`최근 ${DAYS}일 (${ymd(since)} ~ ${ymd(until)}) · ${LEVEL} 단위 · 통화 ${acct.currency}`);
+const bdLabel = (r) => breakdownFields.map((f) => r[f]).join(" · ");
+if (breakdownFields.length) rows.sort((a, b) => (Number(b.spend) || 0) - (Number(a.spend) || 0));
+console.log(`최근 ${DAYS}일 (${ymd(since)} ~ ${ymd(until)}) · ${LEVEL} 단위${BREAKDOWN ? ` · ${BREAKDOWN} 별` : ""} · 통화 ${acct.currency}`);
 const tot = { spend: 0, impressions: 0, clicks: 0, installs: 0 };
 const table = rows.map((r) => {
   const spend = Number(r.spend) || 0, imp = Number(r.impressions) || 0, clk = Number(r.clicks) || 0, inst = installsOf(r);
   tot.spend += spend; tot.impressions += imp; tot.clicks += clk; tot.installs += inst;
   return {
-    name: r[nameKey] || r.campaign_name, spend: fmtMoney(spend), impressions: fmtInt(imp), clicks: fmtInt(clk),
+    name: r[nameKey] || r.campaign_name, bd: bdLabel(r), spend: fmtMoney(spend), impressions: fmtInt(imp), clicks: fmtInt(clk),
     ctr: imp ? (clk / imp * 100).toFixed(2) + "%" : "-", installs: fmtInt(inst), cpi: inst ? fmtMoney(spend / inst) : "-",
   };
 });
 if (rows.length) {
   table.push({
-    name: "합계", spend: fmtMoney(tot.spend), impressions: fmtInt(tot.impressions), clicks: fmtInt(tot.clicks),
+    name: "합계", bd: "", spend: fmtMoney(tot.spend), impressions: fmtInt(tot.impressions), clicks: fmtInt(tot.clicks),
     ctr: tot.impressions ? (tot.clicks / tot.impressions * 100).toFixed(2) + "%" : "-",
     installs: fmtInt(tot.installs), cpi: tot.installs ? fmtMoney(tot.spend / tot.installs) : "-",
   });
 }
 printTable(table, [
   { key: "name", label: LEVEL === "campaign" ? "캠페인" : LEVEL === "adset" ? "세트" : "광고" },
+  ...(breakdownFields.length ? [{ key: "bd", label: BREAKDOWN === "placement" ? "배치" : "연령·성별" }] : []),
   { key: "spend", label: "지출", right: true }, { key: "impressions", label: "노출", right: true }, { key: "clicks", label: "클릭", right: true },
   { key: "ctr", label: "CTR", right: true }, { key: "installs", label: "앱설치", right: true }, { key: "cpi", label: "CPI", right: true },
 ]);
