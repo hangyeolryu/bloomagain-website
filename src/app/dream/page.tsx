@@ -27,6 +27,7 @@ import {
   readUtm,
   sendDreamTurn,
   sendDreamFeedback,
+  requestHandoffCode,
   type DreamResult,
   type DreamStatus,
 } from "./dream-api";
@@ -81,6 +82,9 @@ export default function DreamPage() {
   const [fbRating, setFbRating] = useState<"good" | "ok" | "bad" | null>(null);
   const [fbComment, setFbComment] = useState("");
   const [fbSent, setFbSent] = useState(false);
+  // 이어가기 코드 — 앱 가입 후 '티타 문의'에 보내면 오늘 찾은 첫걸음을 티타AI가 이어서 챙긴다.
+  const [handoff, setHandoff] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
   // 대화 중 앱 받기 카드 — 이 메시지(log 인덱스) 바로 아래에 붙는다. null이면 안 보임.
   // 두 번째 답을 한 뒤 저절로 한 번 뜨고, 머리의 "앱 받기"를 누르면 그 자리에 뜬다.
   const [appCardAt, setAppCardAt] = useState<number | null>(null);
@@ -199,6 +203,30 @@ export default function DreamPage() {
       }
     });
   }, []);
+
+  // 끝까지 간 대화에만 이어가기 코드를 받아 둔다(세션당 하나라 새로고침해도 같은 코드).
+  useEffect(() => {
+    if (!done || status !== "completed" || handoff) return;
+    let alive = true;
+    void requestHandoffCode(sidRef.current).then((c) => {
+      if (alive && c) setHandoff(c);
+    });
+    return () => {
+      alive = false;
+    };
+  }, [done, status, handoff]);
+
+  async function copyHandoff() {
+    if (!handoff) return;
+    try {
+      await navigator.clipboard.writeText(handoff);
+    } catch {
+      /* 복사가 막혀도 코드는 화면에 크게 보인다 */
+    }
+    setCopied(true);
+    logAnalyticsEvent("dream_handoff_copy", {});
+    setTimeout(() => setCopied(false), 2500);
+  }
 
   // 새 말이 오면 아래로. 큰 글씨라 화면 밖으로 밀리기 쉽다.
   useEffect(() => {
@@ -593,8 +621,48 @@ export default function DreamPage() {
             >
               <li>① 앱 받기 (무료)</li>
               <li>② 휴대폰 본인인증으로 가입 — 1~2분</li>
-              <li>③ 같은 꿈 또래와 인사 나누기</li>
+              {handoff ? (
+                <li>③ &lsquo;티타 문의&rsquo;에 아래 코드 보내기</li>
+              ) : (
+                <li>③ 같은 꿈 또래와 인사 나누기</li>
+              )}
             </ol>
+            {handoff && (
+              <div
+                style={{
+                  margin: "0 auto 18px",
+                  maxWidth: 320,
+                  border: `2px dashed ${TITA.forest}`,
+                  borderRadius: 16,
+                  padding: "14px 12px",
+                }}
+              >
+                <p style={{ margin: "0 0 6px", fontSize: 15, color: TITA.forestMid }}>이어가기 코드 (30일 동안 써요)</p>
+                <p
+                  style={{
+                    margin: "0 0 10px",
+                    fontSize: 28,
+                    fontWeight: 700,
+                    letterSpacing: "2px",
+                    color: TITA.forestDeep,
+                    fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
+                  }}
+                >
+                  {handoff}
+                </p>
+                <button
+                  type="button"
+                  onClick={copyHandoff}
+                  style={{ ...bigBtn, fontSize: 16, padding: "10px 22px", background: TITA.surface, color: TITA.forest, border: `1.5px solid ${TITA.forest}` }}
+                >
+                  {copied ? "복사했어요" : "코드 복사"}
+                </button>
+                <p style={{ margin: "10px 0 0", fontSize: 14, color: TITA.forestMid, wordBreak: "keep-all" }}>
+                  보내 주시면 오늘 찾은 첫걸음을 티타AI가 이어서 챙기고, 일주일 뒤 &ldquo;해 보셨어요?&rdquo; 하고 여쭤봐요.
+                  화면을 캡처해 두셔도 돼요.
+                </p>
+              </div>
+            )}
             {/* /needs 등과 같은 다운로드 버튼 — 인앱 브라우저·기기 오감지 처리가 다 들어 있다. */}
             <StoreDownloadButton
               source="dream_result"
