@@ -1,0 +1,95 @@
+{
+  "_comment": "A/B 테스트 C안(2026-11-13) — '꿈이 끝난 나이는 없어요' + 가을 산책길(AI 이미지, 벚꽃 사진을 가을 색으로 보정). 기존 캠페인(A 작은 목표 · B 꿈 코치)에 --campaign 120250090305150724 로 세트만 추가. 링크는 ?v=b(페이지 제목도 같은 문구) + utm_content=c. 일 $3, PAUSED로 만들어진다.",
+  "currency": "USD",
+  "campaign": {
+    "name": "티타AI /dream A/B · 여성 45+ · 2026-11",
+    "objective": "OUTCOME_TRAFFIC",
+    "buying_type": "AUCTION",
+    "special_ad_categories": [],
+    "is_adset_budget_sharing_enabled": false
+  },
+  "adset": {
+    "name": "C · 꿈이 끝난 나이 · 가을 · KR 여성 45-65+ · /dream · 일 $3",
+    "daily_budget": 3,
+    "billing_event": "IMPRESSIONS",
+    "optimization_goal": "LANDING_PAGE_VIEWS",
+    "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
+    "destination_type": "WEBSITE",
+    "targeting": {
+      "geo_locations": {
+        "countries": [
+          "KR"
+        ]
+      },
+      "genders": [
+        2
+      ],
+      "age_min": 45,
+      "age_max": 65,
+      "publisher_platforms": [
+        "facebook",
+        "instagram"
+      ],
+      "targeting_automation": {
+        "advantage_audience": 0
+      },
+      "targeting_relaxation_types": {
+        "lookalike": 0,
+        "custom_audience": 0
+      }
+    }
+  },
+  "creative": {
+    "name": "C · 꿈이 끝난 나이 · 가을 · 2026-11",
+    "image": "assets/ads/dream-c-autumn-2026-11/card-1.jpg",
+    "degrees_of_freedom_spec": {
+      "creative_features_spec": {
+        "image_templates": {
+          "enroll_status": "OPT_OUT"
+        },
+        "image_touchups": {
+          "enroll_status": "OPT_OUT"
+        },
+        "image_brightness_and_contrast": {
+          "enroll_status": "OPT_OUT"
+        },
+        "image_uncrop": {
+          "enroll_status": "OPT_OUT"
+        },
+        "text_optimizations": {
+          "enroll_status": "OPT_OUT"
+        },
+        "enhance_cta": {
+          "enroll_status": "OPT_OUT"
+        },
+        "add_text_overlay": {
+          "enroll_status": "OPT_OUT"
+        },
+        "adapt_to_placement": {
+          "enroll_status": "OPT_OUT"
+        },
+        "media_type_automation": {
+          "enroll_status": "OPT_OUT"
+        }
+      }
+    },
+    "object_story_spec": {
+      "page_id": "$env:META_PAGE_ID",
+      "link_data": {
+        "link": "https://tita-app.com/dream/?v=b&utm_source=meta&utm_medium=paid&utm_campaign=dream_2026_11&utm_content=c",
+        "message": "꿈이 끝난 나이는 없어요.\n\n그림, 지리산 종주, 영어, 악기…\n\"이 나이에 뭘\" 하면서 접어 둔 그것.\n\n티타AI와 3분만 이야기해 보세요. 가입하지 않아도 돼요.\n끝나면 '내가 진짜 바라는 것'을 정리해 드려요.\n\n(사진 속 인물은 AI로 만든 이미지예요.)",
+        "name": "꿈이 끝난 나이는 없어요",
+        "description": "3분, 가입 없이 티타AI와",
+        "call_to_action": {
+          "type": "LEARN_MORE",
+          "value": {
+            "link": "https://tita-app.com/dream/?v=b&utm_source=meta&utm_medium=paid&utm_campaign=dream_2026_11&utm_content=c"
+          }
+        }
+      }
+    }
+  },
+  "ad": {
+    "name": "C · 꿈이 끝난 나이 · 가을"
+  }
+}
