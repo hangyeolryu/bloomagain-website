@@ -39,14 +39,28 @@ type Msg = { role: "assistant" | "user"; text: string };
 // 누른 말은 그대로 회원 답으로 보낸다(서버는 글과 똑같이 다룬다). 그 뒤로는 자유롭게 쓴다.
 const NAME_TYPE = "이름 적을게요";
 const NAME_CHIPS = [NAME_TYPE, "그냥 편하게 불러 주세요"] as const;
+// 꿈 보기는 우리 설문에서 사람들이 실제로 고른 것에서 왔다(/needs 300명·/enjoy, 2026-07~08):
+// 함께라면 해 보고 싶은 것 1위 차 한 잔(24.3%)·2위 사는 얘기(19.6%)·취미(17.3%)·여행(15.3%),
+// 가장 혼자라고 느낄 때 1위 "여행 가고 싶을 때"(28%). /enjoy 보기의 전시·공연·운동·산책도 담았다.
+const LEARN = "간단한 거 하나 배워 보기";
 const DREAM_CHIPS = [
-  "몸 건강·운동",
-  "배우고 싶은 게 있어요",
-  "여행·나들이",
-  "만들기·그림·음악",
-  "사람들과 어울리기",
+  "같이 여행 가 보기",
+  LEARN,
+  "전시·공연 보러 다니기",
+  "걷기·등산",
+  "차 한잔하며 사는 얘기",
   "잘 모르겠어요",
 ] as const;
+// "배워 보기"를 고른 분께 한 번 더 — 하루 이틀이면 맛볼 수 있는 것들.
+const LEARN_CHIPS = [
+  "휴대폰 사진 잘 찍기",
+  "기타·우쿨렐레 코드 몇 개",
+  "수채화·색연필 그림",
+  "영어 한마디씩",
+  "요리 한 가지 제대로",
+  "직접 적을게요",
+] as const;
+const TYPE_OWN = "직접 적을게요";
 type Failure = { reason: "network" | "limited" | "server"; pending: string | null };
 
 // 광고 문구 A/B. ?v=b 로 들어오면 B. 어느 쪽이 대화를 끝까지 이끄는지 utm.v로 남긴다.
@@ -272,18 +286,21 @@ export default function DreamPage() {
   // 빠른 답 — 첫 질문(이름)·둘째 질문(꿈)에서만 보인다.
   const userCount = log.filter((m) => m.role === "user").length;
   const lastIsAi = log.length > 0 && log[log.length - 1].role === "assistant";
+  const lastUser = [...log].reverse().find((m) => m.role === "user")?.text;
   const chips: readonly string[] =
     !done && !waiting && !failure && lastIsAi && !input.trim()
       ? userCount === 0
         ? NAME_CHIPS
         : userCount === 1
           ? DREAM_CHIPS
-          : []
+          : userCount === 2 && lastUser === LEARN
+            ? LEARN_CHIPS
+            : []
       : [];
 
   function onChip(label: string) {
-    logAnalyticsEvent("dream_chip", { step: userCount === 0 ? "name" : "dream", label });
-    if (label === NAME_TYPE) {
+    logAnalyticsEvent("dream_chip", { step: userCount === 0 ? "name" : userCount === 1 ? "dream" : "learn", label });
+    if (label === NAME_TYPE || label === TYPE_OWN) {
       taRef.current?.focus();
       return;
     }
