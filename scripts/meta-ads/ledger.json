@@ -53,5 +53,19 @@
     "adset_id": "120250090310400724",
     "creative_id": "1611028540185121",
     "ad_id": "120250090312640724"
+  },
+  {
+    "created_at": "2026-11-13T15:10:53.978Z",
+    "spec": "dream-c-autumn-2026-11.json",
+    "account": "act_410621907654920",
+    "currency": "USD",
+    "name": "티타AI /dream A/B · 여성 45+ · 2026-11",
+    "status": "PAUSED",
+    "campaign_id": "120250090305150724",
+    "attached_to": "티타AI /dream A/B · 여성 45+ · 2026-11",
+    "adset_id": "120250106564810724",
+    "image_hash": "bdad44ed75c85b1ac8c24fb87ef8473d",
+    "creative_id": "4568033243471980",
+    "ad_id": "120250106566280724"
   }
 ]
