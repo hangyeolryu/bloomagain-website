@@ -34,11 +34,10 @@ import {
 
 type Msg = { role: "assistant" | "user"; text: string };
 
-// 첫 두 답은 눌러서도 할 수 있게 — 광고로 온 53명 중 첫 답을 한 분이 1명(1.9%)이었다(2026-11-13).
+// 2026-11-13 오후: 이름 질문을 뺐다 — 첫 말이 곧 제목의 질문이고, 보기 하나 누르면 대화가 시작된다.
+// 첫 답은 눌러서도 할 수 있게 — 광고로 온 53명 중 첫 답을 한 분이 1명(1.9%)이었다(2026-11-13).
 // 빈 입력칸에 꿈을 적는 게 가장 어려운 질문이라, 한 번 누르면 대화가 시작되게 한다.
 // 누른 말은 그대로 회원 답으로 보낸다(서버는 글과 똑같이 다룬다). 그 뒤로는 자유롭게 쓴다.
-const NAME_TYPE = "이름 적을게요";
-const NAME_CHIPS = [NAME_TYPE, "그냥 편하게 불러 주세요"] as const;
 // 꿈 보기는 우리 설문에서 사람들이 실제로 고른 것에서 왔다(/needs 300명·/enjoy, 2026-07~08):
 // 함께라면 해 보고 싶은 것 1위 차 한 잔(24.3%)·2위 사는 얘기(19.6%)·취미(17.3%)·여행(15.3%),
 // 가장 혼자라고 느낄 때 1위 "여행 가고 싶을 때"(28%). /enjoy 보기의 전시·공연·운동·산책도 담았다.
@@ -61,7 +60,7 @@ const LEARN_CHIPS = [
   "직접 적을게요",
 ] as const;
 const TYPE_OWN = "직접 적을게요";
-const ALL_CHIPS = new Set<string>([...NAME_CHIPS, ...DREAM_CHIPS, ...LEARN_CHIPS]);
+const ALL_CHIPS = new Set<string>([...DREAM_CHIPS, ...LEARN_CHIPS]);
 type Failure = { reason: "network" | "limited" | "server"; pending: string | null };
 
 // 광고 문구 A/B. ?v=b 로 들어오면 B. 어느 쪽이 대화를 끝까지 이끄는지 utm.v로 남긴다.
@@ -169,14 +168,14 @@ export default function DreamPage() {
           next.push({ role: "assistant", text: res.reply });
         }
         saveLog(next);
-        // 세 번째 답(이름 + 꿈 두 번)에 대한 티타AI 말 아래에 앱 카드를 한 번 띄운다. 한두 번은 이야기를
+        // 두 번째 답에 대한 티타AI 말 아래에 앱 카드를 한 번 띄운다. 한두 번은 이야기를
         // 나눈 뒤라 "왜 앱인지"가 보이고, 그보다 늦으면 중간에 떠난 분은 못 본다.
         // 대화는 그대로 이어 갈 수 있다(입력칸은 그대로).
-        // 2026-11-13: 이름 뒤 꿈 답 두 번 + 그중 하나는 직접 쓴 말일 때 한 번만. 보기만 세 번 눌러도
-        // (이름→배워 보기→사진) 진짜 대화가 막 시작될 때라 카드가 끼어들었다.
+        // 답 두 번 + 그중 하나는 직접 쓴 말일 때 한 번만. 보기만 두 번 눌러도
+        // (배워 보기→사진) 진짜 대화가 막 시작될 때라 카드가 끼어들면 안 된다.
         const userMsgs = next.filter((m) => m.role === "user");
-        const typedAfterName = userMsgs.slice(1).filter((m) => !ALL_CHIPS.has(m.text)).length;
-        if (message !== null && userMsgs.length >= 3 && typedAfterName >= 1 && !res.done &&
+        const typed = userMsgs.filter((m) => !ALL_CHIPS.has(m.text)).length;
+        if (message !== null && userMsgs.length >= 2 && typed >= 1 && !res.done &&
             !appCardDismissed.current && !appCardShown.current) {
           appCardShown.current = true;
           setAppCardAt(next.length - 1);
@@ -198,6 +197,17 @@ export default function DreamPage() {
     },
     [finish],
   );
+
+  // 10초 넘게 화면을 본 분을 센다(글 내용 없음). 광고로 와서 바로 나간 분과
+  // 읽고도 답하지 않은 분을 가르려고 — 리포트의 webFunnel.stayed10.
+  useEffect(() => {
+    const t = window.setTimeout(() => {
+      if (document.visibilityState !== "visible" || !sidRef.current) return;
+      logAnalyticsEvent("dream_view_10s", { variant: utmRef.current.v ?? "a" });
+      void sendDreamTurn({ sessionId: sidRef.current, message: null, utm: utmRef.current, hp: "", seen: true });
+    }, 10_000);
+    return () => window.clearTimeout(t);
+  }, []);
 
   // 첫 말 받기. 정적 내보내기라 주소·세션은 마운트 뒤에야 읽을 수 있다.
   useEffect(() => {
@@ -289,24 +299,22 @@ export default function DreamPage() {
     void turnOnce(text);
   }
 
-  // 빠른 답 — 첫 질문(이름)·둘째 질문(꿈)에서만 보인다.
+  // 빠른 답 — 첫 질문(꿈)과, '배워 보기'를 고른 다음 한 번만 보인다.
   const userCount = log.filter((m) => m.role === "user").length;
   const lastIsAi = log.length > 0 && log[log.length - 1].role === "assistant";
   const lastUser = [...log].reverse().find((m) => m.role === "user")?.text;
   const chips: readonly string[] =
     !done && !waiting && !failure && lastIsAi && !input.trim()
       ? userCount === 0
-        ? NAME_CHIPS
-        : userCount === 1
-          ? DREAM_CHIPS
-          : userCount === 2 && lastUser === LEARN
-            ? LEARN_CHIPS
-            : []
+        ? DREAM_CHIPS
+        : userCount === 1 && lastUser === LEARN
+          ? LEARN_CHIPS
+          : []
       : [];
 
   function onChip(label: string) {
-    logAnalyticsEvent("dream_chip", { step: userCount === 0 ? "name" : userCount === 1 ? "dream" : "learn", label });
-    if (label === NAME_TYPE || label === TYPE_OWN) {
+    logAnalyticsEvent("dream_chip", { step: userCount === 0 ? "dream" : "learn", label });
+    if (label === TYPE_OWN) {
       taRef.current?.focus();
       return;
     }
@@ -476,7 +484,7 @@ export default function DreamPage() {
             {variant ? HEADLINE[variant] : ""}
           </h1>
           <p style={{ margin: 0, fontSize: 17, lineHeight: 1.7, color: TITA.ink }}>
-            티타AI와 편하게 이야기 나눠 보세요. 가입하지 않아도 돼요.
+            3분이면 돼요. 끝나면 &lsquo;내가 진짜 바라는 것&rsquo;을 정리해 드려요. 가입 없이.
           </p>
         </header>
 
@@ -902,7 +910,7 @@ export default function DreamPage() {
                   send();
                 }
               }}
-              placeholder={userCount === 0 ? "이름이나 별명" : "편하게 적어 주세요"}
+              placeholder="편하게 적어 주세요"
               disabled={waiting && log.length === 0}
               style={{
                 flex: 1,
