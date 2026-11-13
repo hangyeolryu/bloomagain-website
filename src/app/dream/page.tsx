@@ -61,6 +61,7 @@ const LEARN_CHIPS = [
   "직접 적을게요",
 ] as const;
 const TYPE_OWN = "직접 적을게요";
+const ALL_CHIPS = new Set<string>([...NAME_CHIPS, ...DREAM_CHIPS, ...LEARN_CHIPS]);
 type Failure = { reason: "network" | "limited" | "server"; pending: string | null };
 
 // 광고 문구 A/B. ?v=b 로 들어오면 B. 어느 쪽이 대화를 끝까지 이끄는지 utm.v로 남긴다.
@@ -117,6 +118,7 @@ export default function DreamPage() {
   // 두 번째 답을 한 뒤 저절로 한 번 뜨고, 머리의 "앱 받기"를 누르면 그 자리에 뜬다.
   const [appCardAt, setAppCardAt] = useState<number | null>(null);
   const appCardDismissed = useRef(false);
+  const appCardShown = useRef(false);
   const appCardRef = useRef<HTMLDivElement>(null);
 
   const sidRef = useRef<string>("");
@@ -170,9 +172,13 @@ export default function DreamPage() {
         // 세 번째 답(이름 + 꿈 두 번)에 대한 티타AI 말 아래에 앱 카드를 한 번 띄운다. 한두 번은 이야기를
         // 나눈 뒤라 "왜 앱인지"가 보이고, 그보다 늦으면 중간에 떠난 분은 못 본다.
         // 대화는 그대로 이어 갈 수 있다(입력칸은 그대로).
-        const answers = next.filter((m) => m.role === "user").length;
-        // 2026-11-13: 첫 답이 '부를 이름'이 되면서 한 칸 밀었다(이름 + 꿈 두 번 뒤).
-        if (message !== null && answers === 3 && !res.done && !appCardDismissed.current) {
+        // 2026-11-13: 이름 뒤 꿈 답 두 번 + 그중 하나는 직접 쓴 말일 때 한 번만. 보기만 세 번 눌러도
+        // (이름→배워 보기→사진) 진짜 대화가 막 시작될 때라 카드가 끼어들었다.
+        const userMsgs = next.filter((m) => m.role === "user");
+        const typedAfterName = userMsgs.slice(1).filter((m) => !ALL_CHIPS.has(m.text)).length;
+        if (message !== null && userMsgs.length >= 3 && typedAfterName >= 1 && !res.done &&
+            !appCardDismissed.current && !appCardShown.current) {
+          appCardShown.current = true;
           setAppCardAt(next.length - 1);
         }
         return next;
