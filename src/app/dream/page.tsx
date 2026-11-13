@@ -153,11 +153,12 @@ export default function DreamPage() {
           next.push({ role: "assistant", text: res.reply });
         }
         saveLog(next);
-        // 두 번째 답에 대한 티타AI 말 아래에 앱 카드를 한 번 띄운다. 한두 번은 이야기를
+        // 세 번째 답(이름 + 꿈 두 번)에 대한 티타AI 말 아래에 앱 카드를 한 번 띄운다. 한두 번은 이야기를
         // 나눈 뒤라 "왜 앱인지"가 보이고, 그보다 늦으면 중간에 떠난 분은 못 본다.
         // 대화는 그대로 이어 갈 수 있다(입력칸은 그대로).
         const answers = next.filter((m) => m.role === "user").length;
-        if (message !== null && answers === 2 && !res.done && !appCardDismissed.current) {
+        // 2026-11-13: 첫 답이 '부를 이름'이 되면서 한 칸 밀었다(이름 + 꿈 두 번 뒤).
+        if (message !== null && answers === 3 && !res.done && !appCardDismissed.current) {
           setAppCardAt(next.length - 1);
         }
         return next;
