@@ -33,6 +33,20 @@ import {
 } from "./dream-api";
 
 type Msg = { role: "assistant" | "user"; text: string };
+
+// 첫 두 답은 눌러서도 할 수 있게 — 광고로 온 53명 중 첫 답을 한 분이 1명(1.9%)이었다(2026-11-13).
+// 빈 입력칸에 꿈을 적는 게 가장 어려운 질문이라, 한 번 누르면 대화가 시작되게 한다.
+// 누른 말은 그대로 회원 답으로 보낸다(서버는 글과 똑같이 다룬다). 그 뒤로는 자유롭게 쓴다.
+const NAME_TYPE = "이름 적을게요";
+const NAME_CHIPS = [NAME_TYPE, "그냥 편하게 불러 주세요"] as const;
+const DREAM_CHIPS = [
+  "몸 건강·운동",
+  "배우고 싶은 게 있어요",
+  "여행·나들이",
+  "만들기·그림·음악",
+  "사람들과 어울리기",
+  "잘 모르겠어요",
+] as const;
 type Failure = { reason: "network" | "limited" | "server"; pending: string | null };
 
 // 광고 문구 A/B. ?v=b 로 들어오면 B. 어느 쪽이 대화를 끝까지 이끄는지 utm.v로 남긴다.
@@ -252,6 +266,27 @@ export default function DreamPage() {
     if (!text || waiting || done) return;
     setInput("");
     void turnOnce(text);
+  }
+
+  // 빠른 답 — 첫 질문(이름)·둘째 질문(꿈)에서만 보인다.
+  const userCount = log.filter((m) => m.role === "user").length;
+  const lastIsAi = log.length > 0 && log[log.length - 1].role === "assistant";
+  const chips: readonly string[] =
+    !done && !waiting && !failure && lastIsAi && !input.trim()
+      ? userCount === 0
+        ? NAME_CHIPS
+        : userCount === 1
+          ? DREAM_CHIPS
+          : []
+      : [];
+
+  function onChip(label: string) {
+    logAnalyticsEvent("dream_chip", { step: userCount === 0 ? "name" : "dream", label });
+    if (label === NAME_TYPE) {
+      taRef.current?.focus();
+      return;
+    }
+    void turnOnce(label);
   }
 
   function retry() {
@@ -480,6 +515,34 @@ export default function DreamPage() {
               )}
             </Fragment>
           ))}
+
+          {chips.length > 0 && (
+            <div
+              role="group"
+              aria-label="눌러서 답하기"
+              style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "flex-end", marginTop: 2 }}
+            >
+              {chips.map((c) => (
+                <button
+                  key={c}
+                  type="button"
+                  onClick={() => onChip(c)}
+                  style={{
+                    ...bigBtn,
+                    fontSize: 17,
+                    fontWeight: 700,
+                    minHeight: 48,
+                    padding: "10px 16px",
+                    background: TITA.white,
+                    color: TITA.forest,
+                    border: `1.5px solid ${TITA.forest}`,
+                  }}
+                >
+                  {c}
+                </button>
+              ))}
+            </div>
+          )}
 
           {waiting && (
             <div
@@ -815,7 +878,7 @@ export default function DreamPage() {
                   send();
                 }
               }}
-              placeholder="편하게 적어 주세요"
+              placeholder={userCount === 0 ? "이름이나 별명" : "편하게 적어 주세요"}
               disabled={waiting && log.length === 0}
               style={{
                 flex: 1,
@@ -865,6 +928,7 @@ export default function DreamPage() {
           color: TITA.forestMid,
         }}
       >
+        언제든 &lsquo;그만&rsquo;이라고 하시면 멈춰요. 전화번호·주소는 쓰지 않으셔도 돼요.{" "}
         티타AI가 답해요. 나눈 이야기는 서비스를 고치는 데만 쓰고, 이름은 요약·분석에 넣지 않으며, 90일 뒤 지워요.{" "}
         {/* 비회원에게서 글을 받는 페이지라 처리방침으로 가는 길을 바로 옆에 둔다. */}
         <Link
