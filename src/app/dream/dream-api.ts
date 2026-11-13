@@ -148,3 +148,21 @@ export async function sendDreamFeedback(body: {
     return false;
   }
 }
+
+/** 끝난 대화의 이어가기 코드(TITA-XXXXXX). 앱 '티타 문의'에 보내면 티타AI가 이어서 챙긴다. 실패하면 null. */
+export async function requestHandoffCode(sessionId: string): Promise<string | null> {
+  const backendUrl = process.env.NEXT_PUBLIC_BLOOMAGAIN_BACKEND_URL;
+  if (!backendUrl) return null;
+  try {
+    const res = await fetch(`${backendUrl.replace(/\/$/, "")}/api/v1/dream/handoff`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ session_id: sessionId }),
+    });
+    if (!res.ok) return null;
+    const data = (await res.json()) as { code?: string };
+    return typeof data.code === "string" && /^TITA-[2-9A-Z]{6}$/.test(data.code) ? data.code : null;
+  } catch {
+    return null;
+  }
+}
