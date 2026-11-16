@@ -76,14 +76,14 @@
     "object_story_spec": {
       "page_id": "$env:META_PAGE_ID",
       "link_data": {
-        "link": "https://tita-app.com/dream",
+        "link": "https://tita-app.com/dream/?v=a&utm_source=meta&utm_medium=paid&utm_campaign=dream_2026_11&utm_content=b",
         "message": "요즘 해 보고 싶은데 미뤄둔 거, 있으세요?\n\n그림, 지리산 종주, 영어, 악기…\n\"이 나이에 뭘\" 하면서 접어 둔 그것.\n\n꿈이 끝난 나이는 없어요.\n티타AI에게 편하게 이야기해 보세요. 가입하지 않아도 돼요.\n그리고 같은 꿈을 가진 또래가 티타에 있어요.",
         "name": "꿈이 끝난 나이는 없어요",
         "description": "가입 없이 티타AI와 이야기",
         "call_to_action": {
           "type": "LEARN_MORE",
           "value": {
-            "link": "https://tita-app.com/dream"
+            "link": "https://tita-app.com/dream/?v=a&utm_source=meta&utm_medium=paid&utm_campaign=dream_2026_11&utm_content=b"
           }
         }
       }

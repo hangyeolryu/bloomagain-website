@@ -38,8 +38,15 @@
     "status": "PAUSED",
     "campaign_id": "120250090305150724",
     "adset_id": "120250090305710724",
-    "creative_id": "1692035265772187",
-    "ad_id": "120250090306960724"
+    "creative_id": "4841728529441131",
+    "ad_id": "120250137093900724",
+    "replaced": {
+      "old_ad_id": "120250090306960724",
+      "old_creative_id": "1692035265772187",
+      "at": "2026-11-16T01:38:52.672Z",
+      "reason": "utm_content=a 붙인 크리에이티브로 교체, 옛 광고 PAUSED"
+    },
+    "link": "https://tita-app.com/dream/?v=a&utm_source=meta&utm_medium=paid&utm_campaign=dream_2026_11&utm_content=a"
   },
   {
     "created_at": "2026-11-12T15:15:27.204Z",
@@ -51,8 +58,15 @@
     "campaign_id": "120250090305150724",
     "attached_to": "티타AI /dream A/B · 여성 45+ · 2026-11",
     "adset_id": "120250090310400724",
-    "creative_id": "1611028540185121",
-    "ad_id": "120250090312640724"
+    "creative_id": "3653432654823743",
+    "ad_id": "120250137094620724",
+    "replaced": {
+      "old_ad_id": "120250090312640724",
+      "old_creative_id": "1611028540185121",
+      "at": "2026-11-16T01:38:58.397Z",
+      "reason": "utm_content=b 붙인 크리에이티브로 교체, 옛 광고 PAUSED"
+    },
+    "link": "https://tita-app.com/dream/?v=a&utm_source=meta&utm_medium=paid&utm_campaign=dream_2026_11&utm_content=b"
   },
   {
     "created_at": "2026-11-13T15:10:53.978Z",

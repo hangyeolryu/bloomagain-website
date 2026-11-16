@@ -76,14 +76,14 @@
     "object_story_spec": {
       "page_id": "$env:META_PAGE_ID",
       "link_data": {
-        "link": "https://tita-app.com/dream",
+        "link": "https://tita-app.com/dream/?v=a&utm_source=meta&utm_medium=paid&utm_campaign=dream_2026_11&utm_content=a",
         "message": "요즘, 기다려지는 일 있으세요?\n\n없어도 괜찮아요. 지금 하나 만들면 돼요.\n거창한 꿈 말고, 달력에 동그라미 칠 일 하나.\n\n이번 달 목표 하나, 이번 주 첫걸음 하나.\n혼자 세운 목표는 사흘, 같이 세운 목표는 석 달이에요.\n\n티타AI와 작은 목표 하나 같이 정해 봐요.\n같이 할 친구도 이어 드려요. 가입 없이 시작할 수 있어요.",
         "name": "이번 달 목표 하나, 티타AI와 같이",
         "description": "가입 없이 바로 시작",
         "call_to_action": {
           "type": "LEARN_MORE",
           "value": {
-            "link": "https://tita-app.com/dream"
+            "link": "https://tita-app.com/dream/?v=a&utm_source=meta&utm_medium=paid&utm_campaign=dream_2026_11&utm_content=a"
           }
         }
       }
