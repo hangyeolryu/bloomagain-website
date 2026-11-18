@@ -148,6 +148,22 @@ export async function sendDreamFeedback(body: {
   }
 }
 
+/** 결과 카드 아래 한 질문 — 같이 할 또래가 있으면 더 쉬울지. 버튼 한 번, 글 없음. 실패해도 화면은 고맙다고 한다. */
+export async function sendDreamAfter(body: { sessionId: string; wantsPeer: boolean }): Promise<boolean> {
+  const backendUrl = process.env.NEXT_PUBLIC_BLOOMAGAIN_BACKEND_URL;
+  if (!backendUrl) return false;
+  try {
+    const res = await fetch(`${backendUrl.replace(/\/$/, "")}/api/v1/dream/web-after`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ session_id: body.sessionId, wants_peer: body.wantsPeer }),
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
 /** 끝난 대화의 이어가기 코드(TITA-XXXXXX). 앱 '티타 문의'에 보내면 티타AI가 이어서 챙긴다. 실패하면 null. */
 export async function requestHandoffCode(sessionId: string): Promise<string | null> {
   const backendUrl = process.env.NEXT_PUBLIC_BLOOMAGAIN_BACKEND_URL;

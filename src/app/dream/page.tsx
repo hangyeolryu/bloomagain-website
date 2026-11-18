@@ -26,6 +26,7 @@ import {
   getDreamSessionId,
   readUtm,
   sendDreamTurn,
+  sendDreamAfter,
   sendDreamFeedback,
   requestHandoffCode,
   type DreamResult,
@@ -37,6 +38,9 @@ type Msg = { role: "assistant" | "user"; text: string };
 // 2026-11-13 오후: 이름 질문을 뺐다 — 첫 말이 곧 제목의 질문이고, 보기 하나 누르면 대화가 시작된다.
 // 첫 답은 눌러서도 할 수 있게 — 광고로 온 53명 중 첫 답을 한 분이 1명(1.9%)이었다(2026-11-13).
 // 빈 입력칸에 꿈을 적는 게 가장 어려운 질문이라, 한 번 누르면 대화가 시작되게 한다.
+// 2026-11-18: 인터뷰가 2턴(보기 하나 + 글 한 번)으로 줄었다(백엔드 MAX_TURNS). 광고 방문 236세션 중
+// 10초 머문 분 94 → 보기 누른 분 19 → 끝까지 간 분 0(11/14~17). 보기는 테두리만 있어 예시 말풍선처럼
+// 보였다 — 채운 버튼·왼쪽 정렬·"하나 골라 주세요"로. 미룬 사정·같이 할 사람은 결과 카드 아래 버튼 한 번으로.
 // 누른 말은 그대로 회원 답으로 보낸다(서버는 글과 똑같이 다룬다). 그 뒤로는 자유롭게 쓴다.
 // 꿈 보기는 우리 설문에서 사람들이 실제로 고른 것에서 왔다(/needs 300명·/enjoy, 2026-07~08):
 // 함께라면 해 보고 싶은 것 1위 차 한 잔(24.3%)·2위 사는 얘기(19.6%)·취미(17.3%)·여행(15.3%),
@@ -110,6 +114,8 @@ export default function DreamPage() {
   const [fbRating, setFbRating] = useState<"good" | "ok" | "bad" | null>(null);
   const [fbComment, setFbComment] = useState("");
   const [fbSent, setFbSent] = useState(false);
+  // 결과 카드 아래 한 질문 — 같이 할 또래가 있으면 더 쉬울지(인터뷰에서 뺀 together 주제). 버튼 한 번.
+  const [afterPeer, setAfterPeer] = useState<boolean | null>(null);
   // 이어가기 코드 — 앱 가입 후 '티타 문의'에 보내면 오늘 찾은 첫걸음을 티타AI가 이어서 챙긴다.
   const [handoff, setHandoff] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
@@ -484,7 +490,7 @@ export default function DreamPage() {
             {variant ? HEADLINE[variant] : ""}
           </h1>
           <p style={{ margin: 0, fontSize: 17, lineHeight: 1.7, color: TITA.ink }}>
-            3분이면 돼요. 끝나면 &lsquo;내가 진짜 바라는 것&rsquo;을 정리해 드려요. 가입 없이.
+            1분, 가입 없이. 하나 고르고 한 번만 답하면 &lsquo;진짜 바라는 것&rsquo;을 정리해 드려요.
           </p>
         </header>
 
@@ -549,30 +555,36 @@ export default function DreamPage() {
           ))}
 
           {chips.length > 0 && (
-            <div
-              role="group"
-              aria-label="눌러서 답하기"
-              style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "flex-end", marginTop: 2 }}
-            >
-              {chips.map((c) => (
-                <button
-                  key={c}
-                  type="button"
-                  onClick={() => onChip(c)}
-                  style={{
-                    ...bigBtn,
-                    fontSize: 17,
-                    fontWeight: 700,
-                    minHeight: 48,
-                    padding: "10px 16px",
-                    background: TITA.white,
-                    color: TITA.forest,
-                    border: `1.5px solid ${TITA.forest}`,
-                  }}
-                >
-                  {c}
-                </button>
-              ))}
+            <div role="group" aria-label="눌러서 답하기" style={{ marginTop: 4 }}>
+              {/* 버튼답게 — 채운 색, 왼쪽 정렬, 할 일 한 줄. 테두리만 있는 알약은 '예시 말풍선'으로 읽혔다. */}
+              <p style={{ margin: "0 0 8px", fontSize: 16, fontWeight: 700, color: TITA.forestMid }}>
+                하나 골라 주세요
+              </p>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "flex-start" }}>
+                {chips.map((c) => {
+                  const soft = c === TYPE_OWN || c === "잘 모르겠어요";
+                  return (
+                    <button
+                      key={c}
+                      type="button"
+                      onClick={() => onChip(c)}
+                      style={{
+                        ...bigBtn,
+                        fontSize: 17,
+                        fontWeight: 700,
+                        minHeight: 48,
+                        padding: "10px 16px",
+                        background: soft ? TITA.surface : TITA.forest,
+                        color: soft ? TITA.forestDeep : TITA.cream,
+                        border: soft ? `1.5px solid ${TITA.sage}` : "none",
+                        boxShadow: soft ? "none" : "0 4px 12px rgba(31,78,61,0.22)",
+                      }}
+                    >
+                      {c}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           )}
 
@@ -663,6 +675,59 @@ export default function DreamPage() {
                 <p style={{ margin: 0, fontSize: 19, lineHeight: 1.55, fontWeight: 700, wordBreak: "keep-all" }}>
                   {result.first_step}
                 </p>
+              </>
+            )}
+          </div>
+        )}
+
+        {/* 한 질문 — 인터뷰를 2턴으로 줄이며 뺀 '같이 할 사람'. 버튼 한 번이면 끝. 이 답이 피봇 핵심 가설(wants_peer)이다. */}
+        {done && status === "completed" && (
+          <div
+            style={{
+              marginTop: 18,
+              background: TITA.white,
+              border: `1.5px solid ${TITA.sage}`,
+              borderRadius: 20,
+              padding: "18px 18px",
+              textAlign: "center",
+            }}
+          >
+            {afterPeer !== null ? (
+              <p style={{ margin: 0, fontSize: 17, color: TITA.forestDeep, fontWeight: 700 }}>
+                {afterPeer ? "그러시군요. 아래에서 같이 할 분을 찾아보세요." : "알겠어요. 혼자 시작하는 것도 좋은 걸음이에요."}
+              </p>
+            ) : (
+              <>
+                <p style={{ margin: "0 0 12px", fontSize: 18, fontWeight: 700, color: TITA.forestDeep, wordBreak: "keep-all" }}>
+                  하나만 더요. 같이 할 또래가 있으면 더 쉬울까요?
+                </p>
+                <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
+                  {([
+                    [true, "같이 하면 좋겠어요"],
+                    [false, "혼자가 편해요"],
+                  ] as const).map(([v, label]) => (
+                    <button
+                      key={label}
+                      type="button"
+                      onClick={() => {
+                        setAfterPeer(v);
+                        logAnalyticsEvent("dream_after", { wants_peer: v ? "yes" : "no" });
+                        void sendDreamAfter({ sessionId: sidRef.current, wantsPeer: v });
+                      }}
+                      style={{
+                        ...bigBtn,
+                        fontSize: 17,
+                        padding: "12px 20px",
+                        minHeight: 52,
+                        background: v ? TITA.forest : TITA.surface,
+                        color: v ? TITA.cream : TITA.forestDeep,
+                        border: v ? "none" : `1.5px solid ${TITA.sage}`,
+                      }}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
               </>
             )}
           </div>
