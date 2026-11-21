@@ -315,6 +315,15 @@ export default function PrivacyPage() {
             없습니다.
           </li>
           <li>
+            <strong>웹 대화 이어가기 코드</strong>: 웹사이트(tita-app.com/dream)에서
+            티타AI와 이야기를 나누신 뒤 앱을 받으시면, 그 이야기를 앱에서 이어가기 위해
+            무작위 코드(예: TITA-AB2C3D) 하나만 넘겨받습니다. Android는 Google Play가
+            앱 설치 경로로 이 코드를 앱에 전달하고, 그 밖의 기기는 가입 직후 한 번만
+            복사해 두신 내용이 이 코드 모양인지 확인합니다(코드가 아니면 아무것도 저장하지
+            않습니다). 코드는 본인인증을 마친 뒤 웹 대화 요약(꿈·진짜 바라는 것·첫걸음)을
+            &lsquo;티타 문의&rsquo;로 옮기는 데만 쓰고, 광고 도구로 보내지 않습니다.
+          </li>
+          <li>
             <strong>국외 이전</strong>: 위 정보는 Meta Platforms, Inc.(미국) 및
             Google LLC(미국)의 서버로 전송·처리될 수 있습니다.
           </li>
