@@ -69,6 +69,9 @@ export async function sendDreamTurn(body: {
   try {
     const res = await fetch(`${backendUrl.replace(/\/$/, "")}/api/v1/dream/web-turn`, {
       method: "POST",
+      // '앱 받기' 신호는 누르는 즉시 스토어로 이동하며 보낸다 — keepalive가 없으면 페이지를 떠나며
+      // 요청이 끊긴다(아이폰은 App Store로 넘어가며 거의 늘). 운영 시험에서 클릭이 안 잡혔다(11/21).
+      keepalive: Boolean(body.store),
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         session_id: body.sessionId,
