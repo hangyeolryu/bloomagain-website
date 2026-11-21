@@ -25,8 +25,8 @@ import {
   TITA,
   KOREAN_FONT_STACK,
   APP_STORE_URL,
-  PLAY_STORE_URL,
-  PLAY_STORE_INTENT_URL,
+  playStoreUrl,
+  playStoreIntentUrl,
 } from "./tita-brand";
 import { logAnalyticsEvent } from "@/lib/firebase";
 
@@ -60,6 +60,7 @@ export function StoreDownloadButton({
   style,
   children,
   onStoreClick,
+  playReferrer,
 }: {
   /** 어느 페이지/위치에서 눌렀는지 (집계용) */
   source: string;
@@ -75,7 +76,11 @@ export function StoreDownloadButton({
    * 어드민에서는 "전환이 0이 됐다"처럼 보였다.
    */
   onStoreClick?: (store: StoreKind, source: string) => void;
+  /** Play 설치 링크에 실을 referrer(예: /dream 이어가기 코드). 앱이 첫 실행 때 읽는다. */
+  playReferrer?: string;
 }) {
+  const PLAY_STORE_URL = playStoreUrl(playReferrer);
+  const PLAY_STORE_INTENT_URL = playStoreIntentUrl(playReferrer);
   // SSR에서는 기기를 알 수 없다. 정적 내보내기라 첫 페인트는 항상 "other"로
   // 나가고, 마운트 후 실제 기기로 좁힌다(하이드레이션 불일치 방지).
   const [platform, setPlatform] = useState<Platform>("other");

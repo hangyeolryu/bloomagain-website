@@ -51,3 +51,19 @@ export const PLAY_STORE_URL =
 // (일반 크롬에서도 안전 — 폴백이 있어 그냥 스토어로 감.)
 export const PLAY_STORE_INTENT_URL =
   "intent://details?id=com.bloomagain.bloomagain#Intent;scheme=market;package=com.android.vending;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.bloomagain.bloomagain;end";
+
+// Play 설치 링크에 referrer를 싣는다(2026-11-21). 설치 뒤 앱이 첫 실행 때 Play Install Referrer로
+// 이 값을 읽는다 — /dream 이어가기 코드를 회원이 직접 입력하지 않아도 되게(앱 3.2.37부터 읽음).
+// referrer에는 무작위 코드만 싣는다. 이름·대화는 싣지 않는다.
+export function playStoreUrl(referrer?: string): string {
+  return referrer ? `${PLAY_STORE_URL}&referrer=${encodeURIComponent(referrer)}` : PLAY_STORE_URL;
+}
+
+export function playStoreIntentUrl(referrer?: string): string {
+  if (!referrer) return PLAY_STORE_INTENT_URL;
+  const ref = encodeURIComponent(referrer);
+  return (
+    `intent://details?id=com.bloomagain.bloomagain&referrer=${ref}#Intent;scheme=market;` +
+    `package=com.android.vending;S.browser_fallback_url=${encodeURIComponent(playStoreUrl(referrer))};end`
+  );
+}

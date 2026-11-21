@@ -124,6 +124,8 @@ export default function DreamPage() {
   // 이어가기 코드 — 앱 가입 후 '티타 문의'에 보내면 오늘 찾은 첫걸음을 티타AI가 이어서 챙긴다.
   const [handoff, setHandoff] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  // '앱 받기'를 눌러 코드를 자동으로 복사해 둔 뒤(돌아와서 보면 안내가 바뀌어 있다).
+  const [autoCopied, setAutoCopied] = useState(false);
   // 대화 중 앱 받기 카드 — 이 메시지(log 인덱스) 바로 아래에 붙는다. null이면 안 보임.
   // 두 번째 답을 한 뒤 저절로 한 번 뜨고, 머리의 "앱 받기"를 누르면 그 자리에 뜬다.
   const [appCardAt, setAppCardAt] = useState<number | null>(null);
@@ -374,6 +376,18 @@ export default function DreamPage() {
     // where: 대화 중(dream_mid)인지 끝(dream_result)인지 — 어디서 받는지 봐야 자리를 고친다.
     logAnalyticsEvent("dream_download", { store, where: source });
     trackPixel("DreamDownload", { store, where: source }, true);
+    // 우리 리포트에도 남긴다(코드 받음 → 앱 받기 → 앱에서 연결, 어디서 끊기는지).
+    void sendDreamTurn({ sessionId: sidRef.current, message: null, utm: utmRef.current, hp: "", store: true });
+    // 누르는 순간 코드를 복사해 둔다 — 가입 뒤 '티타 문의'에 붙여 넣기만 하면 되게.
+    // 사용자 제스처(클릭) 안이라 클립보드 쓰기가 허용된다. 실패해도 이동은 막지 않는다.
+    if (handoff) {
+      try {
+        void navigator.clipboard?.writeText(handoff).catch(() => {});
+      } catch {
+        /* 복사가 막혀도 코드는 화면에 크게 보인다 */
+      }
+      setAutoCopied(true);
+    }
   }
 
   function openAppCard() {
@@ -807,7 +821,7 @@ export default function DreamPage() {
               <li>① 앱 받기 (무료)</li>
               <li>② 휴대폰 본인인증으로 가입 — 1~2분</li>
               {handoff ? (
-                <li>③ &lsquo;티타 문의&rsquo;에 아래 코드 보내기</li>
+                <li>③ &lsquo;티타 문의&rsquo;에 코드 붙여 넣기</li>
               ) : (
                 <li>③ 같은 꿈 또래와 인사 나누기</li>
               )}
@@ -840,17 +854,20 @@ export default function DreamPage() {
                   onClick={copyHandoff}
                   style={{ ...bigBtn, fontSize: 16, padding: "10px 22px", background: TITA.surface, color: TITA.forest, border: `1.5px solid ${TITA.forest}` }}
                 >
-                  {copied ? "복사했어요" : "코드 복사"}
+                  {copied || autoCopied ? "복사해 뒀어요" : "코드 복사"}
                 </button>
                 <p style={{ margin: "10px 0 0", fontSize: 14, color: TITA.forestMid, wordBreak: "keep-all" }}>
-                  보내 주시면 오늘 찾은 첫걸음을 티타AI가 이어서 챙기고, 일주일 뒤 &ldquo;해 보셨어요?&rdquo; 하고 여쭤봐요.
-                  화면을 캡처해 두셔도 돼요.
+                  {autoCopied
+                    ? "코드를 복사해 뒀어요. 가입하신 뒤 ‘티타 문의’에 붙여 넣기만 하시면 돼요. "
+                    : "아래 ‘앱 받기’를 누르면 코드가 저절로 복사돼요. "}
+                  오늘 찾은 첫걸음을 티타AI가 이어서 챙기고, 일주일 뒤 &ldquo;해 보셨어요?&rdquo; 하고 여쭤봐요.
                 </p>
               </div>
             )}
             {/* /needs 등과 같은 다운로드 버튼 — 인앱 브라우저·기기 오감지 처리가 다 들어 있다. */}
             <StoreDownloadButton
               source="dream_result"
+              playReferrer={handoff ? `utm_source=dream&utm_content=${handoff}` : undefined}
               label="티타에서 또래 찾기 (무료)"
               onStoreClick={onStoreClick}
               style={{ fontSize: 18, padding: "18px 28px", minWidth: 240, boxShadow: "0 10px 26px rgba(31,78,61,0.28)" }}
