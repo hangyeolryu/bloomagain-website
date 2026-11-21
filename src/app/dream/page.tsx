@@ -65,6 +65,11 @@ const LEARN_CHIPS = [
 ] as const;
 const TYPE_OWN = "직접 적을게요";
 const ALL_CHIPS = new Set<string>([...DREAM_CHIPS, ...LEARN_CHIPS]);
+// '배워 보기' → 세부 보기는 화면에서만 고르고, 서버에는 한 답으로 보낸다(2026-11-21).
+// 대화가 2턴이라 세부 보기를 따로 보내면 둘째 답을 써 버려, 진짜 바라는 것(core)을 못 묻고
+// 결과 카드 없이 끝났다(운영 시험: "배워 보기" → "수채화" → 질문으로 끝, 카드 없음).
+const learnAnswer = (what: string) => `${LEARN} — ${what}`;
+const LEARN_BACK = "다른 거 고를게요";
 type Failure = { reason: "network" | "limited" | "server"; pending: string | null };
 
 // 광고 문구 A/B. ?v=b 로 들어오면 B. 어느 쪽이 대화를 끝까지 이끄는지 utm.v로 남긴다.
@@ -122,6 +127,8 @@ export default function DreamPage() {
   // 대화 중 앱 받기 카드 — 이 메시지(log 인덱스) 바로 아래에 붙는다. null이면 안 보임.
   // 두 번째 답을 한 뒤 저절로 한 번 뜨고, 머리의 "앱 받기"를 누르면 그 자리에 뜬다.
   const [appCardAt, setAppCardAt] = useState<number | null>(null);
+  // '배워 보기'를 눌러 세부 보기를 고르는 중(아직 서버에 안 보냄).
+  const [learnPick, setLearnPick] = useState(false);
   const appCardDismissed = useRef(false);
   const appCardShown = useRef(false);
   const appCardRef = useRef<HTMLDivElement>(null);
@@ -180,7 +187,7 @@ export default function DreamPage() {
         // 답 두 번 + 그중 하나는 직접 쓴 말일 때 한 번만. 보기만 두 번 눌러도
         // (배워 보기→사진) 진짜 대화가 막 시작될 때라 카드가 끼어들면 안 된다.
         const userMsgs = next.filter((m) => m.role === "user");
-        const typed = userMsgs.filter((m) => !ALL_CHIPS.has(m.text)).length;
+        const typed = userMsgs.filter((m) => !ALL_CHIPS.has(m.text) && !m.text.startsWith(`${LEARN} — `)).length;
         if (message !== null && userMsgs.length >= 2 && typed >= 1 && !res.done &&
             !appCardDismissed.current && !appCardShown.current) {
           appCardShown.current = true;
@@ -302,26 +309,44 @@ export default function DreamPage() {
     const text = input.trim();
     if (!text || waiting || done) return;
     setInput("");
+    const first = log.every((m) => m.role !== "user");
+    if (learnPick && first) {
+      setLearnPick(false);
+      void turnOnce(learnAnswer(text));
+      return;
+    }
     void turnOnce(text);
   }
 
   // 빠른 답 — 첫 질문(꿈)과, '배워 보기'를 고른 다음 한 번만 보인다.
   const userCount = log.filter((m) => m.role === "user").length;
   const lastIsAi = log.length > 0 && log[log.length - 1].role === "assistant";
-  const lastUser = [...log].reverse().find((m) => m.role === "user")?.text;
   const chips: readonly string[] =
     !done && !waiting && !failure && lastIsAi && !input.trim()
       ? userCount === 0
-        ? DREAM_CHIPS
-        : userCount === 1 && lastUser === LEARN
-          ? LEARN_CHIPS
-          : []
+        ? learnPick
+          ? [...LEARN_CHIPS, LEARN_BACK]
+          : DREAM_CHIPS
+        : []
       : [];
 
   function onChip(label: string) {
-    logAnalyticsEvent("dream_chip", { step: userCount === 0 ? "dream" : "learn", label });
+    logAnalyticsEvent("dream_chip", { step: learnPick ? "learn" : "dream", label });
     if (label === TYPE_OWN) {
       taRef.current?.focus();
+      return;
+    }
+    if (label === LEARN_BACK) {
+      setLearnPick(false);
+      return;
+    }
+    if (userCount === 0 && label === LEARN) {
+      setLearnPick(true);
+      return;
+    }
+    if (learnPick) {
+      setLearnPick(false);
+      void turnOnce(learnAnswer(label));
       return;
     }
     void turnOnce(label);
@@ -558,11 +583,11 @@ export default function DreamPage() {
             <div role="group" aria-label="눌러서 답하기" style={{ marginTop: 4 }}>
               {/* 버튼답게 — 채운 색, 왼쪽 정렬, 할 일 한 줄. 테두리만 있는 알약은 '예시 말풍선'으로 읽혔다. */}
               <p style={{ margin: "0 0 8px", fontSize: 16, fontWeight: 700, color: TITA.forestMid }}>
-                하나 골라 주세요
+                {learnPick ? "무엇을 배워 볼까요? 하나 골라 주세요" : "하나 골라 주세요"}
               </p>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "flex-start" }}>
                 {chips.map((c) => {
-                  const soft = c === TYPE_OWN || c === "잘 모르겠어요";
+                  const soft = c === TYPE_OWN || c === "잘 모르겠어요" || c === LEARN_BACK;
                   return (
                     <button
                       key={c}
