@@ -59,6 +59,7 @@ export async function sendDreamTurn(body: {
   utm: Record<string, string>;
   hp: string;
   seen?: boolean;
+  store?: boolean;
 }): Promise<DreamTurnResult> {
   const backendUrl = process.env.NEXT_PUBLIC_BLOOMAGAIN_BACKEND_URL;
   if (!backendUrl) return { ok: false, reason: "server" };
@@ -75,6 +76,7 @@ export async function sendDreamTurn(body: {
         utm: body.utm,
         hp: body.hp,
         ...(body.seen ? { seen: true } : {}),
+        ...(body.store ? { store: true } : {}),
       }),
       signal: ctrl.signal,
     });
