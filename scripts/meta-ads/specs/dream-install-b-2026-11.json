@@ -1,0 +1,105 @@
+{
+  "_comment": "E안 B=꿈 코치 카드. --campaign <A에서 만든 캠페인 id> 로 세트만 추가.",
+  "currency": "USD",
+  "campaign": {
+    "name": "티타 앱설치 · /dream 소재 · 여성 45+ 안드로이드 · 2026-11",
+    "objective": "OUTCOME_APP_PROMOTION",
+    "buying_type": "AUCTION",
+    "special_ad_categories": [],
+    "is_adset_budget_sharing_enabled": false
+  },
+  "adset": {
+    "name": "B · 꿈 코치 · KR 여성 45-65+ 안드로이드 · 앱설치 · 일 $3",
+    "daily_budget": 3,
+    "billing_event": "IMPRESSIONS",
+    "optimization_goal": "APP_INSTALLS",
+    "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
+    "promoted_object": {
+      "application_id": "$env:META_PROMOTED_APP_ID",
+      "object_store_url": "https://play.google.com/store/apps/details?id=com.bloomagain.bloomagain"
+    },
+    "targeting": {
+      "geo_locations": {
+        "countries": [
+          "KR"
+        ]
+      },
+      "genders": [
+        2
+      ],
+      "age_min": 45,
+      "age_max": 65,
+      "user_os": [
+        "Android"
+      ],
+      "device_platforms": [
+        "mobile"
+      ],
+      "publisher_platforms": [
+        "facebook",
+        "instagram"
+      ],
+      "targeting_automation": {
+        "advantage_audience": 0
+      },
+      "targeting_relaxation_types": {
+        "lookalike": 0,
+        "custom_audience": 0
+      }
+    }
+  },
+  "creative": {
+    "name": "B · 꿈 코치 · 앱설치 · 2026-11",
+    "image": "https://raw.githubusercontent.com/hangyeolryu/bloomagain-website/main/assets/instagram/dream-2026-11/card-1.jpg",
+    "degrees_of_freedom_spec": {
+      "creative_features_spec": {
+        "image_templates": {
+          "enroll_status": "OPT_OUT"
+        },
+        "image_touchups": {
+          "enroll_status": "OPT_OUT"
+        },
+        "image_brightness_and_contrast": {
+          "enroll_status": "OPT_OUT"
+        },
+        "image_uncrop": {
+          "enroll_status": "OPT_OUT"
+        },
+        "text_optimizations": {
+          "enroll_status": "OPT_OUT"
+        },
+        "enhance_cta": {
+          "enroll_status": "OPT_OUT"
+        },
+        "add_text_overlay": {
+          "enroll_status": "OPT_OUT"
+        },
+        "adapt_to_placement": {
+          "enroll_status": "OPT_OUT"
+        },
+        "media_type_automation": {
+          "enroll_status": "OPT_OUT"
+        }
+      }
+    },
+    "object_story_spec": {
+      "page_id": "$env:META_PAGE_ID",
+      "link_data": {
+        "link": "https://play.google.com/store/apps/details?id=com.bloomagain.bloomagain",
+        "message": "요즘 해 보고 싶은데 미뤄둔 거, 있으세요?\n\n그림, 지리산 종주, 영어, 악기…\n\"이 나이에 뭘\" 하면서 접어 둔 그것.\n\n꿈이 끝난 나이는 없어요.\n같은 꿈을 가진 또래가 티타에 있어요.\n45세 이상 또래 모임 앱이에요. 소개팅 앱이 아니에요.",
+        "name": "꿈이 끝난 나이는 없어요",
+        "description": "같은 꿈을 가진 또래가 티타에 있어요",
+        "call_to_action": {
+          "type": "INSTALL_MOBILE_APP",
+          "value": {
+            "link": "https://play.google.com/store/apps/details?id=com.bloomagain.bloomagain",
+            "application": "$env:META_PROMOTED_APP_ID"
+          }
+        }
+      }
+    }
+  },
+  "ad": {
+    "name": "B · 꿈 코치 · 앱설치"
+  }
+}

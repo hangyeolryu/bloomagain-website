@@ -81,5 +81,44 @@
     "image_hash": "bdad44ed75c85b1ac8c24fb87ef8473d",
     "creative_id": "4568033243471980",
     "ad_id": "120250106566280724"
+  },
+  {
+    "created_at": "2026-11-24T06:58:20.646Z",
+    "spec": "dream-install-a-2026-11.json",
+    "account": "act_410621907654920",
+    "currency": "USD",
+    "name": "티타 앱설치 · /dream 소재 · 여성 45+ 안드로이드 · 2026-11",
+    "status": "PAUSED",
+    "campaign_id": "120250258266570724",
+    "adset_id": "120250258266950724",
+    "creative_id": "1171727475470585",
+    "ad_id": "120250258268520724"
+  },
+  {
+    "created_at": "2026-11-24T06:58:40.046Z",
+    "spec": "dream-install-b-2026-11.json",
+    "account": "act_410621907654920",
+    "currency": "USD",
+    "name": "티타 앱설치 · /dream 소재 · 여성 45+ 안드로이드 · 2026-11",
+    "status": "PAUSED",
+    "campaign_id": "120250258266570724",
+    "attached_to": "티타 앱설치 · /dream 소재 · 여성 45+ 안드로이드 · 2026-11",
+    "adset_id": "120250258272410724",
+    "creative_id": "1724858955671182",
+    "ad_id": "120250258273110724"
+  },
+  {
+    "created_at": "2026-11-24T06:58:45.119Z",
+    "spec": "dream-install-c-2026-11.json",
+    "account": "act_410621907654920",
+    "currency": "USD",
+    "name": "티타 앱설치 · /dream 소재 · 여성 45+ 안드로이드 · 2026-11",
+    "status": "PAUSED",
+    "campaign_id": "120250258266570724",
+    "attached_to": "티타 앱설치 · /dream 소재 · 여성 45+ 안드로이드 · 2026-11",
+    "adset_id": "120250258273610724",
+    "image_hash": "bdad44ed75c85b1ac8c24fb87ef8473d",
+    "creative_id": "1130656213084521",
+    "ad_id": "120250258274420724"
   }
 ]
