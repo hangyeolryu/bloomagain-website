@@ -824,9 +824,27 @@ export default function DreamPage() {
                 wordBreak: "keep-all",
               }}
             >
-              이 꿈, 같이 할 또래가
-              <br />
-              티타에 있어요
+              {/* 같은 꿈 갈래에 '또래 찾기'를 동의한 회원 수(백엔드 dream_peers, 2026-11-24). 85%가 "같이 하면
+                  좋겠어요"인데 앱 받기는 6명 중 1명 — "정말 있나"를 숫자로 보여 준다. 5명 미만이면 숫자 없이. */}
+              {result?.peers?.n ? (
+                <>
+                  &lsquo;{result.peers.label}&rsquo; 꿈을 가진 또래가
+                  <br />
+                  지금 티타에 <span style={{ color: TITA.forest, textDecoration: "underline", textDecorationColor: TITA.camel, textUnderlineOffset: 6 }}>{result.peers.n}명</span> 있어요
+                </>
+              ) : result?.peers ? (
+                <>
+                  &lsquo;{result.peers.label}&rsquo; 꿈을 가진 또래가
+                  <br />
+                  티타에 모이고 있어요
+                </>
+              ) : (
+                <>
+                  이 꿈, 같이 할 또래가
+                  <br />
+                  티타에 있어요
+                </>
+              )}
             </p>
             <p style={{ margin: "0 0 14px", fontSize: 17, lineHeight: 1.7, color: TITA.ink, wordBreak: "keep-all" }}>
               45세 이상, 본인인증을 마친 또래만 모여요.
