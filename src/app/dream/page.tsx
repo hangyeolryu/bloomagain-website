@@ -45,12 +45,19 @@ type Msg = { role: "assistant" | "user"; text: string };
 // 꿈 보기는 우리 설문에서 사람들이 실제로 고른 것에서 왔다(/needs 300명·/enjoy, 2026-07~08):
 // 함께라면 해 보고 싶은 것 1위 차 한 잔(24.3%)·2위 사는 얘기(19.6%)·취미(17.3%)·여행(15.3%),
 // 가장 혼자라고 느낄 때 1위 "여행 가고 싶을 때"(28%). /enjoy 보기의 전시·공연·운동·산책도 담았다.
+// 2026-11-21: 실제 방문자의 꿈에 그림·캘리그라피·굿즈 같은 '손으로 만들기'가 가장 많았는데 보기에 없었다
+// (수채화는 '배워 보기' 안쪽에 숨어 있었다). 맨 앞에 둔다. 10초 머문 39명 중 첫 답 11명(28%) — 고를 게
+// 자기 이야기처럼 보여야 누른다.
+// 첫 말은 화면에서만 짧게 — 바로 위 제목이 같은 질문이라 말풍선이 그대로 되풀이하면 작은 휴대폰
+// (갤럭시 S9+ 크기)에서 보기 버튼이 첫 화면 밖으로 밀렸다(2026-11-21). 서버 기록(OPENING)은 그대로다.
+const OPENING_ON_SCREEN = "안녕하세요, 티타AI예요. 아래에서 하나 고르시거나 편하게 적어 주세요.";
 const LEARN = "간단한 거 하나 배워 보기";
 const DREAM_CHIPS = [
+  "그림·손으로 뭔가 만들기",
   "같이 여행 가 보기",
-  LEARN,
-  "전시·공연 보러 다니기",
   "걷기·등산",
+  "전시·공연 보러 다니기",
+  LEARN,
   "차 한잔하며 사는 얘기",
   "잘 모르겠어요",
 ] as const;
@@ -459,6 +466,8 @@ export default function DreamPage() {
                      display: inline-block; animation: dreamDot 1.2s infinite ease-in-out; }
         .dream-ta:focus { outline: 3px solid ${TITA.camel}; outline-offset: 1px; }
         @media (prefers-reduced-motion: reduce) { .dream-dot { animation: none; opacity: .7 } }
+        /* 아주 작은 화면(아이폰 SE 등)에선 예시 한 줄을 접는다 — 보기 버튼이 첫 화면에 남는 게 먼저다. */
+        @media (max-height: 620px) { .dream-example { display: none } }
       `}</style>
 
       <div style={{ width: "100%", maxWidth: 560, padding: "24px 18px 0", flex: 1 }}>
@@ -529,7 +538,25 @@ export default function DreamPage() {
             {variant ? HEADLINE[variant] : ""}
           </h1>
           <p style={{ margin: 0, fontSize: 17, lineHeight: 1.7, color: TITA.ink }}>
-            1분, 가입 없이. 하나 고르고 한 번만 답하면 &lsquo;진짜 바라는 것&rsquo;을 정리해 드려요.
+            1분, 가입 없이. 하나 고르고 한 번만 답하면 이렇게 정리해 드려요.
+          </p>
+          {/* 무엇을 받는지 예시 한 줄(2026-11-21). 10초 머문 분 중 첫 답이 28%뿐 — 왜 답하는지가 보이게.
+              카드 대신 한 줄로: 휴대폰 첫 화면에서 보기 버튼을 밀어내지 않도록. */}
+          <p
+            aria-label="끝나면 받는 정리 예시"
+            className="dream-example"
+            style={{
+              margin: "8px 0 0",
+              padding: "8px 12px",
+              borderRadius: 12,
+              background: TITA.surface,
+              fontSize: 15,
+              lineHeight: 1.6,
+              color: TITA.forestDeep,
+              wordBreak: "keep-all",
+            }}
+          >
+            예) 진짜 바라는 것 <b>몰입하는 시간</b> · 첫걸음 <b>문구점에서 색연필 골라 보기</b>
           </p>
         </header>
 
@@ -541,7 +568,9 @@ export default function DreamPage() {
         >
           {log.map((m, i) => (
             <Fragment key={i}>
-              <p style={m.role === "assistant" ? aiBubble : userBubble}>{m.text}</p>
+              <p style={m.role === "assistant" ? aiBubble : userBubble}>
+                {i === 0 && m.text === DREAM_OPENING ? OPENING_ON_SCREEN : m.text}
+              </p>
               {i === appCardAt && !done && (
                 <div
                   ref={appCardRef}
@@ -626,6 +655,7 @@ export default function DreamPage() {
               </div>
             </div>
           )}
+
 
           {waiting && (
             <div
