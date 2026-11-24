@@ -15,7 +15,16 @@ export const DREAM_OPENING =
 export type DreamStatus = "active" | "completed" | "stopped" | "crisis";
 
 /** 끝난 대화의 결과 카드 — 오늘 찾은 마음과 이번 주 첫걸음(백엔드 요약에서). */
-export type DreamResult = { core_want: string | null; first_step: string | null };
+/** 같은 꿈 갈래에 '또래 찾기'를 동의한 회원 수. n은 5명 미만이거나 모르면 null(문구만 보인다). */
+export type DreamPeers = { label: string; n: number | null };
+export type DreamResult = { core_want: string | null; first_step: string | null; peers?: DreamPeers };
+
+function cleanPeers(p: unknown): DreamPeers | undefined {
+  if (!p || typeof p !== "object") return undefined;
+  const { label, n } = p as { label?: unknown; n?: unknown };
+  if (typeof label !== "string" || !label.trim()) return undefined;
+  return { label: label.slice(0, 20), n: typeof n === "number" && Number.isFinite(n) && n >= 5 ? Math.floor(n) : null };
+}
 
 export type DreamTurnResult =
   | { ok: true; reply: string; done: boolean; turn: number; status: DreamStatus; result?: DreamResult }
@@ -100,7 +109,10 @@ export async function sendDreamTurn(body: {
       done: data.done === true || res.status === 409,
       turn: typeof data.turn === "number" ? data.turn : 0,
       status: data.status ?? (data.done ? "completed" : "active"),
-      result: data.result && (data.result.core_want || data.result.first_step) ? data.result : undefined,
+      result:
+        data.result && (data.result.core_want || data.result.first_step)
+          ? { ...data.result, peers: cleanPeers(data.result.peers) }
+          : undefined,
     };
   } catch {
     return { ok: false, reason: "network" };
