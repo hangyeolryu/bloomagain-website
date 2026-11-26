@@ -100,5 +100,17 @@
     "permalink": "https://www.instagram.com/p/DgHzilwIFR7/",
     "published_at": "2026-11-24T11:04:30+0000",
     "cards": 4
+  },
+  "seoul-free-2026-12-w1": {
+    "media_id": "18097451000682772",
+    "permalink": "https://www.instagram.com/p/DgMzhWbER7N/",
+    "published_at": "2026-11-26T09:40:31+0000",
+    "cards": 3
+  },
+  "seoul-free-2026-12-w1#story": {
+    "media_id": "18113886950626282",
+    "published_at": "2026-11-26T09:41:00.342Z",
+    "story": true,
+    "file": "story.jpg"
   }
 }
